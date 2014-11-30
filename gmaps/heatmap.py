@@ -1,6 +1,6 @@
 
-from IPython.html import widgets # Widget definitions
-from IPython.utils.traitlets import List, Unicode # Used to declare attributes of our widget
+from IPython.html import widgets
+from IPython.utils.traitlets import List, Unicode
 
 class HeatmapWidget(widgets.DOMWidget):
     _view_name = Unicode('HeatmapView', sync=True)
@@ -22,3 +22,6 @@ class HeatmapWidget(widgets.DOMWidget):
         return [ (min_latitude, min_longitude), (max_latitude, max_longitude) ]
 
 
+def heatmap(data):
+    w = HeatmapWidget(data)
+    return w
