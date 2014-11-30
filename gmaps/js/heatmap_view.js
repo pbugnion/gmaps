@@ -1,7 +1,7 @@
 
 require(["widgets/js/manager", "jquery"], function(WidgetManager,$){
         
-var MapView = IPython.DOMWidgetView.extend({
+var HeatmapView = IPython.DOMWidgetView.extend({
 
     render : function() {
 
@@ -104,6 +104,6 @@ var MapView = IPython.DOMWidgetView.extend({
 
 }) ;
     
-WidgetManager.WidgetManager.register_widget_view("MapView", MapView) ;
+WidgetManager.WidgetManager.register_widget_view("HeatmapView", HeatmapView) ;
 
 });
