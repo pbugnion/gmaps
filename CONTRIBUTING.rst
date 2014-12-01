@@ -25,9 +25,15 @@ contribute to gmaps.
 
 3. Install gmaps by running::
 
-    $ pip install -e "."
+    $ python setup.py install_data
+    $ python setup.py develop
 
-   in the package's root directory. 
+   in the package's root directory. Passing the ``develop`` argument to
+   ``setup.py``, rather than ``install``, means that python files are 
+   sym-linked to the relevant ``site-packages`` directory, rather than copied.
+   That means that you don't have to re-install the package when you 
+   make changes to the source code. If you change the Javascript files, you
+   need to re-run ``$ python setup.py install_data``.
 
 
 You can now make changes and contribute them back to the source code:
