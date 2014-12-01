@@ -1,5 +1,10 @@
 
-require(["widgets/js/manager", "jquery"], function(WidgetManager,$){
+define(["widgets/js/manager", "jquery"], function(WidgetManager,$){
+
+// This should get refactored out into the main module when we add new
+// map widget types.
+window.initialize = function() {} ;
+$.getScript("https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=visualization&callback=initialize") ;
         
 var HeatmapView = IPython.DOMWidgetView.extend({
 
@@ -105,5 +110,7 @@ var HeatmapView = IPython.DOMWidgetView.extend({
 }) ;
     
 WidgetManager.WidgetManager.register_widget_view("HeatmapView", HeatmapView) ;
+
+return { "HeatmapView" : HeatmapView } ;
 
 });

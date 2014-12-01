@@ -15,8 +15,8 @@ def init():
         $.getScript('https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=visualization&callback=gmap_initialize');
         """
         __has_initialized__ = True
-        display(Javascript(data=js))
-        _load_jslibs()
+        #display(Javascript(data=js))
+        #_load_jslibs()
 
 def _load_jslibs():
     # Maybe this should be refactored to use nbextensions?
