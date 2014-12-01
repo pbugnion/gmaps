@@ -12,6 +12,9 @@ var HeatmapView = IPython.DOMWidgetView.extend({
 
         this.$el.addClass("map-container") ;
 
+        this.$el.css("height", this.model.get("height")) ;
+        this.$el.css("width", this.model.get("width")) ;
+
         var that = this ;
         function gmap_init() {
 

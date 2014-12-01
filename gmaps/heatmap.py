@@ -15,8 +15,6 @@ class HeatmapWidget(widgets.DOMWidget):
         self._bounds = self._calc_bounds()
         self.width = "800px"
         self.height = "400px"
-        if IPython.version_info[0] == 2:
-            self._css = { "height" : self.height, "width" : self.width }
         super(widgets.DOMWidget, self).__init__()
 
     def _calc_bounds(self):
