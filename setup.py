@@ -83,7 +83,7 @@ if __name__ == "__main__":
           long_description=long_description,
           author="Pascal Bugnion",
           author_email="pascal@bugnion.org",
-          data_files=[(os.path.join(ipython_dir, "nbextensions/js"),
+          data_files=[(os.path.join(ipython_dir, "nbextensions/gmaps_js"),
               ["gmaps/js/heatmap_view.js"])],
           packages=["gmaps"]
     )

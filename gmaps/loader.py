@@ -14,7 +14,7 @@ def init():
     global __has_initialized__
     if not __has_initialized__:
         display(Javascript("""
-            IPython.load_extensions('js/heatmap_view')
+            IPython.load_extensions('gmaps_js/heatmap_view')
             """))
         __has_initialized__ = True
 
