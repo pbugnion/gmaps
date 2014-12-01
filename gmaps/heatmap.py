@@ -7,15 +7,16 @@ class HeatmapWidget(widgets.DOMWidget):
     _view_name = Unicode('HeatmapView', sync=True)
     _bounds = List(sync=True) 
     _data = List(sync=True)
+    height = Unicode(sync=True)
+    width = Unicode(sync=True)
 
     def __init__(self, data):
         self._data = data
         self._bounds = self._calc_bounds()
+        self.width = "800px"
+        self.height = "400px"
         if IPython.version_info[0] == 2:
-            self._css = { "height" : "800px", "width" : "400px" }
-        else:
-            self.width = "800px"
-            self.height = "400px"
+            self._css = { "height" : self.height, "width" : self.width }
         super(widgets.DOMWidget, self).__init__()
 
     def _calc_bounds(self):
