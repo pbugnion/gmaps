@@ -19,7 +19,6 @@ Let's plot a heatmap (data taken from the `Google maps API documentation <https:
 .. code:: python
 
     In [1]: import gmaps
-            gmaps.init()
 
     In [2]: data = [ [ 37.782, -122.447 ], # [ latitude, longitude ] pairs
                      [ 37.782, -122.445 ],
