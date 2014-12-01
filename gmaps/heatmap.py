@@ -1,4 +1,5 @@
 
+import IPython
 from IPython.html import widgets
 from IPython.utils.traitlets import List, Unicode
 
@@ -10,8 +11,11 @@ class HeatmapWidget(widgets.DOMWidget):
     def __init__(self, data):
         self._data = data
         self._bounds = self._calc_bounds()
-        self.width = "800px"
-        self.height = "400px"
+        if IPython.version_info[0] == 2:
+            self._css = { "height" : "800px", "width" : "400px" }
+        else:
+            self.width = "800px"
+            self.height = "400px"
         super(widgets.DOMWidget, self).__init__()
 
     def _calc_bounds(self):

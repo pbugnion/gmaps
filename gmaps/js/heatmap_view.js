@@ -109,7 +109,13 @@ var HeatmapView = IPython.DOMWidgetView.extend({
 
 }) ;
     
-WidgetManager.WidgetManager.register_widget_view("HeatmapView", HeatmapView) ;
+// Register with the widget manager. This requires a 2.3.x
+// compatibility hack.
+if (IPython.version.split(".")[0] == "2") {
+    WidgetManager.register_widget_view("HeatmapView", HeatmapView) ;
+} else {
+    WidgetManager.WidgetManager.register_widget_view("HeatmapView", HeatmapView) ;
+}
 
 return { "HeatmapView" : HeatmapView } ;
 
