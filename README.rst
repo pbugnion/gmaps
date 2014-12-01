@@ -1,11 +1,5 @@
-#!/usr/bin/env python
-
-from distutils.core import setup
-
-import gmaps
-version = gmaps.__version__
-
-long_description = """
+.. Automatically generated from LONG_DESCRIPTION keyword in 
+.. setup.py. Do not edit directly.
 
 gmaps
 =====
@@ -14,7 +8,7 @@ gmaps is a plugin for including interactive Google maps in the IPython Notebook.
 
 Let's plot a heatmap (data taken from the `Google maps API documentation <https://developers.google.com/maps/documentation/javascript/heatmaplayer>`_):
 
-.. code:: python
+::
 
     In [1]: import gmaps
             gmaps.init()
@@ -45,29 +39,3 @@ Issue reporting and contributing
 Report issues using the `github issue tracker <https://github.com/pbugnion/gmaps/issues>`_.
 
 Contributions are welcome. Read the CONTRIBUTING guide to learn how to contribute.
-"""
-
-def write_readme():
-    """
-    Create README file from LONG_DESCRIPTION, replacing non-standard
-    bits of re-structured text.
-    """
-    with open("README.rst","w") as f:
-        f.write("""\
-.. Automatically generated from LONG_DESCRIPTION keyword in 
-.. setup.py. Do not edit directly.\
-""")
-        f.write(long_description.replace(".. code:: python","::"))
-
-if __name__ == "__main__":
-
-    write_readme()
-
-    setup(name="gmaps",
-          version=version,
-          description="IPython plugin for Google Maps JavaScript API",
-          long_description=long_description,
-          author="Pascal Bugnion",
-          author_email="pascal@bugnion.org",
-          packages=["gmaps"]
-    )
