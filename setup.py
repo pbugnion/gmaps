@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-from distutils.core import setup
+from setuptools import setup
+import os
+import IPython
 
 import gmaps
 version = gmaps.__version__
@@ -68,9 +70,12 @@ def write_readme():
 """)
         f.write(long_description.replace(".. code:: python","::"))
 
+
 if __name__ == "__main__":
 
     write_readme()
+
+    ipython_dir = IPython.get_ipython().ipython_dir
 
     setup(name="gmaps",
           version=version,
@@ -78,5 +83,7 @@ if __name__ == "__main__":
           long_description=long_description,
           author="Pascal Bugnion",
           author_email="pascal@bugnion.org",
+          data_files=[(os.path.join(ipython_dir, "nbextensions/js"),
+              ["gmaps/js/heatmap_view.js"])],
           packages=["gmaps"]
     )
