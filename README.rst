@@ -31,13 +31,10 @@ gmaps can only be installed from source. Clone the git repository by running::
 
 Change to the project's root directory and run::
 
-    $ pip install -e "."
+    $ python setup.py install
 
 Getting started
 ---------------
-
-Before running any `gmaps` code, you must call ``gmaps.init()``. It must be the last line
-in its IPython cell.
 
 Currently, only heatmaps are supported. Draw a heatmap by passing a list of (latitude, longitude)
 pairs to the heatmap command.
