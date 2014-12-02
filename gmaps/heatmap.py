@@ -1,20 +1,21 @@
 
-import IPython
 from IPython.html import widgets
 from IPython.utils.traitlets import List, Unicode
+
+import gmaps_traitlets
 
 class HeatmapWidget(widgets.DOMWidget):
     _view_name = Unicode('HeatmapView', sync=True)
     _bounds = List(sync=True) 
     _data = List(sync=True)
-    height = Unicode(sync=True)
-    width = Unicode(sync=True)
+    height = gmaps_traitlets.CSSDimension(sync=True)
+    width = gmaps_traitlets.CSSDimension(sync=True)
 
-    def __init__(self, data):
+    def __init__(self, data, height, width):
         self._data = data
+        self.height = height
+        self.width = width
         self._bounds = self._calc_bounds()
-        self.width = "800px"
-        self.height = "400px"
         super(widgets.DOMWidget, self).__init__()
 
     def _calc_bounds(self):
@@ -25,7 +26,7 @@ class HeatmapWidget(widgets.DOMWidget):
         return [ (min_latitude, min_longitude), (max_latitude, max_longitude) ]
 
 
-def heatmap(data):
+def heatmap(data, height="400px", width="700px"):
     """
     Draw a heatmap of a list of map coordinates.
 
@@ -41,6 +42,17 @@ def heatmap(data):
         float should indicate the coordinate's longitude and
         the second should indicate the coordinate's latitude.
 
+    Optional arguments
+    ------------------
+    height: int or string
+        Set the height of the map. This can be either an int,
+        in which case it is interpreted as a number of pixels, 
+        or a string with units like "400px" or "20em".
+    width: int or string
+        Set the height of the map. This can be either an int,
+        in which case it is interpreted as a number of pixels, 
+        or a string with units like "400px" or "20em".
+
     Returns
     -------
     HeatmapWidget
@@ -55,5 +67,5 @@ def heatmap(data):
     >>> w = heatmap(data)
     >>> display(w)
     """
-    w = HeatmapWidget(data)
+    w = HeatmapWidget(data, height, width)
     return w
