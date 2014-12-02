@@ -54,6 +54,28 @@ Report issues using the `github issue tracker <https://github.com/pbugnion/gmaps
 Contributions are welcome. Read the CONTRIBUTING guide to learn how to contribute.
 """
 
+classifiers = [
+    'Intended Audience :: Science/Research',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Financial and Insurance Industry',
+    'Intended Audience :: Telecommunications Industry',
+    'License :: OSI Approved :: BSD License',
+    'Framework :: IPython',
+    'Programming Language :: Python',
+    'Topic :: Software Development',
+    'Topic :: Scientific/Engineering',
+    'Operating System :: POSIX',
+    'Operating System :: Unix',
+    'Operating System :: MacOS',
+    'Operating System :: Microsoft :: Windows',
+    'Programming Language :: Python :: 2',
+    'Programming Language :: Python :: 2.7',
+    'Programming Language :: JavaScript',
+    'Topic :: Scientific/Engineering :: GIS',
+    'Topic :: Scientific/Engineering :: Visualization',
+    ]
+
+
 def write_readme():
     """
     Create README file from LONG_DESCRIPTION, replacing non-standard
@@ -81,5 +103,6 @@ if __name__ == "__main__":
           author_email="pascal@bugnion.org",
           data_files=[(os.path.join(ipython_dir, "nbextensions/gmaps_js"),
               ["gmaps/js/heatmap_view.js"])],
+          classifiers=classifiers,
           packages=["gmaps"]
     )
