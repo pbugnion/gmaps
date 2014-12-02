@@ -1,4 +1,5 @@
 
+import IPython
 from IPython.html import widgets
 from IPython.utils.traitlets import List, Unicode
 
@@ -6,6 +7,8 @@ class HeatmapWidget(widgets.DOMWidget):
     _view_name = Unicode('HeatmapView', sync=True)
     _bounds = List(sync=True) 
     _data = List(sync=True)
+    height = Unicode(sync=True)
+    width = Unicode(sync=True)
 
     def __init__(self, data):
         self._data = data

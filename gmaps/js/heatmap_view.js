@@ -12,6 +12,9 @@ var HeatmapView = IPython.DOMWidgetView.extend({
 
         this.$el.addClass("map-container") ;
 
+        this.$el.css("height", this.model.get("height")) ;
+        this.$el.css("width", this.model.get("width")) ;
+
         var that = this ;
         function gmap_init() {
 
@@ -109,7 +112,15 @@ var HeatmapView = IPython.DOMWidgetView.extend({
 
 }) ;
     
-WidgetManager.WidgetManager.register_widget_view("HeatmapView", HeatmapView) ;
+// Register with the widget manager. This requires a 2.3.x
+// compatibility hack.
+if (IPython.version.split(".")[0] == "2") {
+    var manager = WidgetManager ;
+} else {
+    var manager = WidgetManager.WidgetManager ;
+}
+
+manager.register_widget_view("HeatmapView", HeatmapView) ;
 
 return { "HeatmapView" : HeatmapView } ;
 
