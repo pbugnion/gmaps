@@ -109,5 +109,8 @@ if __name__ == "__main__":
           data_files=[(os.path.join(ipython_dir, "nbextensions/gmaps_js"),
               ["gmaps/js/heatmap_view.js"])],
           classifiers=classifiers,
-          packages=["gmaps"]
+          packages=["gmaps"],
+          url=r"https://github.com/pbugnion/gmaps",
+          license="BSD License", 
+          platforms=["Linux", "Mac OS", "Windows"]
     )
