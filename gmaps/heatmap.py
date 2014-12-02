@@ -36,7 +36,7 @@ def heatmap(data, height="400px", width="700px"):
 
     Arguments
     ---------
-    data: list of pairs of floats.
+    data: list (or Numpy Array) of pairs of floats.
         list of coordinate. Each element in the list should be 
         a pair (either a list or a tuple) of floats. The first 
         float should indicate the coordinate's longitude and
@@ -67,5 +67,10 @@ def heatmap(data, height="400px", width="700px"):
     >>> w = heatmap(data)
     >>> display(w)
     """
+    try:
+        data = data.tolist()
+    except AttributeError:
+        # Not a Numpy Array.
+        pass
     w = HeatmapWidget(data, height, width)
     return w
