@@ -1,4 +1,12 @@
 
+Version 0.1.1
+=============
+
+Bugfix release.
+ 
+ * Ensures the notebook extensions are actually included in the source
+   distribution.
+
 Version 0.1
 ===========
 
