@@ -92,3 +92,11 @@ Code
 
 Please follow the `PEP8 conventions <http://www.python.org/dev/peps/pep-0008/>`_ for formatting and indenting code and for variable names.
 
+Ipython notebooks in version control
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This package uses IPython notebooks as examples. If you amend an existing
+notebook, or add a new one, make sure that you only commit the input cells.
+This can be done by following the recipe given in `this Stack Overflow answer
+<http://stackoverflow.com/a/20844506>`.
+
