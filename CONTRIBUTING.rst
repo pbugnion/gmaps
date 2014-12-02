@@ -105,10 +105,9 @@ handle IPython version 2.3 and 3: the code in ipynb_output_filter.py should be::
 
     import sys
     import json
-    import IPython
 
-    ipy_version = IPython.version_info[0]
     json_in = json.load(sys.stdin)
+    ipy_version = int(json_in["nbformat"])-1 # nbformat is 1 more than actual version.
 
     def strip_output_from_cell(cell):
         if "outputs" in cell:
