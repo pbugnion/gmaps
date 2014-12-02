@@ -38,6 +38,11 @@ Getting started
 Currently, only heatmaps are supported. Draw a heatmap by passing a list of (latitude, longitude)
 pairs to the heatmap command.
 
+There are example notebooks in the examples directory. The heatmap example is
+also visible `on nbviewer
+<http://nbviewer.ipython.org/github/pbugnion/gmaps/blob/master/examples/ipy3/heatmap_demo.ipynb>`_,
+but note that you need to download the notebook to actually see the Google Map.
+
 Issue reporting and contributing
 --------------------------------
 
