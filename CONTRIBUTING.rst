@@ -92,3 +92,38 @@ Code
 
 Please follow the `PEP8 conventions <http://www.python.org/dev/peps/pep-0008/>`_ for formatting and indenting code and for variable names.
 
+Ipython notebooks in version control
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This package uses IPython notebooks as examples. If you amend an existing
+notebook, or add a new one, make sure that you only commit the input cells.
+This can be done by following the recipe given in `this Stack Overflow answer
+<http://stackoverflow.com/a/20844506>` with the following modification to
+handle IPython version 2.3 and 3: the code in ipynb_output_filter.py should be::
+
+    #!/usr/bin/env python
+
+    import sys
+    import json
+    import IPython
+
+    ipy_version = IPython.version_info[0]
+    json_in = json.load(sys.stdin)
+
+    def strip_output_from_cell(cell):
+        if "outputs" in cell:
+            cell["outputs"] = []
+        if "prompt_number" in cell:
+            cell["prompt_number"] = ''
+
+    if ipy_version == 2:
+        for sheet in json_in["worksheets"]:
+            for cell in sheet["cells"]:
+                strip_output_from_cell(cell)
+    else:
+        for cell in json_in["cells"]:
+            strip_output_from_cell(cell)
+
+    json.dump(json_in, sys.stdout)
+
+    
