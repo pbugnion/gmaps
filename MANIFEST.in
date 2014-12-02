@@ -1,0 +1,7 @@
+
+include MANIFEST.in
+include *rst *txt *py
+recursive-include examples *ipynb
+recursive-include gmaps *py *js
+recursive-include docs *rst
+recursive-exclude examples/*/.ipynb-checkpoints *
