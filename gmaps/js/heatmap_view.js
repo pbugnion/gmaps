@@ -10,8 +10,6 @@ var HeatmapView = IPython.DOMWidgetView.extend({
 
     render : function() {
 
-        this.$el.addClass("map-container") ;
-
         this.$el.css("height", this.model.get("height")) ;
         this.$el.css("width", this.model.get("width")) ;
 
@@ -22,8 +20,7 @@ var HeatmapView = IPython.DOMWidgetView.extend({
             var bounds = that._getBounds() ;
 
             that.map =  new google.maps.Map(
-                document.getElementsByClassName('map-container')[0],
-                                 { center : bounds.getCenter()  }) ;
+                that.$el[0], { center : bounds.getCenter()  }) ;
 
             that.map.fitBounds(bounds) ;
 
