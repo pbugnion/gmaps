@@ -1,6 +1,6 @@
 
 from IPython.html import widgets
-from IPython.utils.traitlets import List, Unicode
+from IPython.utils.traitlets import List, Unicode, CFloat
 
 import gmaps_traitlets
 
@@ -10,11 +10,13 @@ class HeatmapWidget(widgets.DOMWidget):
     _data = List(sync=True)
     height = gmaps_traitlets.CSSDimension(sync=True)
     width = gmaps_traitlets.CSSDimension(sync=True)
+    max_intensity = CFloat(sync=True, allow_none=True)
 
-    def __init__(self, data, height, width):
+    def __init__(self, data, height, width, max_intensity):
         self._data = data
         self.height = height
         self.width = width
+        self.max_intensity = max_intensity
         self._bounds = self._calc_bounds()
         super(widgets.DOMWidget, self).__init__()
 
@@ -26,7 +28,7 @@ class HeatmapWidget(widgets.DOMWidget):
         return [ (min_latitude, min_longitude), (max_latitude, max_longitude) ]
 
 
-def heatmap(data, height="400px", width="700px"):
+def heatmap(data, height="400px", width="700px", max_intensity=None):
     """
     Draw a heatmap of a list of map coordinates.
 
@@ -52,6 +54,13 @@ def heatmap(data, height="400px", width="700px"):
         Set the height of the map. This can be either an int,
         in which case it is interpreted as a number of pixels, 
         or a string with units like "400px" or "20em".
+    max_intensity: Int or None, >= 1.
+        Set the maximum intensity of the color gradient. This might
+        be useful if the data is highly concentrated in a particular
+        area: the heatmap gets very hot in that area and hides the
+        detail in the rest of the map. It is also useful if the 
+        initial map viewport is very zoomed out. By default, the 
+        intensity is not capped.
 
     Returns
     -------
@@ -72,5 +81,5 @@ def heatmap(data, height="400px", width="700px"):
     except AttributeError:
         # Not a Numpy Array.
         pass
-    w = HeatmapWidget(data, height, width)
+    w = HeatmapWidget(data, height, width, max_intensity)
     return w
