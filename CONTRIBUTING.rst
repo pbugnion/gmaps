@@ -11,7 +11,7 @@ How to contribute
 
 The `documentation <http://docs.scipy.org/doc/numpy/dev/gitwash/index.html>`_ for Numpy gives a detailed description of how to contribute. Most of this information applies to development for ``gmaps``.
 
-Developping with git
+Developing with git
 ^^^^^^^^^^^^^^^^^^^^
 
 You will need the `Git version control system <http://git-scm.com>`_ and an account on `Github <https://github.com>`_ to
@@ -21,7 +21,7 @@ contribute to gmaps.
 
 2. Clone the repository to your computer::
    
-    $ git clone https://github.com/YourUserID/gmaps.git
+    $ git clone https://github.com/pbugnion/gmaps.git
 
 3. Install gmaps by running::
 
@@ -83,7 +83,7 @@ Workflow
 ^^^^^^^^
 
 We loosely follow the `git workflow <http://docs.scipy.org/doc/numpy/dev/gitwash/development_workflow.html>`_ used in numpy development.  Features should
-be developped in separate branches and merged into the master branch when
+be developed in separate branches and merged into the master branch when
 complete. Avoid putting new commits directly in your ``master`` branch.
 
 
