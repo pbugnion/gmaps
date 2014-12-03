@@ -26,7 +26,6 @@ var HeatmapView = IPython.DOMWidgetView.extend({
 
             that.heatmap = new google.maps.visualization.HeatmapLayer({
                 data : data,
-                dissipating : true,
                 radius : 10
             }) ;
 
