@@ -4,6 +4,6 @@ from heatmap import heatmap
 
 from IPython.display import display
 
-__version__ = "0.1.2"
+__version__ = "0.1.3"
 
 init()
