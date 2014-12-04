@@ -1,6 +1,7 @@
 
+import IPython
 from IPython.html import widgets
-from IPython.utils.traitlets import List, Unicode, CFloat
+from IPython.utils.traitlets import List, Unicode, CFloat, Instance
 
 import gmaps_traitlets
 
@@ -10,15 +11,22 @@ class HeatmapWidget(widgets.DOMWidget):
     _data = List(sync=True)
     height = gmaps_traitlets.CSSDimension(sync=True)
     width = gmaps_traitlets.CSSDimension(sync=True)
-    max_intensity = CFloat(sync=True, allow_none=True)
-    point_radius = CFloat(sync=True, allow_none=True)
+
+    # FIXME refactor this mess into something nicer.
+    # maybe an ipy23_compat module?
+    if IPython.version_info[0] == 2:
+        max_intensity = Instance(float, sync=True, allow_none=True)
+        point_radius = Instance(float, sync=True, allow_none=True)
+    else:
+        max_intensity = CFloat(sync=True, allow_none=True)
+        point_radius = CFloat(sync=True, allow_none=True)
 
     def __init__(self, data, height, width, max_intensity, point_radius):
         self._data = data
         self.height = height
         self.width = width
-        self.max_intensity = max_intensity
-        self.point_radius = point_radius
+        self.max_intensity = float(max_intensity)
+        self.point_radius = float(point_radius)
         self._bounds = self._calc_bounds()
         super(widgets.DOMWidget, self).__init__()
 
@@ -56,7 +64,7 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
         Set the height of the map. This can be either an int,
         in which case it is interpreted as a number of pixels, 
         or a string with units like "400px" or "20em".
-    max_intensity: Int or None, >= 1.
+    max_intensity: float or None, >= 1.
         Set the maximum intensity of the color gradient. This might
         be useful if the data is highly concentrated in a particular
         area: the heatmap gets very hot in that area and hides the
@@ -64,7 +72,7 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
         initial map viewport is very zoomed out. This should, typically,
         be a number between 1 and ~20. By default, the 
         intensity is not capped.
-    point_radius: Int or None, >= 1.
+    point_radius: float or None, >= 1.
         The radius of influence of each data point, in pixels.
 
     Returns
