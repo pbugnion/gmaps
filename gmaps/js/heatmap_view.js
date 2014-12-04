@@ -27,7 +27,8 @@ var HeatmapView = IPython.DOMWidgetView.extend({
             that.heatmap = new google.maps.visualization.HeatmapLayer({
                 data : data,
                 radius : 10,
-                maxIntensity : that.model.get('max_intensity')
+                maxIntensity : that.model.get('max_intensity'),
+                radius : that.model.get('point_radius')
             }) ;
 
             that.heatmap.setMap(that.map) ;

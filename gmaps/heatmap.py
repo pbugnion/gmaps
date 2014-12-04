@@ -11,12 +11,14 @@ class HeatmapWidget(widgets.DOMWidget):
     height = gmaps_traitlets.CSSDimension(sync=True)
     width = gmaps_traitlets.CSSDimension(sync=True)
     max_intensity = CFloat(sync=True, allow_none=True)
+    point_radius = CFloat(sync=True, allow_none=True)
 
-    def __init__(self, data, height, width, max_intensity):
+    def __init__(self, data, height, width, max_intensity, point_radius):
         self._data = data
         self.height = height
         self.width = width
         self.max_intensity = max_intensity
+        self.point_radius = point_radius
         self._bounds = self._calc_bounds()
         super(widgets.DOMWidget, self).__init__()
 
@@ -28,7 +30,7 @@ class HeatmapWidget(widgets.DOMWidget):
         return [ (min_latitude, min_longitude), (max_latitude, max_longitude) ]
 
 
-def heatmap(data, height="400px", width="700px", max_intensity=None):
+def heatmap(data, height="400px", width="700px", max_intensity=None, point_radius=None):
     """
     Draw a heatmap of a list of map coordinates.
 
@@ -59,8 +61,11 @@ def heatmap(data, height="400px", width="700px", max_intensity=None):
         be useful if the data is highly concentrated in a particular
         area: the heatmap gets very hot in that area and hides the
         detail in the rest of the map. It is also useful if the 
-        initial map viewport is very zoomed out. By default, the 
+        initial map viewport is very zoomed out. This should, typically,
+        be a number between 1 and ~20. By default, the 
         intensity is not capped.
+    point_radius: Int or None, >= 1.
+        The radius of influence of each data point, in pixels.
 
     Returns
     -------
@@ -81,5 +86,5 @@ def heatmap(data, height="400px", width="700px", max_intensity=None):
     except AttributeError:
         # Not a Numpy Array.
         pass
-    w = HeatmapWidget(data, height, width, max_intensity)
+    w = HeatmapWidget(data, height, width, max_intensity, point_radius)
     return w
