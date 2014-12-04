@@ -1,6 +1,7 @@
 
+import IPython
 from IPython.html import widgets
-from IPython.utils.traitlets import List, Unicode, CFloat
+from IPython.utils.traitlets import List, Unicode, CInt, Instance
 
 import gmaps_traitlets
 
@@ -10,8 +11,12 @@ class HeatmapWidget(widgets.DOMWidget):
     _data = List(sync=True)
     height = gmaps_traitlets.CSSDimension(sync=True)
     width = gmaps_traitlets.CSSDimension(sync=True)
-    max_intensity = CFloat(sync=True, allow_none=True)
-    point_radius = CFloat(sync=True, allow_none=True)
+    if IPython.version_info[0] == 2:
+        max_intensity = Instance(int, sync=True, allow_none=True)
+        point_radius = Instance(int, sync=True, allow_none=True)
+    else:
+        max_intensity = CInt(sync=True, allow_none=True)
+        point_radius = CInt(sync=True, allow_none=True)
 
     def __init__(self, data, height, width, max_intensity, point_radius):
         self._data = data
