@@ -1,3 +1,11 @@
+Version 0.1.3
+=============
+
+Bugfix release.
+
+ * Fixed a bug that arose when using the heatmap with IPython2.3 in the
+   previous release. The bug was caused by the slightly different traitlets API
+   between the two IPython versions.
 
 Version 0.1.2
 =============
