@@ -1,4 +1,11 @@
 
+Version 0.1.2
+=============
+
+Minor heatmap improvements.
+
+ * Exposed the 'maxIntensity' and 'radius' options for heatmaps.
+
 Version 0.1.1
 =============
 
