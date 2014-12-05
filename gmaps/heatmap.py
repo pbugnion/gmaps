@@ -59,17 +59,22 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
     """
     Draw a heatmap of a list of map coordinates.
 
-    Renders a list 'data' of pairs of floats denoting latitude
-    and longitude as a heatmap denoting point density on top of 
-    a Google map.
+    Renders a list 'data' of either:
+        * pairs of floats denoting (latitude, longitude),
+        * triples of floats denoting (latitude, longitude, weight)
+    as a heatmap, where the heat denotes point density.
 
     Arguments
     ---------
-    data: list (or Numpy Array) of pairs of floats.
-        list of coordinate. Each element in the list should be 
-        a pair (either a list or a tuple) of floats. The first 
-        float should indicate the coordinate's longitude and
-        the second should indicate the coordinate's latitude.
+    data: list (or Numpy Array) of pairs or triples of floats.
+        This is a list of coordinate, possibly associated with a weight. 
+        Each element in the list should be a pair 
+        (either a list or a tuple) of floats, or a triple
+        of floats. The first float should indicate the 
+        coordinate's longitude and the second should indicate the 
+        coordinate's latitude. If a third float is provided,
+        it is interpreted as a weight for that data point.
+        Google maps only accepts positive weights.
 
     Optional arguments
     ------------------
@@ -78,7 +83,7 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
         in which case it is interpreted as a number of pixels, 
         or a string with units like "400px" or "20em".
     width: int or string
-        Set the height of the map. This can be either an int,
+        Set the width of the map. This can be either an int,
         in which case it is interpreted as a number of pixels, 
         or a string with units like "400px" or "20em".
     max_intensity: float or None, >= 1.
@@ -103,6 +108,13 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
     >>> data = [ [ 37.782551,-122.445368 ],
     ...          [ 37.782745,-122.444586 ],
     ...          [ 37.782842,-122.443858 ] ]
+    >>> w = heatmap(data)
+    >>> display(w)
+
+    Or, for a weighted heatmap,
+    >>> data = [ [ 37.782551,-122.445368, 2.0 ],
+    ...          [ 37.782745,-122.444586, 5.2 ],
+    ...          [ 37.782842,-122.443858, 0.2 ] ]
     >>> w = heatmap(data)
     >>> display(w)
     """
