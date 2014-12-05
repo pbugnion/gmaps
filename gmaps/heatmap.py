@@ -1,6 +1,6 @@
 
 from IPython.html import widgets
-from IPython.utils.traitlets import List, Unicode
+from IPython.utils.traitlets import List, Unicode, Bool
 
 import ipy23_compat
 import gmaps_traitlets
@@ -13,17 +13,32 @@ class HeatmapWidget(widgets.DOMWidget):
     width = gmaps_traitlets.CSSDimension(sync=True)
     max_intensity = ipy23_compat.FloatOrNone(sync=True)
     point_radius = ipy23_compat.FloatOrNone(sync=True)
+    _is_weighted = Bool(sync=True)
 
     def __init__(self, data, height, width, max_intensity, point_radius):
+        self._check_data_weighted(data)
         self._data = data
         self.height = height
         self.width = width
+        self._is_weighted = True
         if max_intensity is not None:
             self.max_intensity = float(max_intensity)
         if point_radius is not None:
             self.point_radius = float(point_radius)
         self._bounds = self._calc_bounds()
         super(widgets.DOMWidget, self).__init__()
+
+    def _check_data_weighted(self, data):
+        unique_lengths = set(map(len, data))
+        if len(unique_lengths) != 1:
+            raise ValueError("1")
+        length = unique_lengths.pop()
+        if length == 2:
+            self._is_weighted = False
+        elif length == 3:
+            self._is_weighted = True
+        else:
+            raise ValueError("2")
 
     def _calc_bounds(self):
         min_latitude = min(data[0] for data in self._data)
