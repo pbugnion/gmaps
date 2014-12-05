@@ -15,8 +15,8 @@ class HeatmapWidget(widgets.DOMWidget):
     # FIXME refactor this mess into something nicer.
     # maybe an ipy23_compat module?
     if IPython.version_info[0] == 2:
-        max_intensity = Instance(float, sync=True, allow_none=True, default_value=None)
-        point_radius = Instance(float, sync=True, allow_none=True, default_value=None)
+        max_intensity = Instance(float, sync=True, allow_none=True)
+        point_radius = Instance(float, sync=True, allow_none=True)
     else:
         max_intensity = CFloat(sync=True, allow_none=True, default_value=None)
         point_radius = CFloat(sync=True, allow_none=True, default_value=None)
