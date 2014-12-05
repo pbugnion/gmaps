@@ -1,6 +1,6 @@
 
 from IPython.html import widgets
-from IPython.utils.traitlets import List, Unicode
+from IPython.utils.traitlets import List, Unicode, Bool
 
 import ipy23_compat
 import gmaps_traitlets
@@ -13,8 +13,12 @@ class HeatmapWidget(widgets.DOMWidget):
     width = gmaps_traitlets.CSSDimension(sync=True)
     max_intensity = ipy23_compat.FloatOrNone(sync=True)
     point_radius = ipy23_compat.FloatOrNone(sync=True)
+    _is_weighted = Bool(sync=True)
 
     def __init__(self, data, height, width, max_intensity, point_radius):
+        self._check_data_weighted(data)
+        if self._is_weighted:
+            self._check_weights_positive(data)
         self._data = data
         self.height = height
         self.width = width
@@ -24,6 +28,24 @@ class HeatmapWidget(widgets.DOMWidget):
             self.point_radius = float(point_radius)
         self._bounds = self._calc_bounds()
         super(widgets.DOMWidget, self).__init__()
+
+    def _check_data_weighted(self, data):
+        unique_lengths = set(map(len, data))
+        if len(unique_lengths) != 1:
+            raise ValueError("Each item in 'data' list must be the same length, either 2 or 3.")
+        length = unique_lengths.pop()
+        if length == 2:
+            self._is_weighted = False
+        elif length == 3:
+            self._is_weighted = True
+        else:
+            raise ValueError("Items in 'data' list must be of length 2 "
+                    "(for [ latitude, longitude ]) or 3 (for [ latitude, longitude, weight ])")
+
+    def _check_weights_positive(self, data):
+        for (latitude, longitude, weight) in data:
+            if weight <= 0.0:
+                raise ValueError("Google Maps only support positive weights.")
 
     def _calc_bounds(self):
         min_latitude = min(data[0] for data in self._data)
@@ -37,17 +59,22 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
     """
     Draw a heatmap of a list of map coordinates.
 
-    Renders a list 'data' of pairs of floats denoting latitude
-    and longitude as a heatmap denoting point density on top of 
-    a Google map.
+    Renders a list 'data' of either:
+        * pairs of floats denoting (latitude, longitude),
+        * triples of floats denoting (latitude, longitude, weight)
+    as a heatmap, where the heat denotes point density.
 
     Arguments
     ---------
-    data: list (or Numpy Array) of pairs of floats.
-        list of coordinate. Each element in the list should be 
-        a pair (either a list or a tuple) of floats. The first 
-        float should indicate the coordinate's longitude and
-        the second should indicate the coordinate's latitude.
+    data: list (or Numpy Array) of pairs or triples of floats.
+        This is a list of coordinate, possibly associated with a weight. 
+        Each element in the list should be a pair 
+        (either a list or a tuple) of floats, or a triple
+        of floats. The first float should indicate the 
+        coordinate's longitude and the second should indicate the 
+        coordinate's latitude. If a third float is provided,
+        it is interpreted as a weight for that data point.
+        Google maps only accepts positive weights.
 
     Optional arguments
     ------------------
@@ -56,7 +83,7 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
         in which case it is interpreted as a number of pixels, 
         or a string with units like "400px" or "20em".
     width: int or string
-        Set the height of the map. This can be either an int,
+        Set the width of the map. This can be either an int,
         in which case it is interpreted as a number of pixels, 
         or a string with units like "400px" or "20em".
     max_intensity: float or None, >= 1.
@@ -81,6 +108,13 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
     >>> data = [ [ 37.782551,-122.445368 ],
     ...          [ 37.782745,-122.444586 ],
     ...          [ 37.782842,-122.443858 ] ]
+    >>> w = heatmap(data)
+    >>> display(w)
+
+    Or, for a weighted heatmap,
+    >>> data = [ [ 37.782551,-122.445368, 2.0 ],
+    ...          [ 37.782745,-122.444586, 5.2 ],
+    ...          [ 37.782842,-122.443858, 0.2 ] ]
     >>> w = heatmap(data)
     >>> display(w)
     """

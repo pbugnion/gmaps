@@ -10,6 +10,8 @@ var HeatmapView = IPython.DOMWidgetView.extend({
 
     render : function() {
 
+        this.is_weighted = this.model.get("_is_weighted") ;
+
         this.$el.css("height", this.model.get("height")) ;
         this.$el.css("width", this.model.get("width")) ;
 
@@ -89,8 +91,14 @@ var HeatmapView = IPython.DOMWidgetView.extend({
          * LatLng objects.
          */
         var lat_lng_array = new Array() ;
-        for (var i=0; i<data.length; i++) {
-            lat_lng_array[i] = this._array2LatLng(data[i]) ;
+        if(this.is_weighted) {
+            for (var i=0; i<data.length; i++) {
+                lat_lng_array[i] = this._array2WeightedLatLng(data[i]) ;
+            }
+        } else {
+            for (var i=0; i<data.length; i++) {
+                lat_lng_array[i] = this._array2LatLng(data[i]) ;
+            }
         }
         var out = new google.maps.MVCArray(lat_lng_array) ;
         return out ;
@@ -102,6 +110,10 @@ var HeatmapView = IPython.DOMWidgetView.extend({
          * Transform an array to a pair of latitude, longitude objects.
          */
         return new google.maps.LatLng(l[0], l[1]) ;
+    },
+
+    _array2WeightedLatLng : function(l) {
+        return { location : this._array2LatLng(l), weight : l[2] } ;
     },
 
     _latLng2Array : function(latlng) {
