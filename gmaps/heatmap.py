@@ -17,10 +17,11 @@ class HeatmapWidget(widgets.DOMWidget):
 
     def __init__(self, data, height, width, max_intensity, point_radius):
         self._check_data_weighted(data)
+        if self._is_weighted:
+            self._check_weights_positive(data)
         self._data = data
         self.height = height
         self.width = width
-        self._is_weighted = True
         if max_intensity is not None:
             self.max_intensity = float(max_intensity)
         if point_radius is not None:
@@ -31,14 +32,20 @@ class HeatmapWidget(widgets.DOMWidget):
     def _check_data_weighted(self, data):
         unique_lengths = set(map(len, data))
         if len(unique_lengths) != 1:
-            raise ValueError("1")
+            raise ValueError("Each item in 'data' list must be the same length, either 2 or 3.")
         length = unique_lengths.pop()
         if length == 2:
             self._is_weighted = False
         elif length == 3:
             self._is_weighted = True
         else:
-            raise ValueError("2")
+            raise ValueError("Items in 'data' list must be of length 2 "
+                    "(for [ latitude, longitude ]) or 3 (for [ latitude, longitude, weight ])")
+
+    def _check_weights_positive(self, data):
+        for (latitude, longitude, weight) in data:
+            if weight <= 0.0:
+                raise ValueError("Google Maps only support positive weights.")
 
     def _calc_bounds(self):
         min_latitude = min(data[0] for data in self._data)
