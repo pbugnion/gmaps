@@ -1,3 +1,12 @@
+
+Version 0.1.4
+=============
+
+Another bugfix release.
+
+ * Fixed a bug that arose when using heatmap with default values of some of the
+   parameters.
+
 Version 0.1.3
 =============
 
