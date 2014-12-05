@@ -1,8 +1,8 @@
 
-import IPython
 from IPython.html import widgets
-from IPython.utils.traitlets import List, Unicode, CFloat, Instance
+from IPython.utils.traitlets import List, Unicode
 
+import ipy23_compat
 import gmaps_traitlets
 
 class HeatmapWidget(widgets.DOMWidget):
@@ -11,22 +11,17 @@ class HeatmapWidget(widgets.DOMWidget):
     _data = List(sync=True)
     height = gmaps_traitlets.CSSDimension(sync=True)
     width = gmaps_traitlets.CSSDimension(sync=True)
-
-    # FIXME refactor this mess into something nicer.
-    # maybe an ipy23_compat module?
-    if IPython.version_info[0] == 2:
-        max_intensity = Instance(float, sync=True, allow_none=True)
-        point_radius = Instance(float, sync=True, allow_none=True)
-    else:
-        max_intensity = CFloat(sync=True, allow_none=True)
-        point_radius = CFloat(sync=True, allow_none=True)
+    max_intensity = ipy23_compat.FloatOrNone(sync=True)
+    point_radius = ipy23_compat.FloatOrNone(sync=True)
 
     def __init__(self, data, height, width, max_intensity, point_radius):
         self._data = data
         self.height = height
         self.width = width
-        self.max_intensity = float(max_intensity)
-        self.point_radius = float(point_radius)
+        if max_intensity is not None:
+            self.max_intensity = float(max_intensity)
+        if point_radius is not None:
+            self.point_radius = float(point_radius)
         self._bounds = self._calc_bounds()
         super(widgets.DOMWidget, self).__init__()
 
