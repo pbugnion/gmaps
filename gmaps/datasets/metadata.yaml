@@ -1,0 +1,4 @@
+
+taxi_rides :
+  data_file : "taxi_data.csv"
+  description : "Taxi pickup location data in San Francisco"
