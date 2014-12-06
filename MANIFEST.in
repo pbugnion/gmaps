@@ -4,4 +4,5 @@ include *rst *txt *py
 recursive-include examples *ipynb
 recursive-include gmaps *py *js
 recursive-include docs *rst
+recursive-include gmaps/datasets/data *csv
 recursive-exclude examples/*/.ipynb-checkpoints *

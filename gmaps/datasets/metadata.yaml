@@ -1,0 +1,8 @@
+
+taxi_rides :
+  data_file : "taxi_data.csv"
+  description : "Taxi pickup location data in San Francisco"
+
+earthquakes :
+  data_file : "earthquakes.csv"
+  description : "All recorded earthquakes in 30 days starting on 12th November 2014"

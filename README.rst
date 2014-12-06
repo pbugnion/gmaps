@@ -6,19 +6,16 @@ gmaps
 
 gmaps is a plugin for including interactive Google maps in the IPython Notebook.
 
-Let's plot a heatmap (data taken from the `Google maps API documentation <https://developers.google.com/maps/documentation/javascript/heatmaplayer>`_):
+Let's plot a heatmap of taxi pickups in San Francisco:
 
 ::
 
     In [1]: import gmaps
 
-    In [2]: data = [ [ 37.782, -122.447 ], # [ latitude, longitude ] pairs
-                     [ 37.782, -122.445 ],
-                     [ 37.782, -122.443 ],
-                     [ 37.782, -122.441 ],
-                     [ 37.782, -122.439 ],
-                     [ 37.782, -122.437 ] ]
-            map = gmaps.heatmap(data)
+    # load a Numpy array of (latitude, longitude) pairs
+    In [2]: data = gmaps.dataset.load_dataset('taxi_rides') 
+            
+    In [3]: map = gmaps.heatmap(data)
             gmaps.display(map)
 
 Installation
