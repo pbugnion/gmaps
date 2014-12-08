@@ -36,7 +36,7 @@ The easiest way to install `gmaps` is with pip::
 
     $ pip install gmaps
 
-or, if you don't have pip,
+or, if you don't have pip,::
 
     $ easy_install gmaps
 
