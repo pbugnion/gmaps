@@ -21,7 +21,7 @@ Let's plot a heatmap of taxi pickups in San Francisco:
     In [1]: import gmaps
 
     # load a Numpy array of (latitude, longitude) pairs
-    In [2]: data = gmaps.dataset.load_dataset('taxi_rides') 
+    In [2]: data = gmaps.datasets.load_dataset('taxi_rides') 
             
     In [3]: map = gmaps.heatmap(data)
             gmaps.display(map)
