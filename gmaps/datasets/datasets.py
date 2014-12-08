@@ -22,22 +22,21 @@ DATA_DIR = "data"
 METADATA_FNAME = "metadata.yaml"
 
 def _load_metadata():
-    with pkg_resources.resource_stream(__name__, METADATA_FNAME) as f: 
-        datasets = yaml.load(f)
+    f = pkg_resources.resource_stream(__name__, METADATA_FNAME)
+    datasets = yaml.load(f)
+    f.close()
     return datasets
 
 def list_datasets():
     metadata = _load_metadata()
     return metadata.keys()
 
-    metadata = _load_metadata()
-    return metadata[dataset_name]
-
 def load_dataset(dataset_name):
     metadata = _load_metadata()
     fname = metadata[dataset_name]["data_file"]
     fpath = os.path.join(DATA_DIR, fname)
-    with pkg_resources.resource_stream(__name__, fpath) as f:
-        data = np.genfromtxt(f, delimiter=",", names=True)
+    f = pkg_resources.resource_stream(__name__, fpath)
+    data = np.genfromtxt(f, delimiter=",", names=True)
+    f.close()
     return data
 
