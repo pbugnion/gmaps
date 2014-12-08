@@ -1,3 +1,10 @@
+Version 0.1.5
+=============
+Weighted heatmaps and datasets
+
+ * Added possibility of including weights in heatmap data.
+ * Added a datasets module to allow new users to play around with data
+   without having to find their own dataset.
 
 Version 0.1.4
 =============
