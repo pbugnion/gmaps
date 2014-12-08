@@ -123,6 +123,6 @@ handle IPython version 2.3 and 3: the code in ipynb_output_filter.py should be::
         for cell in json_in["cells"]:
             strip_output_from_cell(cell)
 
-    json.dump(json_in, sys.stdout)
+    json.dump(json_in, sys.stdout, sort_keys=True)
 
     
