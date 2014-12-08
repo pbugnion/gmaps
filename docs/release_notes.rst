@@ -1,5 +1,11 @@
+Version 0.1.6
+=============
+
+Fixed typo in setup script.
+
 Version 0.1.5
 =============
+
 Weighted heatmaps and datasets
 
  * Added possibility of including weights in heatmap data.
