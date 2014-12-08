@@ -2,7 +2,7 @@
 Contributing
 ============
 
-gmaps is a very new project, so there is a lot of scope for developpers to make
+gmaps is a very new project, so there is a lot of scope for developers to make
 a strong impact by contributing code, documentation and expertise. All
 contributions are welcome.
 
@@ -11,7 +11,7 @@ How to contribute
 
 The `documentation <http://docs.scipy.org/doc/numpy/dev/gitwash/index.html>`_ for Numpy gives a detailed description of how to contribute. Most of this information applies to development for ``gmaps``.
 
-Developping with git
+Developing with git
 ^^^^^^^^^^^^^^^^^^^^
 
 You will need the `Git version control system <http://git-scm.com>`_ and an account on `Github <https://github.com>`_ to
@@ -76,6 +76,12 @@ upstream::
     $ git rebase upstream/master
 
 
+Testing
+^^^^^^^
+
+We use nose for unit testing. Run ``nose`` in the root directory of the project to run all the tests,
+or in a specific directory to just run the tests in that directory.
+
 Guidelines
 ----------
 
@@ -83,7 +89,7 @@ Workflow
 ^^^^^^^^
 
 We loosely follow the `git workflow <http://docs.scipy.org/doc/numpy/dev/gitwash/development_workflow.html>`_ used in numpy development.  Features should
-be developped in separate branches and merged into the master branch when
+be developed in separate branches and merged into the master branch when
 complete. Avoid putting new commits directly in your ``master`` branch.
 
 
