@@ -2,7 +2,7 @@
 Contributing
 ============
 
-gmaps is a very new project, so there is a lot of scope for developpers to make
+gmaps is a very new project, so there is a lot of scope for developers to make
 a strong impact by contributing code, documentation and expertise. All
 contributions are welcome.
 
@@ -11,7 +11,7 @@ How to contribute
 
 The `documentation <http://docs.scipy.org/doc/numpy/dev/gitwash/index.html>`_ for Numpy gives a detailed description of how to contribute. Most of this information applies to development for ``gmaps``.
 
-Developping with git
+Developing with git
 ^^^^^^^^^^^^^^^^^^^^
 
 You will need the `Git version control system <http://git-scm.com>`_ and an account on `Github <https://github.com>`_ to
@@ -76,6 +76,12 @@ upstream::
     $ git rebase upstream/master
 
 
+Testing
+^^^^^^^
+
+We use nose for unit testing. Run ``nose`` in the root directory of the project to run all the tests,
+or in a specific directory to just run the tests in that directory.
+
 Guidelines
 ----------
 
@@ -83,7 +89,7 @@ Workflow
 ^^^^^^^^
 
 We loosely follow the `git workflow <http://docs.scipy.org/doc/numpy/dev/gitwash/development_workflow.html>`_ used in numpy development.  Features should
-be developped in separate branches and merged into the master branch when
+be developed in separate branches and merged into the master branch when
 complete. Avoid putting new commits directly in your ``master`` branch.
 
 
@@ -98,8 +104,10 @@ Ipython notebooks in version control
 This package uses IPython notebooks as examples. If you amend an existing
 notebook, or add a new one, make sure that you only commit the input cells.
 This can be done by following the recipe given in `this Stack Overflow answer
-<http://stackoverflow.com/a/20844506>` with the following modification to
-handle IPython version 2.3 and 3: the code in ipynb_output_filter.py should be::
+<http://stackoverflow.com/a/20844506>`_: 
+
+1. Put the following script in a directory on your system path, for instance ``~/bin``,
+   saving it as ``ipynb_output_filter.py``::
 
     #!/usr/bin/env python
 
@@ -123,6 +131,20 @@ handle IPython version 2.3 and 3: the code in ipynb_output_filter.py should be::
         for cell in json_in["cells"]:
             strip_output_from_cell(cell)
 
-    json.dump(json_in, sys.stdout)
+    json.dump(json_in, sys.stdout, sort_keys=True)
 
+2. Make it executable using ``chmod +x ipynb_output_filter.py``. 
+3. Make sure the directory containing ``ipynb_output_filter.py`` is in the system
+   path. If not, add the following line to your ``.bashrc`` profile::
+
+    export PATH=$HOME/bin:$PATH
+
+4. Create the file ``~/.gitattributes`` with the following content::
     
+    *.ipynb    filter=dropoutput_ipynb
+
+5. Run the following commands::
+
+    git config --global core.attributesfile ~/.gitattributes
+    git config --global filter.dropoutput_ipynb.clean ~/bin/ipynb_output_filter.py
+    git config --global filter.dropoutput_ipynb.smudge cat
