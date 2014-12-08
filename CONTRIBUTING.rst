@@ -104,8 +104,10 @@ Ipython notebooks in version control
 This package uses IPython notebooks as examples. If you amend an existing
 notebook, or add a new one, make sure that you only commit the input cells.
 This can be done by following the recipe given in `this Stack Overflow answer
-<http://stackoverflow.com/a/20844506>` with the following modification to
-handle IPython version 2.3 and 3: the code in ipynb_output_filter.py should be::
+<http://stackoverflow.com/a/20844506>`_: 
+
+1. Put the following script in a directory on your system path, for instance ``~/bin``,
+   saving it as ``ipynb_output_filter.py``::
 
     #!/usr/bin/env python
 
@@ -131,4 +133,18 @@ handle IPython version 2.3 and 3: the code in ipynb_output_filter.py should be::
 
     json.dump(json_in, sys.stdout, sort_keys=True)
 
+2. Make it executable using ``chmod +x ipynb_output_filter.py``. 
+3. Make sure the directory containing ``ipynb_output_filter.py`` is in the system
+   path. If not, add the following line to your ``.bashrc`` profile::
+
+    export PATH=$HOME/bin:$PATH
+
+4. Create the file ``~/.gitattributes`` with the following content::
     
+    *.ipynb    filter=dropoutput_ipynb
+
+5. Run the following commands::
+
+    git config --global core.attributesfile ~/.gitattributes
+    git config --global filter.dropoutput_ipynb.clean ~/bin/ipynb_output_filter.py
+    git config --global filter.dropoutput_ipynb.smudge cat
