@@ -1,6 +1,7 @@
 
 from loader import init
 from heatmap import heatmap
+from plainmap import plainmap
 
 import datasets
 
