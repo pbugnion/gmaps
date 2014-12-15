@@ -18,5 +18,11 @@ class PlainmapWidget(widgets.DOMWidget):
 
 
 def plainmap(height="400px", width="700px"):
+	"""
+	Draw a simple map.
+
+	This is currently experimental and should be used with 
+	caution.
+	"""
 	w = PlainmapWidget(height, width)
 	return w
