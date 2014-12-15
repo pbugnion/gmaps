@@ -6,6 +6,31 @@ define(["widgets/js/manager", "jquery"], function(WidgetManager,$){
 window.initialize = function() {} ;
 $.getScript("https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=visualization&callback=initialize") ;
         
+var PlainmapView = IPython.DOMWidgetView.extend({
+
+    render : function() {
+        console.log("In render function") ;
+        this.$el.css("height", this.model.get("height")) ;
+        this.$el.css("width", this.model.get("width")) ;
+
+        var that = this ;
+        function gmap_init() {
+            console.log("In init function") ;
+
+            center = new google.maps.LatLng(10.0, 20.0) ;
+            console.log(center) ;
+            that.map = new google.maps.Map(
+                that.$el[0], 
+                { center : center, zoom : 8 }) ;
+            console.log(that.map) ;
+
+        }
+
+        setTimeout(gmap_init, 1) ;
+    }
+
+}) ;
+
 var HeatmapView = IPython.DOMWidgetView.extend({
 
     render : function() {
@@ -131,7 +156,8 @@ if (IPython.version.split(".")[0] == "2") {
 }
 
 manager.register_widget_view("HeatmapView", HeatmapView) ;
+manager.register_widget_view("PlainmapView", PlainmapView) ;
 
-return { "HeatmapView" : HeatmapView } ;
+return { "HeatmapView" : HeatmapView, "PlainmapView" : PlainmapView } ;
 
 });

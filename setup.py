@@ -125,7 +125,7 @@ if __name__ == "__main__":
           author="Pascal Bugnion",
           author_email="pascal@bugnion.org",
           data_files=[(os.path.join(ipython_dir, "nbextensions/gmaps_js"),
-              ["gmaps/js/heatmap_view.js"])],
+              ["gmaps/js/gmaps_views.js"])],
           classifiers=classifiers,
           packages=["gmaps", "gmaps.datasets"],
           package_dir={"gmaps.datasets" : "gmaps/datasets" },
