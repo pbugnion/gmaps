@@ -1,5 +1,5 @@
 
-import IPython.utils.traitlets as traitlets
+import traitlets as traitlets
 
 import utils
 
