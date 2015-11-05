@@ -1,6 +1,6 @@
 
-from IPython.html import widgets
-from IPython.utils.traitlets import List, Unicode, Bool
+from ipywidgets import widgets
+from traitlets import List, Unicode, Bool
 
 import ipy23_compat
 import gmaps_traitlets
