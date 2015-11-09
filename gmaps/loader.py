@@ -1,5 +1,6 @@
 
 from IPython.display import Javascript, display
+from ipywidgets import widget
 
 __has_initialized__ = False
 
@@ -14,7 +15,10 @@ def init():
     global __has_initialized__
     if not __has_initialized__:
         display(Javascript("""
-            IPython.load_extensions('gmaps_js/gmaps_views')
+            require(['base/js/utils'],
+            function(utils) {
+                utils.load_extensions('gmaps_js/gmaps_views');
+            });
             """))
         __has_initialized__ = True
 

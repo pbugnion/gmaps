@@ -116,7 +116,9 @@ if __name__ == "__main__":
 
     write_readme()
 
-    ipython_dir = IPython.get_ipython().ipython_dir
+    from jupyter_core.paths import jupyter_data_dir
+    ipython_dir = jupyter_data_dir()
+
 
     setup(name="gmaps",
           version=version,

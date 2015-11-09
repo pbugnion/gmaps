@@ -1,6 +1,6 @@
 
-from IPython.html import widgets
-from IPython.utils.traitlets import List, Unicode
+from ipywidgets import widgets
+from traitlets import List, Unicode
 
 import gmaps_traitlets
 

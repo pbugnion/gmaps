@@ -1,6 +1,6 @@
 
 import IPython
-from IPython.utils.traitlets import Instance, CFloat
+from traitlets import Instance, CFloat
 
 IPy23 = (IPython.version_info[0] == 2) # true if IPython version is 2.3.
 
