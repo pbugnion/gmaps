@@ -28,11 +28,14 @@ The easiest way to install `gmaps` is with pip::
 
     $ pip install gmaps
 
-or, if you don't have pip,::
+or, if you don't have pip::
 
     $ easy_install gmaps
 
 You may need to run these commands as root if you are using the system wide Python installation.
+
+Note that this will install a version of `gmaps` compatible with IPython 2 and
+3. For IPython 4 compatibility, you will have to install the development version.
 
 Development version
 ^^^^^^^^^^^^^^^^^^^
@@ -40,6 +43,12 @@ Development version
 The development version can be installed by cloning the git repository by running::
 
     $ git clone https://github.com/pbugnion/gmaps.git
+
+The `master` branch is currently compatible with IPython 4 only. If you are
+planning on using `gmaps` with IPython 2 or 3, check out the `ipy23` branch
+with::
+
+    $ git checkout ipy23
 
 Change to the project's root directory and run::
 
