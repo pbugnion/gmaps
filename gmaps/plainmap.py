@@ -2,7 +2,7 @@
 from ipywidgets import widgets
 from traitlets import List, Unicode
 
-import gmaps_traitlets
+import gmaps.gmaps_traitlets as gmaps_traitlets
 
 class PlainmapWidget(widgets.DOMWidget):
 	_view_name = Unicode("PlainmapView", sync=True)

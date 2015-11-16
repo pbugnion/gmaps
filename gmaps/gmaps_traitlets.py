@@ -1,7 +1,7 @@
 
 import traitlets as traitlets
 
-import utils
+import gmaps.utils as utils
 
 class CSSDimension(traitlets.TraitType):
 

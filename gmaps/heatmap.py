@@ -2,8 +2,8 @@
 from ipywidgets import widgets
 from traitlets import List, Unicode, Bool
 
-import ipy23_compat
-import gmaps_traitlets
+import gmaps.ipy23_compat as ipy23_compat
+import gmaps.gmaps_traitlets as gmaps_traitlets
 
 class HeatmapWidget(widgets.DOMWidget):
     _view_name = Unicode('HeatmapView', sync=True)
