@@ -13,17 +13,19 @@ Commands
     load_dataset(dataset_name) : load dataset. Returns a numpy array.
 """
 
-import yaml
-import pkg_resources
-import numpy as np
+import json
 import os
 
+import pkg_resources
+import numpy as np
+
 DATA_DIR = "data"
-METADATA_FNAME = "metadata.yaml"
+METADATA_FNAME = "metadata.json"
 
 def _load_metadata():
     f = pkg_resources.resource_stream(__name__, METADATA_FNAME)
-    datasets = yaml.load(f)
+    print f
+    datasets = json.load(f)
     f.close()
     return datasets
 
