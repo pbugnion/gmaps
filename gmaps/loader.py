@@ -1,6 +1,5 @@
 
 from IPython.display import Javascript, display
-from ipy_compat import widgets
 
 __has_initialized__ = False
 

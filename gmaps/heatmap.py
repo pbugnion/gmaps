@@ -1,7 +1,7 @@
 
 import ipy_compat
 
-from ipy_compat import widgets
+from _ipywidgets import widgets
 from _traitlets import Unicode, List, Bool
 
 import gmaps_traitlets
@@ -12,8 +12,8 @@ class HeatmapWidget(widgets.DOMWidget):
     _data = List(sync=True)
     height = gmaps_traitlets.CSSDimension(sync=True)
     width = gmaps_traitlets.CSSDimension(sync=True)
-    max_intensity = ipy_compat.FloatOrNone(sync=True)
-    point_radius = ipy_compat.FloatOrNone(sync=True)
+    max_intensity = gmaps_traitlets.FloatOrNone(sync=True)
+    point_radius = gmaps_traitlets.FloatOrNone(sync=True)
     _is_weighted = Bool(sync=True)
 
     def __init__(self, data, height, width, max_intensity, point_radius):
