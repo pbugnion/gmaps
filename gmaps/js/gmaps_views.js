@@ -1,5 +1,6 @@
 
-define(["widgets/js/widget", "widgets/js/manager", "jquery"], function(widget, WidgetManager, $){
+define(["widgets/js/widget", "widgets/js/manager", "jquery"],
+function(widget, WidgetManager, $) {
 
 // This should get refactored out into the main module when we add new
 // map widget types.
