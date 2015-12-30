@@ -1,18 +1,19 @@
 
-from ipywidgets import widgets
-from traitlets import List, Unicode, Bool
+import ipy_compat
 
-import gmaps.ipy23_compat as ipy23_compat
-import gmaps.gmaps_traitlets as gmaps_traitlets
+from ipy_compat import widgets
+from _traitlets import Unicode, List, Bool
+
+import gmaps_traitlets
 
 class HeatmapWidget(widgets.DOMWidget):
     _view_name = Unicode('HeatmapView', sync=True)
-    _bounds = List(sync=True) 
+    _bounds = List(sync=True)
     _data = List(sync=True)
     height = gmaps_traitlets.CSSDimension(sync=True)
     width = gmaps_traitlets.CSSDimension(sync=True)
-    max_intensity = ipy23_compat.FloatOrNone(sync=True)
-    point_radius = ipy23_compat.FloatOrNone(sync=True)
+    max_intensity = ipy_compat.FloatOrNone(sync=True)
+    point_radius = ipy_compat.FloatOrNone(sync=True)
     _is_weighted = Bool(sync=True)
 
     def __init__(self, data, height, width, max_intensity, point_radius):
@@ -67,11 +68,11 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
     Arguments
     ---------
     data: list (or Numpy Array) of pairs or triples of floats.
-        This is a list of coordinate, possibly associated with a weight. 
-        Each element in the list should be a pair 
+        This is a list of coordinate, possibly associated with a weight.
+        Each element in the list should be a pair
         (either a list or a tuple) of floats, or a triple
-        of floats. The first float should indicate the 
-        coordinate's longitude and the second should indicate the 
+        of floats. The first float should indicate the
+        coordinate's longitude and the second should indicate the
         coordinate's latitude. If a third float is provided,
         it is interpreted as a weight for that data point.
         Google maps only accepts positive weights.
@@ -80,19 +81,19 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
     ------------------
     height: int or string
         Set the height of the map. This can be either an int,
-        in which case it is interpreted as a number of pixels, 
+        in which case it is interpreted as a number of pixels,
         or a string with units like "400px" or "20em".
     width: int or string
         Set the width of the map. This can be either an int,
-        in which case it is interpreted as a number of pixels, 
+        in which case it is interpreted as a number of pixels,
         or a string with units like "400px" or "20em".
     max_intensity: float or None, >= 1.
         Set the maximum intensity of the color gradient. This might
         be useful if the data is highly concentrated in a particular
         area: the heatmap gets very hot in that area and hides the
-        detail in the rest of the map. It is also useful if the 
+        detail in the rest of the map. It is also useful if the
         initial map viewport is very zoomed out. This should, typically,
-        be a number between 1 and ~20. By default, the 
+        be a number between 1 and ~20. By default, the
         intensity is not capped.
     point_radius: float or None, >= 1.
         The radius of influence of each data point, in pixels.
@@ -102,7 +103,7 @@ def heatmap(data, height="400px", width="700px", max_intensity=None, point_radiu
     HeatmapWidget
         IPython notebook widget containing the map. Display it
         with a call to 'display'.
-    
+
     Examples
     --------
     >>> data = [ [ 37.782551,-122.445368 ],
