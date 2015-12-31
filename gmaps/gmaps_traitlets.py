@@ -15,10 +15,4 @@ class CSSDimension(traitlets.TraitType):
 
 
 def FloatOrNone(**kwargs):
-    """
-    Emulate Float(allow_none=True) in IPython 2.3.
-    """
-    if ipy_version == 2:
-        return traitlets.Instance(float, allow_none=True, **kwargs)
-    else:
-        return traitlets.CFloat(allow_none=True, default_value=None, **kwargs)
+    return traitlets.CFloat(allow_none=True, default_value=None, **kwargs)
