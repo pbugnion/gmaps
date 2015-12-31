@@ -121,8 +121,6 @@ if __name__ == "__main__":
         ipython_dir = jupyter_data_dir()
     except ImportError:
         import IPython
-        if IPython.version_info[0] == 2:
-            raise ValueError("gmaps works with IPython version 3.0 or later")
         ipython_dir = IPython.get_ipython().ipython_dir
 
 
