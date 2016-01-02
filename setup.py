@@ -28,6 +28,13 @@ Let's plot a heatmap of taxi pickups in San Francisco:
 Installation
 ------------
 
+Dependencies
+^^^^^^^^^^^^
+
+To use `gmaps`, you will need IPython version 3 or higher. If using IPython 4, you need to install `ipywidgets`::
+
+    $ pip install ipywidgets
+
 Using pip or easy_install
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -35,7 +42,7 @@ The easiest way to install `gmaps` is with pip::
 
     $ pip install gmaps
 
-or, if you don't have pip,::
+or, if you don't have pip::
 
     $ easy_install gmaps
 

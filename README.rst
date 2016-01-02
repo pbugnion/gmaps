@@ -1,4 +1,4 @@
-.. Automatically generated from LONG_DESCRIPTION keyword in 
+.. Automatically generated from LONG_DESCRIPTION keyword in
 .. setup.py. Do not edit directly.
 
 gmaps
@@ -13,13 +13,20 @@ Let's plot a heatmap of taxi pickups in San Francisco:
     In [1]: import gmaps
 
     # load a Numpy array of (latitude, longitude) pairs
-    In [2]: data = gmaps.datasets.load_dataset('taxi_rides') 
-            
+    In [2]: data = gmaps.datasets.load_dataset('taxi_rides')
+
     In [3]: map = gmaps.heatmap(data)
             gmaps.display(map)
 
 Installation
 ------------
+
+Dependencies
+^^^^^^^^^^^^
+
+To use `gmaps`, you will need IPython version 3 or higher. If using IPython 4, you need to install `ipywidgets`::
+
+    $ pip install ipywidgets
 
 Using pip or easy_install
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -34,21 +41,12 @@ or, if you don't have pip::
 
 You may need to run these commands as root if you are using the system wide Python installation.
 
-Note that this will install a version of `gmaps` compatible with IPython 2 and
-3. For IPython 4 compatibility, you will have to install the development version.
-
 Development version
 ^^^^^^^^^^^^^^^^^^^
 
 The development version can be installed by cloning the git repository by running::
 
     $ git clone https://github.com/pbugnion/gmaps.git
-
-The `master` branch is currently compatible with IPython 4 only. If you are
-planning on using `gmaps` with IPython 2 or 3, check out the `ipy23` branch
-with::
-
-    $ git checkout ipy23
 
 Change to the project's root directory and run::
 
