@@ -1,168 +1,171 @@
 
-define(["widgets/js/widget", "widgets/js/manager", "jquery"], function(widget, WidgetManager, $){
+define(["widgets/js/widget", "widgets/js/manager", "jquery"],
+function(widget, WidgetManager, $) {
 
-    // This should get refactored out into the main module when we add new
-    // map widget types.
-    window.initialize = function() {} ;
+// This should get refactored out into the main module when we add new
+// map widget types.
+window.initialize = function() {} ;
 
-    $.getScript("https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=visualization&callback=initialize") ;
-    
-    var PlainmapView = widget.DOMWidgetView.extend({
+$.getScript("https://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=visualization&callback=initialize") ;
 
-	render : function() {
-            console.log("In render function") ;
-            this.$el.css("height", this.model.get("height")) ;
-            this.$el.css("width", this.model.get("width")) ;
+var PlainmapView = widget.DOMWidgetView.extend({
 
-            var that = this ;
-            function gmap_init() {
-		console.log("In init function") ;
+  render : function() {
+    this.$el.css("height", this.model.get("height")) ;
+    this.$el.css("width", this.model.get("width")) ;
 
-		center = new google.maps.LatLng(10.0, 20.0) ;
-		console.log(center) ;
-		that.map = new google.maps.Map(
-                    that.$el[0], 
-                    { center : center, zoom : 8 }) ;
-		console.log(that.map) ;
+    var that = this ;
 
-            }
+    function gmap_init() {
 
-            setTimeout(gmap_init, 1) ;
-	}
+      center = new google.maps.LatLng(10.0, 20.0) ;
+      console.log(center) ;
+      that.map = new google.maps.Map(
+        that.$el[0],
+        { center : center, zoom : 8 }
+      ) ;
 
-    }) ;
+    }
 
-    var HeatmapView = widget.DOMWidgetView.extend({
+    // IPython 2 compatibility hack. Replace with
+    // this.on("displayed", gmap_init) when support for
+    // IPython 2 is dropped.
+    setTimeout(gmap_init, 1) ;
+  }
 
-	render : function() {
+}) ;
 
-            this.is_weighted = this.model.get("_is_weighted") ;
+var HeatmapView = widget.DOMWidgetView.extend({
 
-            this.$el.css("height", this.model.get("height")) ;
-            this.$el.css("width", this.model.get("width")) ;
+  render : function() {
 
-            var that = this ;
-            function gmap_init() {
+    this.is_weighted = this.model.get("_is_weighted") ;
 
-		var data = that._getData() ;
-		var bounds = that._getBounds() ;
+    this.$el.css("height", this.model.get("height")) ;
+    this.$el.css("width", this.model.get("width")) ;
 
-		that.map =  new google.maps.Map(
-                    that.$el[0], { center : bounds.getCenter()  }) ;
+    var that = this ;
+    function gmap_init() {
 
-		that.map.fitBounds(bounds) ;
+      var data = that._getData() ;
+      var bounds = that._getBounds() ;
 
-		that.heatmap = new google.maps.visualization.HeatmapLayer({
-                    data : data,
-                    radius : 10,
-                    maxIntensity : that.model.get('max_intensity'),
-                    radius : that.model.get('point_radius')
-		}) ;
+      that.map =  new google.maps.Map(
+        that.$el[0], { center : bounds.getCenter()  }) ;
 
-		that.heatmap.setMap(that.map) ;
+        that.map.fitBounds(bounds) ;
 
-		google.maps.event.addListener(that.map, 'bounds_changed', function() {
-                    // Update the model when the bounds change in the view.
-                    var bounds = that.map.getBounds() ;
-                    that._setBounds(bounds) ;
-                    that.touch() ;
-		}) ;
-            }
-            
-            // Hack for IPython version 2.0
-            // When support for IPython v2.0 is dropped, this should be replaced by
-            // this.on("displayed", gmap_init) ;
-            // See https://github.com/ipython/ipython/pull/5404 and
-            // http://comments.gmane.org/gmane.comp.python.ipython.devel/12322
-            // for reference.
-            // The problem (I think) is that Google maps tries to read the 
-            // attributes of the div containing it before they have actually been positioned in the DOM.
-            // I think that the divs get created first (as a JQuery promise), then rendered asynchronously 
-            // by the notebook. It's all a little bewildering.
-            setTimeout(gmap_init, 1) ;
-	},
+        that.heatmap = new google.maps.visualization.HeatmapLayer({
+          data : data,
+          radius : 10,
+          maxIntensity : that.model.get('max_intensity'),
+          radius : that.model.get('point_radius')
+        }) ;
 
-	update : function() {
-	} ,
+        that.heatmap.setMap(that.map) ;
 
-	_getBounds : function() {
-            /*
-             * Get the bounds from the model.
-             */
-            var a = this.model.get('_bounds') ;
-            var sw = this._array2LatLng(a[0]) ;
-            var ne = this._array2LatLng(a[1]) ;
-            return new google.maps.LatLngBounds(sw, ne) ;
-	},
+        google.maps.event.addListener(that.map, 'bounds_changed', function() {
+          // Update the model when the bounds change in the view.
+          var bounds = that.map.getBounds() ;
+          that._setBounds(bounds) ;
+          that.touch() ;
+        }) ;
+      }
 
-	_setBounds : function(bounds) {
-            /*
-             * Set bounds in the model.
-             */
-            this.model.set('_bounds', [ 
-                this._latLng2Array(bounds.getSouthWest()),
-                this._latLng2Array(bounds.getNorthEast()) ]) ;
-	},
+      // Hack for IPython version 2.0
+      // When support for IPython v2.0 is dropped, this should be replaced by
+      // this.on("displayed", gmap_init) ;
+      // See https://github.com/ipython/ipython/pull/5404 and
+      // http://comments.gmane.org/gmane.comp.python.ipython.devel/12322
+      // for reference.
+      // The problem (I think) is that Google maps tries to read the
+      // attributes of the div containing it before they have actually been positioned in the DOM.
+      // I think that the divs get created first (as a JQuery promise), then rendered asynchronously
+      // by the notebook. It's all a little bewildering.
+      setTimeout(gmap_init, 1) ;
+    },
 
-	_getData : function() {
-            /*
-             * Get the data from the model.
-             */
-            return this._data2LatLngArray(this.model.get('_data')) ;
-	},
-        
-	_data2LatLngArray : function(data) {
-            /*
-             * Transform an array of pairs of floats into an array of 
-             * LatLng objects.
-             */
-            var lat_lng_array = new Array() ;
-            if(this.is_weighted) {
-		for (var i=0; i<data.length; i++) {
-                    lat_lng_array[i] = this._array2WeightedLatLng(data[i]) ;
-		}
-            } else {
-		for (var i=0; i<data.length; i++) {
-                    lat_lng_array[i] = this._array2LatLng(data[i]) ;
-		}
-            }
-            var out = new google.maps.MVCArray(lat_lng_array) ;
-            return out ;
+    update : function() {
+    } ,
 
-	} ,
+    _getBounds : function() {
+      /*
+      * Get the bounds from the model.
+      */
+      var a = this.model.get('_bounds') ;
+      var sw = this._array2LatLng(a[0]) ;
+      var ne = this._array2LatLng(a[1]) ;
+      return new google.maps.LatLngBounds(sw, ne) ;
+    },
 
-	_array2LatLng : function(l) {
-            /*
-             * Transform an array to a pair of latitude, longitude objects.
-             */
-            return new google.maps.LatLng(l[0], l[1]) ;
-	},
+    _setBounds : function(bounds) {
+      /*
+      * Set bounds in the model.
+      */
+      this.model.set('_bounds', [
+        this._latLng2Array(bounds.getSouthWest()),
+        this._latLng2Array(bounds.getNorthEast()) ]) ;
+      },
 
-	_array2WeightedLatLng : function(l) {
-            return { location : this._array2LatLng(l), weight : l[2] } ;
-	},
+      _getData : function() {
+        /*
+        * Get the data from the model.
+        */
+        return this._data2LatLngArray(this.model.get('_data')) ;
+      },
 
-	_latLng2Array : function(latlng) {
-            return [ latlng.lat(), latlng.lng() ] ;
-	}
+      _data2LatLngArray : function(data) {
+        /*
+        * Transform an array of pairs of floats into an array of
+        * LatLng objects.
+        */
+        var lat_lng_array = new Array() ;
+        if(this.is_weighted) {
+          for (var i=0; i<data.length; i++) {
+            lat_lng_array[i] = this._array2WeightedLatLng(data[i]) ;
+          }
+        } else {
+          for (var i=0; i<data.length; i++) {
+            lat_lng_array[i] = this._array2LatLng(data[i]) ;
+          }
+        }
+        var out = new google.maps.MVCArray(lat_lng_array) ;
+        return out ;
+
+      } ,
+
+      _array2LatLng : function(l) {
+        /*
+        * Transform an array to a pair of latitude, longitude objects.
+        */
+        return new google.maps.LatLng(l[0], l[1]) ;
+      },
+
+      _array2WeightedLatLng : function(l) {
+        return { location : this._array2LatLng(l), weight : l[2] } ;
+      },
+
+      _latLng2Array : function(latlng) {
+        return [ latlng.lat(), latlng.lng() ] ;
+      }
 
     }) ;
 
     // Register with the widget manager. This requires a 2.3.x
     // compatibility hack.
     if (IPython.version.split(".")[0] == "2") {
-	var manager = WidgetManager ;
+      var manager = WidgetManager ;
     } else {
-	var manager = WidgetManager.WidgetManager ;
+      var manager = WidgetManager.WidgetManager ;
     }
 
     manager.register_widget_view("HeatmapView", HeatmapView) ;
     manager.register_widget_view("PlainmapView", PlainmapView) ;
 
     return { "HeatmapView" : HeatmapView, "PlainmapView" : PlainmapView,
-	     load_ipython_extension: function(){
-		 console.log("I have been loaded ! -- my nb extension");
-	     }
-	   } ;
+    load_ipython_extension: function(){
+      console.log("I have been loaded ! -- my nb extension");
+    }
+  } ;
 
 });

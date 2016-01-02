@@ -1,6 +1,6 @@
 
-from ipywidgets import widgets
-from traitlets import List, Unicode
+from ._ipywidgets import widgets
+from ._traitlets import List, Unicode
 
 import gmaps.gmaps_traitlets as gmaps_traitlets
 
@@ -21,7 +21,7 @@ def plainmap(height="400px", width="700px"):
 	"""
 	Draw a simple map.
 
-	This is currently experimental and should be used with 
+	This is currently experimental and should be used with
 	caution.
 	"""
 	w = PlainmapWidget(height, width)

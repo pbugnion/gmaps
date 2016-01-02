@@ -1,16 +1,15 @@
 
 from IPython.display import Javascript, display
-from ipywidgets import widget
 
 __has_initialized__ = False
 
 def init():
     # FIXME
-    # Loads the JS extensions. This is still a bit of a 
-    # hack: calls to gmaps methods cannot occur in the 
-    # same cell as the import statement. 
+    # Loads the JS extensions. This is still a bit of a
+    # hack: calls to gmaps methods cannot occur in the
+    # same cell as the import statement.
     #
-    # Potential alternatives would be to re-factor the 
+    # Potential alternatives would be to re-factor the
     # init statement into a line magic.
     global __has_initialized__
     if not __has_initialized__:
@@ -21,4 +20,3 @@ def init():
             });
             """))
         __has_initialized__ = True
-
