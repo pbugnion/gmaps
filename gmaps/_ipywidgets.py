@@ -8,7 +8,7 @@
 #
 # See, eg. 'http://jupyter.readthedocs.org/en/latest/migrating.html#imports'.
 
-from ipy_compat import ipy_version
+from .ipy_compat import ipy_version
 
 if ipy_version == 3:
     from IPython.html import widgets

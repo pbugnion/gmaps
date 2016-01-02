@@ -1,10 +1,10 @@
 
-import ipy_compat
+import gmaps.ipy_compat as ipy_compat
 
-from _ipywidgets import widgets
-from _traitlets import Unicode, List, Bool
+from ._ipywidgets import widgets
+from ._traitlets import Unicode, List, Bool
 
-import gmaps_traitlets
+import gmaps.gmaps_traitlets as gmaps_traitlets
 
 class HeatmapWidget(widgets.DOMWidget):
     _view_name = Unicode('HeatmapView', sync=True)

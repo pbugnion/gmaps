@@ -2,7 +2,7 @@
 import gmaps._traitlets as traitlets
 import gmaps.utils as utils
 
-from ipy_compat import ipy_version
+from .ipy_compat import ipy_version
 
 class CSSDimension(traitlets.TraitType):
 

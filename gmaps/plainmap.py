@@ -1,6 +1,6 @@
 
-from _ipywidgets import widgets
-from _traitlets import List, Unicode
+from ._ipywidgets import widgets
+from ._traitlets import List, Unicode
 
 import gmaps.gmaps_traitlets as gmaps_traitlets
 

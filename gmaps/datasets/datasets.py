@@ -24,7 +24,6 @@ METADATA_FNAME = "metadata.json"
 
 def _load_metadata():
     f = pkg_resources.resource_stream(__name__, METADATA_FNAME)
-    print f
     datasets = json.load(f)
     f.close()
     return datasets
@@ -41,4 +40,3 @@ def load_dataset(dataset_name):
     data = np.genfromtxt(f, delimiter=",", names=True)
     f.close()
     return data
-
