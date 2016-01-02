@@ -1,3 +1,11 @@
+Version 0.2
+===========
+
+ * IPython 4.0 compatibility
+ * Python 3 compatibility
+
+ * Drop IPython 2.x compatibility
+
 Version 0.1.6
 =============
 
