@@ -1,8 +1,13 @@
-Version 0.2.1
+Version 0.2.2
 =============
 
  * Remove dependency on Numpy
  * Fix broken datasets example (issue #52)
+
+Version 0.2.1
+=============
+
+test release -- no changes.
 
 Version 0.2
 ===========
