@@ -15,9 +15,9 @@ Commands
 
 import json
 import os
+import csv
 
 import pkg_resources
-import numpy as np
 
 DATA_DIR = "data"
 METADATA_FNAME = "metadata.json"
@@ -28,6 +28,12 @@ def _load_metadata():
     f.close()
     return datasets
 
+def _read_rows(f):
+    f.readline() # skip header line
+    reader = csv.reader(f)
+    rows = [ map(float, row) for row in reader ]
+    return rows
+
 def list_datasets():
     metadata = _load_metadata()
     return metadata.keys()
@@ -37,6 +43,6 @@ def load_dataset(dataset_name):
     fname = metadata[dataset_name]["data_file"]
     fpath = os.path.join(DATA_DIR, fname)
     f = pkg_resources.resource_stream(__name__, fpath)
-    data = np.genfromtxt(f, delimiter=",", names=True)
+    data = _read_rows(f)
     f.close()
     return data

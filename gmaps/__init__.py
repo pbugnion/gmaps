@@ -7,6 +7,6 @@ import gmaps.datasets as datasets
 
 from IPython.display import display
 
-__version__ = "0.2.0"
+__version__ = "0.2.1-dev"
 
 init()
