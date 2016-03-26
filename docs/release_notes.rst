@@ -1,3 +1,9 @@
+Version 0.2.1
+=============
+
+ * Remove dependency on Numpy
+ * Fix broken datasets example (issue #52)
+
 Version 0.2
 ===========
 
@@ -48,7 +54,7 @@ Version 0.1.1
 =============
 
 Bugfix release.
- 
+
  * Ensures the notebook extensions are actually included in the source
    distribution.
 
