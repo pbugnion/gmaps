@@ -142,7 +142,7 @@ if __name__ == "__main__":
           classifiers=classifiers,
           packages=["gmaps", "gmaps.datasets"],
           package_dir={"gmaps.datasets" : "gmaps/datasets" },
-          package_data={"gmaps.datasets": ["metadata.yaml","data/*.csv"]},
+          package_data={"gmaps.datasets": ["metadata.json","data/*.csv"]},
           url=r"https://github.com/pbugnion/gmaps",
           license="BSD License",
           platforms=["Linux", "Mac OS", "Windows"]
