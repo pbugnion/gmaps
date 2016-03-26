@@ -18,6 +18,8 @@ Let's plot a heatmap of taxi pickups in San Francisco:
     In [3]: map = gmaps.heatmap(data)
             gmaps.display(map)
 
+.. image:: docs/example.png
+
 Installation
 ------------
 
