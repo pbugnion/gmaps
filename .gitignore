@@ -5,3 +5,4 @@
 
 *egg-info
 *.ipynb_checkpoints*
+js/node_modules/*
