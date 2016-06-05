@@ -2,7 +2,9 @@
 *pyc
 *swp
 *~
+gmaps/static/*
 
 *egg-info
 *.ipynb_checkpoints*
 js/node_modules/*
+js/dist/*
