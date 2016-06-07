@@ -4,6 +4,60 @@ var _ = require('underscore');
 var GoogleMapsLoader = require('google-maps');
 GoogleMapsLoader.LIBRARIES = ["visualization"] ;
 
+var GMapsLayerView = widgets.WidgetView.extend({
+    initialize: function(parameters) {
+        console.log("in layer initialization");
+        GMapsLayerView.__super__.initialize.apply(this, arguments);
+        this.map_view = this.options.map_view ;
+    }
+});
+
+var HeatmapLayerView = GMapsLayerView.extend({
+    render: function() {
+        console.log("hello heatmap render") ;
+        var that = this ;
+        GoogleMapsLoader.load(function(google) {
+            var data = that.model.get("data");
+            var data_as_google = new google.maps.MVCArray(
+                _.map(data, function(point) {
+                    return new google.maps.LatLng(point[0], point[1]);
+                })
+            );
+            that.heatmap = new google.maps.visualization.HeatmapLayer({
+                data: data_as_google,
+                radius: 10
+            }) ;
+        });
+    },
+
+    add_to_map_view: function(map_view) {
+        console.log("In add to map view");
+        this.heatmap.setMap(map_view.map) ;
+        console.log("added!");
+    }
+});
+
+var GMapsLayerModel = widgets.WidgetModel.extend({
+    defaults: _.extend({}, widgets.WidgetModel.prototype.defaults, {
+        _view_name : 'GMapsLayerView',
+        _model_name : 'GMapsLayerModel',
+        _view_module : 'jupyter-gmaps',
+        _model_module : 'jupyter-gmaps',
+        bottom : false,
+        options : []
+    })
+});
+
+
+var HeatmapLayerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "HeatmapLayerView",
+        _model_name: "HeatmapLayerModel"
+    })
+})
+
+
+
 var PlainmapView = widgets.DOMWidgetView.extend({
     render: function() {
         this.el.style["width"] = this.model.get("width");
@@ -14,6 +68,12 @@ var PlainmapView = widgets.DOMWidgetView.extend({
 
         var initial_center = this.model.get("center");
         this.model.on("change:center", this.update_center, this);
+
+        this.layer_views = new widgets.ViewList(this.add_layer_model, null, this);
+        // this.listenTo(this.model, "change:layers", function(model, value) {
+        //     console.log("layer change");
+        //     this.layer_views.update(value);
+        // }, this) ;
 
         var that = this ;
         this.on("displayed", function() {
@@ -32,13 +92,20 @@ var PlainmapView = widgets.DOMWidgetView.extend({
                     that.touch();
                 });
 
+                console.log("adding layers");
+                console.log(that.model.get("layers"));
+                console.log("-----");
+                //that.layer_views.update([new HeatmapLayerModel()]) ;
+                that.layer_views.update(that.model.get("layers"));
+                //that.add_layer_model(new HeatmapLayerModel());
+
                 // hack to force the map to redraw
                 // without this, it draws fine the first time a map object
                 // is loaded in a cell, but not on subsequent times, until
                 // the window is manually moved.
                 window.setTimeout(function() {
                     google.maps.event.trigger(that.map, 'resize') ;
-                }, 100);
+                }, 1000);
             }) ;
         });
     },
@@ -52,10 +119,41 @@ var PlainmapView = widgets.DOMWidgetView.extend({
         center = new google.maps.LatLng(
             model_center[0], model_center[1]);
         this.map.setCenter(center);
+    },
+
+    add_layer_model: function(child_model) {
+        console.log("add_layer_model called");
+        console.log(child_model);
+        console.log(Object.keys(child_model));
+        console.log("+----------------+");
+        var that = this;
+        return this.create_child_view(child_model, {map_view: this}).then(function(child_view) {
+            console.log("In promise!");
+            child_view.add_to_map_view(that) ;
+            return child_view;
+        })
     }
+
+});
+
+var PlainmapModel = widgets.DOMWidgetModel.extend({
+    defaults: _.extend({}, widgets.DOMWidgetModel.prototype.defaults, {
+        _view_name: "PlainmapView",
+        _model_name: "PlainmapModel",
+        _view_module : 'jupyter-gmaps',
+        _model_module : 'jupyter-gmaps'
+    })
+}, {
+    serializers: _.extend({
+            layers: {deserialize: widgets.unpack_models}
+    }, widgets.DOMWidgetModel.serializers)
 });
 
 
+
 module.exports = {
-    PlainmapView : PlainmapView
+    HeatmapLayerModel: HeatmapLayerModel,
+    HeatmapLayerView: HeatmapLayerView,
+    PlainmapView: PlainmapView,
+    PlainmapModel: PlainmapModel
 };
