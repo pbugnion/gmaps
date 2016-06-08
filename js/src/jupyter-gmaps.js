@@ -96,8 +96,10 @@ var PlainmapView = widgets.DOMWidgetView.extend({
                 that.map.addListener("bounds_changed", function() {
                     var zoom = that.map.getZoom();
                     var center = that.map.getCenter();
+                    center_latitude = center.lat() % 90.0;
+                    center_longitude = center.lng() % 180.0;
                     that.model.set("zoom", zoom);
-                    that.model.set("center", [center.lat(), center.lng()]);
+                    that.model.set("center", [center_latitude, center_longitude]);
                     that.touch();
                 });
 
@@ -126,10 +128,6 @@ var PlainmapView = widgets.DOMWidgetView.extend({
     },
 
     add_layer_model: function(child_model) {
-        console.log("add_layer_model called");
-        console.log(child_model);
-        console.log(Object.keys(child_model));
-        console.log("+----------------+");
         var that = this;
         return this.create_child_view(child_model, {map_view: this}).then(function(child_view) {
             console.log("In promise!");
