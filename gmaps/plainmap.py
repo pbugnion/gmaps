@@ -31,6 +31,8 @@ class HeatmapLayer(widgets.Widget):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     data = List().tag(sync=True)
+    max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
+    point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
 
     @validate("data")
     def _validate_data(self, proposal):

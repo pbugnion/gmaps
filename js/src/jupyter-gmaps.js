@@ -6,7 +6,6 @@ GoogleMapsLoader.LIBRARIES = ["visualization"] ;
 
 var GMapsLayerView = widgets.WidgetView.extend({
     initialize: function(parameters) {
-        console.log("in layer initialization");
         GMapsLayerView.__super__.initialize.apply(this, arguments);
         this.map_view = this.options.map_view ;
     }
@@ -14,7 +13,8 @@ var GMapsLayerView = widgets.WidgetView.extend({
 
 var HeatmapLayerView = GMapsLayerView.extend({
     render: function() {
-        console.log("hello heatmap render") ;
+        this.model.on("change:point_radius", this.update_radius, this);
+        this.model.on("change:max_intensity", this.update_max_intensity, this);
         var that = this ;
         GoogleMapsLoader.load(function(google) {
             var data = that.model.get("data");
@@ -25,16 +25,25 @@ var HeatmapLayerView = GMapsLayerView.extend({
             );
             that.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: data_as_google,
-                radius: 10
+                radius: that.model.get("point_radius"),
+                maxIntensity: that.model.get("max_intensity")
             }) ;
         });
     },
 
     add_to_map_view: function(map_view) {
-        console.log("In add to map view");
         this.heatmap.setMap(map_view.map) ;
-        console.log("added!");
+    },
+
+    update_radius: function() {
+        this.heatmap.set('radius', this.model.get('point_radius'));
+    },
+
+    update_max_intensity: function() {
+        console.log("max_intensity change");
+        this.heatmap.set('maxIntensity', this.model.get('max_intensity'));
     }
+
 });
 
 var GMapsLayerModel = widgets.WidgetModel.extend({
@@ -92,12 +101,7 @@ var PlainmapView = widgets.DOMWidgetView.extend({
                     that.touch();
                 });
 
-                console.log("adding layers");
-                console.log(that.model.get("layers"));
-                console.log("-----");
-                //that.layer_views.update([new HeatmapLayerModel()]) ;
                 that.layer_views.update(that.model.get("layers"));
-                //that.add_layer_model(new HeatmapLayerModel());
 
                 // hack to force the map to redraw
                 // without this, it draws fine the first time a map object
