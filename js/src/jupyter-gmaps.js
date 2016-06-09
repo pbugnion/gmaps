@@ -71,6 +71,8 @@ var PlainmapView = widgets.DOMWidgetView.extend({
     render: function() {
         this.el.style["width"] = this.model.get("width");
         this.el.style["height"] = this.model.get("height");
+        console.log(this.model.get("layout.height"));
+        console.log(this.$el.height());
 
         var initial_zoom = this.model.get("zoom");
         this.model.on("change:zoom", this.update_zoom, this);
@@ -78,20 +80,16 @@ var PlainmapView = widgets.DOMWidgetView.extend({
         var initial_center = this.model.get("center");
         this.model.on("change:center", this.update_center, this);
 
+        var initial_bounds = this.model.get("bounds");
+        this.model.on("change:bounds", this.update_bounds, this);
+
         this.layer_views = new widgets.ViewList(this.add_layer_model, null, this);
-        // this.listenTo(this.model, "change:layers", function(model, value) {
-        //     console.log("layer change");
-        //     this.layer_views.update(value);
-        // }, this) ;
 
         var that = this ;
         this.on("displayed", function() {
             GoogleMapsLoader.load(function(google) {
-                var center = new google.maps.LatLng(
-                    initial_center[0], initial_center[1]) ;
-                that.map = new google.maps.Map(
-                    that.el, { center : center, zoom : initial_zoom }
-                ) ;
+                that.map = new google.maps.Map(that.el) ;
+                that.update_bounds(initial_bounds);
 
                 that.map.addListener("bounds_changed", function() {
                     var zoom = that.map.getZoom();
@@ -100,15 +98,13 @@ var PlainmapView = widgets.DOMWidgetView.extend({
                     center_longitude = center.lng() % 180.0;
                     that.model.set("zoom", zoom);
                     that.model.set("center", [center_latitude, center_longitude]);
+                    // TODO update bounds as well
                     that.touch();
                 });
 
                 that.layer_views.update(that.model.get("layers"));
 
                 // hack to force the map to redraw
-                // without this, it draws fine the first time a map object
-                // is loaded in a cell, but not on subsequent times, until
-                // the window is manually moved.
                 window.setTimeout(function() {
                     google.maps.event.trigger(that.map, 'resize') ;
                 }, 1000);
@@ -127,10 +123,19 @@ var PlainmapView = widgets.DOMWidgetView.extend({
         this.map.setCenter(center);
     },
 
+    update_bounds: function() {
+        var model_bounds = this.model.get("bounds");
+        var bounds_bl = new google.maps.LatLng(
+            model_bounds[0][0], model_bounds[0][1]);
+        var bounds_tr = new google.maps.LatLng(
+            model_bounds[1][0], model_bounds[1][1]);
+        var bounds = new google.maps.LatLngBounds(bounds_bl, bounds_tr)
+        this.map.fitBounds(bounds);
+    },
+
     add_layer_model: function(child_model) {
         var that = this;
         return this.create_child_view(child_model, {map_view: this}).then(function(child_view) {
-            console.log("In promise!");
             child_view.add_to_map_view(that) ;
             return child_view;
         })
@@ -143,7 +148,10 @@ var PlainmapModel = widgets.DOMWidgetModel.extend({
         _view_name: "PlainmapView",
         _model_name: "PlainmapModel",
         _view_module : 'jupyter-gmaps',
-        _model_module : 'jupyter-gmaps'
+        _model_module : 'jupyter-gmaps',
+        width: "600px",
+        height: "400px"
+
     })
 }, {
     serializers: _.extend({

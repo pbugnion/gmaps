@@ -1,11 +1,13 @@
 
 import ipywidgets as widgets
 from traitlets import (Unicode, CUnicode, default, Int,
-                       List, Tuple, Float, Instance, validate)
+                       List, Tuple, Float, Instance, validate,
+                       observe)
 
 import geotraitlets
 
 DEFAULT_CENTER = (46.2, 6.1)
+DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
 
 class InvalidPointException(Exception):
     pass
@@ -18,13 +20,31 @@ class Plainmap(widgets.DOMWidget):
     zoom = Int(8).tag(sync=True)
     center = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     layers = Tuple(trait=Instance(widgets.Widget)).tag(sync=True, **widgets.widget_serialization)
+    bounds = List().tag(sync=True)
 
-    @default('layout')
+    def add_layer(self, layer):
+        self.layers = tuple(self.layers[:] + [layer])
+
+    @default("layout")
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
 
+    @observe("layers")
+    def _calc_bounds(self, change):
+        layers = change["new"]
+        bounds_list = [layer.bounds for layer in layers if layer.has_bounds]
+        if not bounds_list:
+            self.bounds = DEFAULT_BOUNDS
+        else:
+            min_latitude = min(bounds[0][0] for bounds in bounds_list)
+            min_longitude = min(bounds[0][1] for bounds in bounds_list)
+            max_latitude = min(bounds[1][0] for bounds in bounds_list)
+            max_longitude = min(bounds[1][1] for bounds in bounds_list)
+            self.bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+
 
 class HeatmapLayer(widgets.Widget):
+    has_bounds = True
     _view_name = Unicode("HeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("HeatmapLayerModel").tag(sync=True)
@@ -33,6 +53,8 @@ class HeatmapLayer(widgets.Widget):
     data = List().tag(sync=True)
     max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
+    bounds = List().tag(sync=True)
+    # TODO add centre and zoom back
 
     @validate("data")
     def _validate_data(self, proposal):
@@ -41,6 +63,15 @@ class HeatmapLayer(widgets.Widget):
                 raise InvalidPointException(
                     "{} is not a valid latitude, longitude pair".format(point))
         return proposal["value"]
+
+    @observe("data")
+    def _calc_bounds(self, change):
+        data = change["new"]
+        min_latitude = min(row[0] for row in data)
+        min_longitude = min(row[1] for row in data)
+        max_latitude = max(row[0] for row in data)
+        max_longitude = max(row[1] for row in data)
+        self.bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
 
 
 def plainmap():
