@@ -17,8 +17,6 @@ class Map(widgets.DOMWidget):
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("PlainmapModel").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
-    zoom = Int(8).tag(sync=True)
-    center = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     layers = Tuple(trait=Instance(widgets.Widget)).tag(sync=True, **widgets.widget_serialization)
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
 
