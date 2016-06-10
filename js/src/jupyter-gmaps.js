@@ -14,6 +14,9 @@ function gBoundsToList(gbounds) {
     return [sw, ne]
 }
 
+
+// Views
+
 var GMapsLayerView = widgets.WidgetView.extend({
     initialize: function(parameters) {
         GMapsLayerView.__super__.initialize.apply(this, arguments);
@@ -59,24 +62,6 @@ var HeatmapLayerView = GMapsLayerView.extend({
     }
 
 });
-
-var GMapsLayerModel = widgets.WidgetModel.extend({
-    defaults: _.extend({}, widgets.WidgetModel.prototype.defaults, {
-        _view_name : 'GMapsLayerView',
-        _model_name : 'GMapsLayerModel',
-        _view_module : 'jupyter-gmaps',
-        _model_module : 'jupyter-gmaps',
-    })
-});
-
-
-var HeatmapLayerModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "HeatmapLayerView",
-        _model_name: "HeatmapLayerModel"
-    })
-})
-
 
 
 var PlainmapView = widgets.DOMWidgetView.extend({
@@ -130,6 +115,28 @@ var PlainmapView = widgets.DOMWidgetView.extend({
     }
 
 });
+
+
+// Models
+
+var GMapsLayerModel = widgets.WidgetModel.extend({
+    defaults: _.extend({}, widgets.WidgetModel.prototype.defaults, {
+        _view_name : 'GMapsLayerView',
+        _model_name : 'GMapsLayerModel',
+        _view_module : 'jupyter-gmaps',
+        _model_module : 'jupyter-gmaps',
+    })
+});
+
+
+var HeatmapLayerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "HeatmapLayerView",
+        _model_name: "HeatmapLayerModel"
+    })
+})
+
+
 
 var PlainmapModel = widgets.DOMWidgetModel.extend({
     defaults: _.extend({}, widgets.DOMWidgetModel.prototype.defaults, {
