@@ -23,7 +23,7 @@ class Plainmap(widgets.DOMWidget):
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
 
     def add_layer(self, layer):
-        self.layers = tuple(self.layers[:] + [layer])
+        self.layers = tuple([layer for layer in self.layers] + [layer])
 
     @default("layout")
     def _default_layout(self):
@@ -43,9 +43,9 @@ class Plainmap(widgets.DOMWidget):
 
 class HeatmapLayer(widgets.Widget):
     has_bounds = True
-    _view_name = Unicode("HeatmapLayerView").tag(sync=True)
+    _view_name = Unicode("SimpleHeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
-    _model_name = Unicode("HeatmapLayerModel").tag(sync=True)
+    _model_name = Unicode("SimpleHeatmapLayerModel").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     data = List().tag(sync=True)
@@ -59,6 +59,37 @@ class HeatmapLayer(widgets.Widget):
             if not geotraitlets.is_valid_point(point):
                 raise InvalidPointException(
                     "{} is not a valid latitude, longitude pair".format(point))
+        return proposal["value"]
+
+    @observe("data")
+    def _calc_bounds(self, change):
+        data = change["new"]
+        min_latitude = min(row[0] for row in data)
+        min_longitude = min(row[1] for row in data)
+        max_latitude = max(row[0] for row in data)
+        max_longitude = max(row[1] for row in data)
+        self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+
+
+class WeightedHeatmapLayer(widgets.Widget):
+    has_bounds = True
+    _view_name = Unicode("WeightedHeatmapLayerView").tag(sync=True)
+    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
+    _model_name = Unicode("WeightedHeatmapLayerModel").tag(sync=True)
+    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
+
+    data = List().tag(sync=True)
+    max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
+    point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
+    data_bounds = List().tag(sync=True)
+
+    @validate("data")
+    def _validate_data(self, proposal):
+        for point in proposal["value"]:
+            if not geotraitlets.is_valid_point(point[:2]):
+                raise InvalidPointException(
+                    "{} is not a valid latitude, longitude pair".format(point))
+            # check weight
         return proposal["value"]
 
     @observe("data")

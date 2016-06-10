@@ -24,19 +24,13 @@ var GMapsLayerView = widgets.WidgetView.extend({
     }
 });
 
-var HeatmapLayerView = GMapsLayerView.extend({
+var HeatmapLayerBaseView = GMapsLayerView.extend({
     render: function() {
         this.model_events() ;
         var that = this ;
         GoogleMapsLoader.load(function(google) {
-            var data = that.model.get("data");
-            var data_as_google = new google.maps.MVCArray(
-                _.map(data, function(point) {
-                    return new google.maps.LatLng(point[0], point[1]);
-                })
-            );
             that.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: data_as_google,
+                data: that.get_data(),
                 radius: that.model.get("point_radius"),
                 maxIntensity: that.model.get("max_intensity")
             }) ;
@@ -52,6 +46,8 @@ var HeatmapLayerView = GMapsLayerView.extend({
         this.model.on("change:max_intensity", this.update_max_intensity, this);
     },
 
+    get_data: function() {},
+
     update_radius: function() {
         this.heatmap.set('radius', this.model.get('point_radius'));
     },
@@ -62,6 +58,34 @@ var HeatmapLayerView = GMapsLayerView.extend({
     }
 
 });
+
+var SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
+    get_data: function() {
+        var data = this.model.get("data");
+        var data_as_google = new google.maps.MVCArray(
+            _.map(data, function(point) {
+                return new google.maps.LatLng(point[0], point[1]);
+            })
+        );
+        return data_as_google;
+    }
+});
+
+
+var WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
+    get_data: function() {
+        var data = this.model.get("data");
+        var data_as_google = new google.maps.MVCArray(
+            _.map(data, function(weighted_point) {
+                var location = new google.maps.LatLng(
+                    weighted_point[0], weighted_point[1]);
+                var weight = weighted_point[2];
+                return { location: location, weight: weight };
+            })
+        );
+        return data_as_google;
+    }
+})
 
 
 var PlainmapView = widgets.DOMWidgetView.extend({
@@ -129,13 +153,20 @@ var GMapsLayerModel = widgets.WidgetModel.extend({
 });
 
 
-var HeatmapLayerModel = GMapsLayerModel.extend({
+var SimpleHeatmapLayerModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "HeatmapLayerView",
-        _model_name: "HeatmapLayerModel"
+        _view_name: "SimpleHeatmapLayerView",
+        _model_name: "SimpleHeatmapLayerModel"
     })
-})
+});
 
+
+var WeightedHeatmapLayerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "WeightedHeatmapLayerView",
+        _model_name: "WeightedHeatmapLayerModel"
+    })
+});
 
 
 var PlainmapModel = widgets.DOMWidgetModel.extend({
@@ -157,8 +188,10 @@ var PlainmapModel = widgets.DOMWidgetModel.extend({
 
 
 module.exports = {
-    HeatmapLayerModel: HeatmapLayerModel,
-    HeatmapLayerView: HeatmapLayerView,
+    SimpleHeatmapLayerView: SimpleHeatmapLayerView,
+    WeightedHeatmapLayerView: WeightedHeatmapLayerView,
     PlainmapView: PlainmapView,
-    PlainmapModel: PlainmapModel
+    PlainmapModel: PlainmapModel,
+    SimpleHeatmapLayerModel: SimpleHeatmapLayerModel,
+    WeightedHeatmapLayerModel: WeightedHeatmapLayerModel
 };
