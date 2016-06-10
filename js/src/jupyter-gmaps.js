@@ -23,8 +23,7 @@ var GMapsLayerView = widgets.WidgetView.extend({
 
 var HeatmapLayerView = GMapsLayerView.extend({
     render: function() {
-        this.model.on("change:point_radius", this.update_radius, this);
-        this.model.on("change:max_intensity", this.update_max_intensity, this);
+        this.model_events() ;
         var that = this ;
         GoogleMapsLoader.load(function(google) {
             var data = that.model.get("data");
@@ -43,6 +42,11 @@ var HeatmapLayerView = GMapsLayerView.extend({
 
     add_to_map_view: function(map_view) {
         this.heatmap.setMap(map_view.map) ;
+    },
+
+    model_events: function() {
+        this.model.on("change:point_radius", this.update_radius, this);
+        this.model.on("change:max_intensity", this.update_max_intensity, this);
     },
 
     update_radius: function() {
@@ -82,16 +86,10 @@ var PlainmapView = widgets.DOMWidgetView.extend({
         this.el.style["width"] = this.model.get("width");
         this.el.style["height"] = this.model.get("height");
 
-        var initial_zoom = this.model.get("zoom");
-        this.model.on("change:zoom", this.update_zoom, this);
-
-        var initial_center = this.model.get("center");
-        this.model.on("change:center", this.update_center, this);
-
         var initial_bounds = this.model.get("data_bounds");
-        this.model.on("change:data_bounds", this.update_bounds, this);
 
         this.layer_views = new widgets.ViewList(this.add_layer_model, null, this);
+        this.model_events() ;
 
         var that = this ;
         this.on("displayed", function() {
@@ -108,6 +106,12 @@ var PlainmapView = widgets.DOMWidgetView.extend({
             }) ;
         });
     },
+
+    model_events: function() {
+        this.model.on("change:data_bounds", this.update_bounds, this);
+    },
+
+    gmaps_events: function() {},
 
     update_bounds: function() {
         var model_bounds = this.model.get("data_bounds");
