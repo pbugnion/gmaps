@@ -12,7 +12,7 @@ DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
 class InvalidPointException(Exception):
     pass
 
-class Plainmap(widgets.DOMWidget):
+class Map(widgets.DOMWidget):
     _view_name = Unicode("PlainmapView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("PlainmapModel").tag(sync=True)
@@ -41,7 +41,7 @@ class Plainmap(widgets.DOMWidget):
             self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
 
 
-class HeatmapLayer(widgets.Widget):
+class Heatmap(widgets.Widget):
     has_bounds = True
     _view_name = Unicode("SimpleHeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
@@ -71,7 +71,7 @@ class HeatmapLayer(widgets.Widget):
         self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
 
 
-class WeightedHeatmapLayer(widgets.Widget):
+class WeightedHeatmap(widgets.Widget):
     has_bounds = True
     _view_name = Unicode("WeightedHeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)

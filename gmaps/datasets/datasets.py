@@ -13,36 +13,32 @@ Commands
     load_dataset(dataset_name) : load dataset. Returns a numpy array.
 """
 
-import json
-import os
+import urllib2
 import csv
 
-import pkg_resources
-
-DATA_DIR = "data"
-METADATA_FNAME = "metadata.json"
-
-def _load_metadata():
-    f = pkg_resources.resource_stream(__name__, METADATA_FNAME)
-    datasets = json.load(f)
-    f.close()
-    return datasets
+METADATA = {
+    "taxi_rides" : {
+        "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/taxi_data.csv",
+        "description" : "Taxi pickup location data in San Francisco"
+    },
+    "earthquakes" : {
+        "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/earthquakes.csv",
+        "description" : "All recorded earthquakes in 30 days starting on 12th November 2014"
+    }
+}
 
 def _read_rows(f):
     f.readline() # skip header line
     reader = csv.reader(f)
-    rows = [ map(float, row) for row in reader ]
+    rows = [map(float, row) for row in reader]
     return rows
 
 def list_datasets():
-    metadata = _load_metadata()
-    return metadata.keys()
+    return METADATA.keys()
 
 def load_dataset(dataset_name):
-    metadata = _load_metadata()
-    fname = metadata[dataset_name]["data_file"]
-    fpath = os.path.join(DATA_DIR, fname)
-    f = pkg_resources.resource_stream(__name__, fpath)
+    url = METADATA[dataset_name]["url"]
+    f = urllib2.urlopen(url)
     data = _read_rows(f)
     f.close()
     return data
