@@ -66,8 +66,6 @@ var GMapsLayerModel = widgets.WidgetModel.extend({
         _model_name : 'GMapsLayerModel',
         _view_module : 'jupyter-gmaps',
         _model_module : 'jupyter-gmaps',
-        bottom : false,
-        options : []
     })
 });
 
