@@ -1,4 +1,6 @@
 
+import warnings
+
 import ipywidgets as widgets
 from traitlets import (Unicode, CUnicode, default, Int,
                        List, Tuple, Float, Instance, validate,
@@ -101,11 +103,18 @@ class WeightedHeatmap(widgets.Widget):
 
 
 def plainmap():
-    return Plainmap()
+    warnings.warn(
+        "plainmap is deprecated. Prefer the Map class.",
+        category=RuntimeWarning)
+    return Map()
 
 
 def heatmap(data):
-    p = Plainmap()
+    warnings.warn(
+        "heatmap is deprecated. Prefer combining the Map class "
+        "with a Heatmap layer",
+        category=RuntimeWarning)
+    p = Map()
     heatmap_layer = HeatmapLayer()
     heatmap_layer.data = data
     p.layers = (heatmap_layer, )
