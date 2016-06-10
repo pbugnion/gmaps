@@ -1,6 +1,6 @@
 from ._version import version_info, __version__
 
-from plainmap import *
+from maps import *
 
 def _jupyter_nbextension_paths():
     return [{
