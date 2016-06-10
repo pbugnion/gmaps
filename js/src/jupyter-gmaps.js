@@ -4,6 +4,16 @@ var _ = require('underscore');
 var GoogleMapsLoader = require('google-maps');
 GoogleMapsLoader.LIBRARIES = ["visualization"] ;
 
+function gPointToList(gpoint) {
+    return [gpoint.lat(), gpoint.lng()];
+}
+
+function gBoundsToList(gbounds) {
+    var sw = gPointToList(gbounds.getSouthWest());
+    var ne = gPointToList(gbounds.getNorthEast());
+    return [sw, ne]
+}
+
 var GMapsLayerView = widgets.WidgetView.extend({
     initialize: function(parameters) {
         GMapsLayerView.__super__.initialize.apply(this, arguments);
@@ -71,8 +81,6 @@ var PlainmapView = widgets.DOMWidgetView.extend({
     render: function() {
         this.el.style["width"] = this.model.get("width");
         this.el.style["height"] = this.model.get("height");
-        console.log(this.model.get("layout.height"));
-        console.log(this.$el.height());
 
         var initial_zoom = this.model.get("zoom");
         this.model.on("change:zoom", this.update_zoom, this);
@@ -80,8 +88,8 @@ var PlainmapView = widgets.DOMWidgetView.extend({
         var initial_center = this.model.get("center");
         this.model.on("change:center", this.update_center, this);
 
-        var initial_bounds = this.model.get("bounds");
-        this.model.on("change:bounds", this.update_bounds, this);
+        var initial_bounds = this.model.get("data_bounds");
+        this.model.on("change:data_bounds", this.update_bounds, this);
 
         this.layer_views = new widgets.ViewList(this.add_layer_model, null, this);
 
@@ -90,17 +98,6 @@ var PlainmapView = widgets.DOMWidgetView.extend({
             GoogleMapsLoader.load(function(google) {
                 that.map = new google.maps.Map(that.el) ;
                 that.update_bounds(initial_bounds);
-
-                that.map.addListener("bounds_changed", function() {
-                    var zoom = that.map.getZoom();
-                    var center = that.map.getCenter();
-                    center_latitude = center.lat() % 90.0;
-                    center_longitude = center.lng() % 180.0;
-                    that.model.set("zoom", zoom);
-                    that.model.set("center", [center_latitude, center_longitude]);
-                    // TODO update bounds as well
-                    that.touch();
-                });
 
                 that.layer_views.update(that.model.get("layers"));
 
@@ -112,19 +109,8 @@ var PlainmapView = widgets.DOMWidgetView.extend({
         });
     },
 
-    update_zoom: function() {
-        this.map.setZoom(this.model.get("zoom"));
-    },
-
-    update_center: function() {
-        var model_center = this.model.get("center");
-        center = new google.maps.LatLng(
-            model_center[0], model_center[1]);
-        this.map.setCenter(center);
-    },
-
     update_bounds: function() {
-        var model_bounds = this.model.get("bounds");
+        var model_bounds = this.model.get("data_bounds");
         var bounds_bl = new google.maps.LatLng(
             model_bounds[0][0], model_bounds[0][1]);
         var bounds_tr = new google.maps.LatLng(

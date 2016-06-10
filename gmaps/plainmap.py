@@ -20,7 +20,7 @@ class Plainmap(widgets.DOMWidget):
     zoom = Int(8).tag(sync=True)
     center = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     layers = Tuple(trait=Instance(widgets.Widget)).tag(sync=True, **widgets.widget_serialization)
-    bounds = List().tag(sync=True)
+    data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
 
     def add_layer(self, layer):
         self.layers = tuple(self.layers[:] + [layer])
@@ -32,15 +32,13 @@ class Plainmap(widgets.DOMWidget):
     @observe("layers")
     def _calc_bounds(self, change):
         layers = change["new"]
-        bounds_list = [layer.bounds for layer in layers if layer.has_bounds]
-        if not bounds_list:
-            self.bounds = DEFAULT_BOUNDS
-        else:
+        bounds_list = [layer.data_bounds for layer in layers if layer.has_bounds]
+        if bounds_list:
             min_latitude = min(bounds[0][0] for bounds in bounds_list)
             min_longitude = min(bounds[0][1] for bounds in bounds_list)
             max_latitude = min(bounds[1][0] for bounds in bounds_list)
             max_longitude = min(bounds[1][1] for bounds in bounds_list)
-            self.bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+            self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
 
 
 class HeatmapLayer(widgets.Widget):
@@ -53,8 +51,7 @@ class HeatmapLayer(widgets.Widget):
     data = List().tag(sync=True)
     max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
-    bounds = List().tag(sync=True)
-    # TODO add centre and zoom back
+    data_bounds = List().tag(sync=True)
 
     @validate("data")
     def _validate_data(self, proposal):
@@ -71,7 +68,7 @@ class HeatmapLayer(widgets.Widget):
         min_longitude = min(row[1] for row in data)
         max_latitude = max(row[0] for row in data)
         max_longitude = max(row[1] for row in data)
-        self.bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+        self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
 
 
 def plainmap():
