@@ -13,8 +13,10 @@ Commands
     load_dataset(dataset_name) : load dataset. Returns a numpy array.
 """
 
-import urllib2
 import csv
+import codecs
+
+from six.moves.urllib.request import urlopen
 
 METADATA = {
     "taxi_rides" : {
@@ -29,8 +31,8 @@ METADATA = {
 
 def _read_rows(f):
     f.readline() # skip header line
-    reader = csv.reader(f)
-    rows = [map(float, row) for row in reader]
+    reader = csv.reader(codecs.iterdecode(f, "utf-8"))
+    rows = [tuple(map(float, row)) for row in reader]
     return rows
 
 def list_datasets():
@@ -38,7 +40,7 @@ def list_datasets():
 
 def load_dataset(dataset_name):
     url = METADATA[dataset_name]["url"]
-    f = urllib2.urlopen(url)
+    f = urlopen(url)
     data = _read_rows(f)
     f.close()
     return data

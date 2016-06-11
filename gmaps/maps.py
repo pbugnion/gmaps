@@ -6,7 +6,7 @@ from traitlets import (Unicode, CUnicode, default, Int,
                        List, Tuple, Float, Instance, validate,
                        observe)
 
-import geotraitlets
+import gmaps.geotraitlets as geotraitlets
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]

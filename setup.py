@@ -130,6 +130,7 @@ setup_args = {
     ],
     'install_requires': [
         'ipywidgets>=5.1.3',
+        'six'
     ],
     'packages': find_packages(),
     'zip_safe': False,
