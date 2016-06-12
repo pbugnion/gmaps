@@ -26,6 +26,11 @@ METADATA = {
     "earthquakes" : {
         "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/earthquakes.csv",
         "description" : "All recorded earthquakes in 30 days starting on 12th November 2014"
+    },
+    "acled_africa": {
+        "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/acled_africa.csv",
+        "description" : "All recorded incidents of political violence in Africa",
+        "source": "http://www.acleddata.com"
     }
 }
 
