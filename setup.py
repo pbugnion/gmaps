@@ -118,7 +118,7 @@ with open(os.path.join(here, 'gmaps', '_version.py')) as f:
 setup_args = {
     'name': 'gmaps',
     'version': version_ns['__version__'],
-    'description': 'Mapz',
+    'description': 'Google maps plugin for Jupyter notebooks',
     'long_description': LONG_DESCRIPTION,
     'include_package_data': True,
     'data_files': [
@@ -143,7 +143,7 @@ setup_args = {
 
     'author': 'Pascal Bugnion',
     'author_email': 'pascal@bugnion.org',
-    'url': 'http://jupyter.org',
+    'url': 'https://github.com/pbugnion/gmaps',
     'keywords': [
         'ipython',
         'jupyter',
