@@ -49,6 +49,8 @@ You then add layers on top of the base map. For instance, to add a heatmap layer
 
 .. image:: plainmap3.*
 
+TODO: traitlets either through constructor or modifying directly
+
 Heatmaps
 ^^^^^^^^
 
