@@ -1,12 +1,12 @@
 {
   "name": "jupyter-gmaps",
-  "version": "0.3.0-dev",
-  "description": "Mapz",
+  "version": "0.3.0.rc1",
+  "description": "Google maps plugin for Jupyter notebooks",
   "author": "Pascal Bugnion",
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pbugnion/jupyter-gmaps-test-499.git"
+    "url": "https://github.com/pbugnion/gmaps.git"
   },
   "keywords": [
     "jupyter",
