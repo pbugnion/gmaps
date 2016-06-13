@@ -15,6 +15,7 @@ Let's plot a heatmap of taxi pickups in San Francisco:
 
     In [3]: m = gmaps.Map()
             m.add_layer(gmaps.Heatmap(data=data))
+            m
 
 .. image:: docs/example.png
 
