@@ -1,6 +1,3 @@
-.. Automatically generated from LONG_DESCRIPTION keyword in
-.. setup.py. Do not edit directly.
-
 gmaps
 =====
 
@@ -10,13 +7,15 @@ Let's plot a heatmap of taxi pickups in San Francisco:
 
 ::
 
-    In [1]: import gmaps
+    In [1]: import gmaps 
+            import gmaps.datasets
 
     # load a Numpy array of (latitude, longitude) pairs
     In [2]: data = gmaps.datasets.load_dataset('taxi_rides')
 
-    In [3]: map = gmaps.heatmap(data)
-            gmaps.display(map)
+    In [3]: m = gmaps.Map()
+            m.add_layer(gmaps.Heatmap(data=data))
+            m
 
 .. image:: docs/example.png
 
@@ -26,49 +25,51 @@ Installation
 Dependencies
 ^^^^^^^^^^^^
 
-To use `gmaps`, you will need IPython version 3 or higher. If using IPython 4, you need to install `ipywidgets`::
+The current version of `gmaps` is only tested with *IPython 4.2* or later and *ipywidgets 5.1.3* or later. To upgrade to the latest versions, use::
 
-    $ pip install ipywidgets
+    $ pip install -U jupyter
 
-Using pip or easy_install
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Make sure that you have enabled widgets extensions to Jupyter::
 
-The easiest way to install `gmaps` is with pip::
+    $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
+
+Installing `gmaps`
+^^^^^^^^^^^^^^^^^^
+
+Install the Python component using::
 
     $ pip install gmaps
 
-or, if you don't have pip::
+Then tell Jupyter to load the extension with::
 
-    $ easy_install gmaps
-
-You may need to run these commands as root if you are using the system wide Python installation.
+    $ jupyter nbextension enable --py gmaps
 
 Development version
 ^^^^^^^^^^^^^^^^^^^
 
-The development version can be installed by cloning the git repository by running::
+You must have `NPM <https://www.npmjs.com>`_ to install the development version. You can install NPM with your package manager.
+
+You must also install ``gmaps`` in a virtual environment (or, at least, you must be able to run ``pip`` without root access).
+
+Clone the git repository by running::
 
     $ git clone https://github.com/pbugnion/gmaps.git
 
 Change to the project's root directory and run::
 
-    $ python setup.py install
+    $ pip install -e .
 
-Alternatively, if you are planning on doing development with `gmaps`, install `gmaps` in
-development mode using::
+This will create a directory called ``static/`` in the ``gmaps/`` directory. This directory contains Javascript sources. Every time you change the Javascript sources, you will need to recompile this directory by re-running this command (despite everying being installed in `editable` mode). 
 
-    $ python setup.py install_data
-    $ python setup.py develop
+You can then enable the extension in Jupyter::
 
-Getting started
----------------
+    $ jupyter nbextension install --py --symlink --user gmaps
+    $ jupyter nbextension enable --py --user gmaps
 
-Currently, only heatmaps are supported. Draw a heatmap by passing a list of (latitude, longitude)
-pairs to the heatmap command.
 
-There are example notebooks in the examples directory. You can view these on `nbviewer
-<http://nbviewer.ipython.org/github/pbugnion/gmaps/blob/master/examples/ipy3/>`_,
-but note that you need to download the notebook to actually see the Google Map.
+Documentation
+-------------
+
 
 Issue reporting and contributing
 --------------------------------

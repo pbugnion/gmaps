@@ -1,12 +1,11 @@
+from ._version import version_info, __version__
 
-from gmaps.loader import init
-from gmaps.heatmap import heatmap
-from gmaps.plainmap import plainmap
+from .maps import *
 
-import gmaps.datasets as datasets
-
-from IPython.display import display
-
-__version__ = "0.2.2"
-
-init()
+def _jupyter_nbextension_paths():
+    return [{
+        'section': 'notebook',
+        'src': 'static',
+        'dest': 'jupyter-gmaps',
+        'require': 'jupyter-gmaps/extension'
+    }]
