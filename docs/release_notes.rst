@@ -1,3 +1,16 @@
+
+Version 0.3.0
+=============
+
+Complete re-write of gmaps to work with IPython 4.2 and ipywidgets 5.x. This release is at feature parity with the previous release, but the interface differs:
+
+ * Maps are now built up from a base to which we add layers.
+ * Heatmaps and weighted heatmaps are now layers that can be added to the base map.
+ * Add the acled_africa dataset to demonstrate heatmaps with a substantial amount of data.
+ * Now fits into the Jupyter installation convention for widget extensions.
+ * Add sphinx documentation
+ * Remove example notebooks (these may be added back in a later release)
+
 Version 0.2.2
 =============
 
