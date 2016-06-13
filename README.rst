@@ -72,6 +72,11 @@ Documentation
 
 Documentation for `gmaps` is available `here <http://jupyter-gmaps.readthedocs.io/en/latest/>`_.
 
+Similar libraries
+-----------------
+
+The current version of this library is inspired by the `ipyleaflet <https://github.com/ellisonbg/ipyleaflet>`_ notebook widget extension. This extension aims to provide much of the same functionality as `gmaps`, but for `leaflet maps`, not `Google maps`.
+
 
 Issue reporting and contributing
 --------------------------------
