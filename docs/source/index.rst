@@ -14,6 +14,12 @@ jupyter-gmaps
    api
 
 
+.. toctree::
+   :maxdepth: 1
+
+   release_notes
+
+
 
 Indices and tables
 ==================
