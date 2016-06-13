@@ -9,6 +9,7 @@ jupyter-gmaps
 .. toctree::
    :maxdepth: 2
 
+   install
    gmaps
    api
 
