@@ -27,7 +27,7 @@ This gives you a fully-fledged Google map. You can zoom in and out, switch to sa
 Basic concepts
 ^^^^^^^^^^^^^^
 
-`gmaps` is built around the idea of adding layers to a base map. You start by creating a basemap::
+`gmaps` is built around the idea of adding layers to a base map. You start by creating a base map::
 
   import gmaps
   m = gmaps.Map()
@@ -49,7 +49,17 @@ You then add layers on top of the base map. For instance, to add a heatmap layer
 
 .. image:: plainmap3.*
 
-TODO: traitlets either through constructor or modifying directly
+Attributes on the base map and the layers can be set through named arguments in the constructor or as instance attributes once the instance is created. These two constructions are thus equivalent::
+
+  heatmap_layer = gmaps.Heatmap(data=data)
+  heatmap_layer.point_radius = 8
+
+and::
+
+  heatmap_layer = gmaps.Heatmap(data=data, point_radius=8)
+
+The former construction is useful for modifying a map once it has been built. Any change in parameters will propagate to maps in which those layers are included.
+
 
 Heatmaps
 ^^^^^^^^
