@@ -70,6 +70,8 @@ You can then enable the extension in Jupyter::
 Documentation
 -------------
 
+Documentation for `gmaps` is available `here <http://jupyter-gmaps.readthedocs.io/en/latest/>`_.
+
 
 Issue reporting and contributing
 --------------------------------
