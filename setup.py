@@ -22,7 +22,15 @@ log.set_verbosity(log.DEBUG)
 log.info('setup.py entered')
 log.info('$PATH=%s' % os.environ['PATH'])
 
-LONG_DESCRIPTION = 'Mapz'
+LONG_DESCRIPTION = """
+`gmaps` is a Jupyter plugin for embedding Google maps in Jupyter notebooks. It is designed to help visualize and interact with geographical data.
+
+Useful links:
+
+ - `Documentation and examples <http://jupyter-gmaps.readthedocs.io/en/latest/>`_
+ - `Source code <https://github.com/pbugnion/gmaps>`_
+ - `Issue tracker <https://github.com/pbugnion/gmaps/issues>`_
+"""
 
 def js_prerelease(command, strict=False):
     """decorator for building minified js/css prior to another command"""
