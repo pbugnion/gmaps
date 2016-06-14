@@ -9,7 +9,7 @@ contributions are welcome.
 How to contribute
 -----------------
 
-The `documentation <http://docs.scipy.org/doc/numpy/dev/gitwash/index.html>`_ for Numpy gives a detailed description of how to contribute. Most of this information applies to development for ``gmaps``.
+The `documentation <http://docs.scipy.org/doc/numpy/dev/gitwash/index.html>`_ for Numpy gives a detailed description of how to contribute to Numpy. Most of this information applies to development for ``gmaps``.
 
 Developing with git
 ^^^^^^^^^^^^^^^^^^^^
@@ -98,53 +98,11 @@ Code
 
 Please follow the `PEP8 conventions <http://www.python.org/dev/peps/pep-0008/>`_ for formatting and indenting code and for variable names.
 
-Ipython notebooks in version control
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This package uses IPython notebooks as examples. If you amend an existing
-notebook, or add a new one, make sure that you only commit the input cells.
-This can be done by following the recipe given in `this Stack Overflow answer
-<http://stackoverflow.com/a/20844506>`_: 
+Contribution ideas
+------------------
 
-1. Put the following script in a directory on your system path, for instance ``~/bin``,
-   saving it as ``ipynb_output_filter.py``::
+I will be very happy to accept contributions for new layers. I think that the ability to add points to the map (markers, for instance) and to plot GeoJSON would be tremendously useful.
 
-    #!/usr/bin/env python
+The ability to export the maps to HTML would also be tremendously useful.
 
-    import sys
-    import json
-
-    json_in = json.load(sys.stdin)
-    ipy_version = int(json_in["nbformat"])-1 # nbformat is 1 more than actual version.
-
-    def strip_output_from_cell(cell):
-        if "outputs" in cell:
-            cell["outputs"] = []
-        if "prompt_number" in cell:
-            cell["prompt_number"] = ''
-
-    if ipy_version == 2:
-        for sheet in json_in["worksheets"]:
-            for cell in sheet["cells"]:
-                strip_output_from_cell(cell)
-    else:
-        for cell in json_in["cells"]:
-            strip_output_from_cell(cell)
-
-    json.dump(json_in, sys.stdout, sort_keys=True)
-
-2. Make it executable using ``chmod +x ipynb_output_filter.py``. 
-3. Make sure the directory containing ``ipynb_output_filter.py`` is in the system
-   path. If not, add the following line to your ``.bashrc`` profile::
-
-    export PATH=$HOME/bin:$PATH
-
-4. Create the file ``~/.gitattributes`` with the following content::
-    
-    *.ipynb    filter=dropoutput_ipynb
-
-5. Run the following commands::
-
-    git config --global core.attributesfile ~/.gitattributes
-    git config --global filter.dropoutput_ipynb.clean ~/bin/ipynb_output_filter.py
-    git config --global filter.dropoutput_ipynb.smudge cat
