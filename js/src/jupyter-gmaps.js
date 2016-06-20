@@ -24,6 +24,67 @@ var GMapsLayerView = widgets.WidgetView.extend({
     }
 });
 
+
+var DirectionsLayerView = GMapsLayerView.extend({
+    render: function() {
+        var that = this ;
+
+        var rendererOptions = { map:that.map_view.map };
+
+        that.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+
+        var model_data = this.model.get("data");
+        var orig = that.get_orig(model_data);
+        var dest = that.get_dest(model_data);
+        var wps = that.get_wps(model_data);
+
+        var request = {
+            origin: orig,
+            destination: dest,
+            waypoints: wps,
+            travelMode: google.maps.DirectionsTravelMode.DRIVING
+        };
+
+        var directionsService = new google.maps.DirectionsService();
+
+        directionsService.route(request, function(response, status) {
+            // print to the browser console (mostly for debugging) 
+            console.log("Direction service returned: ", status) ; 
+            // set a flag in the model
+            that.model.set("layer_status", status) ; 
+            that.touch() ; // push `layer_status` changes to the model
+            if (status == google.maps.DirectionsStatus.OK) {
+                that.response = that.directionsDisplay ;
+                that.directionsDisplay.setDirections(response);
+            }
+        });
+    },
+
+
+    add_to_map_view: function(map_view) { },
+
+    get_orig: function(model_data) {
+        var first_point = _.first(model_data);
+        return new google.maps.LatLng(first_point[0], first_point[1]);
+    },
+
+    get_dest: function(model_data) {
+        var last_point = _.last(model_data); 
+        return new google.maps.LatLng(last_point[0], last_point[1]);
+    },
+
+    get_wps: function(model_data) {
+        var without_first = _.tail(model_data);
+        var without_last = _.initial(without_first) ;
+        var data_as_google = _.map(without_last, function(point) {
+            var google_point = new google.maps.LatLng(point[0], point[1]);
+            return {location: google_point};
+        });
+        return data_as_google;
+    }
+
+});
+
 var HeatmapLayerBaseView = GMapsLayerView.extend({
     render: function() {
         this.model_events() ;
@@ -152,6 +213,12 @@ var GMapsLayerModel = widgets.WidgetModel.extend({
     })
 });
 
+var DirectionsLayerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "DirectionsLayerView",
+        _model_name: "DirectionsLayerModel"
+    })
+});
 
 var SimpleHeatmapLayerModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
@@ -188,10 +255,12 @@ var PlainmapModel = widgets.DOMWidgetModel.extend({
 
 
 module.exports = {
+    DirectionsLayerView: DirectionsLayerView,
     SimpleHeatmapLayerView: SimpleHeatmapLayerView,
     WeightedHeatmapLayerView: WeightedHeatmapLayerView,
     PlainmapView: PlainmapView,
     PlainmapModel: PlainmapModel,
+    DirectionsLayerModel: DirectionsLayerModel,
     SimpleHeatmapLayerModel: SimpleHeatmapLayerModel,
     WeightedHeatmapLayerModel: WeightedHeatmapLayerModel
 };
