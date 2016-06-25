@@ -4,12 +4,29 @@ import warnings
 import ipywidgets as widgets
 from traitlets import (Unicode, CUnicode, default, Int,
                        List, Tuple, Float, Instance, validate,
-                       observe)
+                       observe, Enum, Dict, HasTraits)
 
 import gmaps.geotraitlets as geotraitlets
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
+
+_default_configuration = {"api_key": None}
+
+def configure(api_key=None):
+    configuration = {"api_key": api_key}
+    global _default_configuration
+    _default_configuration = configuration
+
+
+class ConfigurationMixin(HasTraits):
+    configuration = Dict(
+        traits={"api_key": Unicode(allow_none=True)}).tag(sync=True)
+
+    @default("configuration")
+    def _config_default(self):
+        return _default_configuration
+
 
 class InvalidPointException(Exception):
     pass
@@ -17,7 +34,8 @@ class InvalidPointException(Exception):
 class DirectionsServiceException(RuntimeError):
     pass
 
-class Map(widgets.DOMWidget):
+
+class Map(widgets.DOMWidget, ConfigurationMixin):
     """
     Base map class
 
