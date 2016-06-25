@@ -41,7 +41,7 @@ module.exports = [
         },
         externals: ['jupyter-js-widgets']
     },
-    {// Embeddable jupyter-gmaps-test-499 bundle
+    {// Embeddable jupyter-gmaps bundle
      //
      // This bundle is generally almost identical to the notebook bundle
      // containing the custom widget views and models.
@@ -60,7 +60,7 @@ module.exports = [
             filename: 'index.js',
             path: './dist/',
             libraryTarget: 'amd',
-            publicPath: 'https://npmcdn.com/jupyter-gmaps-test-499@' + version + '/dist/'
+            publicPath: 'https://npmcdn.com/jupyter-gmaps@' + version + '/dist/'
         },
         devtool: 'source-map',
         module: {
