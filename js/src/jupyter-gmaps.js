@@ -61,6 +61,7 @@ var DirectionsLayerView = GMapsLayerView.extend({
             origin: orig,
             destination: dest,
             waypoints: wps,
+            travelMode: google.maps.TravelMode.DRIVING
         };
 
         var directionsService = new google.maps.DirectionsService();
