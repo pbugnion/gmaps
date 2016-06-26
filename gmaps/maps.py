@@ -37,7 +37,7 @@ class Map(widgets.DOMWidget):
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
 
     def add_layer(self, layer):
-        self.layers = tuple([layer for layer in self.layers] + [layer])
+        self.layers = tuple([l for l in self.layers] + [layer])
 
     @default("layout")
     def _default_layout(self):
