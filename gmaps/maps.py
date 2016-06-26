@@ -14,6 +14,12 @@ DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
 _default_configuration = {"api_key": None}
 
 def configure(api_key=None):
+    """
+    Configure access to the GoogleMaps API.
+
+    :param api_key: String denoting the key to use when accessing Google maps, or
+        None to not pass an API key.
+    """
     configuration = {"api_key": api_key}
     global _default_configuration
     _default_configuration = configuration
