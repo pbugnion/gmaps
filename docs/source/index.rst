@@ -10,6 +10,7 @@ jupyter-gmaps
    :maxdepth: 2
 
    install
+   authentication
    gmaps
    api
 
