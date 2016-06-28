@@ -2,7 +2,17 @@ var widgets = require('jupyter-js-widgets');
 var _ = require('underscore');
 
 var GoogleMapsLoader = require('google-maps');
-GoogleMapsLoader.LIBRARIES = ["visualization"] ;
+
+function reloadGoogleMaps(configuration) {
+    GoogleMapsLoader.release();
+    GoogleMapsLoader.LIBRARIES = ["visualization"] ;
+    if (configuration["api_key"] !== null &&
+        configuration["api_key"] !== undefined) {
+            GoogleMapsLoader.KEY = configuration["api_key"];
+    };
+}
+
+reloadGoogleMaps({}) ;
 
 function gPointToList(gpoint) {
     return [gpoint.lat(), gpoint.lng()];
@@ -14,6 +24,15 @@ function gBoundsToList(gbounds) {
     return [sw, ne]
 }
 
+// Mixins
+
+var ConfigurationMixin = {
+    load_configuration: function() {
+        var model_configuration = this.model.get("configuration");
+        reloadGoogleMaps(model_configuration);
+    }
+} ;
+
 
 // Views
 
@@ -21,7 +40,7 @@ var GMapsLayerView = widgets.WidgetView.extend({
     initialize: function(parameters) {
         GMapsLayerView.__super__.initialize.apply(this, arguments);
         this.map_view = this.options.map_view ;
-    }
+    },
 });
 
 
@@ -42,16 +61,16 @@ var DirectionsLayerView = GMapsLayerView.extend({
             origin: orig,
             destination: dest,
             waypoints: wps,
-            travelMode: google.maps.DirectionsTravelMode.DRIVING
+            travelMode: google.maps.TravelMode.DRIVING
         };
 
         var directionsService = new google.maps.DirectionsService();
 
         directionsService.route(request, function(response, status) {
-            // print to the browser console (mostly for debugging) 
-            console.log("Direction service returned: ", status) ; 
+            // print to the browser console (mostly for debugging)
+            console.log("Direction service returned: ", status) ;
             // set a flag in the model
-            that.model.set("layer_status", status) ; 
+            that.model.set("layer_status", status) ;
             that.touch() ; // push `layer_status` changes to the model
             if (status == google.maps.DirectionsStatus.OK) {
                 that.response = that.directionsDisplay ;
@@ -69,7 +88,7 @@ var DirectionsLayerView = GMapsLayerView.extend({
     },
 
     get_dest: function(model_data) {
-        var last_point = _.last(model_data); 
+        var last_point = _.last(model_data);
         return new google.maps.LatLng(last_point[0], last_point[1]);
     },
 
@@ -82,8 +101,8 @@ var DirectionsLayerView = GMapsLayerView.extend({
         });
         return data_as_google;
     }
-
 });
+
 
 var HeatmapLayerBaseView = GMapsLayerView.extend({
     render: function() {
@@ -151,6 +170,7 @@ var WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
 
 var PlainmapView = widgets.DOMWidgetView.extend({
     render: function() {
+        this.load_configuration();
         this.el.style["width"] = this.model.get("width");
         this.el.style["height"] = this.model.get("height");
 
@@ -161,7 +181,7 @@ var PlainmapView = widgets.DOMWidgetView.extend({
 
         var that = this ;
         this.on("displayed", function() {
-            GoogleMapsLoader.load(function(google) {
+            GoogleMapsLoader.load(function (google) {
                 that.map = new google.maps.Map(that.el) ;
                 that.update_bounds(initial_bounds);
 
@@ -171,7 +191,7 @@ var PlainmapView = widgets.DOMWidgetView.extend({
                 window.setTimeout(function() {
                     google.maps.event.trigger(that.map, 'resize') ;
                 }, 1000);
-            }) ;
+            });
         });
     },
 
@@ -197,9 +217,11 @@ var PlainmapView = widgets.DOMWidgetView.extend({
             child_view.add_to_map_view(that) ;
             return child_view;
         })
-    }
+    },
 
 });
+
+_.extend(PlainmapView.prototype, ConfigurationMixin);
 
 
 // Models
@@ -262,5 +284,5 @@ module.exports = {
     PlainmapModel: PlainmapModel,
     DirectionsLayerModel: DirectionsLayerModel,
     SimpleHeatmapLayerModel: SimpleHeatmapLayerModel,
-    WeightedHeatmapLayerModel: WeightedHeatmapLayerModel
+    WeightedHeatmapLayerModel: WeightedHeatmapLayerModel,
 };
