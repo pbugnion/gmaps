@@ -1,3 +1,5 @@
+|pypi| |docs|
+
 gmaps
 =====
 
@@ -94,3 +96,12 @@ Issue reporting and contributing
 Report issues using the `github issue tracker <https://github.com/pbugnion/gmaps/issues>`_.
 
 Contributions are welcome. Read the CONTRIBUTING guide to learn how to contribute.
+
+
+.. |pypi| image:: https://img.shields.io/pypi/v/gmaps.svg?style=flat-square&label=version
+    :target: https://pypi.python.org/pypi/gmaps
+    :alt: Latest version released on PyPi
+
+.. |docs| image:: https://img.shields.io/badge/docs-latest-brightgreen.svg?style=flat
+    :target: http://jupyter-gmaps.readthedocs.io/en/latest/
+    :alt: Latest documentation
