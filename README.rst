@@ -9,6 +9,7 @@ Let's plot a heatmap of taxi pickups in San Francisco:
 
     In [1]: import gmaps 
             import gmaps.datasets
+            gmaps.configure(api_key="AI...") # Your Google API key
 
     # load a Numpy array of (latitude, longitude) pairs
     In [2]: data = gmaps.datasets.load_dataset('taxi_rides')
@@ -67,6 +68,13 @@ You can then enable the extension in Jupyter::
     $ jupyter nbextension enable --py --user gmaps
 
 
+Google API keys
+---------------
+
+To access Google maps, `gmaps` needs a Google API key. This key tells Google who you are, presumably so it can keep track of rate limits and such things. To create an API key, follow the instructions in the `documentation <http://jupyter-gmaps.readthedocs.io/en/latest/authentication.html>`_. Once you have an API key, pass it to `gmaps` before creating widgets::
+
+    gmaps.configure(api_key="AI...")
+  
 Documentation
 -------------
 
