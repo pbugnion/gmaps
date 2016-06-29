@@ -5,7 +5,7 @@ gmaps is a plugin for including interactive Google maps in the IPython Notebook.
 
 Let's plot a heatmap of taxi pickups in San Francisco:
 
-::
+.. code:: python
 
     In [1]: import gmaps 
             import gmaps.datasets
@@ -71,7 +71,9 @@ You can then enable the extension in Jupyter::
 Google API keys
 ---------------
 
-To access Google maps, `gmaps` needs a Google API key. This key tells Google who you are, presumably so it can keep track of rate limits and such things. To create an API key, follow the instructions in the `documentation <http://jupyter-gmaps.readthedocs.io/en/latest/authentication.html>`_. Once you have an API key, pass it to `gmaps` before creating widgets::
+To access Google maps, `gmaps` needs a Google API key. This key tells Google who you are, presumably so it can keep track of rate limits and such things. To create an API key, follow the instructions in the `documentation <http://jupyter-gmaps.readthedocs.io/en/latest/authentication.html>`_. Once you have an API key, pass it to `gmaps` before creating widgets:
+
+.. code:: python
 
     gmaps.configure(api_key="AI...")
   
