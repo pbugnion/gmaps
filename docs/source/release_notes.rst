@@ -2,6 +2,13 @@
 Release notes
 -------------
 
+Version 0.3.1
+=============
+
+Fix release to allow injecting Google maps API keys. Google maps now mandates API keys, so this release provides a way to pass in a key (issue #61).
+
+This release also includes a fix for having multiple layers on the same map.
+
 Version 0.3.0
 =============
 
