@@ -4,6 +4,7 @@ var version = require('./package.json').version;
 // stored in a separate local variable.
 var loaders = [
     { test: /\.json$/, loader: 'json-loader' },
+    { test: /\.js$/, loader: 'babel', query: {presets: ['es2015']}, exclude: /node_modules/ }
 ];
 
 
