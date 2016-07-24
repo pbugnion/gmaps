@@ -27,9 +27,9 @@ function gBoundsToList(gbounds) {
 // Mixins
 
 const ConfigurationMixin = {
-    load_configuration() {
-        const model_configuration = this.model.get("configuration")
-        reloadGoogleMaps(model_configuration)
+    loadConfiguration() {
+        const modelConfiguration = this.model.get("configuration")
+        reloadGoogleMaps(modelConfiguration)
     }
 }
 
@@ -39,26 +39,23 @@ const ConfigurationMixin = {
 const GMapsLayerView = widgets.WidgetView.extend({
     initialize(parameters) {
         GMapsLayerView.__super__.initialize.apply(this, arguments)
-        this.map_view = this.options.map_view
+        this.mapView = this.options.mapView
     }
 })
 
 
 export const DirectionsLayerView = GMapsLayerView.extend({
     render() {
-        const rendererOptions = { map: this.map_view.map }
+        const rendererOptions = { map: this.mapView.map }
 
         this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
 
-        const model_data = this.model.get("data");
-        const orig = this.get_orig(model_data);
-        const dest = this.get_dest(model_data);
-        const wps = this.get_wps(model_data);
+        const modelData = this.model.get("data");
 
         const request = {
-            origin: orig,
-            destination: dest,
-            waypoints: wps,
+            origin: this.getOrigin(modelData),
+            destination: this.getDestination(modelData),
+            waypoints: this.getWaypoints(modelData),
             travelMode: google.maps.TravelMode.DRIVING
         };
 
@@ -66,7 +63,7 @@ export const DirectionsLayerView = GMapsLayerView.extend({
 
         directionsService.route(request, (response, status) => {
             // print to the browser console (mostly for debugging)
-            console.log("Direction service returned: ", status) ;
+            console.log(`Direction service returned: ${status}`) ;
             // set a flag in the model
             this.model.set("layer_status", status) ;
             this.touch() ; // push `layer_status` changes to the model
@@ -78,109 +75,104 @@ export const DirectionsLayerView = GMapsLayerView.extend({
     },
 
 
-    add_to_map_view(map_view) { },
+    addToMapView(mapView) { },
 
-    get_orig(model_data) {
-        const first_point = _.first(model_data)
-        return new google.maps.LatLng(first_point[0], first_point[1])
+    getOrigin(modelData) {
+        const [lat, lng] = _.first(modelData)
+        return new google.maps.LatLng(lat, lng)
     },
 
-    get_dest(model_data) {
-        const last_point = _.last(model_data)
-        return new google.maps.LatLng(last_point[0], last_point[1])
+    getDestination(modelData) {
+        const [lat, lng] = _.last(modelData)
+        return new google.maps.LatLng(lat, lng)
     },
 
-    get_wps(model_data) {
-        const without_first = _.tail(model_data)
-        const without_last = _.initial(without_first)
-        const data_as_google = _.map(without_last, (point) => {
-            const google_point = new google.maps.LatLng(point[0], point[1])
-            return {location: google_point}
+    getWaypoints(modelData) {
+        const withoutFirst = _.tail(modelData)
+        const withoutLast = _.initial(withoutFirst)
+        const dataAsGoogle = withoutLast.map(([lat, lng]) => {
+            return {location: new google.maps.LatLng(lat, lng)}
         })
-        return data_as_google
+        return dataAsGoogle
     }
 })
 
 
 const HeatmapLayerBaseView = GMapsLayerView.extend({
     render() {
-        this.model_events() ;
+        this.modelEvents() ;
         GoogleMapsLoader.load((google) => {
             this.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: this.get_data(),
+                data: this.getData(),
                 radius: this.model.get("point_radius"),
                 maxIntensity: this.model.get("max_intensity")
             }) ;
         });
     },
 
-    add_to_map_view(map_view) {
-        this.heatmap.setMap(map_view.map)
+    addToMapView(mapView) {
+        this.heatmap.setMap(mapView.map)
     },
 
-    model_events() {
-        this.model.on("change:point_radius", this.update_radius, this)
-        this.model.on("change:max_intensity", this.update_max_intensity, this)
+    modelEvents() {
+        this.model.on("change:point_radius", this.updateRadius, this)
+        this.model.on("change:max_intensity", this.updateMaxIntensity, this)
     },
 
     get_data() {},
 
-    update_radius() {
+    updateRadius() {
         this.heatmap.set('radius', this.model.get('point_radius'));
     },
 
-    update_max_intensity() {
+    updateMaxIntensity() {
         this.heatmap.set('maxIntensity', this.model.get('max_intensity'));
     }
 
 })
 
 export const SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
-    get_data() {
-        const data = this.model.get("data");
-        const data_as_google = new google.maps.MVCArray(
-            _.map(data, (point) => {
-                return new google.maps.LatLng(point[0], point[1]);
-            })
-        );
-        return data_as_google
+    getData() {
+        const data = this.model.get("data")
+        const dataAsGoogle = new google.maps.MVCArray(
+            data.map(([lat, lng]) => new google.maps.LatLng(lat, lng))
+        )
+        return dataAsGoogle
     }
 });
 
 
 export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
-    get_data() {
+    getData() {
         const data = this.model.get("data");
-        const data_as_google = new google.maps.MVCArray(
-            _.map(data, (weighted_point) => {
-                const location = new google.maps.LatLng(
-                    weighted_point[0], weighted_point[1]);
-                const weight = weighted_point[2];
-                return { location: location, weight: weight };
+        const dataAsGoogle = new google.maps.MVCArray(
+            data.map(([lat, lng, weight]) => {
+                const location = new google.maps.LatLng(lat, lng)
+                return { location: location, weight: weight }
             })
         );
-        return data_as_google;
+        return dataAsGoogle
     }
 })
 
 
 export const PlainmapView = widgets.DOMWidgetView.extend({
     render() {
-        this.load_configuration();
+        this.loadConfiguration();
         this.el.style["width"] = this.model.get("width");
         this.el.style["height"] = this.model.get("height");
 
-        const initial_bounds = this.model.get("data_bounds");
+        const initialBounds = this.model.get("data_bounds");
 
-        this.layer_views = new widgets.ViewList(this.add_layer_model, null, this);
-        this.model_events() ;
+        this.layerViews = new widgets.ViewList(this.addLayerModel, null, this);
+        this.modelEvents() ;
 
         this.on("displayed", () => {
             GoogleMapsLoader.load((google) => {
                 this.map = new google.maps.Map(this.el) ;
-                this.update_bounds(initial_bounds);
+                this.updateBounds(initialBounds);
 
-                this.layer_views.update(this.model.get("layers"));
+                this.layerViews.update(this.model.get("layers"));
 
                 // hack to force the map to redraw
                 setTimeout(() => {
@@ -190,28 +182,24 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
         })
     },
 
-    model_events() {
-        this.model.on("change:data_bounds", this.update_bounds, this);
+    modelEvents() {
+        this.model.on("change:data_bounds", this.updateBounds, this);
     },
 
-    gmaps_events() {},
-
-    update_bounds() {
-        const model_bounds = this.model.get("data_bounds");
-        const bounds_bl = new google.maps.LatLng(
-            model_bounds[0][0], model_bounds[0][1]);
-        const bounds_tr = new google.maps.LatLng(
-            model_bounds[1][0], model_bounds[1][1]);
-        const bounds = new google.maps.LatLngBounds(bounds_bl, bounds_tr)
+    updateBounds() {
+        const [[latBL, lngBL], [latTR, lngTR]] = this.model.get("data_bounds")
+        const boundBL = new google.maps.LatLng(latBL, lngBL)
+        const boundTR = new google.maps.LatLng(latTR, lngTR)
+        const bounds = new google.maps.LatLngBounds(boundBL, boundTR)
         this.map.fitBounds(bounds);
     },
 
-    add_layer_model(child_model) {
+    addLayerModel(childModel) {
         return this.create_child_view(
-            child_model, {map_view: this}
-        ).then((child_view) => {
-            child_view.add_to_map_view(this) ;
-            return child_view;
+            childModel, {mapView: this}
+        ).then((childView) => {
+            childView.addToMapView(this) ;
+            return childView;
         })
     },
 
