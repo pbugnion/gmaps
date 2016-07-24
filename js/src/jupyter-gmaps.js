@@ -1,7 +1,7 @@
-var widgets = require('jupyter-js-widgets');
-var _ = require('underscore');
+import widgets from 'jupyter-js-widgets'
+import _ from 'underscore'
 
-var GoogleMapsLoader = require('google-maps');
+import GoogleMapsLoader from 'google-maps'
 
 function reloadGoogleMaps(configuration) {
     GoogleMapsLoader.release();
@@ -15,218 +15,202 @@ function reloadGoogleMaps(configuration) {
 reloadGoogleMaps({}) ;
 
 function gPointToList(gpoint) {
-    return [gpoint.lat(), gpoint.lng()];
+    return [gpoint.lat(), gpoint.lng()]
 }
 
 function gBoundsToList(gbounds) {
-    var sw = gPointToList(gbounds.getSouthWest());
-    var ne = gPointToList(gbounds.getNorthEast());
+    const sw = gPointToList(gbounds.getSouthWest())
+    const ne = gPointToList(gbounds.getNorthEast())
     return [sw, ne]
 }
 
 // Mixins
 
-var ConfigurationMixin = {
-    load_configuration: function() {
-        var model_configuration = this.model.get("configuration");
-        reloadGoogleMaps(model_configuration);
+const ConfigurationMixin = {
+    loadConfiguration() {
+        const modelConfiguration = this.model.get("configuration")
+        reloadGoogleMaps(modelConfiguration)
     }
-} ;
+}
 
 
 // Views
 
-var GMapsLayerView = widgets.WidgetView.extend({
-    initialize: function(parameters) {
-        GMapsLayerView.__super__.initialize.apply(this, arguments);
-        this.map_view = this.options.map_view ;
-    },
-});
+const GMapsLayerView = widgets.WidgetView.extend({
+    initialize(parameters) {
+        GMapsLayerView.__super__.initialize.apply(this, arguments)
+        this.mapView = this.options.mapView
+    }
+})
 
 
-var DirectionsLayerView = GMapsLayerView.extend({
-    render: function() {
-        var that = this ;
+export const DirectionsLayerView = GMapsLayerView.extend({
+    render() {
+        const rendererOptions = { map: this.mapView.map }
 
-        var rendererOptions = { map:that.map_view.map };
+        this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
 
-        that.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+        const modelData = this.model.get("data");
 
-        var model_data = this.model.get("data");
-        var orig = that.get_orig(model_data);
-        var dest = that.get_dest(model_data);
-        var wps = that.get_wps(model_data);
-
-        var request = {
-            origin: orig,
-            destination: dest,
-            waypoints: wps,
+        const request = {
+            origin: this.getOrigin(modelData),
+            destination: this.getDestination(modelData),
+            waypoints: this.getWaypoints(modelData),
             travelMode: google.maps.TravelMode.DRIVING
         };
 
-        var directionsService = new google.maps.DirectionsService();
+        const directionsService = new google.maps.DirectionsService();
 
-        directionsService.route(request, function(response, status) {
+        directionsService.route(request, (response, status) => {
             // print to the browser console (mostly for debugging)
-            console.log("Direction service returned: ", status) ;
+            console.log(`Direction service returned: ${status}`) ;
             // set a flag in the model
-            that.model.set("layer_status", status) ;
-            that.touch() ; // push `layer_status` changes to the model
+            this.model.set("layer_status", status) ;
+            this.touch() ; // push `layer_status` changes to the model
             if (status == google.maps.DirectionsStatus.OK) {
-                that.response = that.directionsDisplay ;
-                that.directionsDisplay.setDirections(response);
+                this.response = this.directionsDisplay ;
+                this.directionsDisplay.setDirections(response);
             }
         });
     },
 
 
-    add_to_map_view: function(map_view) { },
+    addToMapView(mapView) { },
 
-    get_orig: function(model_data) {
-        var first_point = _.first(model_data);
-        return new google.maps.LatLng(first_point[0], first_point[1]);
+    getOrigin(modelData) {
+        const [lat, lng] = _.first(modelData)
+        return new google.maps.LatLng(lat, lng)
     },
 
-    get_dest: function(model_data) {
-        var last_point = _.last(model_data);
-        return new google.maps.LatLng(last_point[0], last_point[1]);
+    getDestination(modelData) {
+        const [lat, lng] = _.last(modelData)
+        return new google.maps.LatLng(lat, lng)
     },
 
-    get_wps: function(model_data) {
-        var without_first = _.tail(model_data);
-        var without_last = _.initial(without_first) ;
-        var data_as_google = _.map(without_last, function(point) {
-            var google_point = new google.maps.LatLng(point[0], point[1]);
-            return {location: google_point};
-        });
-        return data_as_google;
-    }
-});
-
-
-var HeatmapLayerBaseView = GMapsLayerView.extend({
-    render: function() {
-        this.model_events() ;
-        var that = this ;
-        GoogleMapsLoader.load(function(google) {
-            that.heatmap = new google.maps.visualization.HeatmapLayer({
-                data: that.get_data(),
-                radius: that.model.get("point_radius"),
-                maxIntensity: that.model.get("max_intensity")
-            }) ;
-        });
-    },
-
-    add_to_map_view: function(map_view) {
-        this.heatmap.setMap(map_view.map) ;
-    },
-
-    model_events: function() {
-        this.model.on("change:point_radius", this.update_radius, this);
-        this.model.on("change:max_intensity", this.update_max_intensity, this);
-    },
-
-    get_data: function() {},
-
-    update_radius: function() {
-        this.heatmap.set('radius', this.model.get('point_radius'));
-    },
-
-    update_max_intensity: function() {
-        console.log("max_intensity change");
-        this.heatmap.set('maxIntensity', this.model.get('max_intensity'));
-    }
-
-});
-
-var SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
-    get_data: function() {
-        var data = this.model.get("data");
-        var data_as_google = new google.maps.MVCArray(
-            _.map(data, function(point) {
-                return new google.maps.LatLng(point[0], point[1]);
-            })
-        );
-        return data_as_google;
-    }
-});
-
-
-var WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
-    get_data: function() {
-        var data = this.model.get("data");
-        var data_as_google = new google.maps.MVCArray(
-            _.map(data, function(weighted_point) {
-                var location = new google.maps.LatLng(
-                    weighted_point[0], weighted_point[1]);
-                var weight = weighted_point[2];
-                return { location: location, weight: weight };
-            })
-        );
-        return data_as_google;
+    getWaypoints(modelData) {
+        const withoutFirst = _.tail(modelData)
+        const withoutLast = _.initial(withoutFirst)
+        const dataAsGoogle = withoutLast.map(([lat, lng]) => {
+            return {location: new google.maps.LatLng(lat, lng)}
+        })
+        return dataAsGoogle
     }
 })
 
 
-var PlainmapView = widgets.DOMWidgetView.extend({
-    render: function() {
-        this.load_configuration();
-        this.el.style["width"] = this.model.get("width");
-        this.el.style["height"] = this.model.get("height");
-
-        var initial_bounds = this.model.get("data_bounds");
-
-        this.layer_views = new widgets.ViewList(this.add_layer_model, null, this);
-        this.model_events() ;
-
-        var that = this ;
-        this.on("displayed", function() {
-            GoogleMapsLoader.load(function (google) {
-                that.map = new google.maps.Map(that.el) ;
-                that.update_bounds(initial_bounds);
-
-                that.layer_views.update(that.model.get("layers"));
-
-                // hack to force the map to redraw
-                window.setTimeout(function() {
-                    google.maps.event.trigger(that.map, 'resize') ;
-                }, 1000);
-            });
+const HeatmapLayerBaseView = GMapsLayerView.extend({
+    render() {
+        this.modelEvents() ;
+        GoogleMapsLoader.load((google) => {
+            this.heatmap = new google.maps.visualization.HeatmapLayer({
+                data: this.getData(),
+                radius: this.model.get("point_radius"),
+                maxIntensity: this.model.get("max_intensity")
+            }) ;
         });
     },
 
-    model_events: function() {
-        this.model.on("change:data_bounds", this.update_bounds, this);
+    addToMapView(mapView) {
+        this.heatmap.setMap(mapView.map)
     },
 
-    gmaps_events: function() {},
-
-    update_bounds: function() {
-        var model_bounds = this.model.get("data_bounds");
-        var bounds_bl = new google.maps.LatLng(
-            model_bounds[0][0], model_bounds[0][1]);
-        var bounds_tr = new google.maps.LatLng(
-            model_bounds[1][0], model_bounds[1][1]);
-        var bounds = new google.maps.LatLngBounds(bounds_bl, bounds_tr)
-        this.map.fitBounds(bounds);
+    modelEvents() {
+        this.model.on("change:point_radius", this.updateRadius, this)
+        this.model.on("change:max_intensity", this.updateMaxIntensity, this)
     },
 
-    add_layer_model: function(child_model) {
-        var that = this;
-        return this.create_child_view(child_model, {map_view: this}).then(function(child_view) {
-            child_view.add_to_map_view(that) ;
-            return child_view;
+    get_data() {},
+
+    updateRadius() {
+        this.heatmap.set('radius', this.model.get('point_radius'));
+    },
+
+    updateMaxIntensity() {
+        this.heatmap.set('maxIntensity', this.model.get('max_intensity'));
+    }
+
+})
+
+export const SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
+    getData() {
+        const data = this.model.get("data")
+        const dataAsGoogle = new google.maps.MVCArray(
+            data.map(([lat, lng]) => new google.maps.LatLng(lat, lng))
+        )
+        return dataAsGoogle
+    }
+});
+
+
+export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
+    getData() {
+        const data = this.model.get("data");
+        const dataAsGoogle = new google.maps.MVCArray(
+            data.map(([lat, lng, weight]) => {
+                const location = new google.maps.LatLng(lat, lng)
+                return { location: location, weight: weight }
+            })
+        );
+        return dataAsGoogle
+    }
+})
+
+
+export const PlainmapView = widgets.DOMWidgetView.extend({
+    render() {
+        this.loadConfiguration();
+        this.el.style["width"] = this.model.get("width");
+        this.el.style["height"] = this.model.get("height");
+
+        const initialBounds = this.model.get("data_bounds");
+
+        this.layerViews = new widgets.ViewList(this.addLayerModel, null, this);
+        this.modelEvents() ;
+
+        this.on("displayed", () => {
+            GoogleMapsLoader.load((google) => {
+                this.map = new google.maps.Map(this.el) ;
+                this.updateBounds(initialBounds);
+
+                this.layerViews.update(this.model.get("layers"));
+
+                // hack to force the map to redraw
+                setTimeout(() => {
+                    google.maps.event.trigger(this.map, 'resize') ;
+                }, 1000);
+            })
         })
     },
 
-});
+    modelEvents() {
+        this.model.on("change:data_bounds", this.updateBounds, this);
+    },
+
+    updateBounds() {
+        const [[latBL, lngBL], [latTR, lngTR]] = this.model.get("data_bounds")
+        const boundBL = new google.maps.LatLng(latBL, lngBL)
+        const boundTR = new google.maps.LatLng(latTR, lngTR)
+        const bounds = new google.maps.LatLngBounds(boundBL, boundTR)
+        this.map.fitBounds(bounds);
+    },
+
+    addLayerModel(childModel) {
+        return this.create_child_view(
+            childModel, {mapView: this}
+        ).then((childView) => {
+            childView.addToMapView(this) ;
+            return childView;
+        })
+    },
+
+})
 
 _.extend(PlainmapView.prototype, ConfigurationMixin);
 
 
 // Models
 
-var GMapsLayerModel = widgets.WidgetModel.extend({
+export const GMapsLayerModel = widgets.WidgetModel.extend({
     defaults: _.extend({}, widgets.WidgetModel.prototype.defaults, {
         _view_name : 'GMapsLayerView',
         _model_name : 'GMapsLayerModel',
@@ -235,14 +219,14 @@ var GMapsLayerModel = widgets.WidgetModel.extend({
     })
 });
 
-var DirectionsLayerModel = GMapsLayerModel.extend({
+export const DirectionsLayerModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
         _view_name: "DirectionsLayerView",
         _model_name: "DirectionsLayerModel"
     })
 });
 
-var SimpleHeatmapLayerModel = GMapsLayerModel.extend({
+export const SimpleHeatmapLayerModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
         _view_name: "SimpleHeatmapLayerView",
         _model_name: "SimpleHeatmapLayerModel"
@@ -250,7 +234,7 @@ var SimpleHeatmapLayerModel = GMapsLayerModel.extend({
 });
 
 
-var WeightedHeatmapLayerModel = GMapsLayerModel.extend({
+export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
         _view_name: "WeightedHeatmapLayerView",
         _model_name: "WeightedHeatmapLayerModel"
@@ -258,7 +242,7 @@ var WeightedHeatmapLayerModel = GMapsLayerModel.extend({
 });
 
 
-var PlainmapModel = widgets.DOMWidgetModel.extend({
+export const PlainmapModel = widgets.DOMWidgetModel.extend({
     defaults: _.extend({}, widgets.DOMWidgetModel.prototype.defaults, {
         _view_name: "PlainmapView",
         _model_name: "PlainmapModel",
@@ -273,16 +257,3 @@ var PlainmapModel = widgets.DOMWidgetModel.extend({
             layers: {deserialize: widgets.unpack_models}
     }, widgets.DOMWidgetModel.serializers)
 });
-
-
-
-module.exports = {
-    DirectionsLayerView: DirectionsLayerView,
-    SimpleHeatmapLayerView: SimpleHeatmapLayerView,
-    WeightedHeatmapLayerView: WeightedHeatmapLayerView,
-    PlainmapView: PlainmapView,
-    PlainmapModel: PlainmapModel,
-    DirectionsLayerModel: DirectionsLayerModel,
-    SimpleHeatmapLayerModel: SimpleHeatmapLayerModel,
-    WeightedHeatmapLayerModel: WeightedHeatmapLayerModel,
-};
