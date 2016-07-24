@@ -44,6 +44,30 @@ class Point(traitlets.Tuple):
             Latitude(), Longitude(), default_value=default_value)
 
 
+class BoundedFloat(traitlets.Float):
+    """
+    Traitlet representing a bounded float
+    """
+    default_value = traitlets.Undefined
+
+    def __init__(self, default_value,
+                 allow_none=None, min_bound=None, max_bound=None):
+        super(BoundedFloat, self).__init__(
+            default_value, allow_none)
+        self.min_bound = min_bound
+        self.max_bound = max_bound
+        self.info_text = "a float between {} and {}".format(
+            min_bound, max_bound)
+
+    def validate(self, obj, value):
+        value = super(BoundedFloat, self).validate(obj, value)
+        if self.min_bound is not None and value < self.min_bound:
+            self.error(obj, value)
+        if self.max_bound is not None and value > self.max_bound:
+            self.error(obj, value)
+        return value
+
+
 def is_valid_point(pt):
     latitude, longitude = pt
     return (-90.0 <= latitude <= 90.0) and (-180.0 <= longitude <= 180.0)

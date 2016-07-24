@@ -2,7 +2,7 @@
 import warnings
 
 import ipywidgets as widgets
-from traitlets import (Unicode, CUnicode, default, Int,
+from traitlets import (Unicode, CUnicode, default, Int, Bool,
                        List, Tuple, Float, Instance, validate,
                        observe, Enum, Dict, HasTraits)
 
@@ -197,6 +197,17 @@ class Heatmap(widgets.Widget):
         Number of pixels for each point passed in the data. This determines the
         "radius of influence" of each data point.
     :type point_radius: int, optional
+
+    :param dissipating:
+        Whether the radius of influence of each point changes as you zoom in
+        or out. If `dissipating` is True, the radius of influence of each
+        point increases as you zoom out and decreases as you zoom in. If
+        False, the radius of influence remains the same. Defaults to True.
+    :type dissipating: bool, optional
+
+    :param opacity:
+        The opacity of the heatmap layer. Defaults to 0.6.
+    :type opacity: float, optional
     """
     has_bounds = True
     _view_name = Unicode("SimpleHeatmapLayerView").tag(sync=True)
@@ -207,6 +218,8 @@ class Heatmap(widgets.Widget):
     data = List().tag(sync=True)
     max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
+    dissipating = Bool(default_value=True).tag(sync=True)
+    opacity = geotraitlets.BoundedFloat(default_value=0.6, min_bound=0.0, max_bound=1.0).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @validate("data")
