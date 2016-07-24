@@ -46,7 +46,15 @@ class Point(traitlets.Tuple):
 
 class BoundedFloat(traitlets.Float):
     """
-    Traitlet representing a bounded float
+    Traitlet representing a float that must be in a certain range
+
+    :param min_bound:
+        This traitlet must have value >= min_bound, unless min_bound
+        is None. Defaults to None.
+
+    :param max_bound:
+        This traitlet must have value <= max_bound, unless max_bound
+        is None. Defaults to None.
     """
     default_value = traitlets.Undefined
 
