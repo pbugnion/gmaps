@@ -7,6 +7,7 @@ from traitlets import (Unicode, CUnicode, default, Int, Bool,
                        observe, Enum, Dict, HasTraits)
 
 import gmaps.geotraitlets as geotraitlets
+from gmaps.nullable_containers import NullableList
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
@@ -220,6 +221,7 @@ class Heatmap(widgets.Widget):
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
     dissipating = Bool(default_value=True).tag(sync=True)
     opacity = geotraitlets.BoundedFloat(default_value=0.6, min_bound=0.0, max_bound=1.0).tag(sync=True)
+    gradient = NullableList(default_value=None).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @validate("data")

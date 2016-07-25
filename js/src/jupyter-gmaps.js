@@ -107,7 +107,8 @@ const HeatmapLayerBaseView = GMapsLayerView.extend({
                 radius: this.model.get("point_radius"),
                 maxIntensity: this.model.get("max_intensity"),
                 dissipating: this.model.get("dissipating"),
-                opacity: this.model.get("opacity")
+                opacity: this.model.get("opacity"),
+                gradient: this.model.get("gradient")
             }) ;
         });
     },
@@ -123,7 +124,8 @@ const HeatmapLayerBaseView = GMapsLayerView.extend({
             ['maxIntensity', 'max_intensity'],
             ['opacity', 'opacity'],
             ['radius', 'point_radius'],
-            ['dissipating', 'dissipating']
+            ['dissipating', 'dissipating'],
+            ['gradient', 'gradient']
         ]
         properties.forEach(([nameInView, nameInModel]) => {
             const callback = (
