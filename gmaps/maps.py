@@ -221,7 +221,7 @@ class Heatmap(widgets.Widget):
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
     dissipating = Bool(default_value=True).tag(sync=True)
     opacity = geotraitlets.BoundedFloat(default_value=0.6, min_bound=0.0, max_bound=1.0).tag(sync=True)
-    gradient = NullableList(default_value=None).tag(sync=True)
+    gradient = NullableList(trait=geotraitlets.ColorAlpha(), default_value=None).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @validate("data")
