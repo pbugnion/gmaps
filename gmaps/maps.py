@@ -149,42 +149,9 @@ class Directions(widgets.Widget):
             raise DirectionsServiceException("No directions returned: " + change["new"])
 
 
-
-class Heatmap(widgets.Widget):
+# Mixin for options common to both heatmap and weighted heatmaps.
+class _HeatmapOptionsMixin(HasTraits):
     """
-    Heatmap layer.
-
-    Add this to a ``Map`` instance to draw a heatmap. A heatmap shows
-    the density of points in or near a particular area.
-
-    To set the parameters, pass them to the constructor or set them
-    on the heatmap object after construction::
-
-    >>> heatmap_layer = gmaps.Heatmap(data=data, max_intensity=10)
-
-    or::
-
-    >>> heatmap_layer = gmaps.Heatmap()
-    >>> heatmap_layer.data = data
-    >>> heatmap_layer.max_intensity = 10
-
-    :Examples:
-
-    >>> m = gmaps.Map()
-    >>> data = [(46.1, 5.2), (46.2, 5.3), (46.3, 5.4)]
-    >>> heatmap_layer = gmaps.Heatmap(data=data)
-    >>> heatmap_layer.max_intensity = 2
-    >>> heatmap_layer.point_radius = 3
-    >>> m.add_layer(heatmap_layer)
-
-    :param data: List of (latitude, longitude) pairs denoting a single
-        point. Latitudes
-        are expressed as a float between -90 (corresponding to 90 degrees south)
-        and 90 (corresponding to 90 degrees north). Longitudes are expressed
-        as a float between -180 (corresponding to 180 degrees west) and 180
-        (corresponding to 180 degrees east).
-    :type data: list of tuples, optional
-
     :param max_intensity:
         Strictly positive floating point number indicating the numeric value
         that corresponds to the hottest colour in the heatmap gradient. Any
@@ -209,7 +176,60 @@ class Heatmap(widgets.Widget):
     :param opacity:
         The opacity of the heatmap layer. Defaults to 0.6.
     :type opacity: float, optional
+
+    :param gradient:
+        The color gradient for the heatmap. This must be specified as a list
+        of colors. Google Maps then interpolates linearly between those
+        colors.
+        Colors can be specified as a simple string, e.g. 'blue',
+        as an RGB tuple, e.g. (100, 0, 0), or as an RGBA tuple, e.g.
+        (100, 0, 0, 0.5).
+    :type gradient: list of colors, optional
     """
+    max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
+    point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
+    dissipating = Bool(default_value=True).tag(sync=True)
+    opacity = geotraitlets.BoundedFloat(default_value=0.6, min_bound=0.0, max_bound=1.0).tag(sync=True)
+    gradient = NullableList(trait=geotraitlets.ColorAlpha(), default_value=None).tag(sync=True)
+
+
+class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
+    """
+    Heatmap layer.
+
+    Add this to a ``Map`` instance to draw a heatmap. A heatmap shows
+    the density of points in or near a particular area.
+
+    To set the parameters, pass them to the constructor or set them
+    on the heatmap object after construction::
+
+    >>> heatmap_layer = gmaps.Heatmap(data=data, max_intensity=10)
+
+    or::
+
+    >>> heatmap_layer = gmaps.Heatmap()
+    >>> heatmap_layer.data = data
+    >>> heatmap_layer.max_intensity = 10
+
+    :Examples:
+
+    >>> m = gmaps.Map()
+    >>> data = [(46.1, 5.2), (46.2, 5.3), (46.3, 5.4)]
+    >>> heatmap_layer = gmaps.Heatmap(data=data)
+    >>> heatmap_layer.max_intensity = 2
+    >>> heatmap_layer.point_radius = 3
+    >>> heatmap_layer.gradient = ['white', 'gray']
+    >>> m.add_layer(heatmap_layer)
+
+    :param data: List of (latitude, longitude) pairs denoting a single
+        point. Latitudes
+        are expressed as a float between -90 (corresponding to 90 degrees south)
+        and 90 (corresponding to 90 degrees north). Longitudes are expressed
+        as a float between -180 (corresponding to 180 degrees west) and 180
+        (corresponding to 180 degrees east).
+    :type data: list of tuples, optional
+
+    """ + _HeatmapOptionsMixin.__doc__
     has_bounds = True
     _view_name = Unicode("SimpleHeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
@@ -217,11 +237,6 @@ class Heatmap(widgets.Widget):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     data = List().tag(sync=True)
-    max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
-    point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
-    dissipating = Bool(default_value=True).tag(sync=True)
-    opacity = geotraitlets.BoundedFloat(default_value=0.6, min_bound=0.0, max_bound=1.0).tag(sync=True)
-    gradient = NullableList(trait=geotraitlets.ColorAlpha(), default_value=None).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @validate("data")
@@ -250,8 +265,6 @@ class WeightedHeatmap(widgets.Widget):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     data = List().tag(sync=True)
-    max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
-    point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @validate("data")
