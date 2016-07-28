@@ -7,7 +7,6 @@ from traitlets import (Unicode, CUnicode, default, Int, Bool,
                        observe, Enum, Dict, HasTraits)
 
 import gmaps.geotraitlets as geotraitlets
-from gmaps.nullable_containers import NullableList
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
@@ -190,7 +189,11 @@ class _HeatmapOptionsMixin(HasTraits):
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
     dissipating = Bool(default_value=True).tag(sync=True)
     opacity = geotraitlets.BoundedFloat(default_value=0.6, min_bound=0.0, max_bound=1.0).tag(sync=True)
-    gradient = NullableList(trait=geotraitlets.ColorAlpha(), default_value=None).tag(sync=True)
+    gradient = List(trait=geotraitlets.ColorAlpha(), allow_none=True).tag(sync=True)
+
+    @default("gradient")
+    def _default_gradient(self):
+        return None
 
 
 class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
@@ -257,7 +260,7 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
         self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
 
 
-class WeightedHeatmap(widgets.Widget):
+class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
     has_bounds = True
     _view_name = Unicode("WeightedHeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
