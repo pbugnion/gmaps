@@ -9,6 +9,7 @@ Maps and layers
 
 .. autoclass:: gmaps.Heatmap
 
+.. autoclass:: gmaps.WeightedHeatmap
 
 Utility functions
 -----------------

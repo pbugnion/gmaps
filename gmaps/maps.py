@@ -227,10 +227,10 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
     :param data: List of (latitude, longitude) pairs denoting a single
         point. Latitudes
         are expressed as a float between -90 (corresponding to 90 degrees south)
-        and 90 (corresponding to 90 degrees north). Longitudes are expressed
+        and +90 (corresponding to 90 degrees north). Longitudes are expressed
         as a float between -180 (corresponding to 180 degrees west) and 180
         (corresponding to 180 degrees east).
-    :type data: list of tuples, optional
+    :type data: list of tuples
 
     """ + _HeatmapOptionsMixin.__doc__
     has_bounds = True
@@ -261,6 +261,31 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
 
 
 class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
+    __doc__ = """
+    Heatmap with weighted points.
+
+    Add this layer to a ``Map`` instance to draw a heatmap. Unlike the plain
+    Heatmap layer, which assumes that all points should have equal weight,
+    this layer lets you specifiy different weights for points.
+
+    :Examples:
+
+    >>> m = gmaps.Map()
+    # triples representing `latitude, longitude, weight`:
+    >>> data = [(46.1, 5.2, 0.5), (46.2, 5.3, 0.2), (46.3, 5.4, 0.8)]
+    >>> heatmap_layer = gmaps.Heatmap(data=data)
+    >>> heatmap_layer.max_intensity = 2
+    >>> m.add_layer(heatmap_layer)
+
+    :param data: List of (latitude, longitude, weight) triples for a single
+        point. Latitudes are expressed as a float between -90 (corresponding to
+        90 degrees south) and +90 (corresponding to 90 degrees north).
+        Longitudes are expressed as a float between -180
+        (corresponding to 180 degrees west) and +180 (corresponding to
+        180 degrees east). Weights must be non-negative.
+    :type data: list of tuples
+
+    """ + _HeatmapOptionsMixin.__doc__
     has_bounds = True
     _view_name = Unicode("WeightedHeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
