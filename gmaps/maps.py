@@ -197,7 +197,7 @@ class _HeatmapOptionsMixin(HasTraits):
 
 
 class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
-    """
+    __doc__ = """
     Heatmap layer.
 
     Add this to a ``Map`` instance to draw a heatmap. A heatmap shows
