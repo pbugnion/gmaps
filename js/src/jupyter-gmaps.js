@@ -105,7 +105,10 @@ const HeatmapLayerBaseView = GMapsLayerView.extend({
             this.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: this.getData(),
                 radius: this.model.get("point_radius"),
-                maxIntensity: this.model.get("max_intensity")
+                maxIntensity: this.model.get("max_intensity"),
+                dissipating: this.model.get("dissipating"),
+                opacity: this.model.get("opacity"),
+                gradient: this.model.get("gradient")
             }) ;
         });
     },
@@ -115,19 +118,24 @@ const HeatmapLayerBaseView = GMapsLayerView.extend({
     },
 
     modelEvents() {
-        this.model.on("change:point_radius", this.updateRadius, this)
-        this.model.on("change:max_intensity", this.updateMaxIntensity, this)
+        // Simple properties:
+        // [nameInView, nameInModel]
+        const properties = [
+            ['maxIntensity', 'max_intensity'],
+            ['opacity', 'opacity'],
+            ['radius', 'point_radius'],
+            ['dissipating', 'dissipating'],
+            ['gradient', 'gradient']
+        ]
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = (
+                () => this.heatmap.set(nameInView, this.model.get(nameInModel))
+            )
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
     },
 
     get_data() {},
-
-    updateRadius() {
-        this.heatmap.set('radius', this.model.get('point_radius'));
-    },
-
-    updateMaxIntensity() {
-        this.heatmap.set('maxIntensity', this.model.get('max_intensity'));
-    }
 
 })
 

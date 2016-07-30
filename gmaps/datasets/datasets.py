@@ -41,9 +41,15 @@ def _read_rows(f):
     return rows
 
 def list_datasets():
+    """
+    List of datasets available
+    """
     return METADATA.keys()
 
 def load_dataset(dataset_name):
+    """
+    Fetch a dataset, returning an array of tuples.
+    """
     url = METADATA[dataset_name]["url"]
     f = urlopen(url)
     data = _read_rows(f)

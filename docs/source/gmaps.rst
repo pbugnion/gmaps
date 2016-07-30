@@ -93,6 +93,9 @@ We already know how to build a heatmap layer::
   m.add_layer(heatmap_layer)
   m
 
+Preventing dissipation on zoom
+++++++++++++++++++++++++++++++
+
 If you zoom in sufficiently, you will notice that individual points disappear. You can prevent this from happening by controlling the ``max_intensity`` setting. This caps off the maximum peak intensity. It is useful if your data is strongly peaked. This settings is `None` by default, which implies no capping. Typically, when setting the maximum intensity, you also want to set the ``point_radius`` setting to a fairly low value. The only good way to find reasonable values for these settings is to tweak them until you have a map that you are happy with.::
 
   heatmap_layer.max_intensity = 100
@@ -103,7 +106,39 @@ To avoid re-drawing the whole map every time you tweak these settings, you may w
 
 .. image:: acled_africa_heatmap.png
 
+Google maps also exposes a ``dissipating`` option, which is true by default. If this is true, the radius of influence of each point is tied to the zoom level: as you zoom out, a given point covers more physical kilometres. If you set it to false, the physical radius covered by each point stays fixed. Your points will therefore either be tiny at high zoom levels or large at low zoom levels.
+
+Setting the color gradient and opacity
+++++++++++++++++++++++++++++++++++++++
+
+You can set the color gradient of the map by passing in a list of colors. Google maps will interpolate linearly between those colors. You can represent a color as a string denoting the color (the colors allowed by `this <http://www.w3.org/TR/css3-color/#html4>`_)::
+
+  heatmap.gradient = [
+      'white',
+      'silver',
+      'gray'
+  ]
+
+If you need more flexibility, you can represent colours as an RGB triple or an RGBA quadruple::
+
+
+  heatmap.gradient = [
+      (200, 200, 200, 0.6),
+      (100, 100, 100, 0.3),
+      (50, 50, 50, 0.3)
+  ]
+
+.. image:: acled_africa_heatmap_gradient.png
+
+You can also use the ``opacity`` option to set a single opacity across the entire colour gradient::
+
+  heatmap.opacity = 0.0 # make the heatmap transparent
+
 Weighted heatmaps
 ^^^^^^^^^^^^^^^^^
 
 Weighted heatmap layers are identical to heatmaps, except that the `data` object is a triple indicating `(latitude, longitude, weight)`. Weights must all be positive (this is a limitation in Google maps itself). 
+
+Weighted heatmaps support the same options as heatmaps.
+
+.. image:: weighted-heatmap-example.png
