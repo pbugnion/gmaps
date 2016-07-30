@@ -1,4 +1,4 @@
-|pypi| |docs|
+|travis| |pypi| |docs|
 
 gmaps
 =====
@@ -97,6 +97,9 @@ Report issues using the `github issue tracker <https://github.com/pbugnion/gmaps
 
 Contributions are welcome. Read the CONTRIBUTING guide to learn how to contribute.
 
+.. |travis| image:: https://travis-ci.org/pbugnion/gmaps.svg?branch=master
+    :target: https://travis-ci.org/pbugnion/gmaps
+    :alt: Travis build status
 
 .. |pypi| image:: https://img.shields.io/pypi/v/gmaps.svg?style=flat-square&label=version
     :target: https://pypi.python.org/pypi/gmaps
