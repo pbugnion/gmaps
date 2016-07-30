@@ -2,6 +2,13 @@
 Release notes
 -------------
 
+Version 0.3.2
+=============
+
+ * Allow setting heatmap options (issues #74)
+ * Basic unit tests for traitlets, mixins and datasets
+ * Continuous integration with Travis CI.
+
 Version 0.3.1
 =============
 
