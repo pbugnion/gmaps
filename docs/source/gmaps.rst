@@ -111,7 +111,7 @@ Google maps also exposes a ``dissipating`` option, which is true by default. If 
 Setting the color gradient and opacity
 ++++++++++++++++++++++++++++++++++++++
 
-You can set the color gradient of the map by passing in a list of colors. Google maps will interpolate linearly between those colors. You can represent a color as a string denoting the color (the colors allowed by `this <http://www.w3.org/TR/css3-color/#html4>`)::
+You can set the color gradient of the map by passing in a list of colors. Google maps will interpolate linearly between those colors. You can represent a color as a string denoting the color (the colors allowed by `this <http://www.w3.org/TR/css3-color/#html4>`_)::
 
   heatmap.gradient = [
       'white',
@@ -138,3 +138,7 @@ Weighted heatmaps
 ^^^^^^^^^^^^^^^^^
 
 Weighted heatmap layers are identical to heatmaps, except that the `data` object is a triple indicating `(latitude, longitude, weight)`. Weights must all be positive (this is a limitation in Google maps itself). 
+
+Weighted heatmaps support the same options as heatmaps.
+
+.. image:: weighted-heatmap-example.png
