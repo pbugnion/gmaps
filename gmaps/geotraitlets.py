@@ -92,9 +92,9 @@ class RgbTuple(traitlets.Tuple):
 
     def __init__(self, **metadata):
         traits = [
-            traitlets.Integer(traitlets.Undefined, min=0, max=255),
-            traitlets.Integer(traitlets.Undefined, min=0, max=255),
-            traitlets.Integer(traitlets.Undefined, min=0, max=255)
+            traitlets.Int(traitlets.Undefined, min=0, max=255),
+            traitlets.Int(traitlets.Undefined, min=0, max=255),
+            traitlets.Int(traitlets.Undefined, min=0, max=255)
         ]
         super(RgbTuple, self).__init__(*traits, **metadata)
 
@@ -104,9 +104,9 @@ class RgbaTuple(traitlets.Tuple):
 
     def __init__(self, **metadata):
         traits = [
-            traitlets.Integer(traitlets.Undefined, min=0, max=255),
-            traitlets.Integer(traitlets.Undefined, min=0, max=255),
-            traitlets.Integer(traitlets.Undefined, min=0, max=255),
+            traitlets.Int(traitlets.Undefined, min=0, max=255),
+            traitlets.Int(traitlets.Undefined, min=0, max=255),
+            traitlets.Int(traitlets.Undefined, min=0, max=255),
             traitlets.Float(traitlets.Undefined, min=0.0, max=1.0)
         ]
         super(RgbaTuple, self).__init__(*traits, **metadata)
