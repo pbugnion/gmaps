@@ -46,68 +46,6 @@ class Point(traitlets.Tuple):
             Latitude(), Longitude(), default_value=default_value)
 
 
-class BoundedFloat(traitlets.Float):
-    """
-    Traitlet representing a float that must be in a certain range
-
-    :param min_bound:
-        This traitlet must have value >= min_bound, unless min_bound
-        is None. Defaults to None.
-
-    :param max_bound:
-        This traitlet must have value <= max_bound, unless max_bound
-        is None. Defaults to None.
-    """
-    default_value = traitlets.Undefined
-
-    def __init__(self, default_value,
-                 allow_none=None, min_bound=None, max_bound=None):
-        super(BoundedFloat, self).__init__(
-            default_value, allow_none)
-        self.min_bound = min_bound
-        self.max_bound = max_bound
-        self.info_text = "a float between {} and {}".format(
-            min_bound, max_bound)
-
-    def validate(self, obj, value):
-        value = super(BoundedFloat, self).validate(obj, value)
-        if self.min_bound is not None and value < self.min_bound:
-            self.error(obj, value)
-        if self.max_bound is not None and value > self.max_bound:
-            self.error(obj, value)
-        return value
-
-
-class BoundedInteger(traitlets.Integer):
-    """
-    Traitlet representing an integer in a certain range.
-
-    :param min_bound:
-        The value of this traitlet must be >= min_bound,
-        unless min_bound is None. Defaults to None.
-
-    :param max_bound:
-        The value of this traitlet must be <= max_bound,
-        unless max_bound is None. Defaults to None.
-    """
-    default_value = traitlets.Undefined
-
-    def __init__(self, default_value,
-                 allow_none=None, min_bound=None, max_bound=None):
-        self.min_bound = min_bound
-        self.max_bound = max_bound
-        self.info_text = "an integer between {} and {}".format(
-            min_bound, max_bound)
-
-    def validate(self, obj, value):
-        value = super(BoundedInteger, self).validate(obj, value)
-        if self.min_bound is not None and value < self.min_bound:
-            self.error(obj, value)
-        if self.max_bound is not None and value > self.max_bound:
-            self.error(obj, value)
-        return value
-
-
 _color_names = {
     "black", "silver", "gray", "white", "maroon", "red",
     "purple", "fuschia", "green", "lime", "olive",
@@ -134,7 +72,7 @@ class ColorString(traitlets.Unicode):
 
     def validate(self, obj, value):
         try:
-            value_as_string = unicode(value)
+            value_as_string = super(ColorString, self).validate(obj, value)
             normalised_string = value_as_string.replace(" ","").lower()
             if (
                 normalised_string.lower() in _color_names or
@@ -154,9 +92,9 @@ class RgbTuple(traitlets.Tuple):
 
     def __init__(self, **metadata):
         traits = [
-            BoundedInteger(traitlets.Undefined, min_bound=0, max_bound=255),
-            BoundedInteger(traitlets.Undefined, min_bound=0, max_bound=255),
-            BoundedInteger(traitlets.Undefined, min_bound=0, max_bound=255)
+            traitlets.Integer(traitlets.Undefined, min=0, max=255),
+            traitlets.Integer(traitlets.Undefined, min=0, max=255),
+            traitlets.Integer(traitlets.Undefined, min=0, max=255)
         ]
         super(RgbTuple, self).__init__(*traits, **metadata)
 
@@ -166,10 +104,10 @@ class RgbaTuple(traitlets.Tuple):
 
     def __init__(self, **metadata):
         traits = [
-            BoundedInteger(traitlets.Undefined, min_bound=0, max_bound=255),
-            BoundedInteger(traitlets.Undefined, min_bound=0, max_bound=255),
-            BoundedInteger(traitlets.Undefined, min_bound=0, max_bound=255),
-            BoundedFloat(traitlets.Undefined, min_bound=0.0, max_bound=1.0)
+            traitlets.Integer(traitlets.Undefined, min=0, max=255),
+            traitlets.Integer(traitlets.Undefined, min=0, max=255),
+            traitlets.Integer(traitlets.Undefined, min=0, max=255),
+            traitlets.Float(traitlets.Undefined, min=0.0, max=1.0)
         ]
         super(RgbaTuple, self).__init__(*traits, **metadata)
 

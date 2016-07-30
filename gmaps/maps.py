@@ -188,7 +188,7 @@ class _HeatmapOptionsMixin(HasTraits):
     max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
     dissipating = Bool(default_value=True).tag(sync=True)
-    opacity = geotraitlets.BoundedFloat(default_value=0.6, min_bound=0.0, max_bound=1.0).tag(sync=True)
+    opacity = Float(default_value=0.6, min=0.0, max=1.0).tag(sync=True)
     gradient = List(trait=geotraitlets.ColorAlpha(), allow_none=True, minlen=1).tag(sync=True)
 
     @default("gradient")
