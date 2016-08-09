@@ -128,7 +128,6 @@ class Directions(widgets.Widget):
 
     @validate("data")
     def _validate_data(self, proposal):
-        assert (len(proposal["value"]) >= 2), "A direction requires at least two points"
         for point in proposal["value"]:
             if not geotraitlets.is_valid_point(point):
                 raise InvalidPointException(
@@ -148,6 +147,36 @@ class Directions(widgets.Widget):
     def _handle_layer_status(self, change):
         if change["new"] != "OK":
             raise DirectionsServiceException("No directions returned: " + change["new"])
+
+
+class Markers(widgets.Widget):
+    has_bounds = True
+    _view_name = Unicode("MarkerLayerView").tag(sync=True)
+    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
+    _model_name = Unicode("MarkerLayerModel").tag(sync=True)
+    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
+
+    data = List(minlen=2).tag(sync=True)
+    data_bounds = List().tag(sync=True)
+
+    @validate("data")
+    def _validate_data(self, proposal):
+        for point in proposal["value"]:
+            if not geotraitlets.is_valid_point(point):
+                raise InvalidPointException(
+                    "{} is not a valid latitude, longitude pair".format(point))
+        return proposal["value"]
+
+    @observe("data")
+    def _calc_bounds(self, change):
+        data = change["new"]
+        min_latitude = min(row[0] for row in data)
+        min_longitude = min(row[1] for row in data)
+        max_latitude = max(row[0] for row in data)
+        max_longitude = max(row[1] for row in data)
+        self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+
+
 
 
 # Mixin for options common to both heatmap and weighted heatmaps.

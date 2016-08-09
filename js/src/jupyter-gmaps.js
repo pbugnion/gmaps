@@ -152,7 +152,7 @@ export const SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
 
 export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
     getData() {
-        const data = this.model.get("data");
+        const data = this.model.get("data")
         const dataAsGoogle = new google.maps.MVCArray(
             data.map(([lat, lng, weight]) => {
                 const location = new google.maps.LatLng(lat, lng)
@@ -168,6 +168,29 @@ export const MarkerLayerView = GMapsLayerView.extend({
 
     }
 })
+
+export const MarkerLayerView = GMapsLayerView.extend({
+    render() {
+        GoogleMapsLoader.load((google) => {
+            const data = this.model.get("data")
+            this.markers = data.map(([lat, lng]) =>
+                new google.maps.Marker({
+                    position: {lat: lat, lng: lng},
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 10
+                    },
+                    draggable: false
+                })
+            )
+        })
+    },
+
+    addToMapView(mapView) {
+        this.markers.forEach(m => m.setMap(mapView.map))
+    }
+})
+
 
 export const PlainmapView = widgets.DOMWidgetView.extend({
     render() {
@@ -229,7 +252,7 @@ export const GMapsLayerModel = widgets.WidgetModel.extend({
         _view_name : 'GMapsLayerView',
         _model_name : 'GMapsLayerModel',
         _view_module : 'jupyter-gmaps',
-        _model_module : 'jupyter-gmaps',
+        _model_module : 'jupyter-gmaps'
     })
 });
 
@@ -254,6 +277,13 @@ export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
         _model_name: "WeightedHeatmapLayerModel"
     })
 });
+
+export const MarkerLayerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "MarkerLayerView",
+        _model_name: "MarkerLayerModel"
+    })
+})
 
 
 export const PlainmapModel = widgets.DOMWidgetModel.extend({
