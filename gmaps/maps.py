@@ -1,5 +1,6 @@
 
 import warnings
+import math
 
 import ipywidgets as widgets
 from traitlets import (Unicode, CUnicode, default, Int, Bool,
@@ -77,6 +78,7 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
             max_latitude = min(bounds[1][0] for bounds in bounds_list)
             max_longitude = min(bounds[1][1] for bounds in bounds_list)
             self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+
 
 class Directions(widgets.Widget):
     """
@@ -195,6 +197,54 @@ class _HeatmapOptionsMixin(HasTraits):
     def _default_gradient(self):
         return None
 
+    def set_bounds(self, data):
+        latitudes = [row[0] for row in data]
+        longitudes = [row[1] for row in data]
+        min_latitude, max_latitude = self._latitude_bounds(latitudes)
+        min_longitude, max_longitude = self._longitude_bounds(longitudes)
+        self.data_bounds = [
+            (min_latitude, min_longitude),
+            (max_latitude, max_longitude)
+        ]
+
+    def _latitude_bounds(self, latitudes):
+        """
+        Estimate latitude bound with 2*sample standard deviation
+        """
+        N = float(len(latitudes))
+        mean = sum(latitudes) / N
+        sum_squares = sum([latitude**2 for latitude in latitudes])
+        standard_deviation = math.sqrt(sum_squares/N-mean**2)
+        lower_bound = max(mean - 2*standard_deviation, -90)
+        upper_bound = min(mean + 2*standard_deviation, 90)
+        return lower_bound, upper_bound
+
+    def _longitude_bounds(self, longitudes):
+        """
+        Estimate longitude bound with 2*sample standard deviation
+
+        Note that longitudes wrap around, so have to use parameter
+        estimation for wrapped probability distribution.
+
+        See https://en.wikipedia.org/wiki/Wrapped_normal_distribution
+        and https://en.wikipedia.org/wiki/Directional_statistics
+        for how to calculate the relevant statistics.
+        """
+        N = float(len(longitudes))
+        mean = sum(longitudes) / N
+        radians = [math.radians(longitude) for longitude in longitudes]
+        sum_cos = sum(math.cos(r) for r in radians)**2
+        sum_sin = sum(math.sin(r) for r in radians)**2
+        Rsq = (1/N**2) * (sum_cos+sum_sin)
+        standard_deviation = math.sqrt(-math.log(Rsq))
+        extent = 2*math.degrees(standard_deviation)
+        extent = min(extent, 180)
+
+        # centre the bound within [-180, 180]
+        lower_bound = ((mean - extent + 180.0) % 360.0) - 180.0
+        upper_bound = ((mean + extent + 180.0) % 360.0) - 180.0
+        return lower_bound, upper_bound
+
 
 class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
     __doc__ = """
@@ -253,11 +303,7 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
     @observe("data")
     def _calc_bounds(self, change):
         data = change["new"]
-        min_latitude = min(row[0] for row in data)
-        min_longitude = min(row[1] for row in data)
-        max_latitude = max(row[0] for row in data)
-        max_longitude = max(row[1] for row in data)
-        self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+        self.set_bounds(data)
 
 
 class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
@@ -307,11 +353,7 @@ class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
     @observe("data")
     def _calc_bounds(self, change):
         data = change["new"]
-        min_latitude = min(row[0] for row in data)
-        min_longitude = min(row[1] for row in data)
-        max_latitude = max(row[0] for row in data)
-        max_longitude = max(row[1] for row in data)
-        self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+        self.set_bounds(data)
 
 
 def plainmap():

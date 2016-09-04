@@ -163,6 +163,11 @@ export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
     }
 })
 
+export const MarkerLayerView = GMapsLayerView.extend({
+    render() {
+
+    }
+})
 
 export const PlainmapView = widgets.DOMWidgetView.extend({
     render() {
@@ -185,6 +190,7 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
                 // hack to force the map to redraw
                 setTimeout(() => {
                     google.maps.event.trigger(this.map, 'resize') ;
+                    this.updateBounds(initialBounds);
                 }, 1000);
             })
         })
