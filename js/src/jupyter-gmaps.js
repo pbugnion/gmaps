@@ -191,7 +191,7 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
                 setTimeout(() => {
                     google.maps.event.trigger(this.map, 'resize') ;
                     this.updateBounds(initialBounds);
-                }, 1000);
+                }, 500);
             })
         })
     },
