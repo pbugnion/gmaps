@@ -2,6 +2,11 @@
 Release notes
 -------------
 
+Version 0.3.3
+=============
+
+ * Improve automatic bounds calculations for heatmaps (PR #84)
+
 Version 0.3.2
 =============
 
