@@ -58,6 +58,11 @@ class TestRgbTuple(unittest.TestCase):
         with self.assertRaises(traitlets.TraitError):
             a = self.A(x=(200, -10, 0))
 
+    def test_default_value(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.RgbTuple(default_value=(100, 0, 250))
+        assert A().x == (100, 0, 250)
+
 
 class TestRgbaTuple(unittest.TestCase):
 
@@ -73,6 +78,11 @@ class TestRgbaTuple(unittest.TestCase):
     def test_reject_tuples_wrong_numbers(self):
         with self.assertRaises(traitlets.TraitError):
             a = self.A(x=(200, 0, 0, -0.5))
+
+    def test_default_value(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.RgbaTuple(default_value=(100, 0, 250, 0.5))
+        assert A().x == (100, 0, 250, 0.5)
 
 
 class TestColorAlpha(unittest.TestCase):
@@ -92,4 +102,3 @@ class TestColorAlpha(unittest.TestCase):
     def test_accept_rgba_tuple(self):
         a = self.A(x=(100, 0, 10, 0.5))
         assert a.x == 'rgba(100,0,10,0.5)'
-

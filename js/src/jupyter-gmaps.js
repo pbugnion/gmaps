@@ -163,31 +163,45 @@ export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
     }
 })
 
-export const MarkerLayerView = GMapsLayerView.extend({
-    render() {
+export const MarkerView = widgets.WidgetView.extend({
 
-    }
-})
-
-export const MarkerLayerView = GMapsLayerView.extend({
     render() {
-        GoogleMapsLoader.load((google) => {
-            const data = this.model.get("data")
-            this.markers = data.map(([lat, lng]) =>
-                new google.maps.Marker({
-                    position: {lat: lat, lng: lng},
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 10
-                    },
-                    draggable: false
-                })
-            )
+        const [lat, lng] = this.model.get("location")
+        this.marker = new google.maps.Marker({
+            position: {lat, lng},
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 10,
+                fillColor: 'red',
+                strokeColor: 'red'
+            },
+            title: 'hello',
+            draggable: false
         })
     },
 
     addToMapView(mapView) {
-        this.markers.forEach(m => m.setMap(mapView.map))
+        this.marker.setMap(mapView.map)
+    }
+
+})
+
+export const MarkerLayerView = GMapsLayerView.extend({
+    render() {
+        this.markerViews = new widgets.ViewList(this.addMarker, null, this)
+        this.markerViews.update(this.model.get("markers"))
+    },
+
+    addToMapView(mapView) {
+        this.markerViews.forEach(view => view.addToMapView(mapView))
+    },
+
+    addMarker(childModel) {
+        return this.create_child_view(childModel)
+            .then((childView) => {
+                childView.addToMapView(this.mapView)
+                return childView
+            })
     }
 })
 
@@ -278,11 +292,22 @@ export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
     })
 });
 
+export const MarkerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "MarkerView",
+        _model_name: "MarkerModel"
+    })
+})
+
 export const MarkerLayerModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
         _view_name: "MarkerLayerView",
         _model_name: "MarkerLayerModel"
-    })
+    }),
+}, {
+    serializers: _.extend({
+            markers: {deserialize: widgets.unpack_models}
+    }, widgets.DOMWidgetModel.serializers)
 })
 
 

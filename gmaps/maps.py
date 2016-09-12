@@ -149,15 +149,26 @@ class Directions(widgets.Widget):
             raise DirectionsServiceException("No directions returned: " + change["new"])
 
 
+class Marker(widgets.Widget):
+    has_bounds = False
+    _view_name = Unicode("MarkerView").tag(sync=True)
+    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
+    _model_name = Unicode("MarkerModel").tag(sync=True)
+    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
+
+    location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
+
+
 class Markers(widgets.Widget):
-    has_bounds = True
+    has_bounds = False
     _view_name = Unicode("MarkerLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("MarkerLayerModel").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
-    data = List(minlen=2).tag(sync=True)
-    data_bounds = List().tag(sync=True)
+    markers = List().tag(sync=True,  **widgets.widget_serialization)
+    #data_bounds = List().tag(sync=True)
+    #data_bounds = [[-5.0, -5.0], [5.0, 5.0]]
 
     @validate("data")
     def _validate_data(self, proposal):
@@ -170,13 +181,7 @@ class Markers(widgets.Widget):
     @observe("data")
     def _calc_bounds(self, change):
         data = change["new"]
-        min_latitude = min(row[0] for row in data)
-        min_longitude = min(row[1] for row in data)
-        max_latitude = max(row[0] for row in data)
-        max_longitude = max(row[1] for row in data)
-        self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
-
-
+        self.data_bounds = [[-5.0, -5.0], [5.0, 5.0]]
 
 
 # Mixin for options common to both heatmap and weighted heatmaps.
