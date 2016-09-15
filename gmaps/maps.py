@@ -168,33 +168,32 @@ class Symbol(widgets.Widget):
 
     @default("stroke_color")
     def _default_stroke_color(self):
-        return "red"
+        return "black"
 
 
 
 class Markers(widgets.Widget):
-    has_bounds = False
+    has_bounds = True
     _view_name = Unicode("MarkerLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("MarkerLayerModel").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
-    markers = List().tag(sync=True,  **widgets.widget_serialization)
-    #data_bounds = List().tag(sync=True)
-    #data_bounds = [[-5.0, -5.0], [5.0, 5.0]]
+    markers = List(minlen=1).tag(sync=True,  **widgets.widget_serialization)
+    data_bounds = List().tag(sync=True)
 
-    @validate("data")
-    def _validate_data(self, proposal):
-        for point in proposal["value"]:
-            if not geotraitlets.is_valid_point(point):
-                raise InvalidPointException(
-                    "{} is not a valid latitude, longitude pair".format(point))
-        return proposal["value"]
-
-    @observe("data")
+    @observe("markers")
     def _calc_bounds(self, change):
-        data = change["new"]
-
+        markers = change["new"]
+        locations = [marker.location for marker in markers]
+        latitudes = [location[0] for location in locations]
+        longitudes = [location[1] for location in locations]
+        min_latitude, max_latitude = bounds.latitude_bounds(latitudes)
+        min_longitude, max_longitude = bounds.longitude_bounds(longitudes)
+        self.data_bounds = [
+            (min_latitude, min_longitude),
+            (max_latitude, max_longitude)
+        ]
 
 
 # Mixin for options common to both heatmap and weighted heatmaps.
