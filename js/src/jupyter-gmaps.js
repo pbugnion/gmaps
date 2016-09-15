@@ -166,6 +166,7 @@ export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
 export const SymbolView = widgets.WidgetView.extend({
 
     render() {
+        this.modelEvents()
         const [lat, lng] = this.model.get("location")
         const fillColor = this.model.get("fill_color")
         const strokeColor = this.model.get("stroke_color")
@@ -186,6 +187,37 @@ export const SymbolView = widgets.WidgetView.extend({
 
     addToMapView(mapView) {
         this.marker.setMap(mapView.map)
+    },
+
+    modelEvents() {
+        // Simple properties:
+        const properties = [
+            ['title', 'hover_text']
+        ]
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = (
+                () => {
+                  this.marker.set(
+                  nameInView, this.model.get(nameInModel))
+                }
+            )
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
+
+        // Icon properties
+        const iconProperties = [
+            ['strokeColor', 'stroke_color'],
+            ['fillColor', 'fill_color'],
+            ['scale', 'scale']
+        ]
+        iconProperties.forEach(([nameInView, nameInModel]) => {
+            const callback = ( () => {
+                const newIcon = Object.assign({}, this.marker.getIcon())
+                newIcon[nameInView] = this.model.get(nameInModel)
+                this.marker.setIcon(newIcon)
+            })
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
     }
 
 })
