@@ -163,19 +163,23 @@ export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
     }
 })
 
-export const MarkerView = widgets.WidgetView.extend({
+export const SymbolView = widgets.WidgetView.extend({
 
     render() {
         const [lat, lng] = this.model.get("location")
+        const fillColor = this.model.get("fill_color")
+        const strokeColor = this.model.get("stroke_color")
+        const scale = this.model.get("scale")
+        const title = this.model.get("hover_text")
         this.marker = new google.maps.Marker({
             position: {lat, lng},
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
-                scale: 10,
-                fillColor: 'red',
-                strokeColor: 'red'
+                scale,
+                fillColor,
+                strokeColor
             },
-            title: 'hello',
+            title,
             draggable: false
         })
     },
@@ -292,10 +296,10 @@ export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
     })
 });
 
-export const MarkerModel = GMapsLayerModel.extend({
+export const SymbolModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "MarkerView",
-        _model_name: "MarkerModel"
+        _view_name: "SymbolView",
+        _model_name: "SymbolModel"
     })
 })
 

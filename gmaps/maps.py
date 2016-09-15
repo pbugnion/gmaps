@@ -149,14 +149,27 @@ class Directions(widgets.Widget):
             raise DirectionsServiceException("No directions returned: " + change["new"])
 
 
-class Marker(widgets.Widget):
+class Symbol(widgets.Widget):
     has_bounds = False
-    _view_name = Unicode("MarkerView").tag(sync=True)
+    _view_name = Unicode("SymbolView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
-    _model_name = Unicode("MarkerModel").tag(sync=True)
+    _model_name = Unicode("SymbolModel").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
+    fill_color = geotraitlets.ColorAlpha().tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha().tag(sync=True)
+    scale = Int(default_value=5, min=0, max=20).tag(sync=True)
+    hover_text = Unicode("").tag(sync=True)
+
+    @default("fill_color")
+    def _default_fill_color(self):
+        return "black"
+
+    @default("stroke_color")
+    def _default_stroke_color(self):
+        return "red"
+
 
 
 class Markers(widgets.Widget):
