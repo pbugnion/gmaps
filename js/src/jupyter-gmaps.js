@@ -163,26 +163,27 @@ export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
     }
 })
 
-export const SymbolView = widgets.WidgetView.extend({
-
+/* Base class for markers.
+ * This sets options common to the different types of markers.
+ *
+ * Subclasses are responsible for implementing the `getStyleOptions`
+ * method, which must return an object of additional options
+ * to add to the marker, and `setStyleEvents`, which must set
+ * up events for those styles.
+ */
+export const BaseMarkerView = widgets.WidgetView.extend({
     render() {
-        this.modelEvents()
         const [lat, lng] = this.model.get("location")
-        const fillColor = this.model.get("fill_color")
-        const strokeColor = this.model.get("stroke_color")
-        const scale = this.model.get("scale")
         const title = this.model.get("hover_text")
-        this.marker = new google.maps.Marker({
+        const styleOptions = this.getStyleOptions()
+        const markerOptions = {
             position: {lat, lng},
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale,
-                fillColor,
-                strokeColor
-            },
+            draggable: false,
             title,
-            draggable: false
-        })
+            ...styleOptions
+        }
+        this.marker = new google.maps.Marker(markerOptions)
+        this.modelEvents()
     },
 
     addToMapView(mapView) {
@@ -204,7 +205,29 @@ export const SymbolView = widgets.WidgetView.extend({
             this.model.on(`change:${nameInModel}`, callback, this)
         })
 
-        // Icon properties
+        this.setStyleEvents()
+    }
+
+
+})
+
+export const SymbolView = BaseMarkerView.extend({
+
+    getStyleOptions() {
+        const fillColor = this.model.get("fill_color")
+        const strokeColor = this.model.get("stroke_color")
+        const scale = this.model.get("scale")
+        return {
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale,
+                fillColor,
+                strokeColor
+            }
+        }
+    },
+
+    setStyleEvents() {
         const iconProperties = [
             ['strokeColor', 'stroke_color'],
             ['fillColor', 'fill_color'],
@@ -219,33 +242,19 @@ export const SymbolView = widgets.WidgetView.extend({
             this.model.on(`change:${nameInModel}`, callback, this)
         })
     }
-
 })
 
 
-export const MarkerView = widgets.WidgetView.extend({
+export const MarkerView = BaseMarkerView.extend({
 
-    render() {
+    getStyleOptions() {
         this.modelEvents()
-        const [lat, lng] = this.model.get("location")
-        const title = this.model.get("hover_text")
         const label = this.model.get("label")
-        this.marker = new google.maps.Marker({
-            position: {lat, lng},
-            title,
-            label,
-            draggable: false
-        })
+        return { label }
     },
 
-    addToMapView(mapView) {
-        this.marker.setMap(mapView.map)
-    },
-
-    modelEvents() {
-        // Simple properties:
+    setStyleEvents() {
         const properties = [
-            ['title', 'hover_text'],
             ['label', 'label']
         ]
         properties.forEach(([nameInView, nameInModel]) => {
