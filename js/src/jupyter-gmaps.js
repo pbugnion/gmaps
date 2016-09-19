@@ -222,6 +222,46 @@ export const SymbolView = widgets.WidgetView.extend({
 
 })
 
+
+export const MarkerView = widgets.WidgetView.extend({
+
+    render() {
+        this.modelEvents()
+        const [lat, lng] = this.model.get("location")
+        const title = this.model.get("hover_text")
+        const label = this.model.get("label")
+        this.marker = new google.maps.Marker({
+            position: {lat, lng},
+            title,
+            label,
+            draggable: false
+        })
+    },
+
+    addToMapView(mapView) {
+        this.marker.setMap(mapView.map)
+    },
+
+    modelEvents() {
+        // Simple properties:
+        const properties = [
+            ['title', 'hover_text'],
+            ['label', 'label']
+        ]
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = (
+                () => {
+                  this.marker.set(
+                  nameInView, this.model.get(nameInModel))
+                }
+            )
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
+    }
+
+})
+
+
 export const MarkerLayerView = GMapsLayerView.extend({
     render() {
         this.markerViews = new widgets.ViewList(this.addMarker, null, this)
@@ -332,6 +372,13 @@ export const SymbolModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
         _view_name: "SymbolView",
         _model_name: "SymbolModel"
+    })
+})
+
+export const MarkerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "MarkerView",
+        _model_name: "MarkerModel"
     })
 })
 

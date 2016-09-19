@@ -150,6 +150,14 @@ class Directions(widgets.Widget):
 
 
 class Symbol(widgets.Widget):
+    """
+    Class representing a single symbol.
+
+    Symbols are like markers, but the point is represented by
+    an SVG symbol, rather than the default inverted droplet.
+    Symbols should be added to the map via the 'Markers'
+    widget.
+    """
     has_bounds = False
     _view_name = Unicode("SymbolView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
@@ -170,6 +178,23 @@ class Symbol(widgets.Widget):
     def _default_stroke_color(self):
         return "black"
 
+
+class Marker(widgets.Widget):
+    """
+    Class representing a marker.
+
+    Markers should be added to the map via the 'Markers'
+    widget.
+    """
+    has_bounds = False
+    _view_name = Unicode("MarkerView").tag(sync=True)
+    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
+    _model_name = Unicode("MarkerModel").tag(sync=True)
+    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
+
+    location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
+    label = Unicode("").tag(sync=True)
+    hover_text = Unicode("").tag(sync=True)
 
 
 class Markers(widgets.Widget):
