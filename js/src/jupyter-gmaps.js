@@ -147,7 +147,7 @@ export const SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
         )
         return dataAsGoogle
     }
-});
+})
 
 
 export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
