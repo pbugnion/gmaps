@@ -1,13 +1,14 @@
 
 import ipywidgets as widgets
 from traitlets import Unicode, Int, default, List, observe, HasTraits
+import collections
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
 
 from .maps import DEFAULT_CENTER
 
-__all__ = ["Symbol", "Marker", "Markers"]
+__all__ = ["Symbol", "Marker", "Markers", "marker_layer"]
 
 
 class _BaseMarkerMixin(HasTraits):
@@ -76,3 +77,23 @@ class Markers(widgets.Widget):
             (min_latitude, min_longitude),
             (max_latitude, max_longitude)
         ]
+
+
+def _is_atomic(elem):
+    return (
+        isinstance(elem, basestring) or
+        not isinstance(elem, collections.Iterable)
+    )
+
+def marker_layer(locations, hover_text="", label=""):
+    number_markers = len(locations)
+    if _is_atomic(hover_text):
+        hover_text = [hover_text] * number_markers
+    if _is_atomic(label):
+        label = [label] * number_markers
+    markers = [
+        Marker(location=location, hover_text=hover_text, label=label)
+        for (location, hover_text, label) in
+        zip(locations, hover_text, label)
+    ]
+    return Markers(markers=markers)
