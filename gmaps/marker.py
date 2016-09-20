@@ -1,6 +1,6 @@
 
 import ipywidgets as widgets
-from traitlets import Unicode, Int, default, List, observe
+from traitlets import Unicode, Int, default, List, observe, HasTraits
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
@@ -10,7 +10,14 @@ from .maps import DEFAULT_CENTER
 __all__ = ["Symbol", "Marker", "Markers"]
 
 
-class Symbol(widgets.Widget):
+class _BaseMarkerMixin(HasTraits):
+    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
+    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
+    location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
+    hover_text = Unicode("").tag(sync=True)
+
+
+class Symbol(_BaseMarkerMixin, widgets.Widget):
     """
     Class representing a single symbol.
 
@@ -19,17 +26,12 @@ class Symbol(widgets.Widget):
     Symbols should be added to the map via the 'Markers'
     widget.
     """
-    has_bounds = False
     _view_name = Unicode("SymbolView").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("SymbolModel").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
-    location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     fill_color = geotraitlets.ColorAlpha().tag(sync=True)
     stroke_color = geotraitlets.ColorAlpha().tag(sync=True)
     scale = Int(default_value=5, min=0, max=20).tag(sync=True)
-    hover_text = Unicode("").tag(sync=True)
 
     @default("fill_color")
     def _default_fill_color(self):
@@ -40,22 +42,16 @@ class Symbol(widgets.Widget):
         return "black"
 
 
-class Marker(widgets.Widget):
+class Marker(_BaseMarkerMixin, widgets.Widget):
     """
     Class representing a marker.
 
     Markers should be added to the map via the 'Markers'
     widget.
     """
-    has_bounds = False
     _view_name = Unicode("MarkerView").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("MarkerModel").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
-
-    location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     label = Unicode("").tag(sync=True)
-    hover_text = Unicode("").tag(sync=True)
 
 
 class Markers(widgets.Widget):
