@@ -43,6 +43,13 @@ class ColorString(unittest.TestCase):
         a = A()
         assert a.x is None
 
+    def test_allow_none_accept_string(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.ColorString(
+                allow_none=True, default_value=None)
+        a = A(x='green')
+        assert a.x == 'green'
+
 
 class TestRgbTuple(unittest.TestCase):
 
@@ -109,3 +116,11 @@ class TestColorAlpha(unittest.TestCase):
     def test_accept_rgba_tuple(self):
         a = self.A(x=(100, 0, 10, 0.5))
         assert a.x == 'rgba(100,0,10,0.5)'
+
+    def test_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.ColorAlpha(default_value=None, allow_none=True)
+        a = A()
+        assert a.x is None
+        a = A(x="blue")
+        assert a.x == "blue"
