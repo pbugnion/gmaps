@@ -8,7 +8,7 @@ import gmaps.bounds as bounds
 
 from .maps import DEFAULT_CENTER
 
-__all__ = ["Symbol", "Marker", "Markers", "marker_layer"]
+__all__ = ["Symbol", "Marker", "Markers", "marker_layer", "symbol_layer"]
 
 
 class _BaseMarkerMixin(HasTraits):
@@ -30,17 +30,15 @@ class Symbol(_BaseMarkerMixin, widgets.Widget):
     _view_name = Unicode("SymbolView").tag(sync=True)
     _model_name = Unicode("SymbolModel").tag(sync=True)
 
-    fill_color = geotraitlets.ColorAlpha().tag(sync=True)
-    stroke_color = geotraitlets.ColorAlpha().tag(sync=True)
-    scale = Int(default_value=5, min=0, max=20).tag(sync=True)
-
-    @default("fill_color")
-    def _default_fill_color(self):
-        return "black"
-
-    @default("stroke_color")
-    def _default_stroke_color(self):
-        return "black"
+    fill_color = geotraitlets.ColorAlpha(
+        allow_none=True, default_value=None
+    ).tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=True, default_value=None
+    ).tag(sync=True)
+    scale = Int(
+        default_value=4, allow_none=True, min=1
+    ).tag(sync=True)
 
 
 class Marker(_BaseMarkerMixin, widgets.Widget):
@@ -84,6 +82,44 @@ def _is_atomic(elem):
         isinstance(elem, basestring) or
         not isinstance(elem, collections.Iterable)
     )
+
+def _is_color_atomic(color):
+    """
+    Determine whether the argument is a singe color or an iterable of colors
+    """
+    if isinstance(color, basestring):
+        is_atomic = True
+    elif isinstance(color, collections.Sequence):
+        if isinstance(color[0], basestring):
+            is_atomic = False
+        if isinstance(color[0], (int, float)) and len(color) in (3, 4):
+            is_atomic = True
+    else:
+        is_atomic = True
+    return is_atomic
+
+
+def symbol_layer(locations, hover_text="", fill_color=None, stroke_color=None, scale=None):
+    number_markers = len(locations)
+    if _is_atomic(hover_text):
+        hover_text = [hover_text] * number_markers
+    if _is_atomic(scale):
+        scale = [scale] * number_markers
+    if _is_color_atomic(fill_color):
+        fill_color = [fill_color] * number_markers
+    if _is_color_atomic(stroke_color):
+        stroke_color = [stroke_color] * number_markers
+    symbols = [
+        Symbol(
+            location=location, hover_text=hover_text,
+            fill_color=fill_color, stroke_color=stroke_color,
+            scale=scale
+        )
+        for (location, hover_text, scale, fill_color, stroke_color) in
+        zip(locations, hover_text, scale, fill_color, stroke_color)
+    ]
+    return Markers(markers=symbols)
+
 
 def marker_layer(locations, hover_text="", label=""):
     number_markers = len(locations)
