@@ -36,6 +36,13 @@ class ColorString(unittest.TestCase):
         a = self.A(x='rgba(100, 0, 0,0.5)')
         assert a.x == 'rgba(100,0,0,0.5)'
 
+    def test_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.ColorString(
+                allow_none=True, default_value=None)
+        a = A()
+        assert a.x is None
+
 
 class TestRgbTuple(unittest.TestCase):
 
