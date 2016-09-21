@@ -99,7 +99,7 @@ def _is_color_atomic(color):
     return is_atomic
 
 
-def symbol_layer(locations, hover_text="", fill_color=None, stroke_color=None, scale=None):
+def _symbol_layer_options(locations, hover_text, fill_color, stroke_color, scale):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
@@ -109,8 +109,8 @@ def symbol_layer(locations, hover_text="", fill_color=None, stroke_color=None, s
         fill_color = [fill_color] * number_markers
     if _is_color_atomic(stroke_color):
         stroke_color = [stroke_color] * number_markers
-    symbols = [
-        Symbol(
+    symbol_options = [
+        dict(
             location=location, hover_text=hover_text,
             fill_color=fill_color, stroke_color=stroke_color,
             scale=scale
@@ -118,18 +118,32 @@ def symbol_layer(locations, hover_text="", fill_color=None, stroke_color=None, s
         for (location, hover_text, scale, fill_color, stroke_color) in
         zip(locations, hover_text, scale, fill_color, stroke_color)
     ]
-    return Markers(markers=symbols)
+    return symbol_options
 
 
-def marker_layer(locations, hover_text="", label=""):
+def _marker_layer_options(locations, hover_text, label):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
     if _is_atomic(label):
         label = [label] * number_markers
-    markers = [
-        Marker(location=location, hover_text=hover_text, label=label)
+    marker_options = [
+        dict(location=location, hover_text=hover_text, label=label)
         for (location, hover_text, label) in
         zip(locations, hover_text, label)
     ]
+    return marker_options
+
+
+def symbol_layer(locations, hover_text="", fill_color=None, stroke_color=None, scale=None):
+    options = _symbol_layer_options(
+        locations, hover_text, fill_color, stroke_color, scale)
+    symbols = [Symbol(**option) for option in options]
+    return Markers(markers=symbols)
+
+
+def marker_layer(locations, hover_text="", label=""):
+    marker_options = _marker_layer_options(
+        locations, hover_text, label)
+    markers = [Marker(**option) for option in marker_options]
     return Markers(markers=markers)
