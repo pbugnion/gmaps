@@ -92,8 +92,10 @@ def _is_color_atomic(color):
     elif isinstance(color, collections.Sequence):
         if isinstance(color[0], basestring):
             is_atomic = False
-        if isinstance(color[0], (int, float)) and len(color) in (3, 4):
+        elif isinstance(color[0], (int, float)) and len(color) in (3, 4):
             is_atomic = True
+        else:
+            is_atomic = False
     else:
         is_atomic = True
     return is_atomic
