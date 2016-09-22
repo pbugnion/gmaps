@@ -1,4 +1,6 @@
 
+from six import string_types
+
 import ipywidgets as widgets
 from traitlets import Unicode, Int, default, List, observe, HasTraits
 import collections
@@ -79,7 +81,7 @@ class Markers(widgets.Widget):
 
 def _is_atomic(elem):
     return (
-        isinstance(elem, basestring) or
+        isinstance(elem, string_types) or
         not isinstance(elem, collections.Iterable)
     )
 
@@ -87,10 +89,10 @@ def _is_color_atomic(color):
     """
     Determine whether the argument is a singe color or an iterable of colors
     """
-    if isinstance(color, basestring):
+    if isinstance(color, string_types):
         is_atomic = True
     elif isinstance(color, collections.Sequence):
-        if isinstance(color[0], basestring):
+        if isinstance(color[0], string_types):
             is_atomic = False
         elif isinstance(color[0], (int, float)) and len(color) in (3, 4):
             is_atomic = True
