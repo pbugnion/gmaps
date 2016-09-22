@@ -1,9 +1,9 @@
 
-from six import string_types
+import collections
 
+from six import string_types
 import ipywidgets as widgets
 from traitlets import Unicode, Int, default, List, observe, HasTraits
-import collections
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
