@@ -216,13 +216,19 @@ export const SymbolView = BaseMarkerView.extend({
     getStyleOptions() {
         const fillColor = this.model.get("fill_color")
         const strokeColor = this.model.get("stroke_color")
+        console.log(strokeColor)
+        console.log(fillColor)
+        const fillOpacity = this.model.get("fill_opacity")
+        const strokeOpacity = this.model.get("stroke_opacity")
         const scale = this.model.get("scale")
         return {
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
                 scale,
                 fillColor,
-                strokeColor
+                strokeColor,
+                fillOpacity,
+                strokeOpacity
             }
         }
     },
@@ -231,7 +237,9 @@ export const SymbolView = BaseMarkerView.extend({
         const iconProperties = [
             ['strokeColor', 'stroke_color'],
             ['fillColor', 'fill_color'],
-            ['scale', 'scale']
+            ['scale', 'scale'],
+            ['stroke_opacity', 'stroke_opacity'],
+            ['fillOpacity', 'fill_opacity']
         ]
         iconProperties.forEach(([nameInView, nameInModel]) => {
             const callback = ( () => {

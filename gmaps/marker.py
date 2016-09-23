@@ -3,7 +3,7 @@ import collections
 
 from six import string_types
 import ipywidgets as widgets
-from traitlets import Unicode, Int, default, List, observe, HasTraits
+from traitlets import Unicode, Int, default, List, observe, HasTraits, Float
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
@@ -35,9 +35,11 @@ class Symbol(_BaseMarkerMixin, widgets.Widget):
     fill_color = geotraitlets.ColorAlpha(
         allow_none=True, default_value=None
     ).tag(sync=True)
+    fill_opacity = Float(min=0.0, max=1.0, default_value=1.0).tag(sync=True)
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=True, default_value=None
     ).tag(sync=True)
+    stroke_opacity = Float(min=0.0, max=1.0, default_value=1.0).tag(sync=True)
     scale = Int(
         default_value=4, allow_none=True, min=1
     ).tag(sync=True)
@@ -103,7 +105,10 @@ def _is_color_atomic(color):
     return is_atomic
 
 
-def _symbol_layer_options(locations, hover_text, fill_color, stroke_color, scale):
+def _symbol_layer_options(
+    locations, hover_text, fill_color, fill_opacity,
+    stroke_color, stroke_opacity, scale
+    ):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
@@ -113,14 +118,19 @@ def _symbol_layer_options(locations, hover_text, fill_color, stroke_color, scale
         fill_color = [fill_color] * number_markers
     if _is_color_atomic(stroke_color):
         stroke_color = [stroke_color] * number_markers
+    if _is_atomic(stroke_opacity):
+        stroke_opacity = [stroke_opacity] * number_markers
+    if _is_atomic(fill_opacity):
+        fill_opacity = [fill_opacity] * number_markers
     symbol_options = [
         dict(
             location=location, hover_text=hover_text,
             fill_color=fill_color, stroke_color=stroke_color,
-            scale=scale
+            scale=scale, stroke_opacity=stroke_opacity,
+            fill_opacity=fill_opacity
         )
-        for (location, hover_text, scale, fill_color, stroke_color) in
-        zip(locations, hover_text, scale, fill_color, stroke_color)
+        for (location, hover_text, scale, fill_color, stroke_color, stroke_opacity, fill_opacity) in
+        zip(locations, hover_text, scale, fill_color, stroke_color, stroke_opacity, fill_opacity)
     ]
     return symbol_options
 
@@ -139,9 +149,10 @@ def _marker_layer_options(locations, hover_text, label):
     return marker_options
 
 
-def symbol_layer(locations, hover_text="", fill_color=None, stroke_color=None, scale=None):
+def symbol_layer(locations, hover_text="", fill_color=None, fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0, scale=None):
     options = _symbol_layer_options(
-        locations, hover_text, fill_color, stroke_color, scale)
+        locations, hover_text, fill_color,
+        fill_opacity, stroke_color, stroke_opacity, scale)
     symbols = [Symbol(**option) for option in options]
     return Markers(markers=symbols)
 

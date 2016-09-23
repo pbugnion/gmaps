@@ -25,7 +25,10 @@ class SymbolLayer(unittest.TestCase):
 
     def setUp(self):
         self.locations = [(-5.0, 5.0), (10.0, 10.0)]
-        self.kwargs = {"hover_text": "", "fill_color": "red", "scale": 5}
+        self.kwargs = {
+            "hover_text": "", "fill_color": "red", "scale": 5,
+            "fill_opacity": 1.0, "stroke_opacity": 1.0
+        }
 
     def test_stroke_color_atomic_text(self):
         symbol_options = _symbol_layer_options(
