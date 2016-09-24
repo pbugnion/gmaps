@@ -31,6 +31,11 @@ METADATA = {
         "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/acled_africa.csv",
         "description" : "All recorded incidents of political violence in Africa",
         "source": "http://www.acleddata.com"
+    },
+    "nuclear_plants": {
+        "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/nuclear_power_plants.csv",
+        "description" : "All nuclear power plants worldwide",
+        "source" : "IAEA (https://www.iaea.org/pris/)"
     }
 }
 
