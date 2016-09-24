@@ -216,8 +216,6 @@ export const SymbolView = BaseMarkerView.extend({
     getStyleOptions() {
         const fillColor = this.model.get("fill_color")
         const strokeColor = this.model.get("stroke_color")
-        console.log(strokeColor)
-        console.log(fillColor)
         const fillOpacity = this.model.get("fill_opacity")
         const strokeOpacity = this.model.get("stroke_opacity")
         const scale = this.model.get("scale")
