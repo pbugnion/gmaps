@@ -6,10 +6,12 @@ def latitude_bounds(latitudes):
     """
     N = float(len(latitudes))
     mean = sum(latitudes) / N
-    sum_squares = sum([latitude**2 for latitude in latitudes])
-    standard_deviation = math.sqrt(sum_squares/N-mean**2)
-    lower_bound = max(mean - 2*standard_deviation, -90)
-    upper_bound = min(mean + 2*standard_deviation, 90)
+    sum_squares = sum(
+        (latitude-mean)**2 for latitude in latitudes
+    )
+    standard_deviation = math.sqrt(sum_squares/float(N))
+    lower_bound = max(mean - 2.0*standard_deviation, -89.9)
+    upper_bound = min(mean + 2.0*standard_deviation, 89.9)
     return lower_bound, upper_bound
 
 
@@ -31,7 +33,7 @@ def longitude_bounds(longitudes):
     sum_sin = sum(math.sin(r) for r in radians)**2
     Rsq = (1/N**2) * (sum_cos+sum_sin)
     standard_deviation = math.sqrt(-math.log(Rsq))
-    extent = 2*math.degrees(standard_deviation)
+    extent = 2.0*math.degrees(standard_deviation)
     extent = min(extent, 180)
 
     # centre the bound within [-180, 180]
