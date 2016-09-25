@@ -48,7 +48,7 @@ Installation
 Dependencies
 ^^^^^^^^^^^^
 
-The current version of `gmaps` is only tested with *IPython 4.2* or later and *ipywidgets 5.2.2* or later. To upgrade to the latest versions, use::
+The current version of `gmaps` is only tested with *IPython 4.2* or later and *ipywidgets 5.2.2* and *traitlets 4.3.0* or later. To upgrade to the latest versions, use::
 
     $ pip install -U jupyter
 
