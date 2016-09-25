@@ -2,7 +2,7 @@
 Getting started
 ---------------
 
-`gmaps` is a plugin for Jupyter for embedding Google Maps in your notebooks. It is designed as a data visualization tool. It can currently only draw heatmaps.
+`gmaps` is a plugin for Jupyter for embedding Google Maps in your notebooks. It is designed as a data visualization tool.
 
 To demonstrate `gmaps`, let's plot the earthquake dataset, included in the package::
 
