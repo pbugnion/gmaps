@@ -2,7 +2,7 @@
 Getting started
 ---------------
 
-`gmaps` is a plugin for Jupyter for embedding Google Maps in your notebooks. It is designed as a data visualization tool. It can currently only draw heatmaps.
+`gmaps` is a plugin for Jupyter for embedding Google Maps in your notebooks. It is designed as a data visualization tool.
 
 To demonstrate `gmaps`, let's plot the earthquake dataset, included in the package::
 
@@ -137,8 +137,74 @@ You can also use the ``opacity`` option to set a single opacity across the entir
 Weighted heatmaps
 ^^^^^^^^^^^^^^^^^
 
-Weighted heatmap layers are identical to heatmaps, except that the `data` object is a triple indicating `(latitude, longitude, weight)`. Weights must all be positive (this is a limitation in Google maps itself). 
+Weighted heatmap layers are identical to heatmaps, except that the `data` object is a triple indicating `(latitude, longitude, weight)`. Weights must all be positive (this is a limitation in Google maps itself).
 
 Weighted heatmaps support the same options as heatmaps.
 
 .. image:: weighted-heatmap-example.png
+
+
+Markers and symbols
+^^^^^^^^^^^^^^^^^^^
+
+We can add a layer of markers to a Google map. Each marker represents an individual data point::
+
+  marker_locations = [
+      (-34.0, -59.166672),
+      (-32.23333, -64.433327),
+      (40.166672, 44.133331),
+      (51.216671, 5.0833302),
+      (51.333328, 4.25)
+  ]
+  markers = gmaps.marker_layer(marker_locations)
+
+  m = gmaps.Map()
+  m.add_layer(markers)
+  m
+
+.. image:: marker-example.png
+
+Markers are currently limited to the Google maps style drop icon. If you need to draw more complex shape on maps, use the ``symbol_layer`` function. Symbols represent each `latitude`, `longitude` pair with a circle whose colour and size you can customize. Let's, for instance, plot the location of every Starbuck's coffee shop in the UK::
+
+    import gmaps
+    import gmaps.datasets
+
+    gmaps.configure(api_key="AI...")
+
+    starbucks_locations = gmaps.datasets.load_dataset("starbucks_uk")
+    starbucks_layer = gmaps.symbol_layer(
+        starbucks_locations, fill_color="green", stroke_color="green", scale=2
+    )
+    m = gmaps.Map()
+    m.add_layer(starbucks_layer)
+    m
+
+.. image:: starbucks-symbols.png
+
+You can have several layers of markers. For instance, we can compare the locations of Starbucks coffee shops and KFC outlets in the UK by plotting both on the same map::
+
+    import gmaps
+    import gmaps.datasets
+
+    gmaps.configure(api_key="AI...")
+
+    starbucks_locations = gmaps.datasets.load_dataset("starbucks_uk")
+    kfc_locations = gmaps.datasets.load_dataset("kfc_uk")
+    starbucks_layer = gmaps.symbol_layer(
+        starbucks_locations, fill_color="green", stroke_color="green", scale=2
+    )
+    kfc_layer = gmaps.symbol_layer(
+        kfc_locations, fill_color="red", stroke_color="red", scale=2
+    )
+    m = gmaps.Map()
+    m.add_layer(starbucks_layer)
+    m.add_layer(kfc_layer)
+    m
+
+.. image:: starbucks-kfc-example.png
+
+
+Dataset size limitations
+++++++++++++++++++++++++
+
+Google maps may become very slow if you try to represent more than a few thousand symbols or markers. If you have a larger dataset, you should either consider subsampling or use heatmaps.

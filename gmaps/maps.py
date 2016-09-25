@@ -1,6 +1,5 @@
 
 import warnings
-import math
 
 import ipywidgets as widgets
 from traitlets import (Unicode, CUnicode, default, Int, Bool,
@@ -8,6 +7,7 @@ from traitlets import (Unicode, CUnicode, default, Int, Bool,
                        observe, Enum, Dict, HasTraits)
 
 import gmaps.geotraitlets as geotraitlets
+import gmaps.bounds as bounds
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
@@ -128,7 +128,6 @@ class Directions(widgets.Widget):
 
     @validate("data")
     def _validate_data(self, proposal):
-        assert (len(proposal["value"]) >= 2), "A direction requires at least two points"
         for point in proposal["value"]:
             if not geotraitlets.is_valid_point(point):
                 raise InvalidPointException(
@@ -208,42 +207,10 @@ class _HeatmapOptionsMixin(HasTraits):
         ]
 
     def _latitude_bounds(self, latitudes):
-        """
-        Estimate latitude bound with 2*sample standard deviation
-        """
-        N = float(len(latitudes))
-        mean = sum(latitudes) / N
-        sum_squares = sum([latitude**2 for latitude in latitudes])
-        standard_deviation = math.sqrt(sum_squares/N-mean**2)
-        lower_bound = max(mean - 2*standard_deviation, -90)
-        upper_bound = min(mean + 2*standard_deviation, 90)
-        return lower_bound, upper_bound
+        return bounds.latitude_bounds(latitudes)
 
     def _longitude_bounds(self, longitudes):
-        """
-        Estimate longitude bound with 2*sample standard deviation
-
-        Note that longitudes wrap around, so have to use parameter
-        estimation for wrapped probability distribution.
-
-        See https://en.wikipedia.org/wiki/Wrapped_normal_distribution
-        and https://en.wikipedia.org/wiki/Directional_statistics
-        for how to calculate the relevant statistics.
-        """
-        N = float(len(longitudes))
-        mean = sum(longitudes) / N
-        radians = [math.radians(longitude) for longitude in longitudes]
-        sum_cos = sum(math.cos(r) for r in radians)**2
-        sum_sin = sum(math.sin(r) for r in radians)**2
-        Rsq = (1/N**2) * (sum_cos+sum_sin)
-        standard_deviation = math.sqrt(-math.log(Rsq))
-        extent = 2*math.degrees(standard_deviation)
-        extent = min(extent, 180)
-
-        # centre the bound within [-180, 180]
-        lower_bound = ((mean - extent + 180.0) % 360.0) - 180.0
-        upper_bound = ((mean + extent + 180.0) % 360.0) - 180.0
-        return lower_bound, upper_bound
+        return bounds.longitude_bounds(longitudes)
 
 
 class Heatmap(widgets.Widget, _HeatmapOptionsMixin):

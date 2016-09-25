@@ -147,12 +147,12 @@ export const SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
         )
         return dataAsGoogle
     }
-});
+})
 
 
 export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
     getData() {
-        const data = this.model.get("data");
+        const data = this.model.get("data")
         const dataAsGoogle = new google.maps.MVCArray(
             data.map(([lat, lng, weight]) => {
                 const location = new google.maps.LatLng(lat, lng)
@@ -163,11 +163,139 @@ export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
     }
 })
 
-export const MarkerLayerView = GMapsLayerView.extend({
+/* Base class for markers.
+ * This sets options common to the different types of markers.
+ *
+ * Subclasses are responsible for implementing the `getStyleOptions`
+ * method, which must return an object of additional options
+ * to add to the marker, and `setStyleEvents`, which must set
+ * up events for those styles.
+ */
+export const BaseMarkerView = widgets.WidgetView.extend({
     render() {
+        const [lat, lng] = this.model.get("location")
+        const title = this.model.get("hover_text")
+        const styleOptions = this.getStyleOptions()
+        const markerOptions = {
+            position: {lat, lng},
+            draggable: false,
+            title,
+            ...styleOptions
+        }
+        this.marker = new google.maps.Marker(markerOptions)
+        this.modelEvents()
+    },
 
+    addToMapView(mapView) {
+        this.marker.setMap(mapView.map)
+    },
+
+    modelEvents() {
+        // Simple properties:
+        const properties = [
+            ['title', 'hover_text']
+        ]
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = (
+                () => {
+                  this.marker.set(
+                  nameInView, this.model.get(nameInModel))
+                }
+            )
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
+
+        this.setStyleEvents()
+    }
+
+
+})
+
+export const SymbolView = BaseMarkerView.extend({
+
+    getStyleOptions() {
+        const fillColor = this.model.get("fill_color")
+        const strokeColor = this.model.get("stroke_color")
+        const fillOpacity = this.model.get("fill_opacity")
+        const strokeOpacity = this.model.get("stroke_opacity")
+        const scale = this.model.get("scale")
+        return {
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale,
+                fillColor,
+                strokeColor,
+                fillOpacity,
+                strokeOpacity
+            }
+        }
+    },
+
+    setStyleEvents() {
+        const iconProperties = [
+            ['strokeColor', 'stroke_color'],
+            ['fillColor', 'fill_color'],
+            ['scale', 'scale'],
+            ['stroke_opacity', 'stroke_opacity'],
+            ['fillOpacity', 'fill_opacity']
+        ]
+        iconProperties.forEach(([nameInView, nameInModel]) => {
+            const callback = ( () => {
+                const newIcon = Object.assign({}, this.marker.getIcon())
+                newIcon[nameInView] = this.model.get(nameInModel)
+                this.marker.setIcon(newIcon)
+            })
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
     }
 })
+
+
+export const MarkerView = BaseMarkerView.extend({
+
+    getStyleOptions() {
+        this.modelEvents()
+        const label = this.model.get("label")
+        return { label }
+    },
+
+    setStyleEvents() {
+        const properties = [
+            ['label', 'label']
+        ]
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = (
+                () => {
+                  this.marker.set(
+                  nameInView, this.model.get(nameInModel))
+                }
+            )
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
+    }
+
+})
+
+
+export const MarkerLayerView = GMapsLayerView.extend({
+    render() {
+        this.markerViews = new widgets.ViewList(this.addMarker, null, this)
+        this.markerViews.update(this.model.get("markers"))
+    },
+
+    addToMapView(mapView) {
+        this.markerViews.forEach(view => view.addToMapView(mapView))
+    },
+
+    addMarker(childModel) {
+        return this.create_child_view(childModel)
+            .then((childView) => {
+                childView.addToMapView(this.mapView)
+                return childView
+            })
+    }
+})
+
 
 export const PlainmapView = widgets.DOMWidgetView.extend({
     render() {
@@ -229,7 +357,7 @@ export const GMapsLayerModel = widgets.WidgetModel.extend({
         _view_name : 'GMapsLayerView',
         _model_name : 'GMapsLayerModel',
         _view_module : 'jupyter-gmaps',
-        _model_module : 'jupyter-gmaps',
+        _model_module : 'jupyter-gmaps'
     })
 });
 
@@ -254,6 +382,31 @@ export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
         _model_name: "WeightedHeatmapLayerModel"
     })
 });
+
+export const SymbolModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "SymbolView",
+        _model_name: "SymbolModel"
+    })
+})
+
+export const MarkerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "MarkerView",
+        _model_name: "MarkerModel"
+    })
+})
+
+export const MarkerLayerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "MarkerLayerView",
+        _model_name: "MarkerLayerModel"
+    }),
+}, {
+    serializers: _.extend({
+            markers: {deserialize: widgets.unpack_models}
+    }, widgets.DOMWidgetModel.serializers)
+})
 
 
 export const PlainmapModel = widgets.DOMWidgetModel.extend({

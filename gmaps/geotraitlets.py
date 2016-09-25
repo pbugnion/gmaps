@@ -119,8 +119,13 @@ class ColorAlpha(traitlets.Union):
     This is either a string like 'blue' or '#aabbcc' or an RGB
     tuple like (100, 0, 250) or an RGBA tuple like (100, 0, 250, 0.5).
     """
-    def __init__(self, **metadata):
-        trait_types = [ColorString(), RgbTuple(), RgbaTuple()]
+    def __init__(self, default_value=traitlets.Undefined,
+            allow_none=False, **metadata):
+        trait_types = [
+            ColorString(default_value=default_value, allow_none=allow_none),
+            RgbTuple(),
+            RgbaTuple()
+        ]
         super(ColorAlpha, self).__init__(trait_types, **metadata)
 
     def validate(self, obj, value):

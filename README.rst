@@ -9,7 +9,7 @@ Let's plot a heatmap of taxi pickups in San Francisco:
 
 .. code:: python
 
-    In [1]: import gmaps 
+    In [1]: import gmaps
             import gmaps.datasets
             gmaps.configure(api_key="AI...") # Your Google API key
 
@@ -22,13 +22,33 @@ Let's plot a heatmap of taxi pickups in San Francisco:
 
 .. image:: docs/example.png
 
+Or, for coffee fans, a map of all Starbucks in the UK:
+
+.. code:: python
+
+    In [1]: import gmaps
+            import gmaps.datasets
+
+            gmaps.configure(api_key="AI...") # Your Google API key
+
+    In [2]: locations = gmaps.datasets.load_dataset("starbucks_uk")
+
+    In [3]: m = gmaps.Map()
+            starbucks_layer = gmaps.symbol_layer(
+                locations, fill_color="green", stroke_color="green", scale=2)
+            m.add_layer(starbucks_layer)
+            m
+
+.. image:: docs/source/starbucks-symbols.png
+
+
 Installation
 ------------
 
 Dependencies
 ^^^^^^^^^^^^
 
-The current version of `gmaps` is only tested with *IPython 4.2* or later and *ipywidgets 5.1.3* or later. To upgrade to the latest versions, use::
+The current version of `gmaps` is only tested with *IPython 4.2* or later and *ipywidgets 5.2.2* and *traitlets 4.3.0* or later. To upgrade to the latest versions, use::
 
     $ pip install -U jupyter
 
@@ -62,7 +82,7 @@ Change to the project's root directory and run::
 
     $ pip install -e .
 
-This will create a directory called ``static/`` in the ``gmaps/`` directory. This directory contains Javascript sources. Every time you change the Javascript sources, you will need to recompile this directory by re-running this command (despite everying being installed in `editable` mode). 
+This will create a directory called ``static/`` in the ``gmaps/`` directory. This directory contains Javascript sources. Every time you change the Javascript sources, you will need to recompile this directory by re-running this command (despite everying being installed in `editable` mode).
 
 You can then enable the extension in Jupyter::
 
@@ -78,7 +98,7 @@ To access Google maps, `gmaps` needs a Google API key. This key tells Google who
 .. code:: python
 
     gmaps.configure(api_key="AI...")
-  
+
 Documentation
 -------------
 
