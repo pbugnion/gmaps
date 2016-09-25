@@ -36,6 +36,16 @@ METADATA = {
         "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/nuclear_power_plants.csv",
         "description" : "All nuclear power plants worldwide",
         "source" : "IAEA (https://www.iaea.org/pris/)"
+    },
+    "starbucks_uk": {
+        "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/starbucks_uk.csv",
+        "description" : "All Starbucks in the UK (September 2016)",
+        "source" : "http://ratings.food.gov.uk"
+    },
+    "kfc_uk": {
+        "url" : "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/kfc_uk.csv",
+        "description" : "All KFC restaurants in the UK (September 2016)",
+        "source" : "http://ratings.food.gov.uk"
     }
 }
 
