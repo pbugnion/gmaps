@@ -149,7 +149,107 @@ def _marker_layer_options(locations, hover_text, label):
     return marker_options
 
 
-def symbol_layer(locations, hover_text="", fill_color=None, fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0, scale=None):
+def symbol_layer(locations, hover_text="", fill_color=None, fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0, scale=3):
+    """
+    Symbol layer
+
+    Add this layer to a ``Map`` instance to draw symbols
+    on the map. A symbol will be drawn on the map for each
+    point in the ``locations`` argument.
+
+    :Examples:
+
+    >>> m = gmaps.Map()
+    >>> locations = [
+            (-34.0, -59.166672),
+            (-32.23333, -64.433327),
+            (40.166672, 44.133331),
+            (51.216671, 5.0833302),
+            (51.333328, 4.25)
+        ]
+    >>> symbols = gmaps.symbol_layer(
+            locations, fill_color="red", stroke_color="red")
+    >>> m.add_layer(symbols)
+
+    You can also set text that appears when someone's mouse hovers
+    over a point:
+
+    >>> names = ["Atucha", "Embalse", "Armenia", "BR", "Doel"]
+    >>> symbol_layer = gmaps.symbol_layer(locations, hover_text=names)
+
+    Apart from ``locations``, which must be an iterable of
+    (latitude, longitude) pairs, the arguments can be given as
+    either a list of the same length as ``locations``, or a
+    single value. If given as a single value, this value will
+    be broadcast to every marker. Thus, these two calls are equivalent:
+
+    >>> symbols = gmaps.symbol_layer(
+            locations, fill_color=["red"]*len(locations))
+    >>> symbols = gmaps.symbol_layer(
+            locations, fill_color="red")
+
+    The former is useful for passing different colours to
+    different symbols.
+
+    >>> colors = ["red", "green", "blue", "black", "white"]
+    >>> symbols = gmaps.symbol_layer(
+            locations, fill_color=colors, stroke_color=colors)
+
+    :param locations:
+        List of (latitude, longitude) pairs
+        denoting a single point. Latitudes are expressed as
+        a float between -90 (corresponding to 90 degrees south)
+        and +90 (corresponding to 90 degrees north). Longitudes
+        are expressed as a float between -180 (corresponding to 180
+        degrees west) and +180 (corresponding to 180 degrees east).
+    :type locations: list of tuples
+
+    :param hover_text:
+        Text to be displayed when a user's mouse is hovering over
+        a marker. This can be either a single string, in which case
+        it will be applied to every marker, or a list of strings,
+        in which case it must be of the same length as `locations`.
+        If this is set to an empty string, nothing will appear when
+        the user's mouse hovers over a symbol.
+    :type hover_text: string or list of strings, optional
+
+    :param fill_color:
+        The fill color of the symbol. This can be specified as a
+        single color, in which case the same color will apply to every symbol, or as a list of colors, in which case it must be the
+        same length as ``locations``.
+        Colors can be specified as a simple string, e.g. 'blue',
+        as an RGB tuple, e.g. (100, 0, 0), or as an RGBA tuple, e.g.
+        (100, 0, 0, 0.5).
+    :type fill_color: single color or list of colors, optional
+
+    :param fill_opacity:
+        The opacity of the fill color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque), or a list of floats.
+        1.0 by default.
+    :type fill_opacity: float or list of floats, optional
+
+    :param stroke_color:
+        The stroke color of the symbol. This can be specified as a
+        single color, in which case the same color will apply to every symbol, or as a list of colors, in which case it must be the
+        same length as ``locations``.
+        Colors can be specified as a simple string, e.g. 'blue',
+        as an RGB tuple, e.g. (100, 0, 0), or as an RGBA tuple, e.g.
+        (100, 0, 0, 0.5).
+    :type stroke_color: single color or list of colors, optional
+
+    :param stroke_opacity:
+        The opacity of the stroke color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque), or a list of floats.
+        1.0 by default.
+    :type stroke_opacity: float or list of floats, optional
+
+    :param scale:
+        How large the marker is. This can either be a single integer,
+        in which case the same scale will be applied to every marker,
+        or it must be an iterable of the same length as ``locations``.
+        The scale must be greater than 1. This defaults to 3.
+    :type scale: integer or list of integers, optional
+    """
     options = _symbol_layer_options(
         locations, hover_text, fill_color,
         fill_opacity, stroke_color, stroke_opacity, scale)
@@ -158,6 +258,9 @@ def symbol_layer(locations, hover_text="", fill_color=None, fill_opacity=1.0, st
 
 
 def marker_layer(locations, hover_text="", label=""):
+    """
+    Marker layer
+    """
     marker_options = _marker_layer_options(
         locations, hover_text, label)
     markers = [Marker(**option) for option in marker_options]

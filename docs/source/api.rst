@@ -11,6 +11,10 @@ Maps and layers
 
 .. autoclass:: gmaps.WeightedHeatmap
 
+.. autofunction:: gmaps.symbol_layer
+
+.. autofunction:: gmaps.marker_layer
+
 Utility functions
 -----------------
 
@@ -29,4 +33,3 @@ Traitlets
 
 .. automodule:: gmaps.geotraitlets
    :members:
-
