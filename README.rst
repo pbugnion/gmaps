@@ -35,7 +35,7 @@ Or, for coffee fans, a map of all Starbucks in the UK:
 
     In [3]: m = gmaps.Map()
             starbucks_layer = gmaps.symbol_layer(
-                starbucks_locations, fill_color="green", stroke_color="green", scale=2)
+                locations, fill_color="green", stroke_color="green", scale=2)
             m.add_layer(starbucks_layer)
             m
 
