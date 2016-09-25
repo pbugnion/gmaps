@@ -260,6 +260,52 @@ def symbol_layer(locations, hover_text="", fill_color=None, fill_opacity=1.0, st
 def marker_layer(locations, hover_text="", label=""):
     """
     Marker layer
+
+    Add this layer to a ``Map`` instance to draw markers
+    corresponding to specific locations on the map.
+    A marker will be drawn on teh map for each point in the
+    ``locations`` argument.
+
+    :Examples:
+
+    >>> m = gmaps.Map()
+    >>> locations = [
+            (-34.0, -59.166672),
+            (-32.23333, -64.433327),
+            (40.166672, 44.133331),
+            (51.216671, 5.0833302),
+            (51.333328, 4.25)
+        ]
+    >>> symbols = gmaps.marker_layer(locations)
+    >>> m.add_layer(symbols)
+
+    :param locations:
+        List of (latitude, longitude) pairs
+        denoting a single point. Latitudes are expressed as
+        a float between -90 (corresponding to 90 degrees south)
+        and +90 (corresponding to 90 degrees north). Longitudes
+        are expressed as a float between -180 (corresponding to 180
+        degrees west) and +180 (corresponding to 180 degrees east).
+    :type locations: list of tuples
+
+    :param hover_text:
+        Text to be displayed when a user's mouse is hovering over
+        a marker. This can be either a single string, in which case
+        it will be applied to every marker, or a list of strings,
+        in which case it must be of the same length as `locations`.
+        If this is set to an empty string, nothing will appear when
+        the user's mouse hovers over a marker.
+    :type hover_text: string or list of strings, optional
+
+    :param label:
+        Text to be displayed inside the marker. Google maps
+        only displays the first letter of whatever string is
+        passed to the marker.
+        This can be either a single string, in which case
+        every marker will receive the same label, or a list of
+        strings, in which case it must be of the same length
+        as `locations`.
+    :type label: string or list of strings, optional
     """
     marker_options = _marker_layer_options(
         locations, hover_text, label)
