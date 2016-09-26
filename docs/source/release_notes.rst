@@ -2,6 +2,12 @@
 Release notes
 -------------
 
+Version 0.3.4
+=============
+
+ * Add marker and symbol layer (PR #78)
+ * Fix bug involving incorrect latitude bound calculation.
+
 Version 0.3.3
 =============
 
