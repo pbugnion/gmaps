@@ -1,11 +1,6 @@
-Mapz
+JavaScript package for jupyter-gmaps. This contains the JavaScript views.
 
 Package Install
 ---------------
 
-**Prerequisites**
-- [node](http://nodejs.org/)
-
-```bash
-npm install --save jupyter-gmaps
-```
+This can only be installed as part of an installation of the entire gmaps package. See the [documentation](http://jupyter-gmaps.readthedocs.io/en/latest/) for details.
