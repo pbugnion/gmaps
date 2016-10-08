@@ -2,9 +2,9 @@
 import warnings
 
 import ipywidgets as widgets
-from traitlets import (Unicode, CUnicode, default, Int, Bool,
+from traitlets import (Unicode, CUnicode, default, Bool,
                        List, Tuple, Float, Instance, validate,
-                       observe, Enum, Dict, HasTraits)
+                       observe, Dict, HasTraits)
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
@@ -14,12 +14,13 @@ DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
 
 _default_configuration = {"api_key": None}
 
+
 def configure(api_key=None):
     """
     Configure access to the GoogleMaps API.
 
-    :param api_key: String denoting the key to use when accessing Google maps, or
-        None to not pass an API key.
+    :param api_key: String denoting the key to use when accessing Google maps,
+        or None to not pass an API key.
     """
     configuration = {"api_key": api_key}
     global _default_configuration
@@ -37,6 +38,7 @@ class ConfigurationMixin(HasTraits):
 
 class InvalidPointException(Exception):
     pass
+
 
 class DirectionsServiceException(RuntimeError):
     pass
@@ -58,7 +60,8 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("PlainmapModel").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
-    layers = Tuple(trait=Instance(widgets.Widget)).tag(sync=True, **widgets.widget_serialization)
+    layers = Tuple(trait=Instance(widgets.Widget)).tag(
+        sync=True, **widgets.widget_serialization)
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
 
     def add_layer(self, layer):
@@ -71,13 +74,18 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
     @observe("layers")
     def _calc_bounds(self, change):
         layers = change["new"]
-        bounds_list = [layer.data_bounds for layer in layers if layer.has_bounds]
+        bounds_list = [
+            layer.data_bounds for layer in layers if layer.has_bounds
+        ]
         if bounds_list:
             min_latitude = min(bounds[0][0] for bounds in bounds_list)
             min_longitude = min(bounds[0][1] for bounds in bounds_list)
             max_latitude = min(bounds[1][0] for bounds in bounds_list)
             max_longitude = min(bounds[1][1] for bounds in bounds_list)
-            self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+            self.data_bounds = [
+                (min_latitude, min_longitude),
+                (max_latitude, max_longitude)
+            ]
 
 
 class Directions(widgets.Widget):
@@ -105,7 +113,9 @@ class Directions(widgets.Widget):
     >>> directions_layer = gmaps.Directions(data=[(50.0, 4.0])
     Traceback (most recent call last):
         ...
-    TraitError: The 'data' trait of a Directions instance must be of length 2 <= L <= 9223372036854775807, but a value of [[50.0, 4.0]] was specified.
+    TraitError: The 'data' trait of a Directions instance must be of
+    length 2 <= L <= 9223372036854775807, but a value of [[50.0, 4.0]]
+    was specified.
 
     There is a limitation in the number of waypoints allowed by Google. If it
     fails to return directions, a DirectionsServiceException is raised.
@@ -141,12 +151,16 @@ class Directions(widgets.Widget):
         min_longitude = min(row[1] for row in data)
         max_latitude = max(row[0] for row in data)
         max_longitude = max(row[1] for row in data)
-        self.data_bounds = [(min_latitude, min_longitude), (max_latitude, max_longitude)]
+        self.data_bounds = [
+            (min_latitude, min_longitude),
+            (max_latitude, max_longitude)
+        ]
 
     @observe("layer_status")
     def _handle_layer_status(self, change):
         if change["new"] != "OK":
-            raise DirectionsServiceException("No directions returned: " + change["new"])
+            raise DirectionsServiceException(
+                "No directions returned: " + change["new"])
 
 
 # Mixin for options common to both heatmap and weighted heatmaps.
@@ -190,7 +204,9 @@ class _HeatmapOptionsMixin(HasTraits):
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
     dissipating = Bool(default_value=True).tag(sync=True)
     opacity = Float(default_value=0.6, min=0.0, max=1.0).tag(sync=True)
-    gradient = List(trait=geotraitlets.ColorAlpha(), allow_none=True, minlen=1).tag(sync=True)
+    gradient = List(
+        trait=geotraitlets.ColorAlpha(), allow_none=True, minlen=1
+    ).tag(sync=True)
 
     @default("gradient")
     def _default_gradient(self):
@@ -242,10 +258,10 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
     >>> m.add_layer(heatmap_layer)
 
     :param data: List of (latitude, longitude) pairs denoting a single
-        point. Latitudes
-        are expressed as a float between -90 (corresponding to 90 degrees south)
-        and +90 (corresponding to 90 degrees north). Longitudes are expressed
-        as a float between -180 (corresponding to 180 degrees west) and 180
+        point. Latitudes are expressed as a float between -90
+        (corresponding to 90 degrees south) and +90 (corresponding to
+        90 degrees north). Longitudes are expressed as a float
+        between -180 (corresponding to 180 degrees west) and 180
         (corresponding to 180 degrees east).
     :type data: list of tuples
 
