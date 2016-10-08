@@ -336,7 +336,7 @@ def heatmap(data):
         "with a Heatmap layer",
         category=RuntimeWarning)
     p = Map()
-    heatmap_layer = HeatmapLayer()
+    heatmap_layer = Heatmap()
     heatmap_layer.data = data
     p.layers = (heatmap_layer, )
     return p
