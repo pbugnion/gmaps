@@ -113,10 +113,14 @@ def _merge_option_dicts(option_dicts):
     This helper function takes a dictionary of (key -> list) and
     returns a list of dictionaries of (key -> value).
     """
-    number_items = len(option_dicts.values()[0])
+    option_values_lengths = [
+        len(option_values) for option_values in option_dicts.values()
+    ]
     # assert all the list values are the same length
+    number_items = option_values_lengths[0]
     assert all(
-        len(options) == number_items for options in option_dicts.values()
+        length == number_items
+        for length in option_values_lengths
     )
     option_lists = []
     for item in range(number_items):
