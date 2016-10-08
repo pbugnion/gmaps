@@ -4,6 +4,10 @@ import re
 import traitlets
 
 
+class InvalidPointException(Exception):
+    pass
+
+
 class Latitude(traitlets.Float):
     """
     Float representing a latitude
