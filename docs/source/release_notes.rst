@@ -2,6 +2,11 @@
 Release notes
 -------------
 
+Version 0.3.5
+=============
+
+ * Bugfix in deprecated heatmap method (PR #89).
+
 Version 0.3.4
 =============
 
