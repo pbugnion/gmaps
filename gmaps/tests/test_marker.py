@@ -18,7 +18,8 @@ class MarkerLayer(unittest.TestCase):
     def test_hover_text_lists(self):
         marker_options = _marker_layer_options(
             self.locations, hover_text=["t1", "t2"], label="")
-        assert tuple(options["hover_text"] for options in marker_options) == ("t1", "t2")
+        hover_texts = [options["hover_text"] for options in marker_options]
+        assert tuple(hover_texts) == ("t1", "t2")
 
 
 class SymbolLayer(unittest.TestCase):

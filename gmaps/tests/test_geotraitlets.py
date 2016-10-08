@@ -18,7 +18,7 @@ class ColorString(unittest.TestCase):
 
     def test_reject_misspelled_color(self):
         with self.assertRaises(traitlets.TraitError):
-            a = self.A(x='gren')
+            self.A(x='gren')
 
     def test_accept_hex_triple(self):
         a = self.A(x='#aabbcc')
@@ -64,13 +64,13 @@ class TestRgbTuple(unittest.TestCase):
 
     def test_reject_tuples_wrong_length(self):
         with self.assertRaises(traitlets.TraitError):
-            a = self.A(x=(100, 2))
+            self.A(x=(100, 2))
 
     def test_reject_tuples_wrong_numbers(self):
         with self.assertRaises(traitlets.TraitError):
-            a = self.A(x=(300, 0, 0))
+            self.A(x=(300, 0, 0))
         with self.assertRaises(traitlets.TraitError):
-            a = self.A(x=(200, -10, 0))
+            self.A(x=(200, -10, 0))
 
     def test_default_value(self):
         class A(traitlets.HasTraits):
@@ -91,7 +91,7 @@ class TestRgbaTuple(unittest.TestCase):
 
     def test_reject_tuples_wrong_numbers(self):
         with self.assertRaises(traitlets.TraitError):
-            a = self.A(x=(200, 0, 0, -0.5))
+            self.A(x=(200, 0, 0, -0.5))
 
     def test_default_value(self):
         class A(traitlets.HasTraits):

@@ -3,6 +3,7 @@ import unittest
 
 import gmaps
 
+
 class TestHeatmapOptionsMixin(unittest.TestCase):
 
     def test_gradient_default_none(self):
@@ -17,4 +18,3 @@ class TestHeatmapOptionsMixin(unittest.TestCase):
         l = gmaps.maps._HeatmapOptionsMixin(gradient=["blue", "red"])
         l.gradient = None
         assert l.gradient is None
-
