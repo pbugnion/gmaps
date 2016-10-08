@@ -1,6 +1,4 @@
 
-import warnings
-
 import ipywidgets as widgets
 from traitlets import (Unicode, CUnicode, default, Bool,
                        List, Tuple, Float, Instance, validate,
