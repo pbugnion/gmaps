@@ -337,22 +337,3 @@ class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
     def _calc_bounds(self, change):
         data = change["new"]
         self.set_bounds(data)
-
-
-def plainmap():
-    warnings.warn(
-        "plainmap is deprecated. Prefer the Map class.",
-        category=RuntimeWarning)
-    return Map()
-
-
-def heatmap(data):
-    warnings.warn(
-        "heatmap is deprecated. Prefer combining the Map class "
-        "with a Heatmap layer",
-        category=RuntimeWarning)
-    p = Map()
-    heatmap_layer = Heatmap()
-    heatmap_layer.data = data
-    p.layers = (heatmap_layer, )
-    return p
