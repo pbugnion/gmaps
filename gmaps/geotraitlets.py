@@ -3,6 +3,7 @@ import re
 
 import traitlets
 
+
 class Latitude(traitlets.Float):
     """
     Float representing a latitude
@@ -56,6 +57,7 @@ _color_re = re.compile(r'#[a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?$')
 _rgb_re = re.compile(r'rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)')
 _rgba_re = re.compile(r'rgba\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3},0?\.[0-9]*\)')
 
+
 class ColorString(traitlets.Unicode):
     """
     A string holding a color recognized by Google Maps.
@@ -73,7 +75,7 @@ class ColorString(traitlets.Unicode):
     def validate(self, obj, value):
         try:
             value_as_string = super(ColorString, self).validate(obj, value)
-            normalised_string = value_as_string.replace(" ","").lower()
+            normalised_string = value_as_string.replace(" ", "").lower()
             if (
                 normalised_string.lower() in _color_names or
                 _color_re.match(normalised_string) or
@@ -119,7 +121,8 @@ class ColorAlpha(traitlets.Union):
     This is either a string like 'blue' or '#aabbcc' or an RGB
     tuple like (100, 0, 250) or an RGBA tuple like (100, 0, 250, 0.5).
     """
-    def __init__(self, default_value=traitlets.Undefined,
+    def __init__(
+            self, default_value=traitlets.Undefined,
             allow_none=False, **metadata):
         trait_types = [
             ColorString(default_value=default_value, allow_none=allow_none),
