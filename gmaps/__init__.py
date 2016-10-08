@@ -1,7 +1,8 @@
-from ._version import version_info, __version__
+from ._version import version_info, __version__  # noqa
 
-from .maps import *
-from .marker import *
+from .maps import *  # noqa
+from .marker import *  # noqa
+
 
 def _jupyter_nbextension_paths():
     return [{
