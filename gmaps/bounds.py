@@ -1,5 +1,6 @@
 import math
 
+
 def latitude_bounds(latitudes):
     """
     Estimate latitude bound with 2*sample standard deviation

@@ -3,7 +3,7 @@ import collections
 
 from six import string_types
 import ipywidgets as widgets
-from traitlets import Unicode, Int, default, List, observe, HasTraits, Float
+from traitlets import Unicode, Int, List, observe, HasTraits, Float
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
@@ -87,6 +87,7 @@ def _is_atomic(elem):
         not isinstance(elem, collections.Iterable)
     )
 
+
 def _is_color_atomic(color):
     """
     Determine whether the argument is a singe color or an iterable of colors
@@ -105,10 +106,32 @@ def _is_color_atomic(color):
     return is_atomic
 
 
+def _merge_option_dicts(option_dicts):
+    """
+    Create a list of options for marker and symbol layers
+
+    This helper function takes a dictionary of (key -> list) and
+    returns a list of dictionaries of (key -> value).
+    """
+    number_items = len(option_dicts.values()[0])
+    # assert all the list values are the same length
+    assert all(
+        len(options) == number_items for options in option_dicts.values()
+    )
+    option_lists = []
+    for item in range(number_items):
+        item_options = {
+            option_name: option_values[item]
+            for (option_name, option_values)
+            in option_dicts.items()
+        }
+        option_lists.append(item_options)
+    return option_lists
+
+
 def _symbol_layer_options(
-    locations, hover_text, fill_color, fill_opacity,
-    stroke_color, stroke_opacity, scale
-    ):
+        locations, hover_text, fill_color, fill_opacity,
+        stroke_color, stroke_opacity, scale):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
@@ -122,17 +145,16 @@ def _symbol_layer_options(
         stroke_opacity = [stroke_opacity] * number_markers
     if _is_atomic(fill_opacity):
         fill_opacity = [fill_opacity] * number_markers
-    symbol_options = [
-        dict(
-            location=location, hover_text=hover_text,
-            fill_color=fill_color, stroke_color=stroke_color,
-            scale=scale, stroke_opacity=stroke_opacity,
-            fill_opacity=fill_opacity
-        )
-        for (location, hover_text, scale, fill_color, stroke_color, stroke_opacity, fill_opacity) in
-        zip(locations, hover_text, scale, fill_color, stroke_color, stroke_opacity, fill_opacity)
-    ]
-    return symbol_options
+    options = {
+        "location": locations,
+        "hover_text": hover_text,
+        "fill_color": fill_color,
+        "stroke_color": stroke_color,
+        "scale": scale,
+        "stroke_opacity": stroke_opacity,
+        "fill_opacity": fill_opacity
+    }
+    return _merge_option_dicts(options)
 
 
 def _marker_layer_options(locations, hover_text, label):
@@ -141,15 +163,17 @@ def _marker_layer_options(locations, hover_text, label):
         hover_text = [hover_text] * number_markers
     if _is_atomic(label):
         label = [label] * number_markers
-    marker_options = [
-        dict(location=location, hover_text=hover_text, label=label)
-        for (location, hover_text, label) in
-        zip(locations, hover_text, label)
-    ]
-    return marker_options
+    options = {
+        "location": locations,
+        "hover_text": hover_text,
+        "label": label
+    }
+    return _merge_option_dicts(options)
 
 
-def symbol_layer(locations, hover_text="", fill_color=None, fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0, scale=3):
+def symbol_layer(
+        locations, hover_text="", fill_color=None, fill_opacity=1.0,
+        stroke_color=None, stroke_opacity=1.0, scale=3):
     """
     Symbol layer
 
@@ -215,7 +239,8 @@ def symbol_layer(locations, hover_text="", fill_color=None, fill_opacity=1.0, st
 
     :param fill_color:
         The fill color of the symbol. This can be specified as a
-        single color, in which case the same color will apply to every symbol, or as a list of colors, in which case it must be the
+        single color, in which case the same color will apply to every symbol,
+        or as a list of colors, in which case it must be the
         same length as ``locations``.
         Colors can be specified as a simple string, e.g. 'blue',
         as an RGB tuple, e.g. (100, 0, 0), or as an RGBA tuple, e.g.
@@ -230,7 +255,8 @@ def symbol_layer(locations, hover_text="", fill_color=None, fill_opacity=1.0, st
 
     :param stroke_color:
         The stroke color of the symbol. This can be specified as a
-        single color, in which case the same color will apply to every symbol, or as a list of colors, in which case it must be the
+        single color, in which case the same color will apply to every symbol,
+        or as a list of colors, in which case it must be the
         same length as ``locations``.
         Colors can be specified as a simple string, e.g. 'blue',
         as an RGB tuple, e.g. (100, 0, 0), or as an RGBA tuple, e.g.
