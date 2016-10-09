@@ -196,7 +196,11 @@ def _heatmap_options(
     }
     if weights is None:
         is_weighted = False
-        data = locations
+        locations_as_list = [
+            (latitude, longitude) for (latitude, longitude)
+            in locations
+        ]
+        data = locations_as_list
     else:
         if len(weights) != len(locations):
             raise ValueError(
