@@ -182,3 +182,42 @@ class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
     def _calc_bounds(self, change):
         data = change["new"]
         self.set_bounds(data)
+
+
+def _heatmap_options(
+        locations, weights, max_intensity, dissipating, point_radius,
+        opacity, gradient):
+    options = {
+        "max_intensity": max_intensity,
+        "dissipating": dissipating,
+        "point_radius": point_radius,
+        "opacity": opacity,
+        "gradient": gradient
+    }
+    if weights is None:
+        is_weighted = False
+        data = locations
+    else:
+        if len(weights) != len(locations):
+            raise ValueError(
+                "weights must be of the same length as locations or None")
+        latitudes, longitudes = zip(*locations)
+        is_weighted = True
+        data = zip(latitudes, longitudes, weights)
+    widget_args = {"data": data}
+    widget_args.update(options)
+    return widget_args, is_weighted
+
+
+def heatmap_layer(
+        locations, weights=None, max_intensity=None,
+        dissipating=True, point_radius=None,
+        opacity=0.6, gradient=None):
+    widget_args, is_weighted = _heatmap_options(
+        locations, weights, max_intensity, dissipating, point_radius,
+        opacity, gradient
+    )
+    if is_weighted:
+        return WeightedHeatmap(**widget_args)
+    else:
+        return Heatmap(**widget_args)
