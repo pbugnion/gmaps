@@ -207,7 +207,7 @@ def _heatmap_options(
                 "weights must be of the same length as locations or None")
         latitudes, longitudes = zip(*locations)
         is_weighted = True
-        data = zip(latitudes, longitudes, weights)
+        data = list(zip(latitudes, longitudes, weights))
     widget_args = {"data": data}
     widget_args.update(options)
     return widget_args, is_weighted
