@@ -1,5 +1,6 @@
 
 import unittest
+import pytest
 
 from ..heatmap import _heatmap_options, _HeatmapOptionsMixin
 
@@ -51,7 +52,7 @@ class HeatmapLayer(unittest.TestCase):
         assert heatmap_args["data"] == self.locations
 
     def test_weighted_pandas_df(self):
-        import pandas as pd
+        pd = pytest.importorskip("pandas")
         df = pd.DataFrame.from_items([
             ("latitude", [loc[0] for loc in self.locations]),
             ("longitude", [loc[1] for loc in self.locations]),
