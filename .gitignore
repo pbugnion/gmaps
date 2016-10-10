@@ -8,3 +8,8 @@ gmaps/static/*
 *.ipynb_checkpoints*
 js/node_modules/*
 js/dist/*
+.tox/*
+docs/build/*
+.cache/*
+build/*
+dist/*
