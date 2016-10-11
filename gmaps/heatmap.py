@@ -4,8 +4,8 @@ from traitlets import (
     Float, Bool, Unicode, HasTraits, default, List, validate,
     observe)
 
-import gmaps.bounds as bounds
-import gmaps.geotraitlets as geotraitlets
+from . import bounds
+from . import geotraitlets
 
 
 # Mixin for options common to both heatmap and weighted heatmaps.

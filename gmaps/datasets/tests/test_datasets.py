@@ -1,7 +1,7 @@
 
 import unittest
 
-import gmaps.datasets as datasets
+from .. import datasets
 
 
 class TestDatasets(unittest.TestCase):
