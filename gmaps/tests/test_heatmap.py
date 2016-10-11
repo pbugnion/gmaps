@@ -75,6 +75,12 @@ class HeatmapLayer(unittest.TestCase):
         assert not is_weighted
         assert heatmap_args["data"] == self.locations
 
+    def test_max_intensity(self):
+        options = self._options_from_default(max_intensity=0.2)
+        heatmap_args, is_weigthed = _heatmap_options(
+            self.locations, **options)
+        assert heatmap_args["max_intensity"] == 0.2
+
 
 class TestHeatmapOptionsMixin(unittest.TestCase):
 
