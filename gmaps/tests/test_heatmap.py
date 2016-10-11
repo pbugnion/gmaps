@@ -60,7 +60,7 @@ class HeatmapLayer(unittest.TestCase):
         ])
         options = self._options_from_default(weights=df["weight"])
         heatmap_args, is_weighted = _heatmap_options(
-            df[["latitude", "longitude"]].values, **options)
+            df[["latitude", "longitude"]], **options)
         assert is_weighted
         assert heatmap_args["data"] == self.merged_weight_locations
 
