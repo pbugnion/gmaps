@@ -4,6 +4,7 @@ import ipywidgets as widgets
 from traitlets import Unicode, CUnicode, List, observe, validate
 
 from . import geotraitlets
+from .locations import locations_to_list
 
 
 class DirectionsServiceException(RuntimeError):
@@ -83,3 +84,18 @@ class Directions(widgets.Widget):
         if change["new"] != "OK":
             raise DirectionsServiceException(
                 "No directions returned: " + change["new"])
+
+
+def _directions_options(start, end, waypoints):
+    start = tuple(start)
+    end = tuple(end)
+    if waypoints is None:
+        data = [start, end]
+    else:
+        data = [start] + locations_to_list(waypoints) + [end]
+    return {"data": data}
+
+
+def directions_layer(start, end, waypoints=None):
+    widget_args = _directions_options(start, end, waypoints)
+    return Directions(**widget_args)
