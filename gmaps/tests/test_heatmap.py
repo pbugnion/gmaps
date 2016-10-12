@@ -66,10 +66,8 @@ class HeatmapLayer(unittest.TestCase):
 
     def test_not_weighted_pandas_df(self):
         pd = pytest.importorskip("pandas")
-        df = pd.DataFrame.from_items([
-            ("latitude", [loc[0] for loc in self.locations]),
-            ("longitude", [loc[1] for loc in self.locations])
-        ])
+        df = pd.DataFrame.from_records(
+            self.locations, columns=["latitude", "longitude"])
         options = self._options_from_default()
         heatmap_args, is_weighted = _heatmap_options(df, **options)
         assert not is_weighted
