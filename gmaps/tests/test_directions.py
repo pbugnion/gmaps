@@ -1,5 +1,6 @@
 
 import unittest
+import pytest
 
 from ..directions import _directions_options
 
@@ -33,4 +34,12 @@ class DirectionsLayer(unittest.TestCase):
         import numpy as np
         options = _directions_options(
             np.array(self.start), self.end, np.array(self.waypoints))["data"]
+        assert options == self.data_array
+
+    def test_pandas_df(self):
+        pd = pytest.importorskip("pandas")
+        waypoints = pd.DataFrame.from_records(
+            self.waypoints, columns=["latitude", "longitude"])
+        options = _directions_options(
+            self.start, self.end, waypoints)["data"]
         assert options == self.data_array
