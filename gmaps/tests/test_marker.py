@@ -86,6 +86,23 @@ class MarkerLayer(unittest.TestCase):
         locations = [options["location"] for options in marker_options]
         assert locations == self.locations
 
+    def test_all_pandas_df(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame.from_records(
+            [
+                list(self.locations[0]) + ["text1", "a"],
+                list(self.locations[1]) + ["text2", "b"],
+            ],
+            columns=["latitude", "longitude", "hover_text", "label"])
+        marker_options = _marker_layer_options(
+            df[["latitude", "longitude"]], df["hover_text"], df["label"])
+        locations = [options["location"] for options in marker_options]
+        assert locations == self.locations
+        hover_texts = [options["hover_text"] for options in marker_options]
+        assert hover_texts == ["text1", "text2"]
+        labels = [options["label"] for options in marker_options]
+        assert labels == ["a", "b"]
+
 
 class SymbolLayer(unittest.TestCase):
 
