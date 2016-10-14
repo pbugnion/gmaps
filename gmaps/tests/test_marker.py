@@ -1,5 +1,6 @@
 
 import unittest
+import pytest
 
 import numpy as np
 
@@ -74,6 +75,15 @@ class MarkerLayer(unittest.TestCase):
         options = self._add_default_options()
         marker_options = _marker_layer_options(locations_array, **options)
         locations = [opts["location"] for opts in marker_options]
+        assert locations == self.locations
+
+    def test_locations_pandas_df(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame.from_records(
+            self.locations, columns=["latitude", "longitude"])
+        marker_options = _marker_layer_options(
+            df, hover_text="", label="")
+        locations = [options["location"] for options in marker_options]
         assert locations == self.locations
 
 
