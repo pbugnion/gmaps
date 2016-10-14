@@ -1,6 +1,8 @@
 
 import unittest
 
+import numpy as np
+
 from ..marker import _marker_layer_options, _symbol_layer_options
 
 
@@ -66,6 +68,13 @@ class MarkerLayer(unittest.TestCase):
         marker_options = _marker_layer_options(self.locations, **options)
         display_infos = [opts["display_info_box"] for opts in marker_options]
         assert tuple(display_infos) == (True, False)
+
+    def test_locations_array(self):
+        locations_array = np.array(self.locations)
+        options = self._add_default_options()
+        marker_options = _marker_layer_options(locations_array, **options)
+        locations = [opts["location"] for opts in marker_options]
+        assert locations == self.locations
 
 
 class SymbolLayer(unittest.TestCase):
