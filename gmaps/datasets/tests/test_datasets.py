@@ -1,6 +1,8 @@
 
 import unittest
 
+import pytest
+
 from .. import datasets
 
 
@@ -24,3 +26,9 @@ class TestDatasets(unittest.TestCase):
         assert 'description' in meta
         assert 'headers' in meta
         assert 'url' not in meta
+
+    def test_load_as_df_taxi_rides(self):
+        pytest.importorskip("pandas")  # only run this if pandas is available
+        df = datasets.load_dataset_as_df('taxi_rides')
+        assert df.columns.tolist() == ['latitude', 'longitude']
+        assert df.dtypes.tolist() == [float, float]

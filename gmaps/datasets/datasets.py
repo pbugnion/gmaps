@@ -97,3 +97,13 @@ def load_dataset(dataset_name):
     data = _read_rows(f)
     f.close()
     return data
+
+
+def load_dataset_as_df(dataset_name):
+    """
+    Fetch a dataset, returning a pandas dataframe.
+    """
+    import pandas as pd
+    data = load_dataset(dataset_name)
+    headers = dataset_metadata(dataset_name)["headers"]
+    return pd.DataFrame(data, columns=headers)
