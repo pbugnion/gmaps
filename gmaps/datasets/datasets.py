@@ -21,22 +21,26 @@ from six.moves.urllib.request import urlopen
 METADATA = {
     "taxi_rides": {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/taxi_data.csv",  # noqa
-        "description": "Taxi pickup location data in San Francisco"
+        "description": "Taxi pickup location data in San Francisco",
+        "headers": ["latitude", "longitude"]
     },
     "earthquakes": {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/earthquakes.csv",  # noqa
         "description": ("All recorded earthquakes in 30 days "
-                        "starting on 12th November 2014")
+                        "starting on 12th November 2014"),
+        "headers": ["latitude", "longitude", "magnitude"]
     },
     "acled_africa": {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/acled_africa.csv",  # noqa
         "description": "Recorded incidents of political violence in Africa",
-        "source": "http://www.acleddata.com"
+        "source": "http://www.acleddata.com",
+        "headers": ["latitude", "longitude"]
     },
     "nuclear_plants": {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/nuclear_power_plants.csv",  # noqa
         "description": "All nuclear power plants worldwide",
-        "source": "IAEA (https://www.iaea.org/pris/)"
+        "source": "IAEA (https://www.iaea.org/pris/)",
+        "headers": ["latitude", "longitude"]
     },
     "starbucks_uk": {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/starbucks_uk.csv",  # noqa
@@ -63,6 +67,21 @@ def list_datasets():
     List of datasets available
     """
     return METADATA.keys()
+
+
+def dataset_metadata(dataset_name):
+    """
+    Information about the dataset
+
+    This returns a dictionary containing a 'description',
+    a list of the dataset headers and optionally information
+    about the dataset source.
+
+    >>> dataset_metadata("earthquakes")
+    """
+    metadata = METADATA[dataset_name].copy()
+    del metadata["url"]
+    return metadata
 
 
 def load_dataset(dataset_name):

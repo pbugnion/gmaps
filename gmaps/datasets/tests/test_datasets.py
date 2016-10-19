@@ -18,3 +18,9 @@ class TestDatasets(unittest.TestCase):
         data = datasets.load_dataset('earthquakes')
         assert data[0] == (65.1933, -149.0725, 1.7)
         assert len(data) == 8604
+
+    def test_dataset_metadata(self):
+        meta = datasets.dataset_metadata('taxi_rides')
+        assert 'description' in meta
+        assert 'headers' in meta
+        assert 'url' not in meta
