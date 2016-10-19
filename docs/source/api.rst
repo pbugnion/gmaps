@@ -25,7 +25,7 @@ Datasets
 --------
 
 .. automodule:: gmaps.datasets
-   :members: list_datasets, load_dataset, dataset_metadata
+   :members: list_datasets, load_dataset, dataset_metadata, load_dataset_as_df
 
 
 Traitlets
