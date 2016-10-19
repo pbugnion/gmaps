@@ -77,7 +77,11 @@ def dataset_metadata(dataset_name):
     a list of the dataset headers and optionally information
     about the dataset source.
 
+    :Examples:
+
     >>> dataset_metadata("earthquakes")
+    {'description': 'Taxi pickup location data in San Francisco',
+     'headers': ['latitude', 'longitude']}
     """
     metadata = METADATA[dataset_name].copy()
     del metadata["url"]
