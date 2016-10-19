@@ -81,9 +81,9 @@ class MarkerLayer(unittest.TestCase):
         pd = pytest.importorskip("pandas")
         df = pd.DataFrame.from_records(
             self.locations, columns=["latitude", "longitude"])
-        marker_options = _marker_layer_options(
-            df, hover_text="", label="")
-        locations = [options["location"] for options in marker_options]
+        options = self._add_default_options()
+        marker_options = _marker_layer_options(df, **options)
+        locations = [opts["location"] for opts in marker_options]
         assert locations == self.locations
 
     def test_all_pandas_df(self):
@@ -94,13 +94,15 @@ class MarkerLayer(unittest.TestCase):
                 list(self.locations[1]) + ["text2", "b"],
             ],
             columns=["latitude", "longitude", "hover_text", "label"])
+        options = self._add_default_options(
+            hover_text=df["hover_text"], label=df["label"])
         marker_options = _marker_layer_options(
-            df[["latitude", "longitude"]], df["hover_text"], df["label"])
-        locations = [options["location"] for options in marker_options]
+            df[["latitude", "longitude"]], **options)
+        locations = [opts["location"] for opts in marker_options]
         assert locations == self.locations
-        hover_texts = [options["hover_text"] for options in marker_options]
+        hover_texts = [opts["hover_text"] for opts in marker_options]
         assert hover_texts == ["text1", "text2"]
-        labels = [options["label"] for options in marker_options]
+        labels = [opts["label"] for opts in marker_options]
         assert labels == ["a", "b"]
 
 

@@ -180,7 +180,7 @@ def _symbol_layer_options(
         fill_opacity = [fill_opacity] * number_markers
 
     symbol_options = {
-        "location": locations,
+        "location": locations_to_list(locations),
         "hover_text": hover_text,
         "fill_color": fill_color,
         "stroke_color": stroke_color,
