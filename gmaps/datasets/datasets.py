@@ -64,7 +64,7 @@ def _read_rows(f, column_types):
         typed_row = [
             column_type(cell) for column_type, cell in zip(column_types, row)
         ]
-        rows.append(typed_row)
+        rows.append(tuple(typed_row))
     return rows
 
 
