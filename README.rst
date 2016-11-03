@@ -14,13 +14,13 @@ Let's plot a heatmap of taxi pickups in San Francisco:
             gmaps.configure(api_key="AI...") # Your Google API key
 
     # load a Numpy array of (latitude, longitude) pairs
-    In [2]: data = gmaps.datasets.load_dataset('taxi_rides')
+    In [2]: data = gmaps.datasets.load_dataset("taxi_rides")
 
     In [3]: m = gmaps.Map()
-            m.add_layer(gmaps.Heatmap(data=data))
+            m.add_layer(gmaps.heatmap_layer(data))
             m
 
-.. image:: docs/example.png
+.. image:: docs/source/taxi_example.png
 
 Or, for coffee fans, a map of all Starbucks in the UK:
 
