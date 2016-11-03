@@ -11,14 +11,15 @@ To demonstrate `gmaps`, let's plot the earthquake dataset, included in the packa
 
   gmaps.configure(api_key="AI...") # Fill in with your API key
 
-  earthquake_data = gmaps.datasets.load_dataset("earthquakes")
+  earthquake_df = gmaps.datasets.load_dataset_as_df("earthquakes")
+  earthquake_df.head()
 
-  print(earthquake_data[:4]) # first four rows
+The earthquake data has three columns: a latitude and longitude indicating the earthquake's epicentre and a weight denoting the magnitude of the earthquake at that point. Let's plot the earthquakes on a Google map::
 
-The earthquake data is a list of triples: a latitude and longitude indicating the earthquake's epicentre and a weight denoting the magnitude of the earthquake at that point. Let's plot the earthquakes on a Google map::
-
+  locations = earthquake_df[["latitude", "longitude"]]
+  weights = earthquake_df["magnitude"]
   m = gmaps.Map()
-  m.add_layer(gmaps.WeightedHeatmap(data=earthquake_data))
+  m.add_layer(gmaps.heatmap_layer(locations, weights=weights))
   m
 
 .. image:: tutorial-earthquakes.*
@@ -46,23 +47,25 @@ You then add layers on top of the base map. For instance, to add a heatmap layer
 
   m = gmaps.Map()
 
-  # generate some data
-  data = [(51.5, 0.1), (51.7, 0.2), (51.4, -0.2), (51.49, 0.1)]
+  # generate some (latitude, longitude) pairs
+  locations = [(51.5, 0.1), (51.7, 0.2), (51.4, -0.2), (51.49, 0.1)]
 
-  heatmap_layer = gmaps.Heatmap(data=data)
+  heatmap_layer = gmaps.heatmap_layer(locations)
   m.add_layer(heatmap_layer)
   m
 
 .. image:: plainmap3.*
 
+The `locations` array can either be a list of tuples, as in the example above, a numpy array of shape $N \times 2$ or a dataframe with two columns.
+
 Attributes on the base map and the layers can be set through named arguments in the constructor or as instance attributes once the instance is created. These two constructions are thus equivalent::
 
-  heatmap_layer = gmaps.Heatmap(data=data)
+  heatmap_layer = gmaps.heatmap_layer(locations)
   heatmap_layer.point_radius = 8
 
 and::
 
-  heatmap_layer = gmaps.Heatmap(data=data, point_radius=8)
+  heatmap_layer = gmaps.heatmap_layer(locations, point_radius=8)
 
 The former construction is useful for modifying a map once it has been built. Any change in parameters will propagate to maps in which those layers are included.
 
