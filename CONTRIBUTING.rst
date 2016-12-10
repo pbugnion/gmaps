@@ -21,7 +21,7 @@ contribute to gmaps.
 
 2. Clone the repository to your computer::
    
-    $ git clone https://github.com/YourUserID/gmaps.git
+    $ git clone https://github.com/pbugnion/gmaps.git
 
 3. Install gmaps by running::
 
