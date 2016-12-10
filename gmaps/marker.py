@@ -18,6 +18,7 @@ class _BaseMarkerMixin(HasTraits):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     hover_text = Unicode("").tag(sync=True)
+    info_html = Unicode("").tag(sync=True)
 
 
 class Symbol(_BaseMarkerMixin, widgets.Widget):
@@ -135,10 +136,12 @@ def _merge_option_dicts(option_dicts):
 
 def _symbol_layer_options(
         locations, hover_text, fill_color, fill_opacity,
-        stroke_color, stroke_opacity, scale):
+        stroke_color, stroke_opacity, scale,info_html):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
+    if _is_atomic(info_html):
+        info_html = [info_html] * number_markers
     if _is_atomic(scale):
         scale = [scale] * number_markers
     if _is_color_atomic(fill_color):
@@ -152,6 +155,7 @@ def _symbol_layer_options(
     options = {
         "location": locations,
         "hover_text": hover_text,
+        "info_html": info_html,
         "fill_color": fill_color,
         "stroke_color": stroke_color,
         "scale": scale,
@@ -161,22 +165,25 @@ def _symbol_layer_options(
     return _merge_option_dicts(options)
 
 
-def _marker_layer_options(locations, hover_text, label):
+def _marker_layer_options(locations, hover_text, label,info_html):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
+    if _is_atomic(info_html):
+        info_html = [info_html] * number_markers
     if _is_atomic(label):
         label = [label] * number_markers
     options = {
         "location": locations,
         "hover_text": hover_text,
+        "info_html": info_html,
         "label": label
     }
     return _merge_option_dicts(options)
 
 
 def symbol_layer(
-        locations, hover_text="", fill_color=None, fill_opacity=1.0,
+        locations, hover_text="", info_html='',fill_color=None, fill_opacity=1.0,
         stroke_color=None, stroke_opacity=1.0, scale=3):
     """
     Symbol layer
@@ -282,12 +289,12 @@ def symbol_layer(
     """
     options = _symbol_layer_options(
         locations, hover_text, fill_color,
-        fill_opacity, stroke_color, stroke_opacity, scale)
+        fill_opacity, stroke_color, stroke_opacity, scale,info_html)
     symbols = [Symbol(**option) for option in options]
     return Markers(markers=symbols)
 
 
-def marker_layer(locations, hover_text="", label=""):
+def marker_layer(locations, hover_text="",into_html="", label=""):
     """
     Marker layer
 
@@ -338,6 +345,6 @@ def marker_layer(locations, hover_text="", label=""):
     :type label: string or list of strings, optional
     """
     marker_options = _marker_layer_options(
-        locations, hover_text, label)
+        locations, hover_text, label,info_html)
     markers = [Marker(**option) for option in marker_options]
     return Markers(markers=markers)
