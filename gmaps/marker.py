@@ -136,7 +136,7 @@ def _merge_option_dicts(option_dicts):
 
 def _symbol_layer_options(
         locations, hover_text, fill_color, fill_opacity,
-        stroke_color, stroke_opacity, scale,info_html):
+        stroke_color, stroke_opacity, scale, info_html):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
@@ -165,7 +165,7 @@ def _symbol_layer_options(
     return _merge_option_dicts(options)
 
 
-def _marker_layer_options(locations, hover_text, label,info_html):
+def _marker_layer_options(locations, hover_text, label, info_html):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
@@ -183,7 +183,8 @@ def _marker_layer_options(locations, hover_text, label,info_html):
 
 
 def symbol_layer(
-        locations, hover_text="", info_html='',fill_color=None, fill_opacity=1.0,
+        locations, hover_text="", info_html='', fill_color=None,
+        fill_opacity=1.0,
         stroke_color=None, stroke_opacity=1.0, scale=3):
     """
     Symbol layer
@@ -289,12 +290,12 @@ def symbol_layer(
     """
     options = _symbol_layer_options(
         locations, hover_text, fill_color,
-        fill_opacity, stroke_color, stroke_opacity, scale,info_html)
+        fill_opacity, stroke_color, stroke_opacity, scale, info_html)
     symbols = [Symbol(**option) for option in options]
     return Markers(markers=symbols)
 
 
-def marker_layer(locations, hover_text="",into_html="", label=""):
+def marker_layer(locations, hover_text="", info_html="", label=""):
     """
     Marker layer
 
@@ -345,6 +346,6 @@ def marker_layer(locations, hover_text="",into_html="", label=""):
     :type label: string or list of strings, optional
     """
     marker_options = _marker_layer_options(
-        locations, hover_text, label,info_html)
+        locations, hover_text, label, info_html)
     markers = [Marker(**option) for option in marker_options]
     return Markers(markers=markers)
