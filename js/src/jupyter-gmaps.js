@@ -185,15 +185,15 @@ export const BaseMarkerView = widgets.WidgetView.extend({
         }
         this.marker = new google.maps.Marker(markerOptions)
 
-        this.infoWindow=new google.maps.InfoWindow({
+        this.infoWindow = new google.maps.InfoWindow({
             content: infoBoxHtml
         });
         this.modelEvents()
     },
 
     addToMapView(mapView) {
-        let marker= this.marker;
-        let infoWindow=this.infoWindow;
+        let marker = this.marker;
+        let infoWindow = this.infoWindow;
         marker.setMap(mapView.map);
         marker.addListener('click', function() {
             infoWindow.open(mapView.map, marker);
@@ -203,7 +203,7 @@ export const BaseMarkerView = widgets.WidgetView.extend({
     modelEvents() {
         // Simple properties:
         const properties = [
-            ['title', 'hover_text','info_html']
+            ['title', 'hover_text', 'info_html']
         ]
         properties.forEach(([nameInView, nameInModel]) => {
             const callback = (
