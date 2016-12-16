@@ -184,7 +184,6 @@ export const BaseMarkerView = widgets.WidgetView.extend({
             ...styleOptions
         }
         this.marker = new google.maps.Marker(markerOptions)
-
         this.infoWindow = new google.maps.InfoWindow({
             content: infoBoxHtml
         });
@@ -203,8 +202,12 @@ export const BaseMarkerView = widgets.WidgetView.extend({
     modelEvents() {
         // Simple properties:
         const properties = [
-            ['title', 'hover_text', 'info_html']
+            ['title', 'hover_text']
         ]
+        const infoBoxProperties = [
+             ['content', 'info_html']
+         ]
+
         properties.forEach(([nameInView, nameInModel]) => {
             const callback = (
                 () => {
@@ -214,6 +217,16 @@ export const BaseMarkerView = widgets.WidgetView.extend({
             )
             this.model.on(`change:${nameInModel}`, callback, this)
         })
+        
+         infoBoxProperties.forEach(([nameInView, nameInModel]) => {
+             const callback = (
+                 () => {
+                     this.infoWindow.set(
+                     nameInView, this.model.get(nameInModel))
+                 }
+             )
+             this.model.on(`change:${nameInModel}`, callback, this)
+         })
 
         this.setStyleEvents()
     }
