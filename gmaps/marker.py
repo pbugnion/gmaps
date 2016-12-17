@@ -207,6 +207,16 @@ def symbol_layer(
             locations, fill_color="red", stroke_color="red")
     >>> m.add_layer(symbols)
 
+    You can set a list of information boxes, which will be displayed when the
+    user clicks on a marker.
+
+    >>> list_of_infoboxes = [
+            "Simple String info box",
+            "<a href='http://example.com'>HTML content</a>"
+        ]
+    >>> symbol_layer = gmaps.symbol_layer(
+                locations, info_box_content=list_of_infoboxes)
+
     You can also set text that appears when someone's mouse hovers
     over a point:
 
@@ -248,9 +258,11 @@ def symbol_layer(
         If this is set to an empty string, nothing will appear when
         the user's mouse hovers over a symbol.
     :type hover_text: string or list of strings, optional
+
     :param info_box_content:
-        Content to be displayed when user's
-    :type info_box_conent: list of strings, optional
+        Content to be displayed when user clicks on a marker. This should be a
+        list of strings with same length of the `locations` list.
+    :type info_box_content: string or list of strings, optional
 
     :param fill_color:
         The fill color of the symbol. This can be specified as a
@@ -337,6 +349,11 @@ def marker_layer(locations, hover_text="", info_box_content="", label=""):
         If this is set to an empty string, nothing will appear when
         the user's mouse hovers over a marker.
     :type hover_text: string or list of strings, optional
+
+    :param info_box_content:
+        Content to be displayed when user clicks on a marker. This should be a
+        list of strings with same length of the `locations` list.
+    :type info_box_content: string or list of strings, optional
 
     :param label:
         Text to be displayed inside the marker. Google maps
