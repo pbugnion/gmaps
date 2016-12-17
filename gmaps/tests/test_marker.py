@@ -11,29 +11,32 @@ class MarkerLayer(unittest.TestCase):
 
     def test_hover_text_atomic(self):
         marker_options = _marker_layer_options(
-            self.locations, hover_text="test-text", label="", info_box_content="")
+            self.locations, hover_text="test-text",
+            label="", info_box_content="")
         for options in marker_options:
             assert options["hover_text"] == "test-text"
 
     def test_hover_text_lists(self):
         marker_options = _marker_layer_options(
-            self.locations, hover_text=["t1", "t2"], label="", info_box_content="")
+            self.locations, hover_text=["t1", "t2"], label="",
+            info_box_content="")
         hover_texts = [options["hover_text"] for options in marker_options]
         assert tuple(hover_texts) == ("t1", "t2")
 
     def test_infobox_text_atomic(self):
         marker_options = _marker_layer_options(
-            self.locations, info_box_content="<h3>test-html-infobox</h3>", label="",
-            hover_text="")
+            self.locations, info_box_content="<h3>test-html-infobox</h3>",
+            label="", hover_text="")
         for options in marker_options:
             assert options["info_box_content"] == "<h3>test-html-infobox</h3>"
 
     def test_infobox_text_lists(self):
         marker_options = _marker_layer_options(
-            self.locations, info_box_content=["<h1>h1</h1>", "<h2>h2</h2>"], label="",
+            self.locations,
+            info_box_content=["<h1>h1</h1>", "<h2>h2</h2>"], label="",
             hover_text="")
-        infos_html = [options["info_box_content"] for options in marker_options]
-        assert tuple(infos_html) == ("<h1>h1</h1>", "<h2>h2</h2>")
+        infos = [options["info_box_content"] for options in marker_options]
+        assert tuple(infos) == ("<h1>h1</h1>", "<h2>h2</h2>")
 
 
 class SymbolLayer(unittest.TestCase):
