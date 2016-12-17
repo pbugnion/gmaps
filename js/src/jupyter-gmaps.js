@@ -175,7 +175,7 @@ export const BaseMarkerView = widgets.WidgetView.extend({
     render() {
         const [lat, lng] = this.model.get("location")
         const title = this.model.get("hover_text")
-        const infoBoxHtml = this.model.get("info_html")
+        const infoBoxHtml = this.model.get("info_box_content")
         const styleOptions = this.getStyleOptions()
         const markerOptions = {
             position: {lat, lng},
@@ -205,7 +205,7 @@ export const BaseMarkerView = widgets.WidgetView.extend({
             ['title', 'hover_text']
         ]
         const infoBoxProperties = [
-             ['content', 'info_html']
+             ['content', 'info_box_content']
          ]
 
         properties.forEach(([nameInView, nameInModel]) => {
@@ -217,7 +217,7 @@ export const BaseMarkerView = widgets.WidgetView.extend({
             )
             this.model.on(`change:${nameInModel}`, callback, this)
         })
-        
+
          infoBoxProperties.forEach(([nameInView, nameInModel]) => {
              const callback = (
                  () => {
