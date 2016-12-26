@@ -169,7 +169,7 @@ def _symbol_layer_options(
 
 
 def _marker_layer_options(
-        locations, hover_text, label, info_box_content):
+        locations, hover_text, label, info_box_content, display_info_box):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
@@ -317,7 +317,9 @@ def symbol_layer(
     return Markers(markers=symbols)
 
 
-def marker_layer(locations, hover_text="", label="", info_box_content=""):
+def marker_layer(
+        locations, hover_text="", label="",
+        info_box_content="", display_info_box=None):
     """
     Marker layer
 
@@ -375,6 +377,6 @@ def marker_layer(locations, hover_text="", label="", info_box_content=""):
     :type info_box_content: string or list of strings, optional
     """
     marker_options = _marker_layer_options(
-        locations, hover_text, label, info_box_content)
+        locations, hover_text, label, info_box_content, display_info_box)
     markers = [Marker(**option) for option in marker_options]
     return Markers(markers=markers)

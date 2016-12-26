@@ -11,7 +11,8 @@ class MarkerLayer(unittest.TestCase):
         self.kwargs = {
             "hover_text": "",
             "label": "",
-            "info_box_content": ""
+            "info_box_content": "",
+            "display_info_box": None
         }
 
     def _add_default_options(self, **options):
