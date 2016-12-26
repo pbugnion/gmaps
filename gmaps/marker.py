@@ -168,7 +168,8 @@ def _symbol_layer_options(
     return _merge_option_dicts(options)
 
 
-def _marker_layer_options(locations, hover_text, label, info_box_content):
+def _marker_layer_options(
+        locations, hover_text, label, info_box_content):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
@@ -179,8 +180,8 @@ def _marker_layer_options(locations, hover_text, label, info_box_content):
     options = {
         "location": locations,
         "hover_text": hover_text,
-        "info_box_content": info_box_content,
-        "label": label
+        "label": label,
+        "info_box_content": info_box_content
     }
     return _merge_option_dicts(options)
 
@@ -310,7 +311,8 @@ def symbol_layer(
     """
     options = _symbol_layer_options(
         locations, hover_text, fill_color,
-        fill_opacity, stroke_color, stroke_opacity, scale, info_box_content)
+        fill_opacity, stroke_color, stroke_opacity, scale,
+        info_box_content)
     symbols = [Symbol(**option) for option in options]
     return Markers(markers=symbols)
 
