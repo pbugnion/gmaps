@@ -43,10 +43,15 @@ class MarkerLayer(unittest.TestCase):
 
     def test_infobox_text_lists(self):
         test_content = ["<h1>h1</h1>", "<h2>h2</h2>"]
-        options = self._add_default_options(info_box_content=test_content)
+        test_display_info_box = [True, False]
+        options = self._add_default_options(
+            info_box_content=test_content,
+            display_info_box=test_display_info_box)
         marker_options = _marker_layer_options(self.locations, **options)
-        infos = [opts["info_box_content"] for opts in marker_options]
-        assert tuple(infos) == tuple(test_content)
+        info_contents = [opts["info_box_content"] for opts in marker_options]
+        display_infos = [opts["display_info_box"] for opts in marker_options]
+        assert tuple(info_contents) == tuple(test_content)
+        assert tuple(display_infos) == tuple(test_display_info_box)
 
 
 class SymbolLayer(unittest.TestCase):
