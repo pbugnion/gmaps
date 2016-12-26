@@ -20,7 +20,7 @@ class _BaseMarkerMixin(HasTraits):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     hover_text = Unicode("").tag(sync=True)
-    show_info_box = Bool(False).tag(sync=True)
+    display_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode("").tag(sync=True)
 
 

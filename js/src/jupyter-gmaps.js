@@ -184,7 +184,7 @@ export const BaseMarkerView = widgets.WidgetView.extend({
         }
         this.marker = new google.maps.Marker(markerOptions)
         this.infoBox = this.renderInfoBox()
-        this.showInfoBox = this.model.get("show_info_box")
+        this.displayInfoBox = this.model.get("display_info_box")
         this.modelEvents()
     },
 
@@ -199,7 +199,7 @@ export const BaseMarkerView = widgets.WidgetView.extend({
         let marker = this.marker;
         let infoWindow = this.infoWindow;
         marker.setMap(mapView.map);
-        if (this.showInfoBox) {
+        if (this.displayInfoBox) {
             marker.addListener(
                 'click',
                 () => { this.infoBox.open(mapView.map, marker) }
