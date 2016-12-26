@@ -173,12 +173,18 @@ def _marker_layer_options(
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
-    if _is_atomic(info_box_content):
-        info_box_content = [info_box_content] * number_markers
     if _is_atomic(label):
         label = [label] * number_markers
+    if _is_atomic(info_box_content):
+        info_box_content = [info_box_content] * number_markers
     if _is_atomic(display_info_box):
         display_info_box = [display_info_box] * number_markers
+
+    # Set display_info_box to True if the content is set
+    for imarker in range(number_markers):
+        if display_info_box[imarker] is None and info_box_content[imarker]:
+            display_info_box[imarker] = True
+
     options = {
         "location": locations,
         "hover_text": hover_text,

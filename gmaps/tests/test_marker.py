@@ -53,6 +53,14 @@ class MarkerLayer(unittest.TestCase):
         assert tuple(info_contents) == tuple(test_content)
         assert tuple(display_infos) == tuple(test_display_info_box)
 
+    def test_infobox_default_display(self):
+        test_content = "test-content"
+        options = self._add_default_options(
+            info_box_content=test_content)
+        marker_options = _marker_layer_options(self.locations, **options)
+        for options in marker_options:
+            assert options["display_info_box"]
+
 
 class SymbolLayer(unittest.TestCase):
 
