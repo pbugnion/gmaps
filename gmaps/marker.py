@@ -186,9 +186,9 @@ def _marker_layer_options(locations, hover_text, label, info_box_content):
 
 
 def symbol_layer(
-        locations, hover_text="", info_box_content="", fill_color=None,
+        locations, hover_text="", fill_color=None,
         fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0,
-        scale=3):
+        scale=3, info_box_content=""):
     """
     Symbol layer
 
@@ -262,13 +262,6 @@ def symbol_layer(
         the user's mouse hovers over a symbol.
     :type hover_text: string or list of strings, optional
 
-    :param info_box_content:
-        Content to be displayed when user clicks on a marker. This should
-        either be a single string, in which case the same content will apply to
-        every marker, or a list of strings of the same length of the
-        `locations` list.
-    :type info_box_content: string or list of strings, optional
-
     :param fill_color:
         The fill color of the symbol. This can be specified as a
         single color, in which case the same color will apply to every symbol,
@@ -307,6 +300,13 @@ def symbol_layer(
         or it must be an iterable of the same length as ``locations``.
         The scale must be greater than 1. This defaults to 3.
     :type scale: integer or list of integers, optional
+
+    :param info_box_content:
+        Content to be displayed when user clicks on a marker. This should
+        either be a single string, in which case the same content will apply to
+        every marker, or a list of strings of the same length of the
+        `locations` list.
+    :type info_box_content: string or list of strings, optional
     """
     options = _symbol_layer_options(
         locations, hover_text, fill_color,
@@ -315,7 +315,7 @@ def symbol_layer(
     return Markers(markers=symbols)
 
 
-def marker_layer(locations, hover_text="", info_box_content="", label=""):
+def marker_layer(locations, hover_text="", label="", info_box_content=""):
     """
     Marker layer
 
@@ -355,13 +355,6 @@ def marker_layer(locations, hover_text="", info_box_content="", label=""):
         the user's mouse hovers over a marker.
     :type hover_text: string or list of strings, optional
 
-    :param info_box_content:
-        Content to be displayed when user clicks on a marker. This should
-        either be a single string, in which case the same content will apply to
-        every marker, or a list of strings of the same length of the
-        `locations` list.
-    :type info_box_content: string or list of strings, optional
-
     :param label:
         Text to be displayed inside the marker. Google maps
         only displays the first letter of whatever string is
@@ -371,6 +364,13 @@ def marker_layer(locations, hover_text="", info_box_content="", label=""):
         strings, in which case it must be of the same length
         as `locations`.
     :type label: string or list of strings, optional
+
+    :param info_box_content:
+        Content to be displayed when user clicks on a marker. This should
+        either be a single string, in which case the same content will apply to
+        every marker, or a list of strings of the same length of the
+        `locations` list.
+    :type info_box_content: string or list of strings, optional
     """
     marker_options = _marker_layer_options(
         locations, hover_text, label, info_box_content)
