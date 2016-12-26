@@ -3,7 +3,9 @@ import collections
 
 from six import string_types
 import ipywidgets as widgets
-from traitlets import Unicode, Int, List, observe, HasTraits, Float
+from traitlets import (
+    Unicode, Int, List, observe, HasTraits, Float, Bool
+)
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
@@ -18,6 +20,7 @@ class _BaseMarkerMixin(HasTraits):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     hover_text = Unicode("").tag(sync=True)
+    show_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode("").tag(sync=True)
 
 
