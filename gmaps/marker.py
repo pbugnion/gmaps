@@ -180,10 +180,11 @@ def _marker_layer_options(
     if _is_atomic(display_info_box):
         display_info_box = [display_info_box] * number_markers
 
-    # Set display_info_box to True if the content is set
+    # Set value for display_info_box if it's still the default
     for imarker in range(number_markers):
-        if display_info_box[imarker] is None and info_box_content[imarker]:
-            display_info_box[imarker] = True
+        if display_info_box[imarker] is None:
+            is_content_empty = (info_box_content[imarker] is None)
+            display_info_box[imarker] = not is_content_empty
 
     options = {
         "location": locations,
@@ -328,7 +329,7 @@ def symbol_layer(
 
 def marker_layer(
         locations, hover_text="", label="",
-        info_box_content="", display_info_box=None):
+        info_box_content=None, display_info_box=None):
     """
     Marker layer
 

@@ -11,7 +11,7 @@ class MarkerLayer(unittest.TestCase):
         self.kwargs = {
             "hover_text": "",
             "label": "",
-            "info_box_content": "",
+            "info_box_content": None,
             "display_info_box": None
         }
 
@@ -55,11 +55,17 @@ class MarkerLayer(unittest.TestCase):
 
     def test_infobox_default_display(self):
         test_content = "test-content"
-        options = self._add_default_options(
-            info_box_content=test_content)
+        options = self._add_default_options(info_box_content=test_content)
         marker_options = _marker_layer_options(self.locations, **options)
         for options in marker_options:
             assert options["display_info_box"]
+
+    def test_infobox_default_display_lists(self):
+        test_content = ["1", None]
+        options = self._add_default_options(info_box_content=test_content)
+        marker_options = _marker_layer_options(self.locations, **options)
+        display_infos = [opts["display_info_box"] for opts in marker_options]
+        assert tuple(display_infos) == (True, False)
 
 
 class SymbolLayer(unittest.TestCase):
