@@ -34,10 +34,12 @@ class MarkerLayer(unittest.TestCase):
 
     def test_infobox_text_atomic(self):
         test_content = "<h3>test-html-infobox</h3>"
-        options = self._add_default_options(info_box_content=test_content)
+        options = self._add_default_options(
+            info_box_content=test_content, display_info_box=True)
         marker_options = _marker_layer_options(self.locations, **options)
         for options in marker_options:
             assert options["info_box_content"] == test_content
+            assert options["display_info_box"]
 
     def test_infobox_text_lists(self):
         test_content = ["<h1>h1</h1>", "<h2>h2</h2>"]

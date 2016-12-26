@@ -177,11 +177,14 @@ def _marker_layer_options(
         info_box_content = [info_box_content] * number_markers
     if _is_atomic(label):
         label = [label] * number_markers
+    if _is_atomic(display_info_box):
+        display_info_box = [display_info_box] * number_markers
     options = {
         "location": locations,
         "hover_text": hover_text,
         "label": label,
-        "info_box_content": info_box_content
+        "info_box_content": info_box_content,
+        "display_info_box": display_info_box
     }
     return _merge_option_dicts(options)
 
