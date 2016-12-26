@@ -184,8 +184,8 @@ def _marker_layer_options(locations, hover_text, label, info_box_content):
 
 def symbol_layer(
         locations, hover_text="", info_box_content="", fill_color=None,
-        fill_opacity=1.0,
-        stroke_color=None, stroke_opacity=1.0, scale=3):
+        fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0,
+        scale=3):
     """
     Symbol layer
 
