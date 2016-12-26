@@ -184,6 +184,8 @@ export const BaseMarkerView = widgets.WidgetView.extend({
         }
         this.marker = new google.maps.Marker(markerOptions)
         this.infoBox = this.renderInfoBox()
+        this.infoBoxListener = null;
+        this.mapView = null;
         this.modelEvents()
     },
 
@@ -198,14 +200,24 @@ export const BaseMarkerView = widgets.WidgetView.extend({
         return infoBox ;
     },
 
-    addToMapView(mapView) {
-        this.marker.setMap(mapView.map);
+    toggleInfoBoxListener() {
         if (this.displayInfoBox()) {
-            this.marker.addListener(
+            this.infoBoxListener = this.marker.addListener(
                 "click",
-                () => { this.infoBox.open(mapView.map, this.marker) }
+                () => { this.infoBox.open(this.mapView.map, this.marker) }
             )
         }
+        else {
+            if (this.infoBoxListener !== null) {
+                this.infoBoxListener.remove()
+            }
+        }
+    },
+
+    addToMapView(mapView) {
+        this.mapView = mapView;
+        this.marker.setMap(mapView.map);
+        this.toggleInfoBoxListener();
     },
 
     modelEvents() {
@@ -236,6 +248,10 @@ export const BaseMarkerView = widgets.WidgetView.extend({
             )
             this.model.on(`change:${nameInModel}`, callback, this)
         })
+
+        this.model.on("change:display_info_box", () => {
+            this.toggleInfoBoxListener()
+        }, this)
 
         this.setStyleEvents()
     }
