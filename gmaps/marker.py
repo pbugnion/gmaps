@@ -139,12 +139,11 @@ def _merge_option_dicts(option_dicts):
 
 def _symbol_layer_options(
         locations, hover_text, fill_color, fill_opacity,
-        stroke_color, stroke_opacity, scale, info_box_content):
+        stroke_color, stroke_opacity, scale,
+        info_box_content, display_info_box):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
-    if _is_atomic(info_box_content):
-        info_box_content = [info_box_content] * number_markers
     if _is_atomic(scale):
         scale = [scale] * number_markers
     if _is_color_atomic(fill_color):
@@ -155,6 +154,17 @@ def _symbol_layer_options(
         stroke_opacity = [stroke_opacity] * number_markers
     if _is_atomic(fill_opacity):
         fill_opacity = [fill_opacity] * number_markers
+    if _is_atomic(info_box_content):
+        info_box_content = [info_box_content] * number_markers
+    if _is_atomic(display_info_box):
+        display_info_box = [display_info_box] * number_markers
+
+    # Set value for display_info_box if it's still the default
+    for imarker in range(number_markers):
+        if display_info_box[imarker] is None:
+            is_content_empty = (info_box_content[imarker] is None)
+            display_info_box[imarker] = not is_content_empty
+
     options = {
         "location": locations,
         "hover_text": hover_text,
@@ -163,7 +173,8 @@ def _symbol_layer_options(
         "stroke_color": stroke_color,
         "scale": scale,
         "stroke_opacity": stroke_opacity,
-        "fill_opacity": fill_opacity
+        "fill_opacity": fill_opacity,
+        "display_info_box": display_info_box
     }
     return _merge_option_dicts(options)
 

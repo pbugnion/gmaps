@@ -74,9 +74,13 @@ class SymbolLayer(unittest.TestCase):
         self.locations = [(-5.0, 5.0), (10.0, 10.0)]
         self.kwargs = {
             "stroke_color": None,
-            "hover_text": "", "fill_color": "red", "scale": 5,
-            "fill_opacity": 1.0, "stroke_opacity": 1.0,
-            "info_box_content": ""
+            "hover_text": "",
+            "fill_color": "red",
+            "scale": 5,
+            "fill_opacity": 1.0,
+            "stroke_opacity": 1.0,
+            "info_box_content": None,
+            "display_info_box": None
         }
 
     def _add_default_options(self, **options):
@@ -111,3 +115,9 @@ class SymbolLayer(unittest.TestCase):
         symbol_options = _symbol_layer_options(self.locations, **options)
         colors = [opts["stroke_color"] for opts in symbol_options]
         assert tuple(colors) == (c1, c2)
+
+    def test_infobox_default(self):
+        options = self._add_default_options()
+        symbol_options = _symbol_layer_options(self.locations, **options)
+        for opts in symbol_options:
+            assert not opts["display_info_box"]
