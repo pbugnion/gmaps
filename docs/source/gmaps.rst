@@ -149,6 +149,9 @@ Markers and symbols
 
 We can add a layer of markers to a Google map. Each marker represents an individual data point::
 
+  import gmaps
+  gmaps.configure(api_key="AI...")
+
   marker_locations = [
       (-34.0, -59.166672),
       (-32.23333, -64.433327),
@@ -163,6 +166,36 @@ We can add a layer of markers to a Google map. Each marker represents an individ
   m
 
 .. image:: marker-example.png
+
+We can also attach a pop-up box to each marker. Clicking on the marker will bring up the info box. The content of the box can be either plain text or html::
+
+  import gmaps
+  gmaps.configure(api_key="AI...")
+
+  nuclear_power_plants = [
+      {"name": "Atucha", "location": (-34.0, -59.167), "active_reactors": 1},
+      {"name": "Embalse", "location": (-32.2333, -64.4333), "active_reactors": 1},
+      {"name": "Armenia", "location": (40.167, 44.133), "active_reactors": 1},
+      {"name": "Br", "location": (51.217, 5.083), "active_reactors": 1},
+      {"name": "Doel", "location": (51.333, 4.25), "active_reactors": 4},
+      {"name": "Tihange", "location": (50.517, 5.283), "active_reactors": 3}
+  ]
+
+  plant_locations = [plant["location"] for plant in nuclear_power_plants]
+  info_box_template = """
+  <dl>
+  <dt>Name</dt><dd>{name}</dd>
+  <dt>Number reactors</dt><dd>{active_reactors}</dd>
+  </dl>
+  """
+  plant_info = [info_box_template.format(**plant) for plant in nuclear_power_plants]
+
+  marker_layer = gmaps.marker_layer(plant_locations, info_box_content=plant_info)
+  m = gmaps.Map()
+  m.add_layer(marker_layer)
+  m
+
+.. image:: marker-info-box-example.png
 
 Markers are currently limited to the Google maps style drop icon. If you need to draw more complex shape on maps, use the ``symbol_layer`` function. Symbols represent each `latitude`, `longitude` pair with a circle whose colour and size you can customize. Let's, for instance, plot the location of every Starbuck's coffee shop in the UK::
 

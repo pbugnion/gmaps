@@ -260,8 +260,10 @@ def symbol_layer(
     :type hover_text: string or list of strings, optional
 
     :param info_box_content:
-        Content to be displayed when user clicks on a marker. This should be a
-        list of strings with same length of the `locations` list.
+        Content to be displayed when user clicks on a marker. This should
+        either be a single string, in which case the same content will apply to
+        every marker, or a list of strings of the same length of the
+        `locations` list.
     :type info_box_content: string or list of strings, optional
 
     :param fill_color:
@@ -351,8 +353,10 @@ def marker_layer(locations, hover_text="", info_box_content="", label=""):
     :type hover_text: string or list of strings, optional
 
     :param info_box_content:
-        Content to be displayed when user clicks on a marker. This should be a
-        list of strings with same length of the `locations` list.
+        Content to be displayed when user clicks on a marker. This should
+        either be a single string, in which case the same content will apply to
+        every marker, or a list of strings of the same length of the
+        `locations` list.
     :type info_box_content: string or list of strings, optional
 
     :param label:
