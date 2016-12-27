@@ -225,7 +225,7 @@ def symbol_layer(
     user clicks on a marker.
 
     >>> list_of_infoboxes = [
-            "Simple String info box",
+            "Simple string info box",
             "<a href='http://example.com'>HTML content</a>"
         ]
     >>> symbol_layer = gmaps.symbol_layer(
@@ -385,6 +385,15 @@ def marker_layer(
         every marker, or a list of strings of the same length of the
         `locations` list.
     :type info_box_content: string or list of strings, optional
+
+    :param display_info_box:
+        Whether to display an info box when the user clicks on a marker.
+        This should either be a single boolean value, in which case it
+        will be applied to every marker, or a list of boolean values of the
+        same length as the `locations` list.
+        The default value is True for any markers for which `info_box_content`
+        is set, and False otherwise.
+    :type display_info_box: boolean or list of booleans, optional
     """
     marker_options = _marker_layer_options(
         locations, hover_text, label, info_box_content, display_info_box)
