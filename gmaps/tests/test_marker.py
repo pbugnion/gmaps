@@ -32,7 +32,7 @@ class MarkerLayer(unittest.TestCase):
         hover_texts = [opts["hover_text"] for opts in marker_options]
         assert tuple(hover_texts) == ("t1", "t2")
 
-    def test_infobox_text_atomic(self):
+    def test_infobox_content_atomic(self):
         test_content = "<h3>test-html-infobox</h3>"
         options = self._add_default_options(
             info_box_content=test_content, display_info_box=True)
@@ -41,7 +41,7 @@ class MarkerLayer(unittest.TestCase):
             assert options["info_box_content"] == test_content
             assert options["display_info_box"]
 
-    def test_infobox_text_lists(self):
+    def test_infobox_content_lists(self):
         test_content = ["<h1>h1</h1>", "<h2>h2</h2>"]
         test_display_info_box = [True, False]
         options = self._add_default_options(
@@ -121,3 +121,19 @@ class SymbolLayer(unittest.TestCase):
         symbol_options = _symbol_layer_options(self.locations, **options)
         for opts in symbol_options:
             assert not opts["display_info_box"]
+
+    def test_infobox_content_atomic(self):
+        test_content = "<h3>test-html-infobox</h3>"
+        options = self._add_default_options(
+            info_box_content=test_content, display_info_box=True)
+        symbol_options = _symbol_layer_options(self.locations, **options)
+        for options in symbol_options:
+            assert options["info_box_content"] == test_content
+            assert options["display_info_box"]
+
+    def test_infobox_default_display_lists(self):
+        test_content = ["1", None]
+        options = self._add_default_options(info_box_content=test_content)
+        marker_options = _symbol_layer_options(self.locations, **options)
+        display_infos = [opts["display_info_box"] for opts in marker_options]
+        assert tuple(display_infos) == (True, False)
