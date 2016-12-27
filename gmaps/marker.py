@@ -147,7 +147,11 @@ def _info_box_option_lists(number_markers, info_box_content, display_info_box):
     for imarker in range(number_markers):
         if display_info_box[imarker] is None:
             is_content_empty = (info_box_content[imarker] is None)
-            display_info_box[imarker] = not is_content_empty
+            if is_content_empty:
+                display_info_box[imarker] = False
+                info_box_content[imarker] = ""
+            else:
+                display_info_box[imarker] = True
 
     options = {
         "info_box_content": info_box_content,
@@ -217,7 +221,7 @@ def _marker_layer_options(
 def symbol_layer(
         locations, hover_text="", fill_color=None,
         fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0,
-        scale=3, info_box_content=""):
+        scale=3, info_box_content=None, display_info_box=None):
     """
     Symbol layer
 
@@ -349,7 +353,7 @@ def symbol_layer(
     options = _symbol_layer_options(
         locations, hover_text, fill_color,
         fill_opacity, stroke_color, stroke_opacity, scale,
-        info_box_content)
+        info_box_content, display_info_box)
     symbols = [Symbol(**option) for option in options]
     return Markers(markers=symbols)
 
