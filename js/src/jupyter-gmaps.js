@@ -175,6 +175,7 @@ export const BaseMarkerView = widgets.WidgetView.extend({
     render() {
         const [lat, lng] = this.model.get("location")
         const title = this.model.get("hover_text")
+        const infoBoxHtml = this.model.get("info_box_content")
         const styleOptions = this.getStyleOptions()
         const markerOptions = {
             position: {lat, lng},
@@ -183,11 +184,19 @@ export const BaseMarkerView = widgets.WidgetView.extend({
             ...styleOptions
         }
         this.marker = new google.maps.Marker(markerOptions)
+        this.infoWindow = new google.maps.InfoWindow({
+            content: infoBoxHtml
+        });
         this.modelEvents()
     },
 
     addToMapView(mapView) {
-        this.marker.setMap(mapView.map)
+        let marker = this.marker;
+        let infoWindow = this.infoWindow;
+        marker.setMap(mapView.map);
+        marker.addListener('click', function() {
+            infoWindow.open(mapView.map, marker);
+        });
     },
 
     modelEvents() {
@@ -195,6 +204,10 @@ export const BaseMarkerView = widgets.WidgetView.extend({
         const properties = [
             ['title', 'hover_text']
         ]
+        const infoBoxProperties = [
+             ['content', 'info_box_content']
+         ]
+
         properties.forEach(([nameInView, nameInModel]) => {
             const callback = (
                 () => {
@@ -204,6 +217,16 @@ export const BaseMarkerView = widgets.WidgetView.extend({
             )
             this.model.on(`change:${nameInModel}`, callback, this)
         })
+
+         infoBoxProperties.forEach(([nameInView, nameInModel]) => {
+             const callback = (
+                 () => {
+                     this.infoWindow.set(
+                     nameInView, this.model.get(nameInModel))
+                 }
+             )
+             this.model.on(`change:${nameInModel}`, callback, this)
+         })
 
         this.setStyleEvents()
     }
