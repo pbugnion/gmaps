@@ -73,33 +73,41 @@ class SymbolLayer(unittest.TestCase):
     def setUp(self):
         self.locations = [(-5.0, 5.0), (10.0, 10.0)]
         self.kwargs = {
+            "stroke_color": None,
             "hover_text": "", "fill_color": "red", "scale": 5,
-            "fill_opacity": 1.0, "stroke_opacity": 1.0, "info_box_content": ""
+            "fill_opacity": 1.0, "stroke_opacity": 1.0,
+            "info_box_content": ""
         }
 
+    def _add_default_options(self, **options):
+        new_options = self.kwargs.copy()
+        new_options.update(options)
+        return new_options
+
     def test_stroke_color_atomic_text(self):
+        options = self._add_default_options(stroke_color="red")
         symbol_options = _symbol_layer_options(
-            self.locations, stroke_color="red", **self.kwargs)
+            self.locations, **options)
         for options in symbol_options:
             assert options["stroke_color"] == "red"
 
     def test_stroke_color_atomic_tuple(self):
         color = (10, 10, 10, 0.5)
-        symbol_options = _symbol_layer_options(
-            self.locations, stroke_color=color, **self.kwargs)
+        options = self._add_default_options(stroke_color=color)
+        symbol_options = _symbol_layer_options(self.locations, **options)
         for options in symbol_options:
             assert options["stroke_color"] == color
 
     def test_stroke_color_list_text(self):
-        symbol_options = _symbol_layer_options(
-            self.locations, stroke_color=["red", "green"], **self.kwargs)
-        opts = [options["stroke_color"] for options in symbol_options]
+        options = self._add_default_options(stroke_color=["red", "green"])
+        symbol_options = _symbol_layer_options(self.locations, **options)
+        opts = [opts["stroke_color"] for opts in symbol_options]
         assert tuple(opts) == ("red", "green")
 
     def test_stroke_color_list_tuples(self):
         c1 = (10, 10, 10, 0.5)
         c2 = (20, 20, 20, 0.5)
-        symbol_options = _symbol_layer_options(
-            self.locations, stroke_color=[c1, c2], **self.kwargs)
-        opts = [options["stroke_color"] for options in symbol_options]
-        assert tuple(opts) == (c1, c2)
+        options = self._add_default_options(stroke_color=[c1, c2])
+        symbol_options = _symbol_layer_options(self.locations, **options)
+        colors = [opts["stroke_color"] for opts in symbol_options]
+        assert tuple(colors) == (c1, c2)
