@@ -13,6 +13,7 @@ jupyter-gmaps
    authentication
    gmaps
    api
+   contributing
 
 
 .. toctree::
