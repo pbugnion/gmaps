@@ -242,7 +242,7 @@ export const BaseMarkerView = widgets.WidgetView.extend({
         infoBoxProperties.forEach(([nameInView, nameInModel]) => {
             const callback = (
                 () => {
-                    this.infoWindow.set(
+                    this.infoBox.set(
                     nameInView, this.model.get(nameInModel))
                 }
             )
