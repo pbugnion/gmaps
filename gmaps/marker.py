@@ -3,7 +3,9 @@ import collections
 
 from six import string_types
 import ipywidgets as widgets
-from traitlets import Unicode, Int, List, observe, HasTraits, Float
+from traitlets import (
+    Unicode, Int, List, observe, HasTraits, Float, Bool
+)
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
@@ -18,6 +20,7 @@ class _BaseMarkerMixin(HasTraits):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     hover_text = Unicode("").tag(sync=True)
+    display_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode("").tag(sync=True)
 
 
@@ -134,14 +137,36 @@ def _merge_option_dicts(option_dicts):
     return option_lists
 
 
+def _info_box_option_lists(number_markers, info_box_content, display_info_box):
+    if _is_atomic(info_box_content):
+        info_box_content = [info_box_content] * number_markers
+    if _is_atomic(display_info_box):
+        display_info_box = [display_info_box] * number_markers
+
+    # Set value for display_info_box if it's still the default
+    for imarker in range(number_markers):
+        if display_info_box[imarker] is None:
+            is_content_empty = (info_box_content[imarker] is None)
+            if is_content_empty:
+                display_info_box[imarker] = False
+                info_box_content[imarker] = ""
+            else:
+                display_info_box[imarker] = True
+
+    options = {
+        "info_box_content": info_box_content,
+        "display_info_box": display_info_box
+    }
+    return options
+
+
 def _symbol_layer_options(
         locations, hover_text, fill_color, fill_opacity,
-        stroke_color, stroke_opacity, scale, info_box_content):
+        stroke_color, stroke_opacity, scale,
+        info_box_content, display_info_box):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
-    if _is_atomic(info_box_content):
-        info_box_content = [info_box_content] * number_markers
     if _is_atomic(scale):
         scale = [scale] * number_markers
     if _is_color_atomic(fill_color):
@@ -152,40 +177,51 @@ def _symbol_layer_options(
         stroke_opacity = [stroke_opacity] * number_markers
     if _is_atomic(fill_opacity):
         fill_opacity = [fill_opacity] * number_markers
-    options = {
+
+    symbol_options = {
         "location": locations,
         "hover_text": hover_text,
-        "info_box_content": info_box_content,
         "fill_color": fill_color,
         "stroke_color": stroke_color,
-        "scale": scale,
-        "stroke_opacity": stroke_opacity,
-        "fill_opacity": fill_opacity
+        "scale": scale
     }
-    return _merge_option_dicts(options)
+
+    info_box_options = _info_box_option_lists(
+        number_markers, info_box_content, display_info_box)
+
+    symbol_options.update(info_box_options)
+
+    return _merge_option_dicts(symbol_options)
 
 
-def _marker_layer_options(locations, hover_text, label, info_box_content):
+def _marker_layer_options(
+        locations, hover_text, label, info_box_content, display_info_box):
     number_markers = len(locations)
     if _is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
-    if _is_atomic(info_box_content):
-        info_box_content = [info_box_content] * number_markers
     if _is_atomic(label):
         label = [label] * number_markers
-    options = {
+    if _is_atomic(info_box_content):
+        info_box_content = [info_box_content] * number_markers
+
+    marker_options = {
         "location": locations,
         "hover_text": hover_text,
-        "info_box_content": info_box_content,
         "label": label
     }
-    return _merge_option_dicts(options)
+
+    info_box_options = _info_box_option_lists(
+        number_markers, info_box_content, display_info_box)
+
+    marker_options.update(info_box_options)
+
+    return _merge_option_dicts(marker_options)
 
 
 def symbol_layer(
-        locations, hover_text="", info_box_content="", fill_color=None,
-        fill_opacity=1.0,
-        stroke_color=None, stroke_opacity=1.0, scale=3):
+        locations, hover_text="", fill_color=None,
+        fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0,
+        scale=3, info_box_content=None, display_info_box=None):
     """
     Symbol layer
 
@@ -211,7 +247,7 @@ def symbol_layer(
     user clicks on a marker.
 
     >>> list_of_infoboxes = [
-            "Simple String info box",
+            "Simple string info box",
             "<a href='http://example.com'>HTML content</a>"
         ]
     >>> symbol_layer = gmaps.symbol_layer(
@@ -259,13 +295,6 @@ def symbol_layer(
         the user's mouse hovers over a symbol.
     :type hover_text: string or list of strings, optional
 
-    :param info_box_content:
-        Content to be displayed when user clicks on a marker. This should
-        either be a single string, in which case the same content will apply to
-        every marker, or a list of strings of the same length of the
-        `locations` list.
-    :type info_box_content: string or list of strings, optional
-
     :param fill_color:
         The fill color of the symbol. This can be specified as a
         single color, in which case the same color will apply to every symbol,
@@ -304,15 +333,34 @@ def symbol_layer(
         or it must be an iterable of the same length as ``locations``.
         The scale must be greater than 1. This defaults to 3.
     :type scale: integer or list of integers, optional
+
+    :param info_box_content:
+        Content to be displayed when user clicks on a marker. This should
+        either be a single string, in which case the same content will apply to
+        every marker, or a list of strings of the same length of the
+        `locations` list.
+    :type info_box_content: string or list of strings, optional
+
+    :param display_info_box:
+        Whether to display an info box when the user clicks on a symbol.
+        This should either be a single boolean value, in which case it
+        will be applied to every symbol, or a list of boolean values of the
+        same length as the `locations` list.
+        The default value is True for any symbols for which `info_box_content`
+        is set, and False otherwise.
+    :type display_info_box: boolean or list of booleans, optional
     """
     options = _symbol_layer_options(
         locations, hover_text, fill_color,
-        fill_opacity, stroke_color, stroke_opacity, scale, info_box_content)
+        fill_opacity, stroke_color, stroke_opacity, scale,
+        info_box_content, display_info_box)
     symbols = [Symbol(**option) for option in options]
     return Markers(markers=symbols)
 
 
-def marker_layer(locations, hover_text="", info_box_content="", label=""):
+def marker_layer(
+        locations, hover_text="", label="",
+        info_box_content=None, display_info_box=None):
     """
     Marker layer
 
@@ -352,13 +400,6 @@ def marker_layer(locations, hover_text="", info_box_content="", label=""):
         the user's mouse hovers over a marker.
     :type hover_text: string or list of strings, optional
 
-    :param info_box_content:
-        Content to be displayed when user clicks on a marker. This should
-        either be a single string, in which case the same content will apply to
-        every marker, or a list of strings of the same length of the
-        `locations` list.
-    :type info_box_content: string or list of strings, optional
-
     :param label:
         Text to be displayed inside the marker. Google maps
         only displays the first letter of whatever string is
@@ -368,8 +409,24 @@ def marker_layer(locations, hover_text="", info_box_content="", label=""):
         strings, in which case it must be of the same length
         as `locations`.
     :type label: string or list of strings, optional
+
+    :param info_box_content:
+        Content to be displayed when user clicks on a marker. This should
+        either be a single string, in which case the same content will apply to
+        every marker, or a list of strings of the same length of the
+        `locations` list.
+    :type info_box_content: string or list of strings, optional
+
+    :param display_info_box:
+        Whether to display an info box when the user clicks on a marker.
+        This should either be a single boolean value, in which case it
+        will be applied to every marker, or a list of boolean values of the
+        same length as the `locations` list.
+        The default value is True for any markers for which `info_box_content`
+        is set, and False otherwise.
+    :type display_info_box: boolean or list of booleans, optional
     """
     marker_options = _marker_layer_options(
-        locations, hover_text, label, info_box_content)
+        locations, hover_text, label, info_box_content, display_info_box)
     markers = [Marker(**option) for option in marker_options]
     return Markers(markers=markers)
