@@ -137,6 +137,25 @@ def _merge_option_dicts(option_dicts):
     return option_lists
 
 
+def _info_box_option_lists(number_markers, info_box_content, display_info_box):
+    if _is_atomic(info_box_content):
+        info_box_content = [info_box_content] * number_markers
+    if _is_atomic(display_info_box):
+        display_info_box = [display_info_box] * number_markers
+
+    # Set value for display_info_box if it's still the default
+    for imarker in range(number_markers):
+        if display_info_box[imarker] is None:
+            is_content_empty = (info_box_content[imarker] is None)
+            display_info_box[imarker] = not is_content_empty
+
+    options = {
+        "info_box_content": info_box_content,
+        "display_info_box": display_info_box
+    }
+    return options
+
+
 def _symbol_layer_options(
         locations, hover_text, fill_color, fill_opacity,
         stroke_color, stroke_opacity, scale,
@@ -154,29 +173,21 @@ def _symbol_layer_options(
         stroke_opacity = [stroke_opacity] * number_markers
     if _is_atomic(fill_opacity):
         fill_opacity = [fill_opacity] * number_markers
-    if _is_atomic(info_box_content):
-        info_box_content = [info_box_content] * number_markers
-    if _is_atomic(display_info_box):
-        display_info_box = [display_info_box] * number_markers
 
-    # Set value for display_info_box if it's still the default
-    for imarker in range(number_markers):
-        if display_info_box[imarker] is None:
-            is_content_empty = (info_box_content[imarker] is None)
-            display_info_box[imarker] = not is_content_empty
-
-    options = {
+    symbol_options = {
         "location": locations,
         "hover_text": hover_text,
-        "info_box_content": info_box_content,
         "fill_color": fill_color,
         "stroke_color": stroke_color,
-        "scale": scale,
-        "stroke_opacity": stroke_opacity,
-        "fill_opacity": fill_opacity,
-        "display_info_box": display_info_box
+        "scale": scale
     }
-    return _merge_option_dicts(options)
+
+    info_box_options = _info_box_option_lists(
+        number_markers, info_box_content, display_info_box)
+
+    symbol_options.update(info_box_options)
+
+    return _merge_option_dicts(symbol_options)
 
 
 def _marker_layer_options(
