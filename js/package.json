@@ -1,6 +1,6 @@
 {
   "name": "jupyter-gmaps",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "description": "Google maps plugin for Jupyter notebooks",
   "author": "Pascal Bugnion",
   "main": "src/index.js",
