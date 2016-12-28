@@ -2,6 +2,11 @@
 Release notes
 -------------
 
+Version 0.3.6
+=============
+
+ * Adds info boxes to the marker and symbol layers (PR #98).
+
 Version 0.3.5
 =============
 
