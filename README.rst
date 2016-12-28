@@ -65,7 +65,7 @@ Install the Python component using::
 
 Then tell Jupyter to load the extension with::
 
-    $ jupyter nbextension enable --py gmaps
+  $ jupyter nbextension enable --py --sys-prefix gmaps
 
 Development version
 ^^^^^^^^^^^^^^^^^^^
@@ -86,8 +86,8 @@ This will create a directory called ``static/`` in the ``gmaps/`` directory. Thi
 
 You can then enable the extension in Jupyter::
 
-    $ jupyter nbextension install --py --symlink --user gmaps
-    $ jupyter nbextension enable --py --user gmaps
+    $ jupyter nbextension install --py --symlink --sys-prefix gmaps
+    $ jupyter nbextension enable --py --sys-prefix gmaps
 
 
 Google API keys
