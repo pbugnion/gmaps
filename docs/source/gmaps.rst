@@ -76,25 +76,25 @@ Heatmaps are a good way of getting a sense of the density and clusters of geogra
 
   import gmaps.datasets
 
-  data = gmaps.datasets.load_dataset("acled_africa.csv")
-  print(rows[:10])
+  locations = gmaps.datasets.load_dataset_as_df("acled_africa")
 
-  # => prints latitude, longitude pairs
-  [(36.4686, 2.8289),
-  (36.6725, 2.7894),
-  ...
+  locations.head()
+  # => dataframe with 'longitude' and 'latitude' columns
 
 
 We already know how to build a heatmap layer::
 
   import gmaps
   import gmaps.datasets
-  gmaps.configure("AI...")
+  gmaps.configure(api_key="AI...")
 
+  locations = gmaps.datasets.load_dataset_as_df("acled_africa")
   m = gmaps.Map()
-  heatmap_layer = gmaps.Heatmap(data=data)
+  heatmap_layer = gmaps.heatmap_layer(locations)
   m.add_layer(heatmap_layer)
   m
+
+.. image:: acled_africa_heatmap_basic.png
 
 Preventing dissipation on zoom
 ++++++++++++++++++++++++++++++
@@ -116,7 +116,7 @@ Setting the color gradient and opacity
 
 You can set the color gradient of the map by passing in a list of colors. Google maps will interpolate linearly between those colors. You can represent a color as a string denoting the color (the colors allowed by `this <http://www.w3.org/TR/css3-color/#html4>`_)::
 
-  heatmap.gradient = [
+  heatmap_layer.gradient = [
       'white',
       'silver',
       'gray'
@@ -125,7 +125,7 @@ You can set the color gradient of the map by passing in a list of colors. Google
 If you need more flexibility, you can represent colours as an RGB triple or an RGBA quadruple::
 
 
-  heatmap.gradient = [
+  heatmap_layer.gradient = [
       (200, 200, 200, 0.6),
       (100, 100, 100, 0.3),
       (50, 50, 50, 0.3)
@@ -135,14 +135,28 @@ If you need more flexibility, you can represent colours as an RGB triple or an R
 
 You can also use the ``opacity`` option to set a single opacity across the entire colour gradient::
 
-  heatmap.opacity = 0.0 # make the heatmap transparent
+  heatmap_layer.opacity = 0.0 # make the heatmap transparent
 
 Weighted heatmaps
 ^^^^^^^^^^^^^^^^^
 
-Weighted heatmap layers are identical to heatmaps, except that the `data` object is a triple indicating `(latitude, longitude, weight)`. Weights must all be positive (this is a limitation in Google maps itself).
+By default, heatmaps assume that every row is of equal importance. You can override this by passing weights through the `weights` keyword argument. The `weights` array is an iterable (e.g. a Python list or a Numpy array) or a single pandas series. Weights must all be positive (this is a limitation in Google maps itself).::
 
-Weighted heatmaps support the same options as heatmaps.
+  import gmaps
+  import gmaps.datasets
+  gmaps.configure(api_key="AI...")
+
+  df = gmaps.datasets.load_dataset_as_df("earthquakes")
+  # dataframe with columns ('latitude', 'longitude', 'magnitude')
+
+  m = gmaps.Map()
+  heatmap_layer = gmaps.heatmap_layer(
+      df[["latitude", "longitude"]], weights=df["magnitude"],
+      max_intensity=30, point_radius=3.0 
+  )
+  m.add_layer(heatmap_layer)
+  m
+
 
 .. image:: weighted-heatmap-example.png
 
