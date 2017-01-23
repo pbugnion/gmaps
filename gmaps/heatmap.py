@@ -257,15 +257,22 @@ heatmap_layer.__doc__ = \
     >>> m.add_layer(heatmap_layer)
 
     :param locations:
-        Iterable of (latitude, longitude) pairs
-        denoting a single point. Latitudes are expressed as
-        a float between -90 (corresponding to 90 degrees south)
-        and +90 (corresponding to 90 degrees north). Longitudes
-        are expressed as a float between -180 (corresponding to 180
-        degrees west) and +180 (corresponding to 180 degrees east).
-        This can be passed in as either a list of tuples, a numpy
-        array or a pandas dataframe with two columns, in which case
-        the first one is taken to be the latitude and the second one
-        is taken to be the longitude.
+        Iterable of (latitude, longitude) pairs denoting a single point.
+        Latitudes are expressed as a float between -90 (corresponding to 90
+        degrees south) and +90 (corresponding to 90 degrees north). Longitudes
+        are expressed as a float between -180 (corresponding to 180 degrees
+        west) and +180 (corresponding to 180 degrees east). This can be passed
+        in as either a list of tuples, a two-dimensional numpy array or a
+        pandas dataframe with two columns, in which case the first one is taken
+        to be the latitude and the second one is taken to be the longitude.
     :type locations: iterable of latitude, longitude pairs
-    """ + _HeatmapOptionsMixin.__doc__
+
+    :param weights:
+        Iterable of weights of the same length as `locations`.
+        All the weights must be positive.
+    :type weights: iterable of floats, optional
+    """ + _HeatmapOptionsMixin.__doc__ + \
+    """
+    :returns:
+        A :class:`gmaps.Heatmap` or a :class:`gmaps.WeightedHeatmap` widget.
+    """
