@@ -7,9 +7,7 @@ Maps and layers
 
 .. autoclass:: gmaps.Map
 
-.. autoclass:: gmaps.Heatmap
-
-.. autoclass:: gmaps.WeightedHeatmap
+.. autofunction:: gmaps.heatmap_layer
 
 .. autofunction:: gmaps.symbol_layer
 
@@ -20,6 +18,18 @@ Utility functions
 
 .. autofunction:: gmaps.configure
 
+Low level widgets
+-----------------
+
+.. autoclass:: gmaps.Heatmap
+
+.. autoclass:: gmaps.WeightedHeatmap
+
+.. autoclass:: gmaps.Symbol
+
+.. autoclass:: gmaps.Marker
+
+.. autoclass:: gmaps.Markers
 
 Datasets
 --------

@@ -63,6 +63,9 @@ class Marker(_BaseMarkerMixin, widgets.Widget):
 
 
 class Markers(widgets.Widget):
+    """
+    A collection of markers or symbols.
+    """
     has_bounds = True
     _view_name = Unicode("MarkerLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)

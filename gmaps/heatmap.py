@@ -226,3 +226,23 @@ def heatmap_layer(
         return WeightedHeatmap(**widget_args)
     else:
         return Heatmap(**widget_args)
+
+
+heatmap_layer.__doc__ = \
+    """
+    Create a heatmap layer.
+
+    This returns a ``Heatmap`` or a ``WeightedHeatmap`` object
+    that can be added to a ``Map`` to draw a heatmap. A heatmap
+    shows the density of points in or near a particular area.
+
+    To set the parameters, pass them to the constructor or set
+    them on the ``Heatmap`` object after construction::
+
+    >>> heatmap_layer = gmaps.heatmap_layer(locations, max_intensity=10)
+
+    or::
+
+    >>> heatmap_layer = gmaps.heatmap_layer(locations)
+    >>> heatmap_layer.max_intensity = 10
+    """ + _HeatmapOptionsMixin.__doc__
