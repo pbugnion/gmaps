@@ -18,6 +18,8 @@ Utility functions
 
 .. autofunction:: gmaps.configure
 
+.. autofunction:: gmaps.locations.locations_to_list
+
 Low level widgets
 -----------------
 

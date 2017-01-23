@@ -5,13 +5,11 @@ from traitlets import (
     observe)
 
 from . import bounds
-from .locations import locations_to_list
+from .locations import locations_to_list, locations_docstring
 from . import geotraitlets
 
 
-# Mixin for options common to both heatmap and weighted heatmaps.
-class _HeatmapOptionsMixin(HasTraits):
-    """
+_heatmap_options_docstring = """
     :param max_intensity:
         Strictly positive floating point number indicating the numeric value
         that corresponds to the hottest colour in the heatmap gradient. Any
@@ -45,7 +43,11 @@ class _HeatmapOptionsMixin(HasTraits):
         as an RGB tuple, e.g. (100, 0, 0), or as an RGBA tuple, e.g.
         (100, 0, 0, 0.5).
     :type gradient: list of colors, optional
-    """
+"""
+
+
+# Mixin for options common to both heatmap and weighted heatmaps.
+class _HeatmapOptionsMixin(HasTraits):
     max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
     point_radius = Float(default_value=None, allow_none=True).tag(sync=True)
     dissipating = Bool(default_value=True).tag(sync=True)
@@ -111,7 +113,7 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
         (corresponding to 180 degrees east).
     :type data: list of tuples
 
-    """ + _HeatmapOptionsMixin.__doc__
+    """ + _heatmap_options_docstring
     has_bounds = True
     _view_name = Unicode("SimpleHeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
@@ -160,7 +162,7 @@ class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
         180 degrees east). Weights must be non-negative.
     :type data: list of tuples
 
-    """ + _HeatmapOptionsMixin.__doc__
+    """ + _heatmap_options_docstring
     has_bounds = True
     _view_name = Unicode("WeightedHeatmapLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
@@ -256,23 +258,18 @@ heatmap_layer.__doc__ = \
     >>> heatmap_layer.gradient = ['white', 'gray']
     >>> m.add_layer(heatmap_layer)
 
-    :param locations:
-        Iterable of (latitude, longitude) pairs denoting a single point.
-        Latitudes are expressed as a float between -90 (corresponding to 90
-        degrees south) and +90 (corresponding to 90 degrees north). Longitudes
-        are expressed as a float between -180 (corresponding to 180 degrees
-        west) and +180 (corresponding to 180 degrees east). This can be passed
-        in as either a list of tuples, a two-dimensional numpy array or a
-        pandas dataframe with two columns, in which case the first one is taken
-        to be the latitude and the second one is taken to be the longitude.
-    :type locations: iterable of latitude, longitude pairs
+    {locations}
 
     :param weights:
         Iterable of weights of the same length as `locations`.
         All the weights must be positive.
     :type weights: iterable of floats, optional
-    """ + _HeatmapOptionsMixin.__doc__ + \
-    """
+
+    {options}
+
     :returns:
         A :class:`gmaps.Heatmap` or a :class:`gmaps.WeightedHeatmap` widget.
-    """
+    """.format(
+        locations=locations_docstring,
+        options=_heatmap_options_docstring
+    )
