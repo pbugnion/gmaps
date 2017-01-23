@@ -245,4 +245,27 @@ heatmap_layer.__doc__ = \
 
     >>> heatmap_layer = gmaps.heatmap_layer(locations)
     >>> heatmap_layer.max_intensity = 10
+
+    :Examples:
+
+    >>> m = gmaps.Map()
+    >>> locations = [(46.1, 5.2), (46.2, 5.3), (46.3, 5.4)]
+    >>> heatmap_layer = gmaps.heatmap_layer(locations)
+    >>> heatmap_layer.max_intensity = 2
+    >>> heatmap_layer.point_radius = 3
+    >>> heatmap_layer.gradient = ['white', 'gray']
+    >>> m.add_layer(heatmap_layer)
+
+    :param locations:
+        Iterable of (latitude, longitude) pairs
+        denoting a single point. Latitudes are expressed as
+        a float between -90 (corresponding to 90 degrees south)
+        and +90 (corresponding to 90 degrees north). Longitudes
+        are expressed as a float between -180 (corresponding to 180
+        degrees west) and +180 (corresponding to 180 degrees east).
+        This can be passed in as either a list of tuples, a numpy
+        array or a pandas dataframe with two columns, in which case
+        the first one is taken to be the latitude and the second one
+        is taken to be the longitude.
+    :type locations: iterable of latitude, longitude pairs
     """ + _HeatmapOptionsMixin.__doc__
