@@ -40,7 +40,7 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
     :Examples:
 
     >>> m = gmaps.Map()
-    >>> m.add_layer(gmaps.Heatmap(data=data))
+    >>> m.add_layer(gmaps.heatmap_layer(locations))
     """
     _view_name = Unicode("PlainmapView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
