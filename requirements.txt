@@ -1,4 +1,4 @@
+six
 ipython>=4.2.0
 ipywidgets>=5.2.2
 traitlets>=4.3.0
-six
