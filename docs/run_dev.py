@@ -18,4 +18,5 @@ BUILD = shell('make html', cwd='.')
 
 server = Server()
 server.watch('source/*', BUILD)
+server.watch('../gmaps/', BUILD)
 server.serve(root='build/html', port=PORT)
