@@ -258,3 +258,35 @@ Dataset size limitations
 ++++++++++++++++++++++++
 
 Google maps may become very slow if you try to represent more than a few thousand symbols or markers. If you have a larger dataset, you should either consider subsampling or use heatmaps.
+
+
+Directions layer
+^^^^^^^^^^^^^^^^
+
+`gmaps` supports drawing routes based on the Google maps `directions service <https://developers.google.com/maps/documentation/javascript/examples/directions-simple>`_. At the moment, this only supports driving directions between points denoted by latitude and longitude::
+
+  import gmaps
+  import gmaps.datasets
+  gmaps.configure(api_key="AIza")
+
+  # Latitude-longitude pairs
+  geneva = (46.2, 6.1)
+  montreux = (46.4, 6.9)
+  zurich = (47.4, 8.5)
+
+  m = gmaps.Map()
+  geneva2zurich = gmaps.directions_layer(geneva, zurich)
+  m.add_layer(geneva2zurich)
+  m
+
+.. image:: directions_layer_simple.png
+
+You can also pass waypoints. The can pass up to 23 waypoints (this is a limitation of the Google Maps directions service)::
+
+  m = gmaps.Map()
+  geneva2zurich_via_montreux =
+      gmaps.directions_layer(geneva, zurich, waypoints=[montreux])
+  m.add_layer(geneva2zurich_via_montreux)
+  m
+
+.. image:: directions_layer_waypoints.png
