@@ -2,6 +2,15 @@
 Release notes
 -------------
 
+Version 0.4.0
+=============
+
+ * Add factory functions to make creating layers easier. Instead of creating widgets directly, the widgets are instantiated through `*_layer()` functions which are easier to use and more tolerant of user input. This fixes:
+    - passing arbitrary iterables to the factory function (issue #66)
+    - passing more complex sets of options (issue #65)
+ * The directions interface is now a first class layer (issue #64)
+ * A regression whereby the API documentation wasn't building on readthedocs is now fixed (PR #105).
+
 Version 0.3.6
 =============
 
