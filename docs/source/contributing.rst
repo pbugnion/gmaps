@@ -13,7 +13,7 @@ This is a set of instructions for releasing to Pypi.
 
  - Upload the pre-release to Pypi with ``python setup.py sdist upload``. Unfortunately, Pypi does not recognize this as a pre-release, and therefore gives it more precendence than the previous, stable release. To correct this, go to the gmaps page on Pypi, then go to the `releases` tab and manually hide that release and un-hide the previous one.
 
- - Verify that you can install the new version and that it works correctly with ``pip install gmaps==<new version>`` and ``jupyter nbextension enable --py --sys-prefix widgetsnbextension``. It's best to verify the installation on a clean virtual machine (rather than just in a new environment) since installation is more complex than for pure Python packages.
+ - Verify that you can install the new version and that it works correctly with ``pip install gmaps==<new version>`` and ``jupyter nbextension enable --py --sys-prefix gmaps``. It's best to verify the installation on a clean virtual machine (rather than just in a new environment) since installation is more complex than for pure Python packages.
 
  - If the manual installation tests failed, fix the issue and repeat the previous steps with ``rc2`` etc. If installing worked, proceed to the next steps.
 
