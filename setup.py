@@ -17,6 +17,11 @@ npm_path = os.pathsep.join([
                 os.environ.get('PATH', os.defpath),
 ])
 
+
+def in_read_the_docs():
+    return os.environ.get('READTHEDOCS') == 'True'
+
+
 from distutils import log
 log.set_verbosity(log.DEBUG)
 log.info('setup.py entered')
@@ -97,6 +102,10 @@ class NPM(Command):
         return self.has_npm()
 
     def run(self):
+        if in_read_the_docs():
+            log.warn(
+                "Inside readthedocs -- skipping building JS dependencies.")
+            return
         has_npm = self.has_npm()
         if not has_npm:
             log.error("`npm` unavailable.  If you're running this command using sudo, make sure `npm` is available to sudo")
@@ -123,6 +132,15 @@ version_ns = {}
 with open(os.path.join(here, 'gmaps', '_version.py')) as f:
     exec(f.read(), {}, version_ns)
 
+if in_read_the_docs():
+    static_js_files = []
+else:
+    static_js_files = [
+        'gmaps/static/extension.js',
+        'gmaps/static/index.js',
+        'gmaps/static/index.js.map'
+    ]
+
 setup_args = {
     'name': 'gmaps',
     'version': version_ns['__version__'],
@@ -130,11 +148,7 @@ setup_args = {
     'long_description': LONG_DESCRIPTION,
     'include_package_data': True,
     'data_files': [
-        ('share/jupyter/nbextensions/jupyter-gmaps', [
-            'gmaps/static/extension.js',
-            'gmaps/static/index.js',
-            'gmaps/static/index.js.map',
-        ]),
+        ('share/jupyter/nbextensions/jupyter-gmaps', static_js_files),
     ],
     'install_requires': [
         'ipywidgets>=5.2.2',
