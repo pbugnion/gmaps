@@ -103,6 +103,8 @@ class NPM(Command):
 
     def run(self):
         if in_read_the_docs():
+            log.warn(
+                "Inside readthedocs -- skipping building JS dependencies.")
             return
         has_npm = self.has_npm()
         if not has_npm:
