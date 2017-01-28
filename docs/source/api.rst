@@ -33,6 +33,8 @@ Low level widgets
 
 .. autoclass:: gmaps.Markers
 
+.. autoclass:: gmaps.Directions
+
 Datasets
 --------
 
