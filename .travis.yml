@@ -6,7 +6,7 @@ python:
 install:
   - "pip install -U pip"
   - "pip install -r requirements.txt"
-  - "pip install flake8"
+  - "pip install -r test-requirements.txt"
 before_script:
   flake8 gmaps
 script:

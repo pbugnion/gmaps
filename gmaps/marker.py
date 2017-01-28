@@ -11,6 +11,7 @@ import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
 
 from .maps import DEFAULT_CENTER
+from .locations import locations_to_list
 
 __all__ = ["Symbol", "Marker", "Markers", "marker_layer", "symbol_layer"]
 
@@ -62,6 +63,9 @@ class Marker(_BaseMarkerMixin, widgets.Widget):
 
 
 class Markers(widgets.Widget):
+    """
+    A collection of markers or symbols.
+    """
     has_bounds = True
     _view_name = Unicode("MarkerLayerView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
@@ -179,7 +183,7 @@ def _symbol_layer_options(
         fill_opacity = [fill_opacity] * number_markers
 
     symbol_options = {
-        "location": locations,
+        "location": locations_to_list(locations),
         "hover_text": hover_text,
         "fill_color": fill_color,
         "stroke_color": stroke_color,
@@ -205,7 +209,7 @@ def _marker_layer_options(
         info_box_content = [info_box_content] * number_markers
 
     marker_options = {
-        "location": locations,
+        "location": locations_to_list(locations),
         "hover_text": hover_text,
         "label": label
     }

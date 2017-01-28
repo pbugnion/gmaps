@@ -7,9 +7,7 @@ Maps and layers
 
 .. autoclass:: gmaps.Map
 
-.. autoclass:: gmaps.Heatmap
-
-.. autoclass:: gmaps.WeightedHeatmap
+.. autofunction:: gmaps.heatmap_layer
 
 .. autofunction:: gmaps.symbol_layer
 
@@ -20,12 +18,26 @@ Utility functions
 
 .. autofunction:: gmaps.configure
 
+.. autofunction:: gmaps.locations.locations_to_list
+
+Low level widgets
+-----------------
+
+.. autoclass:: gmaps.Heatmap
+
+.. autoclass:: gmaps.WeightedHeatmap
+
+.. autoclass:: gmaps.Symbol
+
+.. autoclass:: gmaps.Marker
+
+.. autoclass:: gmaps.Markers
 
 Datasets
 --------
 
 .. automodule:: gmaps.datasets
-   :members: list_datasets, load_dataset
+   :members: list_datasets, load_dataset, dataset_metadata, load_dataset_as_df
 
 
 Traitlets

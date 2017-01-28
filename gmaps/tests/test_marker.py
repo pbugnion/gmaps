@@ -1,5 +1,8 @@
 
 import unittest
+import pytest
+
+import numpy as np
 
 from ..marker import _marker_layer_options, _symbol_layer_options
 
@@ -66,6 +69,41 @@ class MarkerLayer(unittest.TestCase):
         marker_options = _marker_layer_options(self.locations, **options)
         display_infos = [opts["display_info_box"] for opts in marker_options]
         assert tuple(display_infos) == (True, False)
+
+    def test_locations_array(self):
+        locations_array = np.array(self.locations)
+        options = self._add_default_options()
+        marker_options = _marker_layer_options(locations_array, **options)
+        locations = [opts["location"] for opts in marker_options]
+        assert locations == self.locations
+
+    def test_locations_pandas_df(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame.from_records(
+            self.locations, columns=["latitude", "longitude"])
+        options = self._add_default_options()
+        marker_options = _marker_layer_options(df, **options)
+        locations = [opts["location"] for opts in marker_options]
+        assert locations == self.locations
+
+    def test_all_pandas_df(self):
+        pd = pytest.importorskip("pandas")
+        df = pd.DataFrame.from_records(
+            [
+                list(self.locations[0]) + ["text1", "a"],
+                list(self.locations[1]) + ["text2", "b"],
+            ],
+            columns=["latitude", "longitude", "hover_text", "label"])
+        options = self._add_default_options(
+            hover_text=df["hover_text"], label=df["label"])
+        marker_options = _marker_layer_options(
+            df[["latitude", "longitude"]], **options)
+        locations = [opts["location"] for opts in marker_options]
+        assert locations == self.locations
+        hover_texts = [opts["hover_text"] for opts in marker_options]
+        assert hover_texts == ["text1", "text2"]
+        labels = [opts["label"] for opts in marker_options]
+        assert labels == ["a", "b"]
 
 
 class SymbolLayer(unittest.TestCase):

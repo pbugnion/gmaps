@@ -3,7 +3,7 @@ import unittest
 
 import traitlets
 
-import gmaps.geotraitlets as geotraitlets
+from .. import geotraitlets
 
 
 class ColorString(unittest.TestCase):
