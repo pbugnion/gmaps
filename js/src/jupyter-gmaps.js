@@ -345,6 +345,17 @@ export const MarkerLayerView = GMapsLayerView.extend({
 })
 
 
+export const GeoJsonLayerView = GMapsLayerView.extend({
+    render() {
+        this.geojson = this.model.get('data');
+    },
+
+    addToMapView(mapView) {
+        mapView.map.data.addGeoJson(this.geojson);
+    }
+})
+
+
 export const PlainmapView = widgets.DOMWidgetView.extend({
     render() {
         this.loadConfiguration();
@@ -423,11 +434,17 @@ export const SimpleHeatmapLayerModel = GMapsLayerModel.extend({
     })
 });
 
-
 export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
         _view_name: "WeightedHeatmapLayerView",
         _model_name: "WeightedHeatmapLayerModel"
+    })
+});
+
+export const GeoJsonLayerModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "GeoJsonLayerView",
+        _model_name: "GeoJsonLayerModel"
     })
 });
 

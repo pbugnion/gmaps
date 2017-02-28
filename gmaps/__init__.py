@@ -4,6 +4,7 @@ from .maps import *  # noqa
 from .marker import *  # noqa
 from .heatmap import *  # noqa
 from .directions import *  # noqa
+from .geojson import *  # noqa
 
 
 def _jupyter_nbextension_paths():
