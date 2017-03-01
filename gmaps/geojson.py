@@ -1,6 +1,6 @@
 
 import ipywidgets as widgets
-from traitlets import Unicode, Dict
+from traitlets import Unicode, Dict, List
 
 
 __all__ = ["GeoJson"]
@@ -13,3 +13,4 @@ class GeoJson(widgets.Widget):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     has_bounds = False
     data = Dict().tag(sync=True)
+    styles = List().tag(sync=True)
