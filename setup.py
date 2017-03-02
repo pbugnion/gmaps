@@ -153,6 +153,7 @@ setup_args = {
     'install_requires': [
         'ipywidgets>=5.2.2',
         'traitlets>=4.3.0',
+        'geojson>=1.3.4',
         'six'
     ],
     'packages': find_packages(),
