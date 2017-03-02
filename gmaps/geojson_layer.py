@@ -1,6 +1,4 @@
 
-import json
-
 import ipywidgets as widgets
 from traitlets import (Unicode, Dict, List, observe)
 
