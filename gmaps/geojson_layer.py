@@ -65,7 +65,7 @@ class GeoJson(widgets.Widget):
 
 
 def _geojson_layer_options(
-        number_features, hover_text, fill_color, fill_opacity,
+        number_features, fill_color, fill_opacity,
         stroke_color, stroke_opacity, stroke_weight):
     feature_options = {
         "fill_color": broadcast_if_color_atomic(fill_color, number_features),
@@ -79,14 +79,14 @@ def _geojson_layer_options(
 
 
 def geojson_layer(
-        geojson, hover_text="", fill_color=None,
+        geojson, fill_color=None,
         fill_opacity=0.4, stroke_color=None, stroke_opacity=0.8,
         stroke_weight=3.0):
     styled_geojson = copy.deepcopy(geojson)
     features = styled_geojson["features"]
     number_features = len(features)
     styles = _geojson_layer_options(
-        number_features, hover_text, fill_color, fill_opacity, stroke_color,
+        number_features, fill_color, fill_opacity, stroke_color,
         stroke_opacity, stroke_weight)
     feature_widgets = []
     for feature, style in zip(features, styles):
