@@ -7,7 +7,8 @@ from traitlets import (Unicode, Dict, List, observe)
 import geojson
 
 from . import bounds
-from .options import merge_option_dicts
+from .options import (
+    merge_option_dicts, broadcast_if_atomic, broadcast_if_color_atomic)
 
 __all__ = ["GeoJson", "geojson_layer"]
 
@@ -41,13 +42,31 @@ class GeoJson(widgets.Widget):
         self._set_bounds(data)
 
 
-def geojson_layer(geojson, fill_color, stroke_color):
-    styled_geojson = copy.deepcopy(geojson)
+def _geojson_layer_options(
+        number_features, hover_text, fill_color, fill_opacity,
+        stroke_color, stroke_opacity, stroke_weight):
     style_options = {
-        "fillColor": fill_color,
-        "strokeColor": stroke_color
+        "title": broadcast_if_atomic(hover_text, number_features),
+        "fillColor": broadcast_if_color_atomic(fill_color, number_features),
+        "fillOpacity": broadcast_if_atomic(fill_opacity, number_features),
+        "strokeColor":
+            broadcast_if_color_atomic(stroke_color, number_features),
+        "strokeOpacity": broadcast_if_atomic(stroke_opacity, number_features),
+        "strokeWeight": broadcast_if_atomic(stroke_weight, number_features)
     }
-    styles = merge_option_dicts(style_options)
-    for feature, styles in zip(styled_geojson["features"], styles):
-        feature["properties"]["style"] = styles
+    return merge_option_dicts(style_options)
+
+
+def geojson_layer(
+        geojson, hover_text="", fill_color=None,
+        fill_opacity=0.4, stroke_color=None, stroke_opacity=0.8,
+        stroke_weight=3.0):
+    styled_geojson = copy.deepcopy(geojson)
+    features = styled_geojson["features"]
+    number_features = len(features)
+    styles = _geojson_layer_options(
+        number_features, hover_text, fill_color, fill_opacity, stroke_color,
+        stroke_opacity, stroke_weight)
+    for feature, style in zip(features, styles):
+        feature["properties"]["style"] = style
     return GeoJson(data=styled_geojson)

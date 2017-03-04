@@ -57,3 +57,11 @@ def is_color_atomic(color):
     else:
         is_atomic = True
     return is_atomic
+
+
+def broadcast_if_atomic(elem, number_elements):
+    return [elem] * number_elements if is_atomic(elem) else elem
+
+
+def broadcast_if_color_atomic(elem, number_elements):
+    return [elem] * number_elements if is_color_atomic(elem) else elem
