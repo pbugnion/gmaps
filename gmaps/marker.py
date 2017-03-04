@@ -12,6 +12,7 @@ import gmaps.bounds as bounds
 
 from .maps import DEFAULT_CENTER
 from .locations import locations_to_list
+from .options import merge_option_dicts
 
 __all__ = ["Symbol", "Marker", "Markers", "marker_layer", "symbol_layer"]
 
@@ -114,33 +115,6 @@ def _is_color_atomic(color):
     return is_atomic
 
 
-def _merge_option_dicts(option_dicts):
-    """
-    Create a list of options for marker and symbol layers
-
-    This helper function takes a dictionary of (key -> list) and
-    returns a list of dictionaries of (key -> value).
-    """
-    option_values_lengths = [
-        len(option_values) for option_values in option_dicts.values()
-    ]
-    # assert all the list values are the same length
-    number_items = option_values_lengths[0]
-    assert all(
-        length == number_items
-        for length in option_values_lengths
-    )
-    option_lists = []
-    for item in range(number_items):
-        item_options = {
-            option_name: option_values[item]
-            for (option_name, option_values)
-            in option_dicts.items()
-        }
-        option_lists.append(item_options)
-    return option_lists
-
-
 def _info_box_option_lists(number_markers, info_box_content, display_info_box):
     if _is_atomic(info_box_content):
         info_box_content = [info_box_content] * number_markers
@@ -195,7 +169,7 @@ def _symbol_layer_options(
 
     symbol_options.update(info_box_options)
 
-    return _merge_option_dicts(symbol_options)
+    return merge_option_dicts(symbol_options)
 
 
 def _marker_layer_options(
@@ -219,7 +193,7 @@ def _marker_layer_options(
 
     marker_options.update(info_box_options)
 
-    return _merge_option_dicts(marker_options)
+    return merge_option_dicts(marker_options)
 
 
 def symbol_layer(
