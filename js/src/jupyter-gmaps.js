@@ -348,16 +348,11 @@ export const MarkerLayerView = GMapsLayerView.extend({
 export const GeoJsonLayerView = GMapsLayerView.extend({
     render() {
         this.geojson = this.model.get('data')
-        this.styles = this.model.get('styles')
     },
 
     addToMapView(mapView) {
         mapView.map.data.addGeoJson(this.geojson)
-        let counter = 0
-        mapView.map.data.forEach((feature) => {
-            mapView.map.data.overrideStyle(feature, this.styles[counter])
-            counter += 1
-        })
+        mapView.map.data.setStyle((feature) => feature.getProperty('style'))
     }
 })
 

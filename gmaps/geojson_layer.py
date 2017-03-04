@@ -15,9 +15,8 @@ class GeoJson(widgets.Widget):
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     has_bounds = True
-    data = Dict().tag(sync=True)
-    styles = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
+    data = Dict().tag(sync=True)
 
     def _set_bounds(self, data):
         longitudes, latitudes = [], []
