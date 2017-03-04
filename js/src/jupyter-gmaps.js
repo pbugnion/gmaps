@@ -350,7 +350,11 @@ export const GeoJsonFeatureView = GMapsLayerView.extend({
     render() {
         this.geojson = this.model.get("feature")
         this.geojson.properties.style = {
-            fillOpacity: this.model.get("fill_opacity")
+            fillColor: this.model.get("fill_color"),
+            fillOpacity: this.model.get("fill_opacity"),
+            strokeColor: this.model.get("stroke_color"),
+            strokeOpacity: this.model.get("stroke_opacity"),
+            strokeWeight: this.model.get("stroke_weight")
         }
     },
 

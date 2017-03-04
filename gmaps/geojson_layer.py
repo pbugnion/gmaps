@@ -6,6 +6,7 @@ from traitlets import (Unicode, Dict, List, observe, Float)
 
 import geojson
 
+from . import geotraitlets
 from . import bounds
 from .options import (
     merge_option_dicts, broadcast_if_atomic, broadcast_if_color_atomic)
@@ -20,7 +21,15 @@ class GeoJsonFeature(widgets.Widget):
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     feature = Dict().tag(sync=True)
     has_bounds = False
-    fill_opacity = Float().tag(sync=True)
+    fill_color = geotraitlets.ColorAlpha(
+        allow_none=True, default_value=None
+    ).tag(sync=True)
+    fill_opacity = Float(min=0.0, max=1.0, default_value=1.0).tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=True, default_value=None
+    ).tag(sync=True)
+    stroke_opacity = Float(min=0.0, max=1.0, default_value=1.0).tag(sync=True)
+    stroke_weight = Float(min=0.0, default_value=3.0).tag(sync=True)
 
     def get_coords(self):
         return geojson.utils.coords(self.feature)
