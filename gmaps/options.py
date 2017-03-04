@@ -1,4 +1,9 @@
 
+import collections
+
+from six import string_types
+
+
 def merge_option_dicts(option_dicts):
     """
     Create a list of options for marker and symbol layers
@@ -24,3 +29,31 @@ def merge_option_dicts(option_dicts):
         }
         option_lists.append(item_options)
     return option_lists
+
+
+def is_atomic(elem):
+    """
+    True if an element is a single atom and false if it's a collection
+    """
+    return (
+        isinstance(elem, string_types) or
+        not isinstance(elem, collections.Iterable)
+    )
+
+
+def is_color_atomic(color):
+    """
+    Determine whether the argument is a singe color or an iterable of colors
+    """
+    if isinstance(color, string_types):
+        is_atomic = True
+    elif isinstance(color, collections.Sequence):
+        if isinstance(color[0], string_types):
+            is_atomic = False
+        elif isinstance(color[0], (int, float)) and len(color) in (3, 4):
+            is_atomic = True
+        else:
+            is_atomic = False
+    else:
+        is_atomic = True
+    return is_atomic
