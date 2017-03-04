@@ -67,16 +67,15 @@ class GeoJson(widgets.Widget):
 def _geojson_layer_options(
         number_features, hover_text, fill_color, fill_opacity,
         stroke_color, stroke_opacity, stroke_weight):
-    style_options = {
-        "title": broadcast_if_atomic(hover_text, number_features),
-        "fillColor": broadcast_if_color_atomic(fill_color, number_features),
-        "fillOpacity": broadcast_if_atomic(fill_opacity, number_features),
-        "strokeColor":
+    feature_options = {
+        "fill_color": broadcast_if_color_atomic(fill_color, number_features),
+        "fill_opacity": broadcast_if_atomic(fill_opacity, number_features),
+        "stroke_color":
             broadcast_if_color_atomic(stroke_color, number_features),
-        "strokeOpacity": broadcast_if_atomic(stroke_opacity, number_features),
-        "strokeWeight": broadcast_if_atomic(stroke_weight, number_features)
+        "stroke_opacity": broadcast_if_atomic(stroke_opacity, number_features),
+        "stroke_weight": broadcast_if_atomic(stroke_weight, number_features)
     }
-    return merge_option_dicts(style_options)
+    return merge_option_dicts(feature_options)
 
 
 def geojson_layer(
@@ -89,6 +88,8 @@ def geojson_layer(
     styles = _geojson_layer_options(
         number_features, hover_text, fill_color, fill_opacity, stroke_color,
         stroke_opacity, stroke_weight)
+    feature_widgets = []
     for feature, style in zip(features, styles):
-        feature["properties"]["style"] = style
-    return GeoJson(data=styled_geojson)
+        feature_widget = GeoJsonFeature(feature=feature, **style)
+        feature_widgets.append(feature_widget)
+    return GeoJson(features=feature_widgets)
