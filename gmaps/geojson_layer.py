@@ -22,7 +22,7 @@ class GeoJson(widgets.Widget):
 
     def _set_bounds(self, data):
         longitudes, latitudes = [], []
-        for feature in data['features']:
+        for feature in data["features"]:
             feature_coords = geojson.utils.coords(feature)
             feature_longitudes, feature_latitudes = zip(*feature_coords)
             longitudes.extend(feature_longitudes)
@@ -70,8 +70,8 @@ def _merge_option_dicts(option_dicts):
 def geojson_layer(geojson, fill_color, stroke_color):
     styled_geojson = copy.deepcopy(geojson)
     style_options = {
-        'fillColor': fill_color,
-        'strokeColor': stroke_color
+        "fillColor": fill_color,
+        "strokeColor": stroke_color
     }
     styles = _merge_option_dicts(style_options)
     for feature, styles in zip(styled_geojson["features"], styles):
