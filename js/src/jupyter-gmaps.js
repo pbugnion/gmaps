@@ -345,14 +345,38 @@ export const MarkerLayerView = GMapsLayerView.extend({
 })
 
 
-export const GeoJsonLayerView = GMapsLayerView.extend({
+export const GeoJsonFeatureView = GMapsLayerView.extend({
+
     render() {
-        this.geojson = this.model.get('data')
+        this.geojson = this.model.get("feature")
+        this.geojson.properties.style = {
+            fillOpacity: this.model.get("fill_opacity")
+        }
     },
 
     addToMapView(mapView) {
         mapView.map.data.addGeoJson(this.geojson)
+    }
+
+})
+
+
+export const GeoJsonLayerView = GMapsLayerView.extend({
+    render() {
+        this.featureViews = new widgets.ViewList(this.addFeature, null, this)
+        this.featureViews.update(this.model.get("features"))
+    },
+
+    addToMapView(mapView) {
         mapView.map.data.setStyle((feature) => feature.getProperty('style'))
+    },
+
+    addFeature(childModel) {
+        return this.create_child_view(childModel)
+            .then((childView) => {
+                childView.addToMapView(this.mapView)
+                return childView
+            })
     }
 })
 
@@ -446,6 +470,17 @@ export const GeoJsonLayerModel = GMapsLayerModel.extend({
     defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
         _view_name: "GeoJsonLayerView",
         _model_name: "GeoJsonLayerModel"
+    })
+}, {
+    serializers: _.extend({
+            features: {deserialize: widgets.unpack_models}
+    }, widgets.DOMWidgetModel.serializers)
+})
+
+export const GeoJsonFeatureModel = GMapsLayerModel.extend({
+    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
+        _view_name: "GeoJsonFeatureView",
+        _model_name: "GeoJsonFeatureModel"
     })
 });
 
