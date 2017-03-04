@@ -169,6 +169,14 @@ class SymbolLayer(unittest.TestCase):
             assert options["info_box_content"] == test_content
             assert options["display_info_box"]
 
+    def test_infobox_content_lists(self):
+        test_content = ["1", "2"]
+        options = self._add_default_options(
+            info_box_content=test_content, display_info_box=True)
+        symbol_options = _symbol_layer_options(self.locations, **options)
+        content_options = [opts["info_box_content"] for opts in symbol_options]
+        assert tuple(content_options) == tuple(test_content)
+
     def test_infobox_default_display_lists(self):
         test_content = ["1", None]
         options = self._add_default_options(info_box_content=test_content)
