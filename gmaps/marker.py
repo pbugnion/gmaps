@@ -316,7 +316,7 @@ def marker_layer(
 
     Add this layer to a ``Map`` instance to draw markers
     corresponding to specific locations on the map.
-    A marker will be drawn on teh map for each point in the
+    A marker will be drawn on the map for each point in the
     ``locations`` argument.
 
     :Examples:
