@@ -82,6 +82,90 @@ def geojson_layer(
         geojson, fill_color=None,
         fill_opacity=0.4, stroke_color=None, stroke_opacity=0.8,
         stroke_weight=3.0):
+    """
+    GeoJSON layer
+
+    Add this layer to a ``Map`` instance to render GeoJSON.
+
+    :Examples:
+
+    Let's start by fetching some GeoJSON. We could have loaded it from file,
+    but let's load it from a URL instead. You will need `requests`.
+
+    >>> import json
+    >>> import requests
+    >>> countries_string = requests.get(
+        "https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json"
+    ).content
+    >>> countries = json.loads(countries_string)
+
+    >>> import gmaps
+    >>> gmaps.configure(api_key="AI...")
+    >>> m = gmaps.Map()
+    >>> geojson = gmaps.geojson_layer(countries)
+    >>> m.add_layer(geojson)
+    >>> m
+
+    We can pass style options into the layer. Let's assign a random
+    color to each country:
+
+    >>> import random
+    >>> colors = [
+        random.choice(['red', 'green', 'blue', 'purple', 'yellow', 'teal'])
+        for country in countries['features']
+    ]
+    >>> geojson = gmaps.geojson_layer(countries, fill_color=colors)
+
+    Finally, let's also make our colors more transparent and decrease
+    the stroke weight.
+
+    >>> geojson = gmaps.geojson_layer(
+            countries, fill_color=colors, fill_opacity=0.2, stroke_weight=1)
+
+    :param geojson:
+        A Python dictionary containing a GeoJSON feature collection. If you
+        have a GeoJSON file, you will need to load it using
+        `json.load <https://docs.python.org/3.6/library/json.html>`_.
+    :type geojson: dict
+
+    :param fill_color:
+        The fill color of the symbol. This can be specified as a
+        single color, in which case the same color will apply to every symbol,
+        or as a list of colors, in which case it must be the
+        same length as ``locations``.
+        Colors can be specified as a simple string, e.g. 'blue',
+        as an RGB tuple, e.g. (100, 0, 0), or as an RGBA tuple, e.g.
+        (100, 0, 0, 0.5).
+    :type fill_color: single color or list of colors, optional
+
+    :param fill_opacity:
+        The opacity of the fill color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque), or a list of floats.
+        0.4 by default.
+    :type fill_opacity: float or list of floats, optional
+
+    :param stroke_color:
+        The stroke color of the symbol. This can be specified as a
+        single color, in which case the same color will apply to every symbol,
+        or as a list of colors, in which case it must be the
+        same length as ``locations``.
+        Colors can be specified as a simple string, e.g. 'blue',
+        as an RGB tuple, e.g. (100, 0, 0), or as an RGBA tuple, e.g.
+        (100, 0, 0, 0.5).
+    :type stroke_color: single color or list of colors, optional
+
+    :param stroke_opacity:
+        The opacity of the stroke color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque), or a list of floats.
+        0.8 by default.
+    :type stroke_opacity: float or list of floats, optional
+
+    :param stroke_weight:
+        The width, in pixels, of the stroke. Useful values range from 0.0
+        (corresponding to no stroke) to about 20, corresponding to a very
+        fat brush. 3.0 by default.
+    :type stroke_weight: float or list of floats, optional
+    """
     styled_geojson = copy.deepcopy(geojson)
     features = styled_geojson["features"]
     number_features = len(features)

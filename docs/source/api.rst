@@ -13,6 +13,8 @@ Maps and layers
 
 .. autofunction:: gmaps.marker_layer
 
+.. autofunction:: gmaps.geojson_layer
+
 .. autofunction:: gmaps.directions_layer
 
 Utility functions
