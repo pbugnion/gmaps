@@ -37,6 +37,10 @@ Low level widgets
 
 .. autoclass:: gmaps.Markers
 
+.. autoclass:: gmaps.GeoJsonFeature
+
+.. autoclass:: gmaps.GeoJson
+
 .. autoclass:: gmaps.Directions
 
 Datasets

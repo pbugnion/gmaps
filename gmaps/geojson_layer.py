@@ -15,6 +15,12 @@ __all__ = ["GeoJson", "geojson_layer", "GeoJsonFeature"]
 
 
 class GeoJsonFeature(widgets.Widget):
+    """
+    Widget for a single GeoJSON feature.
+
+    Prefer to use the `geojson_layer` function to construct these,
+    rather than making them explicitly.
+    """
     _view_name = Unicode("GeoJsonFeatureView").tag(sync=True)
     _model_name = Unicode("GeoJsonFeatureModel").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
@@ -36,6 +42,15 @@ class GeoJsonFeature(widgets.Widget):
 
 
 class GeoJson(widgets.Widget):
+    """
+    Widget for a collection of GeoJSON features.
+
+    Prefer to use the `geojson_layer` function to construct this,
+    rather than making them explicitly.
+
+    Use the `features` attribute on this class to change the style
+    of the features in this layer.
+    """
     _view_name = Unicode("GeoJsonLayerView").tag(sync=True)
     _model_name = Unicode("GeoJsonLayerModel").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
