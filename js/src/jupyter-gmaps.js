@@ -347,17 +347,19 @@ export const MarkerLayerView = GMapsLayerView.extend({
 
 export const GeoJsonFeatureView = GMapsLayerView.extend({
 
+    // nameInView -> name_in_model
+    styleProperties: [
+          ['fillColor', 'fill_color'],
+          ['fillOpacity', 'fill_opacity'],
+          ['strokeColor', 'stroke_color'],
+          ['strokeOpacity', 'stroke_opacity'],
+          ['strokeWeight', 'stroke_weight']
+    ],
+
     render() {
-        // nameInView -> name_in_model
-        const styleProperties = [
-            ['fillColor', 'fill_color'],
-            ['fillOpacity', 'fill_opacity'],
-            ['strokeColor', 'stroke_color'],
-            ['strokeOpacity', 'stroke_opacity'],
-            ['strokeWeight', 'stroke_weight']
-        ]
+        this.modelEvents() ;
         this.geojson = this.model.get("feature")
-        const style = styleProperties.reduce(
+        const style = this.styleProperties.reduce(
             (acc, [nameInView, nameInModel]) => {
               return {...acc, [nameInView]: this.model.get(nameInModel)}
             },
@@ -366,8 +368,15 @@ export const GeoJsonFeatureView = GMapsLayerView.extend({
         this.geojson.properties =
             this.geojson.properties ? this.geojson.properties : {}
         this.geojson.properties.style = style
+    },
 
-        styleProperties.forEach(([nameInView, nameInModel]) => {
+    addToMapView(mapView) {
+        this.mapView = mapView
+        mapView.map.data.addGeoJson(this.geojson)
+    },
+
+    modelEvents() {
+        this.styleProperties.forEach(([nameInView, nameInModel]) => {
             const callback = (() => {
                 this.geojson.properties.style = {
                     ...this.geojson.properties.style,
@@ -378,12 +387,6 @@ export const GeoJsonFeatureView = GMapsLayerView.extend({
             })
             this.model.on(`change:${nameInModel}`, callback, this)
         })
-
-    },
-
-    addToMapView(mapView) {
-        this.mapView = mapView
-        mapView.map.data.addGeoJson(this.geojson)
     }
 
 })
