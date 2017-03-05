@@ -1,2 +1,2 @@
 
-from geojson_geometries import *  # noqa
+from .geojson_geometries import *  # noqa
