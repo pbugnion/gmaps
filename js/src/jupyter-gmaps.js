@@ -348,27 +348,37 @@ export const MarkerLayerView = GMapsLayerView.extend({
 export const GeoJsonFeatureView = GMapsLayerView.extend({
 
     render() {
+        // nameInView -> name_in_model
+        const styleProperties = [
+            ['fillColor', 'fill_color'],
+            ['fillOpacity', 'fill_opacity'],
+            ['strokeColor', 'stroke_color'],
+            ['strokeOpacity', 'stroke_opacity'],
+            ['strokeWeight', 'stroke_weight']
+        ]
         this.geojson = this.model.get("feature")
-        this.geojson.properties.style = {
-            fillColor: this.model.get("fill_color"),
-            fillOpacity: this.model.get("fill_opacity"),
-            strokeColor: this.model.get("stroke_color"),
-            strokeOpacity: this.model.get("stroke_opacity"),
-            strokeWeight: this.model.get("stroke_weight")
-        }
+        const style = styleProperties.reduce(
+            (acc, [nameInView, nameInModel]) => {
+              return {...acc, [nameInView]: this.model.get(nameInModel)}
+            },
+            {}
+        )
+        this.geojson.properties =
+            this.geojson.properties ? this.geojson.properties : {}
+        this.geojson.properties.style = style
 
-      const callback = (
-        () => {
-          this.geojson.properties.style = {
-              ...this.geojson.properties.style,
-              'fillColor': this.model.get("fill_color")
-          }
-          this.mapView.map.data.setStyle(
-            (feature) => feature.getProperty('style'))
-        }
-      )
+        styleProperties.forEach(([nameInView, nameInModel]) => {
+            const callback = (() => {
+                this.geojson.properties.style = {
+                    ...this.geojson.properties.style,
+                    [nameInView]: this.model.get(nameInModel)
+                }
+                this.mapView.map.data.setStyle(
+                    (feature) => feature.getProperty('style'))
+            })
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
 
-      this.model.on('change:fill_color', callback, this)
     },
 
     addToMapView(mapView) {
