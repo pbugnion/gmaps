@@ -1,7 +1,4 @@
 
-import collections
-
-from six import string_types
 import ipywidgets as widgets
 from traitlets import (
     Unicode, Int, List, observe, HasTraits, Float, Bool
@@ -12,6 +9,7 @@ import gmaps.bounds as bounds
 
 from .maps import DEFAULT_CENTER
 from .locations import locations_to_list
+from .options import merge_option_dicts, is_atomic, is_color_atomic
 
 __all__ = ["Symbol", "Marker", "Markers", "marker_layer", "symbol_layer"]
 
@@ -89,62 +87,10 @@ class Markers(widgets.Widget):
         ]
 
 
-def _is_atomic(elem):
-    return (
-        isinstance(elem, string_types) or
-        not isinstance(elem, collections.Iterable)
-    )
-
-
-def _is_color_atomic(color):
-    """
-    Determine whether the argument is a singe color or an iterable of colors
-    """
-    if isinstance(color, string_types):
-        is_atomic = True
-    elif isinstance(color, collections.Sequence):
-        if isinstance(color[0], string_types):
-            is_atomic = False
-        elif isinstance(color[0], (int, float)) and len(color) in (3, 4):
-            is_atomic = True
-        else:
-            is_atomic = False
-    else:
-        is_atomic = True
-    return is_atomic
-
-
-def _merge_option_dicts(option_dicts):
-    """
-    Create a list of options for marker and symbol layers
-
-    This helper function takes a dictionary of (key -> list) and
-    returns a list of dictionaries of (key -> value).
-    """
-    option_values_lengths = [
-        len(option_values) for option_values in option_dicts.values()
-    ]
-    # assert all the list values are the same length
-    number_items = option_values_lengths[0]
-    assert all(
-        length == number_items
-        for length in option_values_lengths
-    )
-    option_lists = []
-    for item in range(number_items):
-        item_options = {
-            option_name: option_values[item]
-            for (option_name, option_values)
-            in option_dicts.items()
-        }
-        option_lists.append(item_options)
-    return option_lists
-
-
 def _info_box_option_lists(number_markers, info_box_content, display_info_box):
-    if _is_atomic(info_box_content):
+    if is_atomic(info_box_content):
         info_box_content = [info_box_content] * number_markers
-    if _is_atomic(display_info_box):
+    if is_atomic(display_info_box):
         display_info_box = [display_info_box] * number_markers
 
     # Set value for display_info_box if it's still the default
@@ -169,17 +115,17 @@ def _symbol_layer_options(
         stroke_color, stroke_opacity, scale,
         info_box_content, display_info_box):
     number_markers = len(locations)
-    if _is_atomic(hover_text):
+    if is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
-    if _is_atomic(scale):
+    if is_atomic(scale):
         scale = [scale] * number_markers
-    if _is_color_atomic(fill_color):
+    if is_color_atomic(fill_color):
         fill_color = [fill_color] * number_markers
-    if _is_color_atomic(stroke_color):
+    if is_color_atomic(stroke_color):
         stroke_color = [stroke_color] * number_markers
-    if _is_atomic(stroke_opacity):
+    if is_atomic(stroke_opacity):
         stroke_opacity = [stroke_opacity] * number_markers
-    if _is_atomic(fill_opacity):
+    if is_atomic(fill_opacity):
         fill_opacity = [fill_opacity] * number_markers
 
     symbol_options = {
@@ -195,17 +141,17 @@ def _symbol_layer_options(
 
     symbol_options.update(info_box_options)
 
-    return _merge_option_dicts(symbol_options)
+    return merge_option_dicts(symbol_options)
 
 
 def _marker_layer_options(
         locations, hover_text, label, info_box_content, display_info_box):
     number_markers = len(locations)
-    if _is_atomic(hover_text):
+    if is_atomic(hover_text):
         hover_text = [hover_text] * number_markers
-    if _is_atomic(label):
+    if is_atomic(label):
         label = [label] * number_markers
-    if _is_atomic(info_box_content):
+    if is_atomic(info_box_content):
         info_box_content = [info_box_content] * number_markers
 
     marker_options = {
@@ -219,7 +165,7 @@ def _marker_layer_options(
 
     marker_options.update(info_box_options)
 
-    return _merge_option_dicts(marker_options)
+    return merge_option_dicts(marker_options)
 
 
 def symbol_layer(
@@ -370,7 +316,7 @@ def marker_layer(
 
     Add this layer to a ``Map`` instance to draw markers
     corresponding to specific locations on the map.
-    A marker will be drawn on teh map for each point in the
+    A marker will be drawn on the map for each point in the
     ``locations`` argument.
 
     :Examples:
