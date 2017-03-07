@@ -18,8 +18,17 @@ from six.moves.urllib.request import urlopen
 
 METADATA = {
     "countries": {
-        "url": "",
-        "description": "Map of world countries"
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/countries.geo.json",  # noqa
+        "description": ("Map of world countries. See also "
+                        "`countries-high-resolution` for a higher "
+                        "resolution version of this."),
+        "source": "https://github.com/datasets/geo-countries"
+    },
+    "countries-high-resolution": {
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/countries-high-resolution.geo.json",  # noqa
+        "description": ("Map of world countries. See also `countries` "
+                        "for a lower resolution version of this."),
+        "source": "https://github.com/datasets/geo-countries"
     }
 }
 
@@ -49,6 +58,7 @@ def geometry_metadata(geometry_name):
 
 def load_geometry(geometry_name):
     url = METADATA[geometry_name]["url"]
-    with urlopen(url) as f:
-        geometry = json.load(f)
+    f = urlopen(url)
+    geometry = json.load(f)
+    f.close()
     return geometry
