@@ -13,6 +13,7 @@ Commands
 """
 
 import json
+import codecs
 
 from six.moves.urllib.request import urlopen
 
@@ -58,7 +59,8 @@ def geometry_metadata(geometry_name):
 
 def load_geometry(geometry_name):
     url = METADATA[geometry_name]["url"]
+    reader = codecs.getreader("utf-8")
     f = urlopen(url)
-    geometry = json.load(f)
+    geometry = json.load(reader(f))
     f.close()
     return geometry
