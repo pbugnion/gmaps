@@ -11,7 +11,11 @@ from . import bounds
 from .options import (
     merge_option_dicts, broadcast_if_atomic, broadcast_if_color_atomic)
 
-__all__ = ["GeoJson", "geojson_layer", "GeoJsonFeature"]
+__all__ = ["GeoJson", "geojson_layer", "GeoJsonFeature", "InvalidGeoJson"]
+
+
+class InvalidGeoJson(Exception):
+    pass
 
 
 class GeoJsonFeature(widgets.Widget):
@@ -91,6 +95,16 @@ def _geojson_layer_options(
         "stroke_weight": broadcast_if_atomic(stroke_weight, number_features)
     }
     return merge_option_dicts(feature_options)
+
+
+def _validate_feature(feature):
+    if feature.get("properties") is None:
+        feature["properties"] = {}
+    if feature.get('geometry') is None:
+        raise InvalidGeoJson(
+            "Feature with properties {} does not have a geometry.".format(
+                feature.get("properties")))
+    return feature
 
 
 def geojson_layer(
@@ -182,7 +196,8 @@ def geojson_layer(
     :type stroke_weight: float or list of floats, optional
     """
     styled_geojson = copy.deepcopy(geojson)
-    features = styled_geojson["features"]
+    raw_features = styled_geojson["features"]
+    features = [_validate_feature(feature) for feature in raw_features]
     number_features = len(features)
     styles = _geojson_layer_options(
         number_features, fill_color, fill_opacity, stroke_color,
