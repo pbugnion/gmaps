@@ -35,7 +35,7 @@ METADATA = {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/england-counties.geo.json",  # noqa
         "description": ("Counties and unitary authorities boundaries " +
                         "for England and Wales"),
-        "source": "https://data.gov.uk/dataset/counties-and-unitary-authorities-december-2015-full-extent-boundaries-in-england-and-wales"
+        "source": "https://data.gov.uk/dataset/counties-and-unitary-authorities-december-2015-full-extent-boundaries-in-england-and-wales"  # noqa
     }
 }
 
