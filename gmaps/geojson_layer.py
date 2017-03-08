@@ -1,4 +1,5 @@
 
+import json
 import copy
 
 import ipywidgets as widgets
@@ -107,6 +108,16 @@ def _validate_feature(feature):
     return feature
 
 
+def _validate_geojson(geojson_document):
+    is_valid = geojson.validation.is_valid(
+        geojson.loads(json.dumps(geojson_document)))
+    if is_valid["valid"] != "yes":
+        raise InvalidGeoJson(is_valid["message"])
+    if geojson_document["type"] != "FeatureCollection":
+        raise InvalidGeoJson(
+            "Only FeatureCollection GeoJSON is currently supported")
+
+
 def geojson_layer(
         geojson, fill_color=None,
         fill_opacity=0.4, stroke_color=None, stroke_opacity=0.8,
@@ -195,6 +206,7 @@ def geojson_layer(
         fat brush. 3.0 by default.
     :type stroke_weight: float or list of floats, optional
     """
+    _validate_geojson(geojson)
     styled_geojson = copy.deepcopy(geojson)
     raw_features = styled_geojson["features"]
     features = [_validate_feature(feature) for feature in raw_features]

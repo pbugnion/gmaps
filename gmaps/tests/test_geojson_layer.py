@@ -19,3 +19,17 @@ class GeoJson(unittest.TestCase):
         }
         with self.assertRaises(InvalidGeoJson):
             geojson_layer(geo)
+
+    def test_raises_on_empty_geojson(self):
+        geo = {}
+        with self.assertRaises(InvalidGeoJson):
+            geojson_layer(geo)
+
+    def test_raises_not_feature_collection(self):
+        geo = {
+            "type": "Feature",
+            "geometry": None,
+            "properties": {"a": 5}
+        }
+        with self.assertRaises(InvalidGeoJson):
+            geojson_layer(geo)
