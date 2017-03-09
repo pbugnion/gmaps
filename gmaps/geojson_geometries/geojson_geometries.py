@@ -46,6 +46,16 @@ METADATA = {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/us-counties.geo.json",  # noqa
         "description": "US county boundaries",
         "source": "http://eric.clst.org/Stuff/USGeoJSON"  # noqa
+    },
+    "india-states": {
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/india-states.geo.json",  # noqa
+        "description": "India state boundaries",
+        "source": "https://github.com/geohacker/india"  # noqa
+    },
+    "brazil-states": {
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/brazil-states.geo.json",  # noqa
+        "description": "Brazil state boundaries",
+        "source": "https://github.com/codeforamerica/click_that_hood/blob/master/public/data/brazil-states.geojson (No license specified, so use with care)"  # noqa
     }
 }
 
