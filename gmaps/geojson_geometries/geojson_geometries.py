@@ -36,6 +36,16 @@ METADATA = {
         "description": ("Counties and unitary authorities boundaries " +
                         "for England and Wales"),
         "source": "https://data.gov.uk/dataset/counties-and-unitary-authorities-december-2015-full-extent-boundaries-in-england-and-wales"  # noqa
+    },
+    "us-states": {
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/us-states.geo.json",  # noqa
+        "description": "US state boundaries",
+        "source": "http://eric.clst.org/Stuff/USGeoJSON"  # noqa
+    },
+    "us-counties": {
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/us-counties.geo.json",  # noqa
+        "description": "US county boundaries",
+        "source": "http://eric.clst.org/Stuff/USGeoJSON"  # noqa
     }
 }
 
