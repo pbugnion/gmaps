@@ -8,7 +8,7 @@ Access geographical datasets.
 Commands
 --------
     list_datasets() : get a list of available datasets.
-    describe_dataset(dataset_name) : get metadata on specified
+    dataset_metadata(dataset_name) : get metadata on specified
         dataset.
     load_dataset(dataset_name) : load dataset. Returns a numpy array.
 """
