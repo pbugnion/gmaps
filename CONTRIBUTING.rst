@@ -2,15 +2,18 @@
 Contributing
 ============
 
-Contributions are very much encouraged. Jupyter-gmaps deserves more time than I
-can give it, so there is scope for making significant contributions to the
-project.
+We want to start by thanking you for using Jupyter-gmaps. We very much appreciate all of the users who catch bugs, contribute enhancements and features or add to the documentation. Every contribution is meaningful, so thank you for participating.
 
 How to contribute
 -----------------
 
-The `documentation <http://docs.scipy.org/doc/numpy/dev/gitwash/index.html>`_ for Numpy gives a detailed description of how to contribute to Numpy. Most of this information applies to development for ``gmaps``.
+Code contributions are more than welcome. Take a look at the `issue tracker <https://github.com/pbugnion/gmaps/issues>`_, specially issues labelled as `beginner-friendly`. These are issues which have a lot of impact on the project, but don't require understanding the entire codebase.
 
+Beyond code, the following contributions will make `gmaps` a better project:
+
+ - additional datasets related to geographical data. The data needs to be clean, of reasonable size (ideally not more than 1MB), and should be clearly related to geography.
+ - additional GeoJSON geometries. These should be clean and reasonably small (ideally 1-3MB).
+ - Examples of you using Jupyter-gmaps. If you've used gmaps and have an artefact to show for it (a blogpost or an image), I'm very happy to put a link in the documentation.
 
 Testing
 -------
