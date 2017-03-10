@@ -15,6 +15,30 @@ Beyond code, the following contributions will make `gmaps` a better project:
  - additional GeoJSON geometries. These should be clean and reasonably small (ideally 1-3MB).
  - Examples of you using Jupyter-gmaps. If you've used gmaps and have an artefact to show for it (a blogpost or an image), I'm very happy to put a link in the documentation.
 
+
+Installing a development version of gmaps
+-----------------------------------------
+
+You must have `NPM <https://www.npmjs.com>`_ to install the development version. You can install NPM with your package manager.
+
+You must also install ``gmaps`` in a virtual environment (or, at least, you must be able to run ``pip`` without root access).
+
+Clone the git repository by running::
+
+    $ git clone https://github.com/pbugnion/gmaps.git
+
+Change to the project's root directory and run::
+
+    $ pip install -e .
+
+This will create a directory called ``static/`` in the ``gmaps/`` directory. This directory contains Javascript sources. Every time you change the Javascript sources, you will need to recompile this directory by re-running this command (despite everying being installed in `editable` mode).
+
+You can then enable the extension in Jupyter::
+
+    $ jupyter nbextension install --py --symlink --sys-prefix gmaps
+    $ jupyter nbextension enable --py --sys-prefix gmaps
+
+
 Testing
 -------
 
