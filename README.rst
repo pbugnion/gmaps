@@ -66,29 +66,6 @@ Then tell Jupyter to load the extension with::
 
   $ jupyter nbextension enable --py --sys-prefix gmaps
 
-Development version
-^^^^^^^^^^^^^^^^^^^
-
-You must have `NPM <https://www.npmjs.com>`_ to install the development version. You can install NPM with your package manager.
-
-You must also install ``gmaps`` in a virtual environment (or, at least, you must be able to run ``pip`` without root access).
-
-Clone the git repository by running::
-
-    $ git clone https://github.com/pbugnion/gmaps.git
-
-Change to the project's root directory and run::
-
-    $ pip install -e .
-
-This will create a directory called ``static/`` in the ``gmaps/`` directory. This directory contains Javascript sources. Every time you change the Javascript sources, you will need to recompile this directory by re-running this command (despite everying being installed in `editable` mode).
-
-You can then enable the extension in Jupyter::
-
-    $ jupyter nbextension install --py --symlink --sys-prefix gmaps
-    $ jupyter nbextension enable --py --sys-prefix gmaps
-
-
 Google API keys
 ---------------
 
@@ -107,6 +84,16 @@ Similar libraries
 -----------------
 
 The current version of this library is inspired by the `ipyleaflet <https://github.com/ellisonbg/ipyleaflet>`_ notebook widget extension. This extension aims to provide much of the same functionality as `gmaps`, but for `leaflet maps`, not `Google maps`.
+
+Vision and roadmap
+------------------
+
+Jupyter-gmaps is built for data scientists. Data scientists should be able to visualize geographical data on a map with minimal friction. Beyond just visualization, they should be able to integrate gmaps into their widgets so they can build interactive applications.
+
+We see the priorities of gmaps as:
+
+- being able to export maps (both as HTML and as rendered widgets).
+- responding to events, like user clicks, so that maps can be used interactively.
 
 
 Issue reporting and contributing

@@ -2,84 +2,47 @@
 Contributing
 ============
 
-gmaps is a very new project, so there is a lot of scope for developers to make
-a strong impact by contributing code, documentation and expertise. All
-contributions are welcome.
+We want to start by thanking you for using Jupyter-gmaps. We very much appreciate all of the users who catch bugs, contribute enhancements and features or add to the documentation. Every contribution is meaningful, so thank you for participating.
 
 How to contribute
 -----------------
 
-The `documentation <http://docs.scipy.org/doc/numpy/dev/gitwash/index.html>`_ for Numpy gives a detailed description of how to contribute to Numpy. Most of this information applies to development for ``gmaps``.
+Code contributions are more than welcome. Take a look at the `issue tracker <https://github.com/pbugnion/gmaps/issues>`_, specially issues labelled as `beginner-friendly`. These are issues which have a lot of impact on the project, but don't require understanding the entire codebase.
 
-Developing with git
-^^^^^^^^^^^^^^^^^^^^
+Beyond code, the following contributions will make `gmaps` a better project:
 
-You will need the `Git version control system <http://git-scm.com>`_ and an account on `Github <https://github.com>`_ to
-contribute to gmaps.
-
-1. Fork the `project repository <http://github.com/pbugnion/gmaps>`_ by clicking `Fork` in the top right of the page. This will create a copy of the fork under your account on Github.
-
-2. Clone the repository to your computer::
-   
-    $ git clone https://github.com/YourUserID/gmaps.git
-
-3. Install gmaps by running::
-
-    $ python setup.py install_data
-    $ python setup.py develop
-
-   in the package's root directory. Passing the ``develop`` argument to
-   ``setup.py``, rather than ``install``, means that python files are 
-   sym-linked to the relevant ``site-packages`` directory, rather than copied.
-   That means that you don't have to re-install the package when you 
-   make changes to the source code. If you change the Javascript files, you
-   need to re-run ``$ python setup.py install_data``.
+ - additional datasets related to geographical data. The data needs to be clean, of reasonable size (ideally not more than 1MB), and should be clearly related to geography.
+ - additional GeoJSON geometries. These should be clean and reasonably small (ideally 1-3MB).
+ - Examples of you using Jupyter-gmaps. If you've used gmaps and have an artefact to show for it (a blogpost or an image), I'm very happy to put a link in the documentation.
 
 
-You can now make changes and contribute them back to the source code:
+Installing a development version of gmaps
+-----------------------------------------
 
-1. Create a branch to hold your changes::
+You must have `NPM <https://www.npmjs.com>`_ to install the development version. You can install NPM with your package manager.
 
-    $ git checkout -b my-feature
+You must also install ``gmaps`` in a virtual environment (or, at least, you must be able to run ``pip`` without root access).
 
-   and start making changes.
+Clone the git repository by running::
 
-2. Work on your local copy. When you are satisfied with the changes, commit
-   them to your local repository::
+    $ git clone https://github.com/pbugnion/gmaps.git
 
-    $ git add 'FILES THAT YOU MODIFIED'
-    $ git commit
+Change to the project's root directory and run::
 
-   You will be asked to write a commit message. Explain the reasoning behind
-   the changes that you made.
+    $ pip install -e .
 
-3. Propagate the changes back to your github account::
+This will create a directory called ``static/`` in the ``gmaps/`` directory. This directory contains Javascript sources. Every time you change the Javascript sources, you will need to recompile this directory by re-running this command (despite everying being installed in `editable` mode).
 
-    $ git push -u origin my-feature
+You can then enable the extension in Jupyter::
 
-4. To integrate the changes into the main code repository, click `Pull Request`
-   on the `gmaps` repository page on your accont. This will notify the
-   committers who will review your code.
-
-Updating your repository
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-To keep your private repository updated, you should add the main repository as 
-a remote::
-    
-    $ git remote add upstream git://github.com/pbugnion/gmaps.git
-
-To update your private repository, you can then fetch new commits from
-upstream::
-
-    $ git fetch upstream
-    $ git rebase upstream/master
+    $ jupyter nbextension install --py --symlink --sys-prefix gmaps
+    $ jupyter nbextension enable --py --sys-prefix gmaps
 
 
 Testing
-^^^^^^^
+-------
 
-We use nose for unit testing. Run ``nose`` in the root directory of the project to run all the tests,
+We use nose for unit testing. Run ``nosetests`` in the root directory of the project to run all the tests,
 or in a specific directory to just run the tests in that directory.
 
 Guidelines
@@ -90,19 +53,10 @@ Workflow
 
 We loosely follow the `git workflow <http://docs.scipy.org/doc/numpy/dev/gitwash/development_workflow.html>`_ used in numpy development.  Features should
 be developed in separate branches and merged into the master branch when
-complete. Avoid putting new commits directly in your ``master`` branch.
-
+complete.
 
 Code
 ^^^^
 
 Please follow the `PEP8 conventions <http://www.python.org/dev/peps/pep-0008/>`_ for formatting and indenting code and for variable names.
-
-
-Contribution ideas
-------------------
-
-I will be very happy to accept contributions for new layers. I think that the ability to add points to the map (markers, for instance) and to plot GeoJSON would be tremendously useful.
-
-The ability to export the maps to HTML would also be tremendously useful.
 
