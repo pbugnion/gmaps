@@ -40,7 +40,7 @@ class GeoJsonFeature(widgets.Widget):
         allow_none=True, default_value=None
     ).tag(sync=True)
     stroke_opacity = Float(min=0.0, max=1.0, default_value=1.0).tag(sync=True)
-    stroke_weight = Float(min=0.0, default_value=3.0).tag(sync=True)
+    stroke_weight = Float(min=0.0, default_value=1.0).tag(sync=True)
 
     def get_coords(self):
         return geojson.utils.coords(self.feature)
@@ -121,7 +121,7 @@ def _validate_geojson(geojson_document):
 def geojson_layer(
         geojson, fill_color=None,
         fill_opacity=0.4, stroke_color=None, stroke_opacity=0.8,
-        stroke_weight=3.0):
+        stroke_weight=1.0):
     """
     GeoJSON layer
 

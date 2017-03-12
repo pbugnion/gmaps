@@ -52,6 +52,13 @@ METADATA = {
         "source": "http://ratings.food.gov.uk",
         "headers": ["latitude", "longitude", "chain_name"],
         "types": [float, float, str]
+    },
+    "gini": {
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/gini.csv",  # noqa
+        "description": "GINI coefficient for most countries",
+        "source": "https://www.cia.gov/library/publications/the-world-factbook/rankorder/2172rank.html",  # noqa
+        "headers": ["country", "gini"],
+        "types": [str, float]
     }
 }
 

@@ -259,6 +259,155 @@ Dataset size limitations
 
 Google maps may become very slow if you try to represent more than a few thousand symbols or markers. If you have a larger dataset, you should either consider subsampling or use heatmaps.
 
+GeoJSON layer
+^^^^^^^^^^^^^
+
+We can add GeoJSON to a map. This is very useful when we want to draw `chloropleth maps <https://en.wikipedia.org/wiki/Choropleth_map>`_.
+
+You can either load data from your own GeoJSON file, or you can load one of the GeoJSON geometries bundled with `gmaps`. Let's start with the latter. We will create a map of the `GINI coefficient <https://en.wikipedia.org/wiki/Gini_coefficient>`_ (a measure of inequality) for every country in the world.
+
+Let's start by just plotting the raw GeoJSON::
+
+  import gmaps
+  import gmaps.geojson_geometries
+  gmaps.configure(api_key="AIza...")
+
+  countries_geojson = gmaps.geojson_geometries.load_geometry('countries')
+
+  m = gmaps.Map()
+
+  gini_layer = gmaps.geojson_layer(countries_geojson)
+  m.add_layer(gini_layer)
+  m
+
+This just plots the country boundaries on top of a Google map.
+
+.. image:: geojson-1.png
+
+Next, we want to colour each country by a colour derived from its GINI index. We first need to map from each item in the GeoJSON document to a GINI value. GeoJSON documents are organised as a collection of `features`, each of which has the keys `geometry` and `properties`. For instance, for our countries::
+
+  >>> print(len(geojson['features']))
+  217 # corresponds to 217 distinct countries and territories
+  >>> print(geojson['features'][0])
+  {
+    'type': 'Feature'
+    'geometry': {'coordinates': [ ... ], 'type': 'Polygon'},
+    'properties': {'ISO_A3': u'AFG', 'name': u'Afghanistan'}
+  }
+
+As we can see, `properties` encodes meta-information about the feature, like the country name. We will use this name to look up a GINI value for that country and translate that into a colour. We can download a list of GINI coefficients for (nearly) every country using the `gmaps.datasets` module (you could load your own data here)::
+
+  import gmaps.datasets
+  rows = gmaps.datasets.load_dataset('gini') # 'rows' is a list of tuples
+  country2gini = dict(rows) # dictionary mapping 'country' -> gini coefficient
+  print(country2gini['United Kingdom'])
+  # 32.4
+
+We can now use the ``country2gini`` dictionary to map each country to a color. We will use a Matplotlib `colormap <http://matplotlib.org/api/cm_api.html>`_  to map from our GINI floats to a color that makes sense on a linear scale. We will use the `Viridis <http://matplotlib.org/examples/color/colormaps_reference.html>`_ colorscale::
+
+  from matplotlib.cm import viridis
+  from matplotlib.colors import to_hex
+
+  # We will need to scale the GINI values to lie between 0 and 1
+  min_gini = min(country2gini.values())
+  max_gini = max(country2gini.values())
+  gini_range = max_gini - min_gini
+
+  def calculate_color(gini):
+      """
+      Convert the GINI coefficient to a color
+      """
+      # make gini a number between 0 and 1
+      normalized_gini = (gini - min_gini) / gini_range
+
+      # invert gini so that high inequality gives dark color
+      inverse_gini = 1.0 - normalized_gini
+
+      # transform the gini coefficient to a matplotlib color
+      mpl_color = viridis(inverse_gini)
+
+      # transform from a matplotlib color to a valid CSS color
+      gmaps_color = to_kex(mpl_color, keep_alpha=False)
+
+      return gmaps_color
+
+We now need to build an array of colors, one for each country, that we can pass to the GeoJSON layer. The easiest way to do this is to iterate over the array of features in the GeoJSON::
+
+  colors = []
+  for feature in countries_geojson['features']:
+      country_name = feature['properties']['name']
+      try:
+          gini = country2gini[country_name]
+          color = calculate_color(gini)
+      except KeyError:
+          # no GINI for that country: return default color
+          color = (0, 0, 0, 0.3)
+      colors.append(color)
+
+
+We can now pass our array of colors to the GeoJSON layer::
+
+  m = gmaps.Map(height="600px")
+  gini_layer = gmaps.geojson_layer(
+      countries_geojson, 
+      fill_color=colors, 
+      stroke_color=colors, 
+      fill_opacity=0.8)
+  m.add_layer(gini_layer)
+  m
+
+.. image:: geojson-2.png
+
+GeoJSON geometries bundled with Gmaps
++++++++++++++++++++++++++++++++++++++
+
+Finding appropriate GeoJSON geometries can be painful. To mitigate this somewhat, `gmaps` comes with its own set of curated GeoJSON geometries::
+
+  >>> gmaps.geojson_geometries.list_geometries()
+  ['brazil-states',
+  'england-counties',
+  'us-states',
+  'countries',
+  'india-states',
+  'us-counties',
+  'countries-high-resolution']
+
+  >>> gmaps.geojson_geometries.geometry_metadata('brazil-states')
+  {'description': 'US county boundaries',
+   'source': 'http://eric.clst.org/Stuff/USGeoJSON'}
+
+Use the `load_geometry` function to get the GeoJSON object::
+
+  import gmaps
+  import gmaps.geojson_geometries
+  gmaps.configure(api_key="AIza...")
+
+  countries_geojson = gmaps.geojson_geometries.load_geometry('brazil-states')
+
+  m = gmaps.Map()
+
+  geojson_layer = gmaps.geojson_layer(countries_geojson)
+  m.add_layer(geojson_layer)
+  m
+
+New geometries would greatly enhance the usability of `jupyter-gmaps`. Refer to `this issue <https://github.com/pbugnion/gmaps/issues/112>`_ on GitHub for information on how to contribute a geometry.
+
+
+Loading your own GeoJSON
+++++++++++++++++++++++++
+
+So far, we have only considered visualizing GeoJSON geometries that come with `jupyter-gmaps`. Most of the time, though, you will want to load your own geometry. Use the standard library `json <https://docs.python.org/3.5/library/json.html>`_ module for this::
+
+  import gmaps
+  gmaps.configure(api_key="AIza...")
+
+  with open("my_geojson_geometry.json") as f:
+      geometry = json.load(f)
+
+  m = gmaps.Map()
+  geojson_layer = gmaps.geojson_layer(geometry)
+  m.add_layer(geojson_layer)
+  m
 
 Directions layer
 ^^^^^^^^^^^^^^^^
@@ -267,7 +416,7 @@ Directions layer
 
   import gmaps
   import gmaps.datasets
-  gmaps.configure(api_key="AIza")
+  gmaps.configure(api_key="AIza...")
 
   # Latitude-longitude pairs
   geneva = (46.2, 6.1)
