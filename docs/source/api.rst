@@ -47,7 +47,7 @@ Datasets
 --------
 
 .. automodule:: gmaps.datasets
-   :members: list_datasets, load_dataset, dataset_metadata, load_dataset_as_df
+   :members: list_datasets, dataset_metadata, load_dataset, load_dataset_as_df
 
 GeoJSON geometries
 ------------------
