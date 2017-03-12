@@ -284,7 +284,7 @@ This just plots the country boundaries on top of a Google map.
 
 .. image:: geojson-1.png
 
-Next, we want to colour each country by its color. GeoJSON documents are organised as a collection of `features`, each of which has the keys `geometry` and `properties`. For instance, for our countries::
+Next, we want to colour each country by a colour derived from its GINI index. We first need to map from each item in the GeoJSON document to a GINI value. GeoJSON documents are organised as a collection of `features`, each of which has the keys `geometry` and `properties`. For instance, for our countries::
 
   >>> print(len(geojson['features']))
   217 # corresponds to 217 distinct countries and territories
@@ -295,15 +295,15 @@ Next, we want to colour each country by its color. GeoJSON documents are organis
     'properties': {'ISO_A3': u'AFG', 'name': u'Afghanistan'}
   }
 
-As we can see, `properties` encodes meta-information about the feature, like the country name. We will use this name to look up a GINI value for that country and translate that into a colour. We can download a list of GINI coefficients for (nearly) every country using the `gmaps.datasets` module (obviously you could load your own data here)::
+As we can see, `properties` encodes meta-information about the feature, like the country name. We will use this name to look up a GINI value for that country and translate that into a colour. We can download a list of GINI coefficients for (nearly) every country using the `gmaps.datasets` module (you could load your own data here)::
 
   import gmaps.datasets
-  rows = gmaps.datasets.load_dataset('gini')
+  rows = gmaps.datasets.load_dataset('gini') # 'rows' is a list of tuples
   country2gini = dict(rows) # dictionary mapping 'country' -> gini coefficient
   print(country2gini['United Kingdom'])
   # 32.4
 
-We can now use the ``country2gini`` dictionary to map each country to a color. We will use a Matplotlib `colormap <http://matplotlib.org/api/cm_api.html>`_ object to map from floats to a specific RGB color on the Viridis colorscale.::
+We can now use the ``country2gini`` dictionary to map each country to a color. We will use a Matplotlib `colormap <http://matplotlib.org/api/cm_api.html>`_  to map from our GINI floats to a color that makes sense on a linear scale. We will use the `Viridis <http://matplotlib.org/examples/color/colormaps_reference.html>`_ colorscale::
 
   from matplotlib.cm import viridis
   from matplotlib.colors import to_hex
@@ -323,10 +323,13 @@ We can now use the ``country2gini`` dictionary to map each country to a color. W
       # invert gini so that high inequality gives dark color
       inverse_gini = 1.0 - normalized_gini
 
-      # transform the gini to a matplotlib color
-      color = to_hex(viridis(inverse_gini), keep_alpha=False)
+      # transform the gini coefficient to a matplotlib color
+      mpl_color = viridis(inverse_gini)
 
-      return color
+      # transform from a matplotlib color to a valid CSS color
+      gmaps_color = to_kex(mpl_color, keep_alpha=False)
+
+      return gmaps_color
 
 We now need to build an array of colors, one for each country, that we can pass to the GeoJSON layer. The easiest way to do this is to iterate over the array of features in the GeoJSON::
 
@@ -358,7 +361,7 @@ We can now pass our array of colors to the GeoJSON layer::
 GeoJSON geometries bundled with Gmaps
 +++++++++++++++++++++++++++++++++++++
 
-Finding appropriate GeoJSON geometries can be painful. To mitigate this somewhat, `gmaps` comes with its own set of GeoJSON geometries::
+Finding appropriate GeoJSON geometries can be painful. To mitigate this somewhat, `gmaps` comes with its own set of curated GeoJSON geometries::
 
   >>> gmaps.geojson_geometries.list_geometries()
   ['brazil-states',
