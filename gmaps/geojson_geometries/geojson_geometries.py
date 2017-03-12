@@ -84,6 +84,24 @@ def geometry_metadata(geometry_name):
 
 
 def load_geometry(geometry_name):
+    """
+    Fetch a geometry.
+
+    :returns:
+        A python dictionary containing the geometry.
+
+    :Examples:
+
+    >>> import gmaps
+    >>> import gmaps.geojson_geometries
+    >>> gmaps.configure(api_key="AIza...")
+    >>> countries_geojson = gmaps.geojson_geometries.load_geometry('countries')
+
+    >>> m = gmaps.Map()
+    >>> gini_layer = gmaps.geojson_layer(countries_geojson)
+    >>> m.add_layer(gini_layer)
+    >>> m
+    """
     url = METADATA[geometry_name]["url"]
     reader = codecs.getreader("utf-8")
     f = urlopen(url)
