@@ -264,7 +264,7 @@ GeoJSON layer
 
 We can add GeoJSON to a map. This is very useful when we want to draw `chloropleth maps <https://en.wikipedia.org/wiki/Choropleth_map>`_.
 
-You can either load data from your own GeoJSON file, or you can load one of the GeoJSON geometries bundled with `gmaps`. Let's start with the latter. We will create a map of the GINI coefficient (a measure of inequality) for every country in the world.
+You can either load data from your own GeoJSON file, or you can load one of the GeoJSON geometries bundled with `gmaps`. Let's start with the latter. We will create a map of the `GINI coefficient <https://en.wikipedia.org/wiki/Gini_coefficient>`_ (a measure of inequality) for every country in the world.
 
 Let's start by just plotting the raw GeoJSON::
 
