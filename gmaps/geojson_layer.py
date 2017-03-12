@@ -121,7 +121,7 @@ def _validate_geojson(geojson_document):
 def geojson_layer(
         geojson, fill_color=None,
         fill_opacity=0.4, stroke_color=None, stroke_opacity=0.8,
-        stroke_weight=3.0):
+        stroke_weight=1.0):
     """
     GeoJSON layer
 
