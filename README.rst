@@ -26,15 +26,20 @@ We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedo
 
 .. code:: python
 
-    In [1]: import gmaps
-            import gmaps.datasets
-            gmaps.configure(api_key="AI...") # Your Google API key
-            from matplotlib.cm import viridis
+    In [1]: from matplotlib.cm import viridis
             from matplotlib.colors import to_hex
+            
+            import gmaps
+            import gmaps.datasets
+            import gmaps.geojson_geometries
+            
+            gmaps.configure(api_key="AI...") # Your Google API key
 
     In [2]: countries_geojson = gmaps.geojson_geometries.load_geometry('countries') # Load GeoJSON of countries
 
-    In [3]: min_gini = min(country2gini.values())
+    In [3]: rows = gmaps.datasets.load_dataset('gini') # 'rows' is a list of tuples
+            country2gini = dict(rows) # dictionary mapping 'country' -> gini coefficient
+            min_gini = min(country2gini.values())
             max_gini = max(country2gini.values())
             gini_range = max_gini - min_gini
 
@@ -52,7 +57,7 @@ We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedo
                 mpl_color = viridis(inverse_gini)
 
                 # transform from a matplotlib color to a valid CSS color
-                gmaps_color = to_kex(mpl_color, keep_alpha=False)
+                gmaps_color = to_hex(mpl_color, keep_alpha=False)
 
                 return gmaps_color
     
