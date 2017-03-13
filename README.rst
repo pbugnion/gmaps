@@ -5,7 +5,7 @@ gmaps
 
 gmaps is a plugin for including interactive Google maps in the IPython Notebook.
 
-Let's plot a heatmap of taxi pickups in San Francisco:
+Let's plot a `heatmap <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#heatmaps>`_ of taxi pickups in San Francisco:
 
 .. code:: python
 
@@ -22,7 +22,7 @@ Let's plot a heatmap of taxi pickups in San Francisco:
 
 .. image:: docs/source/taxi_example.png
 
-We can also plot chloropleth maps:
+We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#geojson-layer>`_:
 
 .. code:: python
 
@@ -32,7 +32,7 @@ We can also plot chloropleth maps:
             from matplotlib.cm import viridis
             from matplotlib.colors import to_hex
 
-    In [2]: countries_geojson = gmaps.geojson_geometries.load_geometry('countries')
+    In [2]: countries_geojson = gmaps.geojson_geometries.load_geometry('countries') # Load GeoJSON of countries
 
     In [3]: min_gini = min(country2gini.values())
             max_gini = max(country2gini.values())
@@ -56,6 +56,7 @@ We can also plot chloropleth maps:
 
                 return gmaps_color
     
+            # Calculate a color for each GeoJSON feature
             colors = []
             for feature in countries_geojson['features']:
                 country_name = feature['properties']['name']
