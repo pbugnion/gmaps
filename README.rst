@@ -22,6 +22,62 @@ Let's plot a heatmap of taxi pickups in San Francisco:
 
 .. image:: docs/source/taxi_example.png
 
+We can also plot chloropleth maps:
+
+.. code:: python
+
+    In [1]: import gmaps
+            import gmaps.datasets
+            gmaps.configure(api_key="AI...") # Your Google API key
+            from matplotlib.cm import viridis
+            from matplotlib.colors import to_hex
+
+    In [2]: countries_geojson = gmaps.geojson_geometries.load_geometry('countries')
+
+    In [3]: min_gini = min(country2gini.values())
+            max_gini = max(country2gini.values())
+            gini_range = max_gini - min_gini
+
+            def calculate_color(gini):
+                """
+                Convert the GINI coefficient to a color
+                """
+                # make gini a number between 0 and 1
+                normalized_gini = (gini - min_gini) / gini_range
+
+                # invert gini so that high inequality gives dark color
+                inverse_gini = 1.0 - normalized_gini
+
+                # transform the gini coefficient to a matplotlib color
+                mpl_color = viridis(inverse_gini)
+
+                # transform from a matplotlib color to a valid CSS color
+                gmaps_color = to_kex(mpl_color, keep_alpha=False)
+
+                return gmaps_color
+    
+            colors = []
+            for feature in countries_geojson['features']:
+                country_name = feature['properties']['name']
+                try:
+                    gini = country2gini[country_name]
+                    color = calculate_color(gini)
+                except KeyError:
+                    # no GINI for that country: return default color
+                    color = (0, 0, 0, 0.3)
+                colors.append(color)
+
+      In [4]: m = gmaps.Map(height="600px")
+              gini_layer = gmaps.geojson_layer(
+                  countries_geojson,
+                  fill_color=colors,
+                  stroke_color=colors,
+                  fill_opacity=0.8)
+              m.add_layer(gini_layer)
+              m
+
+.. image:: docs/source/geojson-2.png
+
 Or, for coffee fans, a map of all Starbucks in the UK:
 
 .. code:: python
