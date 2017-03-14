@@ -363,6 +363,7 @@ GeoJSON geometries bundled with Gmaps
 
 Finding appropriate GeoJSON geometries can be painful. To mitigate this somewhat, `gmaps` comes with its own set of curated GeoJSON geometries::
 
+  >>> import mgaps.geojson_geometries
   >>> gmaps.geojson_geometries.list_geometries()
   ['brazil-states',
   'england-counties',
@@ -398,6 +399,7 @@ Loading your own GeoJSON
 
 So far, we have only considered visualizing GeoJSON geometries that come with `jupyter-gmaps`. Most of the time, though, you will want to load your own geometry. Use the standard library `json <https://docs.python.org/3.5/library/json.html>`_ module for this::
 
+  import json
   import gmaps
   gmaps.configure(api_key="AIza...")
 
