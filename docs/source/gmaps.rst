@@ -363,7 +363,7 @@ GeoJSON geometries bundled with Gmaps
 
 Finding appropriate GeoJSON geometries can be painful. To mitigate this somewhat, `gmaps` comes with its own set of curated GeoJSON geometries::
 
-  >>> import mgaps.geojson_geometries
+  >>> import gmaps.geojson_geometries
   >>> gmaps.geojson_geometries.list_geometries()
   ['brazil-states',
   'england-counties',
