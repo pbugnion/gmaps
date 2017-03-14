@@ -2,6 +2,14 @@
 Release notes
 -------------
 
+Version 0.4.1
+=============
+
+ * Add a GeoJSON layer (PRs #106 and #115)
+ * Add the `geojson_geometries` module for bundling GeoJSON geometries with `jupyter-gmaps` (PR #111).
+ * Minor improvements to README and compatibility guide.
+ * Support for Python 3.6 (PR #107).
+
 Version 0.4.0
 =============
 
