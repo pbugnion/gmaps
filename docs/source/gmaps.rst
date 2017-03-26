@@ -221,7 +221,9 @@ Markers are currently limited to the Google maps style drop icon. If you need to
 
     gmaps.configure(api_key="AI...")
 
-    starbucks_locations = gmaps.datasets.load_dataset("starbucks_uk")
+    starbucks_kfc_locations = gmaps.datasets.load_dataset("starbucks_kfc_uk")
+    starbucks_locations = [(i[0], i[1]) for i in starbucks_kfc_locations if i[2] == 'starbucks'] 
+
     starbucks_layer = gmaps.symbol_layer(
         starbucks_locations, fill_color="green", stroke_color="green", scale=2
     )
@@ -238,8 +240,10 @@ You can have several layers of markers. For instance, we can compare the locatio
 
     gmaps.configure(api_key="AI...")
 
-    starbucks_locations = gmaps.datasets.load_dataset("starbucks_uk")
-    kfc_locations = gmaps.datasets.load_dataset("kfc_uk")
+    starbucks_kfc_locations = gmaps.datasets.load_dataset("starbucks_kfc_uk")
+    starbucks_locations = [(i[0], i[1]) for i in starbucks_kfc_locations if i[2] == 'starbucks'] 
+    kfc_locations = [(i[0], i[1]) for i in starbucks_kfc_locations if i[2] == 'kfc'] 
+    
     starbucks_layer = gmaps.symbol_layer(
         starbucks_locations, fill_color="green", stroke_color="green", scale=2
     )
@@ -327,7 +331,7 @@ We can now use the ``country2gini`` dictionary to map each country to a color. W
       mpl_color = viridis(inverse_gini)
 
       # transform from a matplotlib color to a valid CSS color
-      gmaps_color = to_kex(mpl_color, keep_alpha=False)
+      gmaps_color = to_hex(mpl_color, keep_alpha=False)
 
       return gmaps_color
 
