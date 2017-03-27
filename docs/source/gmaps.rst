@@ -221,11 +221,11 @@ Markers are currently limited to the Google maps style drop icon. If you need to
 
     gmaps.configure(api_key="AI...")
 
-    starbucks_kfc_locations = gmaps.datasets.load_dataset("starbucks_kfc_uk")
-    starbucks_locations = [(i[0], i[1]) for i in starbucks_kfc_locations if i[2] == 'starbucks'] 
+    df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
+    starbucks_df = df.query("chain_name == 'starbucks'").drop("chain_name", axis=1)
 
     starbucks_layer = gmaps.symbol_layer(
-        starbucks_locations, fill_color="green", stroke_color="green", scale=2
+        starbucks_df, fill_color="green", stroke_color="green", scale=2
     )
     m = gmaps.Map()
     m.add_layer(starbucks_layer)
@@ -240,16 +240,18 @@ You can have several layers of markers. For instance, we can compare the locatio
 
     gmaps.configure(api_key="AI...")
 
-    starbucks_kfc_locations = gmaps.datasets.load_dataset("starbucks_kfc_uk")
-    starbucks_locations = [(i[0], i[1]) for i in starbucks_kfc_locations if i[2] == 'starbucks'] 
-    kfc_locations = [(i[0], i[1]) for i in starbucks_kfc_locations if i[2] == 'kfc'] 
-    
+    df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
+    starbucks_df = df.query("chain_name == 'starbucks'").drop("chain_name", axis=1)
+    kfc_df = df.query("chain_name == 'kfc'").drop("chain_name", axis=1)
+
     starbucks_layer = gmaps.symbol_layer(
-        starbucks_locations, fill_color="green", stroke_color="green", scale=2
+        starbucks_df, fill_color="green", stroke_color="green", scale=2
     )
+
     kfc_layer = gmaps.symbol_layer(
-        kfc_locations, fill_color="red", stroke_color="red", scale=2
+        kfc_df, fill_color="red", stroke_color="red", scale=2
     )
+
     m = gmaps.Map()
     m.add_layer(starbucks_layer)
     m.add_layer(kfc_layer)
