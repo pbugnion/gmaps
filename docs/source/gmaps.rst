@@ -222,7 +222,9 @@ Markers are currently limited to the Google maps style drop icon. If you need to
     gmaps.configure(api_key="AI...")
 
     df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
-    starbucks_df = df.query("chain_name == 'starbucks'").drop("chain_name", axis=1)
+
+    starbucks_df = df[df["chain_name"] == "starbucks"]
+    starbucks_df = starbucks_df[['latitude', 'longitude']]                
 
     starbucks_layer = gmaps.symbol_layer(
         starbucks_df, fill_color="green", stroke_color="green", scale=2
@@ -241,8 +243,13 @@ You can have several layers of markers. For instance, we can compare the locatio
     gmaps.configure(api_key="AI...")
 
     df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
-    starbucks_df = df.query("chain_name == 'starbucks'").drop("chain_name", axis=1)
-    kfc_df = df.query("chain_name == 'kfc'").drop("chain_name", axis=1)
+
+    starbucks_df = df[df["chain_name"] == "starbucks"]
+    starbucks_df = starbucks_df[['latitude', 'longitude']]                
+
+    kfc_df = df[df["chain_name"] == "kfc"]
+    kfc_df = kfc_df[['latitude', 'longitude']]
+
 
     starbucks_layer = gmaps.symbol_layer(
         starbucks_df, fill_color="green", stroke_color="green", scale=2
