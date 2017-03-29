@@ -221,9 +221,13 @@ Markers are currently limited to the Google maps style drop icon. If you need to
 
     gmaps.configure(api_key="AI...")
 
-    starbucks_locations = gmaps.datasets.load_dataset("starbucks_uk")
+    df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
+
+    starbucks_df = df[df["chain_name"] == "starbucks"]
+    starbucks_df = starbucks_df[['latitude', 'longitude']]                
+
     starbucks_layer = gmaps.symbol_layer(
-        starbucks_locations, fill_color="green", stroke_color="green", scale=2
+        starbucks_df, fill_color="green", stroke_color="green", scale=2
     )
     m = gmaps.Map()
     m.add_layer(starbucks_layer)
@@ -238,14 +242,23 @@ You can have several layers of markers. For instance, we can compare the locatio
 
     gmaps.configure(api_key="AI...")
 
-    starbucks_locations = gmaps.datasets.load_dataset("starbucks_uk")
-    kfc_locations = gmaps.datasets.load_dataset("kfc_uk")
+    df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
+
+    starbucks_df = df[df["chain_name"] == "starbucks"]
+    starbucks_df = starbucks_df[['latitude', 'longitude']]                
+
+    kfc_df = df[df["chain_name"] == "kfc"]
+    kfc_df = kfc_df[['latitude', 'longitude']]
+
+
     starbucks_layer = gmaps.symbol_layer(
-        starbucks_locations, fill_color="green", stroke_color="green", scale=2
+        starbucks_df, fill_color="green", stroke_color="green", scale=2
     )
+
     kfc_layer = gmaps.symbol_layer(
-        kfc_locations, fill_color="red", stroke_color="red", scale=2
+        kfc_df, fill_color="red", stroke_color="red", scale=2
     )
+
     m = gmaps.Map()
     m.add_layer(starbucks_layer)
     m.add_layer(kfc_layer)
@@ -327,7 +340,7 @@ We can now use the ``country2gini`` dictionary to map each country to a color. W
       mpl_color = viridis(inverse_gini)
 
       # transform from a matplotlib color to a valid CSS color
-      gmaps_color = to_kex(mpl_color, keep_alpha=False)
+      gmaps_color = to_hex(mpl_color, keep_alpha=False)
 
       return gmaps_color
 
