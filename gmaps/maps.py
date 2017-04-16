@@ -70,8 +70,8 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
         if bounds_list:
             min_latitude = min(bounds[0][0] for bounds in bounds_list)
             min_longitude = min(bounds[0][1] for bounds in bounds_list)
-            max_latitude = min(bounds[1][0] for bounds in bounds_list)
-            max_longitude = min(bounds[1][1] for bounds in bounds_list)
+            max_latitude = max(bounds[1][0] for bounds in bounds_list)
+            max_longitude = max(bounds[1][1] for bounds in bounds_list)
             self.data_bounds = [
                 (min_latitude, min_longitude),
                 (max_latitude, max_longitude)
