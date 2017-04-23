@@ -52,73 +52,82 @@ class ConfigurationMixin(HasTraits):
 #
 # Note: the google api for setting map bounds seems to follow this
 # convention as well, but I'm not sure gmaps overall does.
-#
 # (At least, I couldn't verify)
 #
-# Then, given a set of bounds we want to satisfy,
-# we want to exclude the largest strech of empty map possible
-# while satisfying all layer bounds. We can do this by finding the
-# largest gap between all the bounds.
-#
-# To do this easily despite the wrap-around, we can normalize
-# all our input bounds to make sure that lng_start < lng_end
-# for each bound set as follows:
-#
-# 1) normalize every given bound such that
-#    * -180 < lng_start  < 180
-#    * long_start < long_end
-#    * long_start + 360 > long_end
-# We can do this by adding a multiple of 360 to either bound
-# Sort all start / ends (labelled as such)
-# find places where no interval is covering
-# find the largest such place, the bounds are
-# the complement of this interval
-#
-#
-def normalize_lng_bound(lng_start, lng_end):
-    """ returns an equivalent bound with nice properties to work with """
-    lng_start = lng_start % 360
-    if lng_start >= 180:
-        lng_start -= 360
+#-180                                            180 = -180
+# |     >--------------->                        |
+# |         >------->                            |
+# |            >------------->                   |
+# |->    >------->                         >-----|
+# 11000012223334433322221111100000000000000111111|
+#                            ^ biggest empty range
+# the bounds are then
+#  First we find which longitude ranges are feasible
+#  to cut (they have no range overlaps) by counting number of
+#  intervals that overlap and finding 0s.
+#  The initial condition (at -180)
+#  we find from counting how many intervals have west > east.
+#  then we go through our list.
+#  Of all the segments with a 0 count, the longest one
+#  is the one we should use to cut the map (here we
+#  have two choices)
 
-    lng_end = lng_end % 360
-    if lng_end >= lng_start + 360:
-        lng_end -= 360
+#
+def normalize_lng(lng):
+    """ returns an equivalent longitude in the [-180,180) range """
+    lng = lng % 360
+    if lng >= 180:
+        lng = lng - 360
 
-    if lng_end < lng_start:
-        lng_end += 360
-
-    assert(-180 <= lng_start)
-    assert(lng_start < 180)
-    assert(lng_end >= lng_start)
-    assert(lng_end < 360 + lng_start)
-
-    return (lng_start, lng_end)
+    assert(lng >= -180)
+    assert(lng < 180)
+    return lng
 
 
 # Then we can search for the best gap, including ones that wrap around
 # we achieve this by sorting and counting covering intervals
 # 0 means no bounds overalp with that segment
 def get_lng_bound(bounds_list):
-    directed_intervals = [(b[0][1], b[1][1]) for b in bounds_list]
-    normalized_lngs = [normalize_lng_bound(lng1, lng2)
-                       for (lng1, lng2) in directed_intervals]
-    starts = [(lng_start, 1) for (lng_start, _) in normalized_lngs]
-    ends = [(lng_end, -1) for (_, lng_end) in normalized_lngs]
-    interleaved = sorted(starts + ends)
-    (curr_seg_start, coverage) = (-180, 0)
-    best_gap = (-180, -180)
+
+    # extract and normalize lngs from bounds (if they arent normalized)
+    directed_intervals = [(normalize_lng(b[0][1]),
+                           normalize_lng(b[1][1]))
+                          for b in bounds_list]
+
+    # coverage is initially the number of wrap-around intervals. it can be 0.
+    coverage = sum([1 for (lng0, lng1)
+                    in directed_intervals if lng0 > lng1])
+    
+    starts = [(lng_start, 1)
+              for (lng_start, _) in directed_intervals]
+
+    ends = [(lng_end, -1)
+            for (_, lng_end) in directed_intervals]
+
+    endpoints = starts + ends
+    endpoints += [(x + 360, i)
+                  for (x, i) in endpoints]
+    # we repeat the longs shifted by 360 to handle gaps that overlap with 180
+    # without special-casing. 
+    interleaved = sort(endpoints)
+
+    # The largest clear gap we know of.
+    # We start by assuming there isn't one.
+    largest_gap = (-180, -180)
+    # current segment starts as -180
+    seg_start = -180
     for (bnd, delta) in interleaved:
-        if coverage == 0 and (bnd - curr_seg_start >
-                              best_gap[1] - best_gap[0]):
-            best_gap = (curr_seg_start, bnd)
+        if coverage == 0 and
+        (bnd - seg_start) > (largest_gap[1] - largest_gap[0]):
+            largest_gap = (seg_start, bnd)
+        seg_start = bnd
+        coverage += delta
+        assert(coverage >= 0)
 
-        (curr_seg_start, coverage) = (bnd, coverage + delta)
-
-    # once we found the best gap, the best bounds are the complement
-    # we normalize for readability
-    best_bounds = normalize_lng_bound(best_gap[1], best_gap[0])
-    return best_bounds
+    # reversing the lng order in a gap gives us a valid bound
+    # the largest gap has the smallest bound
+    return (normalize_lng(largest_gap[1]),
+            normalize_lng(largest_gap[0]))
 
 
 class Map(widgets.DOMWidget, ConfigurationMixin):
