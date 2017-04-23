@@ -34,18 +34,31 @@ class ConfigurationMixin(HasTraits):
 # bounds means that the layer wants the map to
 # cover all the longitudes that lie
 # (going eastwards) from lng0 to lng1.
-# For example: (170,-170) means we cover 20 degrees of latitude starting at 170 (through 180)
-# Wherease (-170,170) means we start where the previous one ended, go through 0, eventually to 170 (340 degrees)
-# This means that (lng1,lng0) is the complement of (lng0,lng1) on this notation.
-# It is important we have this sense information somehow, because otherwise the bounds are
-# underspecified.
+# For example: (170,-170) means we cover 20 degrees of
+# latitude starting at 170 (through 180)
+# Whereas (-170,170) means we start where the previous
+# interval ended (at 170), go through lng 0, and eventually
+# to 170 (340 degrees).
+#
+# As a side note, this definition means that (lng1,lng0) is
+# the complement of (lng0,lng1) on this notation.
+# It is important we have this direction information somehow,
+# because otherwise the bounds are underspecified.
+#
+# As another side note, the meaning of (15, 30) in this notation
+# is the same as that of (15+/-360, 30) and that of (15, 30 +/- 360),
+# because we stop as soon as we hit the coordinate the first
+# time.
+#
 # Note: the google api for setting map bounds seems to follow this
-# convention as well
-
-# then, given a set of bounds we want to satisfy,
-# we want to exclude the largest stretch of remaining map possible
-# while satisfying all bounds. We can do this by finding the
-# largest gap that has no bounds on it.
+# convention as well, but I'm not sure gmaps overall does.
+#
+# (At least, I couldn't verify)
+#
+# Then, given a set of bounds we want to satisfy,
+# we want to exclude the largest strech of empty map possible
+# while satisfying all layer bounds. We can do this by finding the
+# largest gap between all the bounds.
 #
 # To do this easily despite the wrap-around, we can normalize
 # all our input bounds to make sure that lng_start < lng_end
@@ -58,7 +71,8 @@ class ConfigurationMixin(HasTraits):
 # We can do this by adding a multiple of 360 to either bound
 # Sort all start / ends (labelled as such)
 # find places where no interval is covering
-# find the largest such place, the bounds are the complement of this interval
+# find the largest such place, the bounds are
+# the complement of this interval
 #
 #
 def normalize_lng_bound(lng_start, lng_end):
@@ -95,7 +109,8 @@ def get_lng_bound(bounds_list):
     (curr_seg_start, coverage) = (-180, 0)
     best_gap = (-180, -180)
     for (bnd, delta) in interleaved:
-        if coverage == 0 and (bnd - curr_seg_start > best_gap[1] - best_gap[0]):
+        if coverage == 0 and (bnd - curr_seg_start >
+                              best_gap[1] - best_gap[0]):
             best_gap = (curr_seg_start, bnd)
 
         (curr_seg_start, coverage) = (bnd, coverage + delta)
