@@ -97,7 +97,7 @@ def get_lng_bound(bounds_list):
     # coverage is initially the number of wrap-around intervals. it can be 0.
     coverage = sum([1 for (lng0, lng1)
                     in directed_intervals if lng0 > lng1])
-    
+
     starts = [(lng_start, 1)
               for (lng_start, _) in directed_intervals]
 
@@ -108,7 +108,7 @@ def get_lng_bound(bounds_list):
     endpoints += [(x + 360, i)
                   for (x, i) in endpoints]
     # we repeat the longs shifted by 360 to handle gaps that overlap with 180
-    # without special-casing. 
+    # without special-casing.
     interleaved = sort(endpoints)
 
     # The largest clear gap we know of.
