@@ -30,7 +30,6 @@ class ConfigurationMixin(HasTraits):
         return _default_configuration
 
 
-
 # I assume (lng0, lng1) in a layer's
 # bounds means that the layer wants the map to
 # cover all the longitudes that lie
@@ -40,7 +39,8 @@ class ConfigurationMixin(HasTraits):
 # This means that (lng1,lng0) is the complement of (lng0,lng1) on this notation.
 # It is important we have this sense information somehow, because otherwise the bounds are
 # underspecified.
-# Note: the google api for setting map bounds seems to follow this convention as well
+# Note: the google api for setting map bounds seems to follow this
+# convention as well
 
 # then, given a set of bounds we want to satisfy,
 # we want to exclude the largest stretch of remaining map possible
@@ -59,7 +59,7 @@ class ConfigurationMixin(HasTraits):
 # Sort all start / ends (labelled as such)
 # find places where no interval is covering
 # find the largest such place, the bounds are the complement of this interval
-# 
+#
 #
 def normalize_lng_bound(lng_start, lng_end):
     """ returns an equivalent bound with nice properties to work with """
@@ -87,12 +87,13 @@ def normalize_lng_bound(lng_start, lng_end):
 # 0 means no bounds overalp with that segment
 def get_lng_bound(bounds_list):
     directed_intervals = [(b[0][1], b[1][1]) for b in bounds_list]
-    normalized_lngs = [normalize_lng_bound(lng1,lng2) for (lng1,lng2) in directed_intervals]
+    normalized_lngs = [normalize_lng_bound(lng1, lng2)
+                       for (lng1, lng2) in directed_intervals]
     starts = [(lng_start, 1) for (lng_start, _) in normalized_lngs]
     ends = [(lng_end, -1) for (_, lng_end) in normalized_lngs]
     interleaved = sorted(starts + ends)
-    (curr_seg_start, coverage) = (-180,0)
-    best_gap = (-180,-180)
+    (curr_seg_start, coverage) = (-180, 0)
+    best_gap = (-180, -180)
     for (bnd, delta) in interleaved:
         if coverage == 0 and (bnd - curr_seg_start > best_gap[1] - best_gap[0]):
             best_gap = (curr_seg_start, bnd)
@@ -101,11 +102,12 @@ def get_lng_bound(bounds_list):
 
     # once we found the best gap, the best bounds are the complement
     # we normalize for readability
-    best_bounds = normalize_lng_bound(best_gap[1],best_gap[0])
+    best_bounds = normalize_lng_bound(best_gap[1], best_gap[0])
     return best_bounds
 
 
 class Map(widgets.DOMWidget, ConfigurationMixin):
+
     """
     Base map class
 
