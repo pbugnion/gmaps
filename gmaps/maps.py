@@ -54,13 +54,13 @@ class ConfigurationMixin(HasTraits):
 # convention as well, but I'm not sure gmaps overall does.
 # (At least, I couldn't verify)
 #
-#-180                                            180 = -180
-# |     >--------------->                        |
-# |         >------->                            |
-# |            >------------->                   |
-# |->    >------->                         >-----|
-# 11000012223334433322221111100000000000000111111|
-#                            ^ biggest empty range
+# -180                                            180 = -180
+#   |     >--------------->                        |
+#   |         >------->                            |
+#   |            >------------->                   |
+#   |->    >------->                         >-----|
+#   11000012223334433322221111100000000000000111111|
+#                              ^ biggest empty range
 # the bounds are then
 #  First we find which longitude ranges are feasible
 #  to cut (they have no range overlaps) by counting number of
@@ -109,7 +109,7 @@ def get_lng_bound(bounds_list):
                   for (x, i) in endpoints]
     # we repeat the longs shifted by 360 to handle gaps that overlap with 180
     # without special-casing.
-    interleaved = sort(endpoints)
+    interleaved = sorted(endpoints)
 
     # The largest clear gap we know of.
     # We start by assuming there isn't one.
@@ -117,8 +117,8 @@ def get_lng_bound(bounds_list):
     # current segment starts as -180
     seg_start = -180
     for (bnd, delta) in interleaved:
-        if coverage == 0 and
-        (bnd - seg_start) > (largest_gap[1] - largest_gap[0]):
+        if coverage == 0 \
+          and (bnd - seg_start) > (largest_gap[1] - largest_gap[0]):
             largest_gap = (seg_start, bnd)
         seg_start = bnd
         coverage += delta
