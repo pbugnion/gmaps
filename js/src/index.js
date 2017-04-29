@@ -9,5 +9,5 @@ __webpack_public_path__ = document.querySelector('body').getAttribute('data-base
 
 
 // Export everything from example and the npm package version number.
-module.exports = require('./jupyter-gmaps.js');
+module.exports = { ...require('./jupyter-gmaps.js'), ...require('./toolbar.js')}
 module.exports['version'] = require('../package.json').version;
