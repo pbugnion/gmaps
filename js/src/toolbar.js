@@ -11,6 +11,7 @@ export const ToolbarModel = widgets.DOMWidgetModel.extend({
 });
 
 export const ToolbarView = widgets.DOMWidgetView.extend({
+
   render() {
     const saveButton = document.createElement("button")
     saveButton.classList.add("jupyter-widgets"); // jupyter-js-widgets css
@@ -20,11 +21,17 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
     saveButton.innerHTML = "save";
     saveButton.onclick = (elem) => {
       elem.preventDefault();
-      console.log("clicked!")
+      if (this.savePngCallback) {
+        this.savePngCallback().then(() => console.log("done"));
+      }
     }
 
     this.el.appendChild(saveButton);
     this.update();
+  },
+
+  registerSavePngCallback(callback) {
+      this.savePngCallback = callback;
   }
 })
 
