@@ -462,15 +462,18 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
     },
 
     savePng() {
-        html2canvas(this.$el, {
-            useCORS: true,
-            onrendered: (canvas) => {
-                const a = document.createElement("a");
-                a.download = "map.png";
-                a.href = canvas.toDataURL("image/png");
-                document.body.appendChild(a);
-                a.click();
-            }
+        return new Promise((resolve, reject) => {
+            html2canvas(this.$el, {
+                useCORS: true,
+                onrendered: (canvas) => {
+                    const a = document.createElement("a");
+                    a.download = "map.png";
+                    a.href = canvas.toDataURL("image/png");
+                    document.body.appendChild(a);
+                    a.click();
+                    resolve();
+                }
+            })
         })
     }
 
