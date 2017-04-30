@@ -29,7 +29,7 @@ class Symbol(_BaseMarkerMixin, widgets.Widget):
 
     Symbols are like markers, but the point is represented by
     an SVG symbol, rather than the default inverted droplet.
-    Symbols should be added to the map via the 'Markers'
+    Symbols should be added to the map via the 'Symbols'
     widget.
     """
     _view_name = Unicode("SymbolView").tag(sync=True)
