@@ -13,25 +13,25 @@ export const ToolbarModel = widgets.DOMWidgetModel.extend({
 export const ToolbarView = widgets.DOMWidgetView.extend({
 
   render() {
-    const saveButton = document.createElement("button")
-    saveButton.classList.add("jupyter-widgets"); // jupyter-js-widgets css
-    saveButton.classList.add("jupyter-button"); // jupyter-js-widgets css
-    saveButton.classList.add("widget-button") // jupyter-js-widgets css
-    saveButton.setAttribute("title", "Save");
-    saveButton.innerHTML = "save";
-    saveButton.onclick = (elem) => {
-      saveButton.innerHTML = "saving";
-      saveButton.disabled = true;
-      elem.preventDefault();
-      if (this.savePngCallback) {
-        this.savePngCallback().then(() => {
-          saveButton.innerHTML = "save";
-          saveButton.disabled = false;
-        });
-      }
-    }
+    const $saveButton = $("<button />")
+    $saveButton
+      .addClass("btn btn-default")
+      .attr("title", "Download the map as PNG")
+      .append("<i />")
+        .addClass("fa fa-save");
 
-    this.el.appendChild(saveButton);
+    $saveButton
+      .click((event) => {
+        event.preventDefault();
+        $saveButton.prop("disabled", true)
+        if (this.savePngCallback) {
+          this.savePngCallback().then(() => {
+            $saveButton.prop("disabled", false)
+          });
+        };
+      })
+
+    this.$el.append($saveButton)
     this.update();
   },
 
