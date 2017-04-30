@@ -20,9 +20,14 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
     saveButton.setAttribute("title", "Save");
     saveButton.innerHTML = "save";
     saveButton.onclick = (elem) => {
+      saveButton.innerHTML = "saving";
+      saveButton.disabled = true;
       elem.preventDefault();
       if (this.savePngCallback) {
-        this.savePngCallback().then(() => console.log("done"));
+        this.savePngCallback().then(() => {
+          saveButton.innerHTML = "save";
+          saveButton.disabled = false;
+        });
       }
     }
 
