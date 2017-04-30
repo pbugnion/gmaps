@@ -16,6 +16,11 @@ class Figure(widgets.DOMWidget):
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
 
+    def add_layer(self, layer):
+        self._map.add_layer(layer)
 
-# def figure(width="100%", height="400px", hide_toolbar=False):
-#     map_ = Map(width=width, height=height)
+
+def figure(show_toolbar=True):
+    _map = Map()
+    _toolbar = Toolbar() if show_toolbar else None
+    return Figure(_map=_map, _toolbar=_toolbar)
