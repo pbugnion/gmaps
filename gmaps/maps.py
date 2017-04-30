@@ -37,9 +37,13 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
     Instances of this act as a base map on which you can add
     additional layers.
 
+    You should use the :func:`gmaps.figure` factory method
+    to instiate a figure, rather than building this class
+    directly.
+
     :Examples:
 
-    >>> m = gmaps.Map()
+    >>> m = gmaps.figure()
     >>> m.add_layer(gmaps.heatmap_layer(locations))
     """
     _view_name = Unicode("PlainmapView").tag(sync=True)
