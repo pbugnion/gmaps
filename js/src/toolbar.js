@@ -19,28 +19,42 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
 
     const $toolbarContainer = $("<div />")
     $toolbarContainer
-      .addClass("container toolbar")
-      .attr("id", "gmaps-toolbar-container");
+      .addClass("container toolbar gmaps-toolbar-container");
 
     const $saveButton = $("<button />")
     $saveButton
-      .addClass("btn btn-default")
+      .addClass("btn btn-default gmaps-toolbar-button")
       .attr("title", "Download the map as PNG")
       .append("<i />")
         .addClass("fa fa-save");
+
+    const $notificationArea = $("<span />");
+    $notificationArea
+      .addClass("gmaps-toolbar-notification-area");
+
+    const $savingNotification = $("<button />")
+    $savingNotification
+      .addClass("notification_widget btn btn-xs navbar-btn warning")
+      .html("<span>Saving</span>")
+      .hide();
 
     $saveButton
       .click((event) => {
         event.preventDefault();
         $saveButton.prop("disabled", true)
+        $savingNotification.show()
         if (this.savePngCallback) {
           this.savePngCallback().then(() => {
             $saveButton.prop("disabled", false)
+            $savingNotification.hide();
           });
         };
       })
 
-    $toolbarContainer.append($saveButton)
+    $toolbarContainer
+      .append($saveButton)
+      .append($notificationArea);
+    $notificationArea.append($savingNotification);
     $toolbar.append($toolbarContainer)
     this.$el.append($toolbar)
 
