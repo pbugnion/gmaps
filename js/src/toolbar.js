@@ -13,6 +13,15 @@ export const ToolbarModel = widgets.DOMWidgetModel.extend({
 export const ToolbarView = widgets.DOMWidgetView.extend({
 
   render() {
+    const $toolbar = $("<div />");
+    $toolbar
+      .addClass("toolbar-inner navbar-inner navbar-nobg");
+
+    const $toolbarContainer = $("<div />")
+    $toolbarContainer
+      .addClass("container toolbar")
+      .attr("id", "gmaps-toolbar-container");
+
     const $saveButton = $("<button />")
     $saveButton
       .addClass("btn btn-default")
@@ -31,7 +40,10 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
         };
       })
 
-    this.$el.append($saveButton)
+    $toolbarContainer.append($saveButton)
+    $toolbar.append($toolbarContainer)
+    this.$el.append($toolbar)
+
     this.update();
   },
 
