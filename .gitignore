@@ -13,3 +13,6 @@ docs/build/*
 .cache/*
 build/*
 dist/*
+node_modules/
+
+*.ipynb
