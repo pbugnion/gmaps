@@ -24,7 +24,6 @@ export const FigureModel = widgets.VBoxModel.extend({
 export const FigureView = widgets.VBoxView.extend({
     initialize(parameters) {
       FigureView.__super__.initialize.apply(this, arguments)
-      this.mapView = this.add_child_model(this.model.get("_map"));
       const toolbarModel = this.model.get("_toolbar");
       if(toolbarModel) {
         this.toolbarView =
@@ -37,6 +36,7 @@ export const FigureView = widgets.VBoxView.extend({
       else {
         this.toolbarView = null;
       }
+      this.mapView = this.add_child_model(this.model.get("_map"));
     },
 
     savePng() {
