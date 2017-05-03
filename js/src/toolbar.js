@@ -26,7 +26,7 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
       .addClass("btn btn-default gmaps-toolbar-button")
       .attr("title", "Download the map as PNG")
       .append("<i />")
-        .addClass("fa fa-save");
+        .addClass("fa fa-download");
 
     const $notificationArea = $("<span />");
     $notificationArea
@@ -35,7 +35,7 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
     const $savingNotification = $("<button />")
     $savingNotification
       .addClass("notification_widget btn btn-xs navbar-btn warning")
-      .html("<span>Saving</span>")
+      .html("<span>Downloading</span>")
       .hide();
 
     $saveButton
