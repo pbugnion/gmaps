@@ -34,7 +34,7 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
 
     const $savingNotification = $("<button />")
     $savingNotification
-      .addClass("notification_widget btn btn-xs navbar-btn warning")
+      .addClass("notification_widget btn btn-xs navbar-btn warning gmaps-notification-widget")
       .html("<span>Downloading</span>")
       .hide();
 
