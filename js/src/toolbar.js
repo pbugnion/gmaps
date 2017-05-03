@@ -15,7 +15,7 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
   render() {
     const $toolbar = $("<div />");
     $toolbar
-      .addClass("toolbar-inner navbar-inner navbar-nobg");
+      .addClass("toolbar-inner navbar-inner");
 
     const $toolbarContainer = $("<div />")
     $toolbarContainer
