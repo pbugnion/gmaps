@@ -18,9 +18,9 @@ The earthquake data has three columns: a latitude and longitude indicating the e
 
   locations = earthquake_df[["latitude", "longitude"]]
   weights = earthquake_df["magnitude"]
-  m = gmaps.Map()
-  m.add_layer(gmaps.heatmap_layer(locations, weights=weights))
-  m
+  fig = gmaps.figure()
+  fig.add_layer(gmaps.heatmap_layer(locations, weights=weights))
+  fig
 
 .. image:: tutorial-earthquakes.*
 
@@ -30,13 +30,13 @@ This gives you a fully-fledged Google map. You can zoom in and out, switch to sa
 Basic concepts
 ^^^^^^^^^^^^^^
 
-`gmaps` is built around the idea of adding layers to a base map. After you've `authenticated <authentication.html>`_ with Google maps, you start by creating a base map::
+`gmaps` is built around the idea of adding layers to a base map. After you've `authenticated <authentication.html>`_ with Google maps, you start by creating a figure, which contains a base map::
 
   import gmaps
   gmaps.configure(api_key="AI...")
 
-  m = gmaps.Map()
-  m
+  fig = gmaps.figure()
+  fig
 
 .. image:: plainmap2.*
 
@@ -45,14 +45,14 @@ You then add layers on top of the base map. For instance, to add a heatmap layer
   import gmaps
   gmaps.configure(api_key="AI...")
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
 
   # generate some (latitude, longitude) pairs
   locations = [(51.5, 0.1), (51.7, 0.2), (51.4, -0.2), (51.49, 0.1)]
 
   heatmap_layer = gmaps.heatmap_layer(locations)
-  m.add_layer(heatmap_layer)
-  m
+  fig.add_layer(heatmap_layer)
+  fig
 
 .. image:: plainmap3.*
 
@@ -72,7 +72,9 @@ The former construction is useful for modifying a map once it has been built. An
 Heatmaps
 ^^^^^^^^
 
-Heatmaps are a good way of getting a sense of the density and clusters of geographical events. They are a powerful tool for making sense of larger datasets. We will use a dataset recording all instances of political violence that occurred in Africa between 1997 and 2015. The dataset comes from the `Armed Conflict Location and Event Data Project <http://www.acleddata.com>`_. This dataset contains about 110,000 rows.::
+Heatmaps are a good way of getting a sense of the density and clusters of geographical events. They are a powerful tool for making sense of larger datasets. We will use a dataset recording all instances of political violence that occurred in Africa between 1997 and 2015. The dataset comes from the `Armed Conflict Location and Event Data Project <http://www.acleddata.com>`_. This dataset contains about 110,000 rows.
+
+::
 
   import gmaps.datasets
 
@@ -89,10 +91,10 @@ We already know how to build a heatmap layer::
   gmaps.configure(api_key="AI...")
 
   locations = gmaps.datasets.load_dataset_as_df("acled_africa")
-  m = gmaps.Map()
+  fig = gmaps.figure()
   heatmap_layer = gmaps.heatmap_layer(locations)
-  m.add_layer(heatmap_layer)
-  m
+  fig.add_layer(heatmap_layer)
+  fig
 
 .. image:: acled_africa_heatmap_basic.png
 
@@ -140,7 +142,9 @@ You can also use the ``opacity`` option to set a single opacity across the entir
 Weighted heatmaps
 ^^^^^^^^^^^^^^^^^
 
-By default, heatmaps assume that every row is of equal importance. You can override this by passing weights through the `weights` keyword argument. The `weights` array is an iterable (e.g. a Python list or a Numpy array) or a single pandas series. Weights must all be positive (this is a limitation in Google maps itself).::
+By default, heatmaps assume that every row is of equal importance. You can override this by passing weights through the `weights` keyword argument. The `weights` array is an iterable (e.g. a Python list or a Numpy array) or a single pandas series. Weights must all be positive (this is a limitation in Google maps itself).
+
+::
 
   import gmaps
   import gmaps.datasets
@@ -149,13 +153,13 @@ By default, heatmaps assume that every row is of equal importance. You can overr
   df = gmaps.datasets.load_dataset_as_df("earthquakes")
   # dataframe with columns ('latitude', 'longitude', 'magnitude')
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
   heatmap_layer = gmaps.heatmap_layer(
       df[["latitude", "longitude"]], weights=df["magnitude"],
       max_intensity=30, point_radius=3.0 
   )
-  m.add_layer(heatmap_layer)
-  m
+  fig.add_layer(heatmap_layer)
+  fig
 
 
 .. image:: weighted-heatmap-example.png
