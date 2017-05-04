@@ -180,11 +180,11 @@ We can add a layer of markers to a Google map. Each marker represents an individ
       (51.216671, 5.0833302),
       (51.333328, 4.25)
   ]
-  markers = gmaps.marker_layer(marker_locations)
 
-  m = gmaps.Map()
-  m.add_layer(markers)
-  m
+  fig = gmaps.figure()
+  markers = gmaps.marker_layer(marker_locations)
+  fig.add_layer(markers)
+  fig
 
 .. image:: marker-example.png
 
@@ -212,9 +212,9 @@ We can also attach a pop-up box to each marker. Clicking on the marker will brin
   plant_info = [info_box_template.format(**plant) for plant in nuclear_power_plants]
 
   marker_layer = gmaps.marker_layer(plant_locations, info_box_content=plant_info)
-  m = gmaps.Map()
-  m.add_layer(marker_layer)
-  m
+  fig = gmaps.figure()
+  fig.add_layer(marker_layer)
+  fig
 
 .. image:: marker-info-box-example.png
 
