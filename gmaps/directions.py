@@ -15,25 +15,25 @@ class Directions(widgets.Widget):
     """
     Directions layer.
 
-    Add this to a ``Map`` instance to draw directions.
+    Add this to a :class:`gmaps.Figure` instance to draw directions.
 
     The directions are requested with the ``DRIVING`` option.
 
-    Data is a list of latitude, longitude tuples. The first point of the list
-    is passed as the origin of the itinerary and the last point is passed as
-    the destination of the itinerary. Other points are passed in order as a
-    list of waypoints.
+    Use the :func:`gmaps.directions_layer` factory function to
+    instantiate this class, rather than the constructor.
 
     :Examples:
 
-    >>> m = gmaps.Map()
-    >>> data = [(48.85341, 2.3488), (50.85045, 4.34878), (52.37403, 4.88969)]
-    >>> directions_layer = gmaps.Directions(data=data)
-    >>> m.add_layer(directions_layer)
+    >>> fig = gmaps.figure()
+    >>> start = (46.2, 6.1)
+    >>> end = (47.4, 8.5)
+    >>> waypoints = [(52.37403, 4.88969)]
+    >>> directions_layer = gmaps.directions_layer(start, end, waypoints)
+    >>> fig.add_layer(directions_layer)
 
     There is a limitation in the number of waypoints allowed by Google
     (currently 23). If it
-    fails to return directions, a DirectionsServiceException is raised.
+    fails to return directions, a ``DirectionsServiceException`` is raised.
 
     >>> directions_layer = gmaps.Directions(data=data*10)
     Traceback (most recent call last):
@@ -102,17 +102,18 @@ def directions_layer(start, end, waypoints=None):
     """
     Create a directions layer.
 
-    Add this layer to a ``Map`` instance to draw directions on the map.
-    Currently, directions are limited to ``DRIVING`` directions.
+    Add this layer to a :class:`gmaps.Figure` instance to draw
+    directions on the map. Currently, directions are limited
+    to ``DRIVING`` directions.
 
     :Examples:
 
-    >>> m = gmaps.Map()
+    >>> fig = gmaps.figure()
     >>> start = (46.2, 6.1)
     >>> end = (47.4, 8.5)
     >>> directions = gmaps.directions_layer(start, end)
-    >>> m.add_layer(directions)
-    >>> m
+    >>> fig.add_layer(directions)
+    >>> fig
 
     You can also add waypoints on the route:
 
