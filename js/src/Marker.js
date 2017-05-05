@@ -3,6 +3,39 @@ import widgets from 'jupyter-js-widgets';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
+
+export const SymbolModel = GMapsLayerModel.extend({
+    defaults: {
+        ...GMapsLayerModel.prototype.defaults,
+        _view_name: "SymbolView",
+        _model_name: "SymbolModel"
+    }
+})
+
+
+export const MarkerModel = GMapsLayerModel.extend({
+    defaults: {
+        ...GMapsLayerModel.prototype.defaults,
+        _view_name: "MarkerView",
+        _model_name: "MarkerModel"
+    }
+})
+
+
+export const MarkerLayerModel = GMapsLayerModel.extend({
+    defaults: {
+        ...GMapsLayerModel.prototype.defaults,
+        _view_name: "MarkerLayerView",
+        _model_name: "MarkerLayerModel"
+    }
+}, {
+    serializers: {
+        markers: {deserialize: widgets.unpack_models},
+        ...widgets.DOMWidgetModel.serializers
+    }
+})
+
+
 /* Base class for markers.
  * This sets options common to the different types of markers.
  *
@@ -182,30 +215,4 @@ export const MarkerLayerView = GMapsLayerView.extend({
                 return childView
             })
     }
-})
-
-
-export const SymbolModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "SymbolView",
-        _model_name: "SymbolModel"
-    })
-})
-
-export const MarkerModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "MarkerView",
-        _model_name: "MarkerModel"
-    })
-})
-
-export const MarkerLayerModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "MarkerLayerView",
-        _model_name: "MarkerLayerModel"
-    }),
-}, {
-    serializers: _.extend({
-            markers: {deserialize: widgets.unpack_models}
-    }, widgets.DOMWidgetModel.serializers)
 })
