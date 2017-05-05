@@ -3,6 +3,25 @@ import GoogleMapsLoader from 'google-maps'
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
+
+export const SimpleHeatmapLayerModel = GMapsLayerModel.extend({
+    defaults: {
+        ...GMapsLayerModel.prototype.defaults,
+        _view_name: "SimpleHeatmapLayerView",
+        _model_name: "SimpleHeatmapLayerModel"
+    }
+});
+
+
+export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
+    defaults: {
+        ...GMapsLayerModel.prototype.defaults,
+        _view_name: "WeightedHeatmapLayerView",
+        _model_name: "WeightedHeatmapLayerModel"
+    }
+});
+
+
 const HeatmapLayerBaseView = GMapsLayerView.extend({
     render() {
         this.modelEvents() ;
@@ -68,19 +87,3 @@ export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
         return dataAsGoogle
     }
 })
-
-
-export const SimpleHeatmapLayerModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "SimpleHeatmapLayerView",
-        _model_name: "SimpleHeatmapLayerModel"
-    })
-});
-
-
-export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "WeightedHeatmapLayerView",
-        _model_name: "WeightedHeatmapLayerModel"
-    })
-});

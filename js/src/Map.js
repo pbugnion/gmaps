@@ -102,17 +102,18 @@ _.extend(PlainmapView.prototype, ConfigurationMixin);
 // Models
 
 export const PlainmapModel = widgets.DOMWidgetModel.extend({
-    defaults: _.extend({}, widgets.DOMWidgetModel.prototype.defaults, {
+    defaults: {
+        ...widgets.DOMWidgetModel.prototype.defaults,
         _view_name: "PlainmapView",
         _model_name: "PlainmapModel",
         _view_module : 'jupyter-gmaps',
         _model_module : 'jupyter-gmaps',
         width: "600px",
         height: "400px"
-
-    })
+    }
 }, {
-    serializers: _.extend({
-            layers: {deserialize: widgets.unpack_models}
-    }, widgets.DOMWidgetModel.serializers)
+    serializers: {
+        layers: {deserialize: widgets.unpack_models},
+        ...widgets.DOMWidgetModel.serializers
+    }
 });

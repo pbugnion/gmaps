@@ -3,6 +3,30 @@ import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
+
+export const GeoJsonLayerModel = GMapsLayerModel.extend({
+    defaults: {
+        ...GMapsLayerModel.prototype.defaults,
+        _view_name: "GeoJsonLayerView",
+        _model_name: "GeoJsonLayerModel"
+    }
+}, {
+    serializers: {
+        features: {deserialize: widgets.unpack_models},
+        ...widgets.DOMWidgetModel.serializers
+    }
+})
+
+
+export const GeoJsonFeatureModel = GMapsLayerModel.extend({
+    defaults: {
+        ...GMapsLayerModel.prototype.defaults,
+        _view_name: "GeoJsonFeatureView",
+        _model_name: "GeoJsonFeatureModel"
+    }
+});
+
+
 export const GeoJsonFeatureView = GMapsLayerView.extend({
 
     // nameInView -> name_in_model
@@ -68,24 +92,3 @@ export const GeoJsonLayerView = GMapsLayerView.extend({
             })
     }
 })
-
-
-
-export const GeoJsonLayerModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "GeoJsonLayerView",
-        _model_name: "GeoJsonLayerModel"
-    })
-}, {
-    serializers: _.extend({
-        features: {deserialize: widgets.unpack_models}
-    }, widgets.DOMWidgetModel.serializers)
-})
-
-export const GeoJsonFeatureModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "GeoJsonFeatureView",
-        _model_name: "GeoJsonFeatureModel"
-    })
-});
-

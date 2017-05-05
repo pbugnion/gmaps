@@ -9,10 +9,11 @@ export const GMapsLayerView = widgets.WidgetView.extend({
 
 
 export const GMapsLayerModel = widgets.WidgetModel.extend({
-    defaults: _.extend({}, widgets.WidgetModel.prototype.defaults, {
+    defaults: {
+        ...widgets.WidgetModel.prototype.defaults,
         _view_name : 'GMapsLayerView',
         _model_name : 'GMapsLayerModel',
         _view_module : 'jupyter-gmaps',
         _model_module : 'jupyter-gmaps'
-    })
+    }
 });
