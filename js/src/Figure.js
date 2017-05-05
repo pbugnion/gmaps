@@ -17,11 +17,12 @@ export const FigureModel = widgets.VBoxModel.extend({
     }
 
 }, {
-    serializers: _.extend({
+    serializers: {
         children: {deserialize: widgets.unpack_models},
         _map: {deserialize: widgets.unpack_models},
         _toolbar: {deserialize: widgets.unpack_models},
-    }, widgets.DOMWidgetModel.serializers)
+        ...widgets.DOMWidgetModel.serializers
+    }
 })
 
 export const FigureView = widgets.VBoxView.extend({
