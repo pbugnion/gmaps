@@ -11,8 +11,8 @@ require('./jupyter-gmaps.less');
 
 // Export everything from example and the npm package version number.
 export * from './jupyter-gmaps';
-export * from './toolbar';
-export * from './figure';
+export * from './Toolbar';
+export * from './Figure';
 export * from './Heatmap';
 
 export { version } from '../package.json';
