@@ -56,13 +56,13 @@ class Figure(widgets.DOMWidget):
         self._map.add_layer(layer)
 
 
-def figure(show_toolbar=True):
+def figure(display_toolbar=True):
     """
     Create a gmaps figure
 
     This returns a `Figure` object to which you can add data layers.
 
-    :param show_toolbar: Boolean denoting whether to show the toolbar.
+    :param display_toolbar: Boolean denoting whether to show the toolbar.
         Defaults to True.
 
     :returns:
@@ -76,5 +76,5 @@ def figure(show_toolbar=True):
     >>> fig.add_layer(gmaps.heatmap_layer(locations))
     """
     _map = Map()
-    _toolbar = Toolbar() if show_toolbar else None
+    _toolbar = Toolbar() if display_toolbar else None
     return Figure(_map=_map, _toolbar=_toolbar)
