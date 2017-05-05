@@ -1,33 +1,37 @@
 
+import GoogleMapsLoader from 'google-maps';
+
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
 export const DirectionsLayerView = GMapsLayerView.extend({
     render() {
         const rendererOptions = { map: this.mapView.map }
 
-        this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
-
         const modelData = this.model.get("data");
 
-        const request = {
-            origin: this.getOrigin(modelData),
-            destination: this.getDestination(modelData),
-            waypoints: this.getWaypoints(modelData),
-            travelMode: google.maps.TravelMode.DRIVING
-        };
+        GoogleMapsLoader.load((google) => {
+            this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
 
-        const directionsService = new google.maps.DirectionsService();
+            const request = {
+                origin: this.getOrigin(modelData),
+                destination: this.getDestination(modelData),
+                waypoints: this.getWaypoints(modelData),
+                travelMode: google.maps.TravelMode.DRIVING
+            };
 
-        directionsService.route(request, (response, status) => {
-            // print to the browser console (mostly for debugging)
-            console.log(`Direction service returned: ${status}`) ;
-            // set a flag in the model
-            this.model.set("layer_status", status) ;
-            this.touch() ; // push `layer_status` changes to the model
-            if (status == google.maps.DirectionsStatus.OK) {
-                this.response = this.directionsDisplay ;
-                this.directionsDisplay.setDirections(response);
-            }
+            const directionsService = new google.maps.DirectionsService();
+
+            directionsService.route(request, (response, status) => {
+                // print to the browser console (mostly for debugging)
+                console.log(`Direction service returned: ${status}`) ;
+                // set a flag in the model
+                this.model.set("layer_status", status) ;
+                this.touch() ; // push `layer_status` changes to the model
+                if (status == google.maps.DirectionsStatus.OK) {
+                    this.response = this.directionsDisplay ;
+                    this.directionsDisplay.setDirections(response);
+                }
+            });
         });
     },
 
