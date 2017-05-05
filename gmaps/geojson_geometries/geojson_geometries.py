@@ -97,10 +97,10 @@ def load_geometry(geometry_name):
     >>> gmaps.configure(api_key="AIza...")
     >>> countries_geojson = gmaps.geojson_geometries.load_geometry('countries')
 
-    >>> m = gmaps.Map()
+    >>> fig = gmaps.figure()
     >>> gini_layer = gmaps.geojson_layer(countries_geojson)
-    >>> m.add_layer(gini_layer)
-    >>> m
+    >>> fig.add_layer(gini_layer)
+    >>> fig
     """
     url = METADATA[geometry_name]["url"]
     reader = codecs.getreader("utf-8")
