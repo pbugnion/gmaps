@@ -175,13 +175,13 @@ def symbol_layer(
     """
     Symbol layer
 
-    Add this layer to a ``Map`` instance to draw symbols
-    on the map. A symbol will be drawn on the map for each
-    point in the ``locations`` argument.
+    Add this layer to a :class:`gmaps.Figure` instance to draw
+    symbols on the map. A symbol will be drawn on the map for
+    each point in the ``locations`` argument.
 
     :Examples:
 
-    >>> m = gmaps.Map()
+    >>> fig = gmaps.figure()
     >>> locations = [
             (-34.0, -59.166672),
             (-32.23333, -64.433327),
@@ -191,7 +191,7 @@ def symbol_layer(
         ]
     >>> symbols = gmaps.symbol_layer(
             locations, fill_color="red", stroke_color="red")
-    >>> m.add_layer(symbols)
+    >>> fig.add_layer(symbols)
 
     You can set a list of information boxes, which will be displayed when the
     user clicks on a marker.
@@ -314,14 +314,14 @@ def marker_layer(
     """
     Marker layer
 
-    Add this layer to a ``Map`` instance to draw markers
-    corresponding to specific locations on the map.
+    Add this layer to a :class:`gmaps.Figure` instance to draw
+    markers corresponding to specific locations on the map.
     A marker will be drawn on the map for each point in the
     ``locations`` argument.
 
     :Examples:
 
-    >>> m = gmaps.Map()
+    >>> fig = gmaps.figure()
     >>> locations = [
             (-34.0, -59.166672),
             (-32.23333, -64.433327),
@@ -329,8 +329,8 @@ def marker_layer(
             (51.216671, 5.0833302),
             (51.333328, 4.25)
         ]
-    >>> symbols = gmaps.marker_layer(locations)
-    >>> m.add_layer(symbols)
+    >>> markers = gmaps.marker_layer(locations)
+    >>> fig.add_layer(markers)
 
     :param locations:
         List of (latitude, longitude) pairs
