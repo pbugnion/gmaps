@@ -17,15 +17,6 @@ function reloadGoogleMaps(configuration) {
 
 reloadGoogleMaps({}) ;
 
-function gPointToList(gpoint) {
-    return [gpoint.lat(), gpoint.lng()]
-}
-
-function gBoundsToList(gbounds) {
-    const sw = gPointToList(gbounds.getSouthWest())
-    const ne = gPointToList(gbounds.getNorthEast())
-    return [sw, ne]
-}
 
 // Mixins
 
