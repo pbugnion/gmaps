@@ -125,7 +125,7 @@ def geojson_layer(
     """
     GeoJSON layer
 
-    Add this layer to a ``Map`` instance to render GeoJSON.
+    Add this layer to a :class:`gmaps.Figure` instance to render GeoJSON.
 
     :Examples:
 
@@ -141,10 +141,10 @@ def geojson_layer(
 
     >>> import gmaps
     >>> gmaps.configure(api_key="AI...")
-    >>> m = gmaps.Map()
+    >>> fig = gmaps.figure()
     >>> geojson = gmaps.geojson_layer(countries)
-    >>> m.add_layer(geojson)
-    >>> m
+    >>> fig.add_layer(geojson)
+    >>> fig
 
     We can pass style options into the layer. Let's assign a random
     color to each country:
