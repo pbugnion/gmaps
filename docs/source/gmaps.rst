@@ -233,9 +233,9 @@ Markers are currently limited to the Google maps style drop icon. If you need to
     starbucks_layer = gmaps.symbol_layer(
         starbucks_df, fill_color="green", stroke_color="green", scale=2
     )
-    m = gmaps.Map()
-    m.add_layer(starbucks_layer)
-    m
+    fig = gmaps.figure()
+    fig.add_layer(starbucks_layer)
+    fig
 
 .. image:: starbucks-symbols.png
 
@@ -256,17 +256,19 @@ You can have several layers of markers. For instance, we can compare the locatio
 
 
     starbucks_layer = gmaps.symbol_layer(
-        starbucks_df, fill_color="green", stroke_color="green", scale=2
+        starbucks_df, fill_color="rgba(0, 150, 0, 0.4)", 
+        stroke_color="rgba(0, 150, 0, 0.4)", scale=2
     )
 
     kfc_layer = gmaps.symbol_layer(
-        kfc_df, fill_color="red", stroke_color="red", scale=2
+        kfc_df, fill_color="rgba(200, 0, 0, 0.4)", 
+        stroke_color="rgba(200, 0, 0, 0.4)", scale=2
     )
 
-    m = gmaps.Map()
-    m.add_layer(starbucks_layer)
-    m.add_layer(kfc_layer)
-    m
+    fig = gmaps.figure()
+    fig.add_layer(starbucks_layer)
+    fig.add_layer(kfc_layer)
+    fig
 
 .. image:: starbucks-kfc-example.png
 
@@ -291,11 +293,11 @@ Let's start by just plotting the raw GeoJSON::
 
   countries_geojson = gmaps.geojson_geometries.load_geometry('countries')
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
 
   gini_layer = gmaps.geojson_layer(countries_geojson)
-  m.add_layer(gini_layer)
-  m
+  fig.add_layer(gini_layer)
+  fig
 
 This just plots the country boundaries on top of a Google map.
 
@@ -364,14 +366,14 @@ We now need to build an array of colors, one for each country, that we can pass 
 
 We can now pass our array of colors to the GeoJSON layer::
 
-  m = gmaps.Map(height="600px")
+  fig = gmaps.figure()
   gini_layer = gmaps.geojson_layer(
       countries_geojson, 
       fill_color=colors, 
       stroke_color=colors, 
       fill_opacity=0.8)
-  m.add_layer(gini_layer)
-  m
+  fig.add_layer(gini_layer)
+  fig
 
 .. image:: geojson-2.png
 
@@ -402,11 +404,11 @@ Use the `load_geometry` function to get the GeoJSON object::
 
   countries_geojson = gmaps.geojson_geometries.load_geometry('brazil-states')
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
 
   geojson_layer = gmaps.geojson_layer(countries_geojson)
-  m.add_layer(geojson_layer)
-  m
+  fig.add_layer(geojson_layer)
+  fig
 
 New geometries would greatly enhance the usability of `jupyter-gmaps`. Refer to `this issue <https://github.com/pbugnion/gmaps/issues/112>`_ on GitHub for information on how to contribute a geometry.
 
@@ -423,10 +425,10 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
   with open("my_geojson_geometry.json") as f:
       geometry = json.load(f)
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
   geojson_layer = gmaps.geojson_layer(geometry)
-  m.add_layer(geojson_layer)
-  m
+  fig.add_layer(geojson_layer)
+  fig
 
 Directions layer
 ^^^^^^^^^^^^^^^^
@@ -442,19 +444,19 @@ Directions layer
   montreux = (46.4, 6.9)
   zurich = (47.4, 8.5)
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
   geneva2zurich = gmaps.directions_layer(geneva, zurich)
-  m.add_layer(geneva2zurich)
-  m
+  fig.add_layer(geneva2zurich)
+  fig
 
 .. image:: directions_layer_simple.png
 
 You can also pass waypoints. The can pass up to 23 waypoints (this is a limitation of the Google Maps directions service)::
 
-  m = gmaps.Map()
-  geneva2zurich_via_montreux =
+  fig = gmaps.figure()
+  geneva2zurich_via_montreux =\
       gmaps.directions_layer(geneva, zurich, waypoints=[montreux])
-  m.add_layer(geneva2zurich_via_montreux)
-  m
+  fig.add_layer(geneva2zurich_via_montreux)
+  fig
 
 .. image:: directions_layer_waypoints.png
