@@ -15,5 +15,6 @@ export * from './Toolbar';
 export * from './Figure';
 export * from './Heatmap';
 export * from './Marker';
+export * from './GeoJson';
 
 export { version } from '../package.json';

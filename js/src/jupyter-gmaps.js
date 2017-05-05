@@ -85,26 +85,6 @@ export const DirectionsLayerView = GMapsLayerView.extend({
 })
 
 
-export const GeoJsonLayerView = GMapsLayerView.extend({
-    render() {
-        this.featureViews = new widgets.ViewList(this.addFeature, null, this)
-        this.featureViews.update(this.model.get("features"))
-    },
-
-    addToMapView(mapView) {
-        mapView.map.data.setStyle((feature) => feature.getProperty('style'))
-    },
-
-    addFeature(childModel) {
-        return this.create_child_view(childModel)
-            .then((childView) => {
-                childView.addToMapView(this.mapView)
-                return childView
-            })
-    }
-})
-
-
 export const PlainmapView = widgets.DOMWidgetView.extend({
     render() {
         this.loadConfiguration();
@@ -182,25 +162,6 @@ export const DirectionsLayerModel = GMapsLayerModel.extend({
         _model_name: "DirectionsLayerModel"
     })
 });
-
-export const GeoJsonLayerModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "GeoJsonLayerView",
-        _model_name: "GeoJsonLayerModel"
-    })
-}, {
-    serializers: _.extend({
-            features: {deserialize: widgets.unpack_models}
-    }, widgets.DOMWidgetModel.serializers)
-})
-
-export const GeoJsonFeatureModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "GeoJsonFeatureView",
-        _model_name: "GeoJsonFeatureModel"
-    })
-});
-
 
 export const PlainmapModel = widgets.DOMWidgetModel.extend({
     defaults: _.extend({}, widgets.DOMWidgetModel.prototype.defaults, {
