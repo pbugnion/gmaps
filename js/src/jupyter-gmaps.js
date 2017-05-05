@@ -1,5 +1,6 @@
 import widgets from 'jupyter-js-widgets'
 import _ from 'underscore'
+import html2canvas from 'html2canvas'
 
 import GoogleMapsLoader from 'google-maps'
 
@@ -459,6 +460,22 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
             return childView;
         })
     },
+
+    savePng() {
+        return new Promise((resolve, reject) => {
+            html2canvas(this.$el, {
+                useCORS: true,
+                onrendered: (canvas) => {
+                    const a = document.createElement("a");
+                    a.download = "map.png";
+                    a.href = canvas.toDataURL("image/png");
+                    document.body.appendChild(a);
+                    a.click();
+                    resolve();
+                }
+            })
+        })
+    }
 
 })
 

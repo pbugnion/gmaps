@@ -18,9 +18,9 @@ The earthquake data has three columns: a latitude and longitude indicating the e
 
   locations = earthquake_df[["latitude", "longitude"]]
   weights = earthquake_df["magnitude"]
-  m = gmaps.Map()
-  m.add_layer(gmaps.heatmap_layer(locations, weights=weights))
-  m
+  fig = gmaps.figure()
+  fig.add_layer(gmaps.heatmap_layer(locations, weights=weights))
+  fig
 
 .. image:: tutorial-earthquakes.*
 
@@ -30,13 +30,13 @@ This gives you a fully-fledged Google map. You can zoom in and out, switch to sa
 Basic concepts
 ^^^^^^^^^^^^^^
 
-`gmaps` is built around the idea of adding layers to a base map. After you've `authenticated <authentication.html>`_ with Google maps, you start by creating a base map::
+`gmaps` is built around the idea of adding layers to a base map. After you've `authenticated <authentication.html>`_ with Google maps, you start by creating a figure, which contains a base map::
 
   import gmaps
   gmaps.configure(api_key="AI...")
 
-  m = gmaps.Map()
-  m
+  fig = gmaps.figure()
+  fig
 
 .. image:: plainmap2.*
 
@@ -45,14 +45,14 @@ You then add layers on top of the base map. For instance, to add a heatmap layer
   import gmaps
   gmaps.configure(api_key="AI...")
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
 
   # generate some (latitude, longitude) pairs
   locations = [(51.5, 0.1), (51.7, 0.2), (51.4, -0.2), (51.49, 0.1)]
 
   heatmap_layer = gmaps.heatmap_layer(locations)
-  m.add_layer(heatmap_layer)
-  m
+  fig.add_layer(heatmap_layer)
+  fig
 
 .. image:: plainmap3.*
 
@@ -72,7 +72,9 @@ The former construction is useful for modifying a map once it has been built. An
 Heatmaps
 ^^^^^^^^
 
-Heatmaps are a good way of getting a sense of the density and clusters of geographical events. They are a powerful tool for making sense of larger datasets. We will use a dataset recording all instances of political violence that occurred in Africa between 1997 and 2015. The dataset comes from the `Armed Conflict Location and Event Data Project <http://www.acleddata.com>`_. This dataset contains about 110,000 rows.::
+Heatmaps are a good way of getting a sense of the density and clusters of geographical events. They are a powerful tool for making sense of larger datasets. We will use a dataset recording all instances of political violence that occurred in Africa between 1997 and 2015. The dataset comes from the `Armed Conflict Location and Event Data Project <http://www.acleddata.com>`_. This dataset contains about 110,000 rows.
+
+::
 
   import gmaps.datasets
 
@@ -89,10 +91,10 @@ We already know how to build a heatmap layer::
   gmaps.configure(api_key="AI...")
 
   locations = gmaps.datasets.load_dataset_as_df("acled_africa")
-  m = gmaps.Map()
+  fig = gmaps.figure()
   heatmap_layer = gmaps.heatmap_layer(locations)
-  m.add_layer(heatmap_layer)
-  m
+  fig.add_layer(heatmap_layer)
+  fig
 
 .. image:: acled_africa_heatmap_basic.png
 
@@ -140,7 +142,9 @@ You can also use the ``opacity`` option to set a single opacity across the entir
 Weighted heatmaps
 ^^^^^^^^^^^^^^^^^
 
-By default, heatmaps assume that every row is of equal importance. You can override this by passing weights through the `weights` keyword argument. The `weights` array is an iterable (e.g. a Python list or a Numpy array) or a single pandas series. Weights must all be positive (this is a limitation in Google maps itself).::
+By default, heatmaps assume that every row is of equal importance. You can override this by passing weights through the `weights` keyword argument. The `weights` array is an iterable (e.g. a Python list or a Numpy array) or a single pandas series. Weights must all be positive (this is a limitation in Google maps itself).
+
+::
 
   import gmaps
   import gmaps.datasets
@@ -149,13 +153,13 @@ By default, heatmaps assume that every row is of equal importance. You can overr
   df = gmaps.datasets.load_dataset_as_df("earthquakes")
   # dataframe with columns ('latitude', 'longitude', 'magnitude')
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
   heatmap_layer = gmaps.heatmap_layer(
       df[["latitude", "longitude"]], weights=df["magnitude"],
       max_intensity=30, point_radius=3.0 
   )
-  m.add_layer(heatmap_layer)
-  m
+  fig.add_layer(heatmap_layer)
+  fig
 
 
 .. image:: weighted-heatmap-example.png
@@ -176,11 +180,11 @@ We can add a layer of markers to a Google map. Each marker represents an individ
       (51.216671, 5.0833302),
       (51.333328, 4.25)
   ]
-  markers = gmaps.marker_layer(marker_locations)
 
-  m = gmaps.Map()
-  m.add_layer(markers)
-  m
+  fig = gmaps.figure()
+  markers = gmaps.marker_layer(marker_locations)
+  fig.add_layer(markers)
+  fig
 
 .. image:: marker-example.png
 
@@ -208,9 +212,9 @@ We can also attach a pop-up box to each marker. Clicking on the marker will brin
   plant_info = [info_box_template.format(**plant) for plant in nuclear_power_plants]
 
   marker_layer = gmaps.marker_layer(plant_locations, info_box_content=plant_info)
-  m = gmaps.Map()
-  m.add_layer(marker_layer)
-  m
+  fig = gmaps.figure()
+  fig.add_layer(marker_layer)
+  fig
 
 .. image:: marker-info-box-example.png
 
@@ -229,9 +233,9 @@ Markers are currently limited to the Google maps style drop icon. If you need to
     starbucks_layer = gmaps.symbol_layer(
         starbucks_df, fill_color="green", stroke_color="green", scale=2
     )
-    m = gmaps.Map()
-    m.add_layer(starbucks_layer)
-    m
+    fig = gmaps.figure()
+    fig.add_layer(starbucks_layer)
+    fig
 
 .. image:: starbucks-symbols.png
 
@@ -252,17 +256,19 @@ You can have several layers of markers. For instance, we can compare the locatio
 
 
     starbucks_layer = gmaps.symbol_layer(
-        starbucks_df, fill_color="green", stroke_color="green", scale=2
+        starbucks_df, fill_color="rgba(0, 150, 0, 0.4)", 
+        stroke_color="rgba(0, 150, 0, 0.4)", scale=2
     )
 
     kfc_layer = gmaps.symbol_layer(
-        kfc_df, fill_color="red", stroke_color="red", scale=2
+        kfc_df, fill_color="rgba(200, 0, 0, 0.4)", 
+        stroke_color="rgba(200, 0, 0, 0.4)", scale=2
     )
 
-    m = gmaps.Map()
-    m.add_layer(starbucks_layer)
-    m.add_layer(kfc_layer)
-    m
+    fig = gmaps.figure()
+    fig.add_layer(starbucks_layer)
+    fig.add_layer(kfc_layer)
+    fig
 
 .. image:: starbucks-kfc-example.png
 
@@ -287,11 +293,11 @@ Let's start by just plotting the raw GeoJSON::
 
   countries_geojson = gmaps.geojson_geometries.load_geometry('countries')
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
 
   gini_layer = gmaps.geojson_layer(countries_geojson)
-  m.add_layer(gini_layer)
-  m
+  fig.add_layer(gini_layer)
+  fig
 
 This just plots the country boundaries on top of a Google map.
 
@@ -360,14 +366,14 @@ We now need to build an array of colors, one for each country, that we can pass 
 
 We can now pass our array of colors to the GeoJSON layer::
 
-  m = gmaps.Map(height="600px")
+  fig = gmaps.figure()
   gini_layer = gmaps.geojson_layer(
       countries_geojson, 
       fill_color=colors, 
       stroke_color=colors, 
       fill_opacity=0.8)
-  m.add_layer(gini_layer)
-  m
+  fig.add_layer(gini_layer)
+  fig
 
 .. image:: geojson-2.png
 
@@ -398,11 +404,11 @@ Use the `load_geometry` function to get the GeoJSON object::
 
   countries_geojson = gmaps.geojson_geometries.load_geometry('brazil-states')
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
 
   geojson_layer = gmaps.geojson_layer(countries_geojson)
-  m.add_layer(geojson_layer)
-  m
+  fig.add_layer(geojson_layer)
+  fig
 
 New geometries would greatly enhance the usability of `jupyter-gmaps`. Refer to `this issue <https://github.com/pbugnion/gmaps/issues/112>`_ on GitHub for information on how to contribute a geometry.
 
@@ -419,10 +425,10 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
   with open("my_geojson_geometry.json") as f:
       geometry = json.load(f)
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
   geojson_layer = gmaps.geojson_layer(geometry)
-  m.add_layer(geojson_layer)
-  m
+  fig.add_layer(geojson_layer)
+  fig
 
 Directions layer
 ^^^^^^^^^^^^^^^^
@@ -438,19 +444,32 @@ Directions layer
   montreux = (46.4, 6.9)
   zurich = (47.4, 8.5)
 
-  m = gmaps.Map()
+  fig = gmaps.figure()
   geneva2zurich = gmaps.directions_layer(geneva, zurich)
-  m.add_layer(geneva2zurich)
-  m
+  fig.add_layer(geneva2zurich)
+  fig
 
 .. image:: directions_layer_simple.png
 
 You can also pass waypoints. The can pass up to 23 waypoints (this is a limitation of the Google Maps directions service)::
 
-  m = gmaps.Map()
-  geneva2zurich_via_montreux =
+  fig = gmaps.figure()
+  geneva2zurich_via_montreux =\
       gmaps.directions_layer(geneva, zurich, waypoints=[montreux])
-  m.add_layer(geneva2zurich_via_montreux)
-  m
+  fig.add_layer(geneva2zurich_via_montreux)
+  fig
 
 .. image:: directions_layer_waypoints.png
+
+
+Exporting maps
+^^^^^^^^^^^^^^
+
+You can save maps to PNG by clicking the `Download` button in the toolbar.
+This will download a static copy of the map.
+
+This feature suffers from some know issues:
+
+ - there is no way to set the quality of the rendering at present,
+ - on Google Chrome, if you pan or zoom into the map, it will fail to render,
+ - on older versions of Safari, the map opens in the same window instead of downloading.

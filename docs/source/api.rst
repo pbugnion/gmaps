@@ -2,10 +2,10 @@
 API documentation
 =================
 
-Maps and layers
----------------
+Figures and layers
+------------------
 
-.. autoclass:: gmaps.Map
+.. autofunction:: gmaps.figure
 
 .. autofunction:: gmaps.heatmap_layer
 
@@ -26,6 +26,11 @@ Utility functions
 
 Low level widgets
 -----------------
+
+.. autoclass:: gmaps.Figure
+   :members:
+
+.. autoclass:: gmaps.Map
 
 .. autoclass:: gmaps.Heatmap
 

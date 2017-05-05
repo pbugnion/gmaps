@@ -84,26 +84,18 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
     Add this to a ``Map`` instance to draw a heatmap. A heatmap shows
     the density of points in or near a particular area.
 
-    To set the parameters, pass them to the constructor or set them
-    on the heatmap object after construction::
-
-    >>> heatmap_layer = gmaps.Heatmap(data=data, max_intensity=10)
-
-    or::
-
-    >>> heatmap_layer = gmaps.Heatmap()
-    >>> heatmap_layer.data = data
-    >>> heatmap_layer.max_intensity = 10
+    You should not instantiate this directly. Instead, use the
+    :func:`gmaps.heatmap_layer` factory function.
 
     :Examples:
 
-    >>> m = gmaps.Map()
-    >>> data = [(46.1, 5.2), (46.2, 5.3), (46.3, 5.4)]
-    >>> heatmap_layer = gmaps.Heatmap(data=data)
-    >>> heatmap_layer.max_intensity = 2
-    >>> heatmap_layer.point_radius = 3
-    >>> heatmap_layer.gradient = ['white', 'gray']
-    >>> m.add_layer(heatmap_layer)
+    >>> fig = gmaps.figure()
+    >>> locations = [(46.1, 5.2), (46.2, 5.3), (46.3, 5.4)]
+    >>> heatmap = gmaps.heatmap_layer(locations)
+    >>> heatmap.max_intensity = 2
+    >>> heatmap.point_radius = 3
+    >>> heatmap.gradient = ['white', 'gray']
+    >>> fig.add_layer(heatmap_layer)
 
     :param data: List of (latitude, longitude) pairs denoting a single
         point. Latitudes are expressed as a float between -90
@@ -145,14 +137,18 @@ class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
     Heatmap layer, which assumes that all points should have equal weight,
     this layer lets you specifiy different weights for points.
 
+    You should not instantiate this directly. Instead, use the
+    :func:`gmaps.heatmap_layer` factory function, passing in a
+    parameter for `weights`.
+
     :Examples:
 
-    >>> m = gmaps.Map()
-    # triples representing `latitude, longitude, weight`:
-    >>> data = [(46.1, 5.2, 0.5), (46.2, 5.3, 0.2), (46.3, 5.4, 0.8)]
-    >>> heatmap_layer = gmaps.Heatmap(data=data)
-    >>> heatmap_layer.max_intensity = 2
-    >>> m.add_layer(heatmap_layer)
+    >>> fig = gmaps.figure()
+    >>> locations = [(46.1, 5.2), (46.2, 5.3), (46.3, 5.4)]
+    >>> weights = [0.5, 0.2, 0.8]
+    >>> heatmap = gmaps.heatmap_layer(locations, weights=weights)
+    >>> heatmap.max_intensity = 2
+    >>> fig.add_layer(heatmap_layer)
 
     :param data: List of (latitude, longitude, weight) triples for a single
         point. Latitudes are expressed as a float between -90 (corresponding to
@@ -234,29 +230,30 @@ heatmap_layer.__doc__ = \
     """
     Create a heatmap layer.
 
-    This returns a ``Heatmap`` or a ``WeightedHeatmap`` object
-    that can be added to a ``Map`` to draw a heatmap. A heatmap
-    shows the density of points in or near a particular area.
+    This returns a :class:`gmaps.Heatmap` or a :class:`gmaps.WeightedHeatmap`
+    object that can be added to a :class:`gmaps.Figure` to draw a
+    heatmap. A heatmap shows the density of points in or near
+    a particular area.
 
     To set the parameters, pass them to the constructor or set
     them on the ``Heatmap`` object after construction::
 
-    >>> heatmap_layer = gmaps.heatmap_layer(locations, max_intensity=10)
+    >>> heatmap = gmaps.heatmap_layer(locations, max_intensity=10)
 
     or::
 
-    >>> heatmap_layer = gmaps.heatmap_layer(locations)
-    >>> heatmap_layer.max_intensity = 10
+    >>> heatmap = gmaps.heatmap_layer(locations)
+    >>> heatmap.max_intensity = 10
 
     :Examples:
 
-    >>> m = gmaps.Map()
+    >>> fig = gmaps.figure()
     >>> locations = [(46.1, 5.2), (46.2, 5.3), (46.3, 5.4)]
-    >>> heatmap_layer = gmaps.heatmap_layer(locations)
-    >>> heatmap_layer.max_intensity = 2
-    >>> heatmap_layer.point_radius = 3
-    >>> heatmap_layer.gradient = ['white', 'gray']
-    >>> m.add_layer(heatmap_layer)
+    >>> heatmap = gmaps.heatmap_layer(locations)
+    >>> heatmap.max_intensity = 2
+    >>> heatmap.point_radius = 3
+    >>> heatmap.gradient = ['white', 'gray']
+    >>> fig.add_layer(heatmap)
 
     {locations}
 
