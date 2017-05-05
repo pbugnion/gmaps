@@ -16,9 +16,9 @@ Let's plot a `heatmap <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#
     # load a Numpy array of (latitude, longitude) pairs
     In [2]: locations = gmaps.datasets.load_dataset("taxi_rides")
 
-    In [3]: m = gmaps.Map()
-            m.add_layer(gmaps.heatmap_layer(locations))
-            m
+    In [3]: fig = gmaps.figure()
+            fig.add_layer(gmaps.heatmap_layer(locations))
+            fig
 
 .. image:: docs/source/taxi_example.png
 
@@ -73,14 +73,14 @@ We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedo
                     color = (0, 0, 0, 0.3)
                 colors.append(color)
 
-      In [4]: m = gmaps.Map(height="600px")
+      In [4]: fig = gmaps.figure()
               gini_layer = gmaps.geojson_layer(
                   countries_geojson,
                   fill_color=colors,
                   stroke_color=colors,
                   fill_opacity=0.8)
-              m.add_layer(gini_layer)
-              m
+              fig.add_layer(gini_layer)
+              fig
 
 .. image:: docs/source/geojson-2.png
 
@@ -94,11 +94,11 @@ Or, for coffee fans, a map of all Starbucks in the UK:
 
     In [2]: locations = gmaps.datasets.load_dataset("starbucks_uk")
 
-    In [3]: m = gmaps.Map()
+    In [3]: fig = gmaps.Map()
             starbucks_layer = gmaps.symbol_layer(
                 locations, fill_color="green", stroke_color="green", scale=2)
-            m.add_layer(starbucks_layer)
-            m
+            fig.add_layer(starbucks_layer)
+            fig
 
 .. image:: docs/source/starbucks-symbols.png
 
