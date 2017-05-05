@@ -14,5 +14,6 @@ export * from './jupyter-gmaps';
 export * from './Toolbar';
 export * from './Figure';
 export * from './Heatmap';
+export * from './Marker';
 
 export { version } from '../package.json';
