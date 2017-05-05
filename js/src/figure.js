@@ -1,4 +1,7 @@
- import widgets from 'jupyter-js-widgets'
+
+import _ from 'underscore';
+
+import widgets from 'jupyter-js-widgets';
 
 export const FigureModel = widgets.VBoxModel.extend({
     defaults: {

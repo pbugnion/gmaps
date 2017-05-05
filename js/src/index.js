@@ -13,5 +13,6 @@ require('./jupyter-gmaps.less');
 export * from './jupyter-gmaps';
 export * from './toolbar';
 export * from './figure';
+export * from './Heatmap';
 
 export { version } from '../package.json';
