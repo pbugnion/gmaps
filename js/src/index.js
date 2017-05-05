@@ -10,8 +10,12 @@ __webpack_public_path__ = document.querySelector('body').getAttribute('data-base
 require('./jupyter-gmaps.less');
 
 // Export everything from example and the npm package version number.
-export * from './jupyter-gmaps';
-export * from './toolbar';
-export * from './figure';
+export * from './Map';
+export * from './Toolbar';
+export * from './Figure';
+export * from './Heatmap';
+export * from './Marker';
+export * from './GeoJson';
+export * from './Directions';
 
 export { version } from '../package.json';
