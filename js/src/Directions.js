@@ -3,6 +3,16 @@ import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
+
+export const DirectionsLayerModel = GMapsLayerModel.extend({
+    defaults: {
+        ...GMapsLayerModel.prototype.defaults,
+        _view_name: "DirectionsLayerView",
+        _model_name: "DirectionsLayerModel"
+    }
+});
+
+
 export const DirectionsLayerView = GMapsLayerView.extend({
     render() {
         const rendererOptions = { map: this.mapView.map }
@@ -57,11 +67,3 @@ export const DirectionsLayerView = GMapsLayerView.extend({
         return dataAsGoogle
     }
 })
-
-
-export const DirectionsLayerModel = GMapsLayerModel.extend({
-    defaults: _.extend({}, GMapsLayerModel.prototype.defaults, {
-        _view_name: "DirectionsLayerView",
-        _model_name: "DirectionsLayerModel"
-    })
-});
