@@ -460,3 +460,16 @@ You can also pass waypoints. The can pass up to 23 waypoints (this is a limitati
   fig
 
 .. image:: directions_layer_waypoints.png
+
+
+Exporting maps
+^^^^^^^^^^^^^^
+
+You can save maps to PNG by clicking the `Download` button in the toolbar.
+This will download a static copy of the map.
+
+This feature suffers from some know issues:
+
+ - there is no way to set the quality of the rendering at present,
+ - on Google Chrome, if you pan or zoom into the map, it will fail to render,
+ - on older versions of Safari, the map opens in the same window instead of downloading.
