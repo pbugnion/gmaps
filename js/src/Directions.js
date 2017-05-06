@@ -1,4 +1,6 @@
 
+import _ from 'underscore';
+
 import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
