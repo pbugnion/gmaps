@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "google-maps": "^3.2.1",
-    "jupyter-js-widgets": "^1.1.1",
+    "jupyter-js-widgets": "3.0.0-alpha.2",
     "underscore": "^1.8.3"
   }
 }
