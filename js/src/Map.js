@@ -6,16 +6,22 @@ import GoogleMapsLoader from 'google-maps'
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
+function needReloadGoogleMaps(configuration) {
+    return GoogleMapsLoader.KEY !== configuration["api_key"];
+}
+
 function reloadGoogleMaps(configuration) {
-    GoogleMapsLoader.release();
+    if (needReloadGoogleMaps(configuration)) {
+        console.log("Releasing Google Maps");
+        GoogleMapsLoader.release();
+    }
+
     GoogleMapsLoader.LIBRARIES = ["visualization"] ;
     if (configuration["api_key"] !== null &&
         configuration["api_key"] !== undefined) {
             GoogleMapsLoader.KEY = configuration["api_key"];
     };
 }
-
-reloadGoogleMaps({}) ;
 
 
 // Mixins
