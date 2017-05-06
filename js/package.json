@@ -15,7 +15,8 @@
     "ipywidgets"
   ],
   "scripts": {
-    "prepublish": "webpack",
+    "prepublish": "npm run build",
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
