@@ -47,12 +47,13 @@ You can export maps to HTML using the infrastructure provided by `ipywidgets`. I
 
 The first two define the state of the widgets and should be embedded in the head of the HTML document. The remaining tags describe the views. There will be one for each cell containing a widget in the notebook. You should paste these into the DOM elements that need to hold the views.
 
-Additionally, you will need to import `jupyter-gmaps`, as well as JQuery, in the head of your HTML document. You can use this template to make sure you have all the imports:
+Additionally, you will need to import `jupyter-gmaps`, JQuery and the Bootstrap CSS in the head of your HTML document. You can use this template to make sure you have all the imports:
 
 .. code-block:: html
 
     <html>
         <head>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
             <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
             <script src="https://unpkg.com/jupyter-gmaps@*/dist/index.js"></script>
 
@@ -73,6 +74,7 @@ Thus, a valid HTML document containing a single map would look like:
 
    <html>
        <head>
+           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
            <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
            <script src="https://unpkg.com/jupyter-gmaps@*/dist/index.js"></script>
 
