@@ -6,16 +6,22 @@ import GoogleMapsLoader from 'google-maps'
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
+function needReloadGoogleMaps(configuration) {
+    return GoogleMapsLoader.KEY !== configuration["api_key"];
+}
+
 function reloadGoogleMaps(configuration) {
-    GoogleMapsLoader.release();
+    if (needReloadGoogleMaps(configuration)) {
+        console.log("Releasing Google Maps");
+        GoogleMapsLoader.release();
+    }
+
     GoogleMapsLoader.LIBRARIES = ["visualization"] ;
     if (configuration["api_key"] !== null &&
         configuration["api_key"] !== undefined) {
             GoogleMapsLoader.KEY = configuration["api_key"];
     };
 }
-
-reloadGoogleMaps({}) ;
 
 
 // Mixins
@@ -61,12 +67,12 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
         this.model.on("change:data_bounds", this.updateBounds, this);
     },
 
-    updateBounds() {
-        const [[latBL, lngBL], [latTR, lngTR]] = this.model.get("data_bounds")
+    updateBounds(bounds) {
+        const [[latBL, lngBL], [latTR, lngTR]] = bounds
         const boundBL = new google.maps.LatLng(latBL, lngBL)
         const boundTR = new google.maps.LatLng(latTR, lngTR)
-        const bounds = new google.maps.LatLngBounds(boundBL, boundTR)
-        this.map.fitBounds(bounds);
+        const boundsAsGoogle = new google.maps.LatLngBounds(boundBL, boundTR)
+        this.map.fitBounds(boundsAsGoogle);
     },
 
     addLayerModel(childModel) {
@@ -109,7 +115,8 @@ export const PlainmapModel = widgets.DOMWidgetModel.extend({
         _view_module : 'jupyter-gmaps',
         _model_module : 'jupyter-gmaps',
         width: "600px",
-        height: "400px"
+        height: "400px",
+        data_bounds: null
     }
 }, {
     serializers: {

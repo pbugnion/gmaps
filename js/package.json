@@ -15,7 +15,8 @@
     "ipywidgets"
   ],
   "scripts": {
-    "prepublish": "webpack",
+    "prepublish": "npm run build",
+    "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
@@ -29,7 +30,7 @@
   },
   "dependencies": {
     "google-maps": "^3.2.1",
-    "jupyter-js-widgets": "^1.1.1",
+    "jupyter-js-widgets": "3.0.0-alpha.2",
     "underscore": "^1.8.3"
   }
 }
