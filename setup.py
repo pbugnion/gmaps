@@ -151,6 +151,7 @@ setup_args = {
         ('share/jupyter/nbextensions/jupyter-gmaps', static_js_files),
     ],
     'install_requires': [
+        'jupyter>=4.3.0',
         'ipywidgets>=6.0.0',
         'traitlets>=4.3.0',
         'geojson>=1.3.4',
