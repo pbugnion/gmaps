@@ -1,2 +1,3 @@
-version_info = (0, 4, 2, 'dev')
-__version__ = '.'.join(map(str, version_info))
+
+# This file is generated programatically.
+__version__ = '0.5.0'
