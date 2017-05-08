@@ -2,6 +2,16 @@
 Release notes
 -------------
 
+Version 0.5.0
+=============
+
+This release:
+
+ - introduces a new Figure widget that wraps a toolbar and a map
+ - adds the ability to export maps to PNG
+ - fixes bugs and outdated dependencies that prevented embedding maps in
+   rendered HTML.
+
 Version 0.4.1
 =============
 
