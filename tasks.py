@@ -22,8 +22,16 @@ Version {version_string}
 
 GMAPS_DIR = os.path.dirname(os.path.realpath(__file__))
 
-@task
+
+@task(help={'version': 'Version number to release'})
 def prerelease(ctx, version):
+    '''
+    Release a pre-release version
+
+    Running this task will:
+     - Bump the version number
+     - Push a release to pypi and npm
+    '''
     set_pyversion(version)
     set_jsversion(version)
     run('python setup.py sdist upload')
@@ -35,8 +43,18 @@ def prerelease(ctx, version):
     print('Remember to reset the active version on Pypi')
 
 
-@task
+@task(help={'version': 'Version number to release'})
 def release(ctx, version):
+    '''
+    Release a new version
+
+    Running this task will:
+     - Prompt the user for a changelog and write it to
+       the release notes
+     - Commit the release notes
+     - Bump the version number
+     - Push a release to pypi and npm
+    '''
     release_notes_lines = get_release_notes(version)
 
     if release_notes_lines is None:
@@ -59,8 +77,19 @@ def release(ctx, version):
         os.chdir(GMAPS_DIR)
 
 
-@task
+@task(help={
+    'version': 'Version number to finalize. Must be '
+               'the same version number that was used in the release.'
+})
 def postrelease(ctx, version):
+    '''
+    Finalise the release
+
+    Running this task will:
+     - commit the version changes to source control
+     - tag the commit
+     - push changes to master
+    '''
     run('git add gmaps/_version.py')
     run('git add js/package.json')
     run('git commit -m "Bump version to {}"'.format(version))
