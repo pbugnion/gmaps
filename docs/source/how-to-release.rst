@@ -2,33 +2,19 @@
 How to release jupyter-gmaps
 ----------------------------
 
-This is a set of instructions for releasing to Pypi.
+This is a set of instructions for releasing to Pypi. The release process is somewhat automated with an `invoke <http://docs.pyinvoke.org/en/latest/getting_started.html>`_ task file. You will need `invoke` installed.
 
- - Append the suffix ``rc1`` to the version in ``_version.py`` 
-
- - Upload the pre-release to Pypi with ``python setup.py sdist upload``. Unfortunately, Pypi does not recognize this as a pre-release, and therefore gives it more precendence than the previous, stable release. To correct this, go to the gmaps page on Pypi, then go to the `releases` tab and manually hide that release and un-hide the previous one.
+ - Run ``invoke prerelease <version>``, where ``version`` is the version number of the release candidate. If you are aiming to release version ``0.5.0``, this will be ``0.5.0-rc1``. This will automatically bump the version numbers and upload the release to Pypi and NPM. Unfortunately, Pypi does not recognize this as a pre-release, and therefore gives it more precendence than the previous, stable release. To correct this, go to the gmaps page on Pypi, then go to the `releases` tab and manually hide that release and un-hide the previous one.
 
  - Verify that you can install the new version and that it works correctly with ``pip install gmaps==<new version>`` and ``jupyter nbextension enable --py --sys-prefix gmaps``. It's best to verify the installation on a clean virtual machine (rather than just in a new environment) since installation is more complex than for pure Python packages.
 
  - If the manual installation tests failed, fix the issue and repeat the previous steps with ``rc2`` etc. If installing worked, proceed to the next steps.
 
- - Write the changelog for the new version and commit the changes.
-
- - Bump the version number in ``_version.py`` to a stable version (e.g. 0.3.6).
-
- - Bump the version number in ``docs/source/conf.py`` for both the ``version`` and the ``release`` variables.
-
- - Bump the version number in ``js/package.json``.
-
- - Run ``python setup.py sdist bdist upload`` to upload the artefact to pypi.
+ - Run ``invoke release <version>``, where ``version`` is the version number of the release (e.g. ``0.5.0``). You will be prompted to enter a changelog.
 
  - Verify that the new version is available by running ``pip install gmaps`` in a new virtual environment.
 
- - Commit the changes in version.
-
- - Tag the new version with an annotated tag, e.g. ``git tag -a v0.3.6``. Include a ``v`` in front of the version number. Copy the release notes as the tag annotation.
-
- - Push the new commits and the tag with ``git push origin master --tags``
+ - Run ``invoke postrelease <version>``, where ``version`` is the version number of the new release. This will commit the changes in version, add an annotated tag from the changelog and push the changes to Github.
 
  - Change the version number in ``_version.py`` back to a ``dev`` version. It's better to bump just the patch release, even if you think the next release may be a minor release.
 
