@@ -9,16 +9,16 @@ from subprocess import call
 
 import semver
 
-VERSION_TEMPLATE = """
+VERSION_TEMPLATE = '''
 # This file is generated programatically.
 __version__ = '{version_string}'
-"""
+'''
 
-RELEASE_NOTES_TEMPLATE = """# Write the release notes here
+RELEASE_NOTES_TEMPLATE = '''# Write the release notes here
 # Delete the version title to cancel
 Version {version_string}
 {underline}
-"""
+'''
 
 GMAPS_DIR = os.path.dirname(os.path.realpath(__file__))
 
@@ -136,14 +136,14 @@ def get_release_notes(version):
 def set_pyversion(version):
     version_info = semver.parse_version_info(version)
     version_string = semver.format_version(*version_info)
-    with open(os.path.join(GMAPS_DIR, "gmaps", "_version.py"), "w") as f:
+    with open(os.path.join(GMAPS_DIR, 'gmaps', '_version.py'), 'w') as f:
         f.write(VERSION_TEMPLATE.format(version_string=version_string))
 
 
 def set_jsversion(version):
     version_info = semver.parse_version_info(version)
     version_string = semver.format_version(*version_info)
-    package_json_path = os.path.join(GMAPS_DIR, "js", "package.json")
+    package_json_path = os.path.join(GMAPS_DIR, 'js', 'package.json')
     with open(package_json_path) as f:
         package_json = f.readlines()
     for iline, line in enumerate(package_json):
@@ -155,7 +155,7 @@ def set_jsversion(version):
 
 def open_editor(initial_message):
     editor = os.environ.get('EDITOR', 'vim')
-    tmp = tempfile.NamedTemporaryFile(suffix=".tmp")
+    tmp = tempfile.NamedTemporaryFile(suffix='.tmp')
     fname = tmp.name
 
     with open(fname, 'wb') as f:
