@@ -154,7 +154,7 @@ def set_jsversion(version):
 
 
 def open_editor(initial_message):
-    editor = os.environ.get('EDITOR','vim')
+    editor = os.environ.get('EDITOR', 'vim')
     tmp = tempfile.NamedTemporaryFile(suffix=".tmp")
     fname = tmp.name
 
