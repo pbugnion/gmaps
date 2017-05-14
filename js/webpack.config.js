@@ -6,7 +6,7 @@ var loaders = [
     { test: /\.css$/, loader: "style-loader!css-loader" },
     { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
     { test: /\.json$/, loader: 'json-loader' },
-    { test: /\.js$/, loader: 'babel', query: {presets: ['es2015', 'stage-0']}, exclude: /node_modules/ }
+    { test: /\.js$/, loader: 'babel-loader', query: {presets: ['es2015', 'stage-0']}, exclude: /node_modules/ }
 ];
 
 
@@ -22,7 +22,7 @@ module.exports = [
         entry: './src/extension.js',
         output: {
             filename: 'extension.js',
-            path: '../gmaps/static',
+            path: __dirname + '/../gmaps/static',
             libraryTarget: 'amd'
         }
     },
@@ -35,7 +35,7 @@ module.exports = [
         entry: './src/index.js',
         output: {
             filename: 'index.js',
-            path: '../gmaps/static',
+            path: __dirname + '/../gmaps/static',
             libraryTarget: 'amd'
         },
         devtool: 'source-map',
@@ -61,7 +61,7 @@ module.exports = [
         entry: './src/embed.js',
         output: {
             filename: 'index.js',
-            path: './dist/',
+            path: __dirname + '/dist/',
             libraryTarget: 'amd',
             publicPath: 'https://unpkg.com/jupyter-gmaps@' + version + '/dist/'
         },
