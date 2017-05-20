@@ -1,1 +1,2 @@
 recursive-include gmaps/static *.*
+include LICENSE.txt
