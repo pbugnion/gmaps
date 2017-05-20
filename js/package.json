@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "google-maps": "^3.2.1",
+    "html2canvas": "^0.5.0-beta4",
     "jupyter-js-widgets": "3.0.0-alpha.2",
     "underscore": "^1.8.3"
   }
