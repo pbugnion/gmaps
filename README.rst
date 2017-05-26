@@ -106,10 +106,19 @@ Or, for coffee fans, a map of all Starbucks in the UK:
 Installation
 ------------
 
-Dependencies
-^^^^^^^^^^^^
+Installing `gmaps` with `conda`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The current version of `gmaps` is only tested with *IPython 4.2* or later and *ipywidgets 5.2.2* and *traitlets 4.3.0* or later. To upgrade to the latest versions, use::
+The easiest way to install `gmaps` is with `conda`::
+
+    $ conda install -c conda-forge gmaps
+
+Installing `gmaps` with `pip`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you do not use conda, you can install `gmaps` with pip. The current version
+of `gmaps` is only tested with *IPython 4.2* or later and *ipywidgets 6.0.0* or
+later. To upgrade to the latest versions, use::
 
     $ pip install -U jupyter
 
@@ -117,16 +126,14 @@ Make sure that you have enabled widgets extensions to Jupyter::
 
     $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
-Installing `gmaps`
-^^^^^^^^^^^^^^^^^^
-
-Install the Python component using::
+You can then install gmaps with::
 
     $ pip install gmaps
 
 Then tell Jupyter to load the extension with::
 
-  $ jupyter nbextension enable --py --sys-prefix gmaps
+    $ jupyter nbextension enable --py --sys-prefix gmaps
+
 
 Google API keys
 ---------------
