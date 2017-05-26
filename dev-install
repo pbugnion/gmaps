@@ -1,0 +1,33 @@
+#! /usr/bin/env bash
+echo -n "Checking npm... "
+npm -v
+if [ $? -ne 0 ]; then
+    echo "'npm -v' failed, therefore npm is not installed.  In order to perform a
+    developer install of ipywidgets you must have both npm and pip installed on your
+    machine! See http://blog.npmjs.org/post/85484771375/how-to-install-npm for
+    installation instructions."
+    exit 1
+fi
+
+echo -n "Checking pip... "
+pip --version
+if [ $? -ne 0 ]; then
+    echo "'pip --version' failed, therefore pip is not installed. In order to perform
+    a developer install of ipywidgets you must have both pip and npm installed on
+    your machine! See https://packaging.python.org/installing/ for installation instructions."
+    exit 1
+fi
+
+# All following commands must run successfully
+set -e
+
+cd js
+npm install
+npm run build
+cd ..
+
+pip install -e .
+
+jupyter nbextension enable --py --sys-prefix widgetsnbextension
+jupyter nbextension install --overwrite --py --symlink --sys-prefix gmaps
+jupyter nbextension enable --py --sys-prefix gmaps
