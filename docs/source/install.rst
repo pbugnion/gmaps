@@ -35,20 +35,22 @@ Development version
 
 You must have `NPM <https://www.npmjs.com>`_ to install the development version. You can install NPM with your package manager.
 
-You must also install ``gmaps`` in a virtual environment (or, at least, you must be able to run ``pip`` without root access).
+We strongly recommend installing `jupyter-gmaps` in a virtual environment (either a conda environment or a virtualenv environment).
 
 Clone the git repository by running::
 
     $ git clone https://github.com/pbugnion/gmaps.git
 
-Change to the project's root directory and run::
+For the initial installation, run::
 
-    $ pip install -e .
+    $ ./dev-install
 
-This will create a directory called ``static/`` in the ``gmaps/`` directory. This directory contains Javascript sources. Every time you change the Javascript sources, you will need to recompile this directory by re-running this command (despite everying being installed in `editable` mode). 
+This installs ``gmaps`` in editable mode and installs the Javascript components as symlinks.
 
-You can then enable the extension in Jupyter::
+If you then make changes to the code, you can make those changes available to a running notebook server by:
 
-    $ jupyter nbextension install --py --symlink --user gmaps
-    $ jupyter nbextension enable --py --user gmaps
+ - restarting the kernel if you have made changes to the Python source code
+ - running ``npm run update`` in the ``js/`` directory and `refreshing` the browser page containing the notebook if you have made changes to the JavaScript source. You do not need to restart the kernel.
+ - running ``npm run update``, refreshing the browser and restarting the kernel if you have made changes to both the Python and JavaScript source.
 
+You should not need to restart the notebook server.
