@@ -5,6 +5,15 @@
   Released under MIT License
 */
 
+// html2canvas 0.5.0.a-* releases contain regressions that make
+// them unsuitable for use in gmaps at this stage (see e.g. issue 129).
+// We therefore prefer to use version 0.4.1. This is not, however,
+// available on NPM as a nicely packaged CommonJS library. We therefore
+// prefer to vendor our own version. This is identical to the source
+// on GitHub for 0.4.1, but rewritten as a CommonJS library rather than
+// binding to `window` directly.
+
+
 "use strict";
 
 var _html2canvas = {},
