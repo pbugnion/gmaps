@@ -17,13 +17,21 @@ export const ErrorsBoxModel = widgets.DOMWidgetModel.extend({
 
 export const ErrorsBoxView = widgets.DOMWidgetView.extend({
     render() {
-        console.log('Hello erors view')
-        console.log(this.model.get('errors'));
+        this._renderErrors()
 
         this.listenTo(
             this.model,
             'change:errors',
-            () => console.log(this.model.get('errors'))
+            () => this._renderErrors()
         )
+    },
+
+    _renderErrors() {
+        const errorContainer = $('<ul />')
+        this.model.get('errors').map(
+            message => $(`<li>${message}</li>`)
+        ).forEach(element => errorContainer.append(element))
+        this.$el.empty(); // Clear the current state
+        this.$el.append(errorContainer);
     }
 });
