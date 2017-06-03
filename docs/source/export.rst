@@ -55,7 +55,6 @@ Additionally, you will need to import `jupyter-gmaps`, JQuery and the Bootstrap 
         <head>
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
             <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-            <script src="https://unpkg.com/jupyter-gmaps@*/dist/index.js"></script>
 
             {{ paste first two script tags here }}
 
@@ -76,7 +75,6 @@ Thus, a valid HTML document containing a single map would look like:
        <head>
            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
            <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-           <script src="https://unpkg.com/jupyter-gmaps@*/dist/index.js"></script>
 
            <script src="https://unpkg.com/jupyter-js-widgets@~2.1.4/dist/embed.js"></script>
            <script type="application/vnd.jupyter.widget-state+json">
