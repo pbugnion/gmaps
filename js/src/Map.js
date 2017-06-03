@@ -1,9 +1,9 @@
 import widgets from 'jupyter-js-widgets'
 import _ from 'underscore'
-import { html2canvas } from './vendor/html2canvas'
 
 import GoogleMapsLoader from 'google-maps'
 
+import { downloadElementAsPng } from './services/downloadElement'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
 function needReloadGoogleMaps(configuration) {
@@ -91,7 +91,7 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
         )
         return canDownloadEveryLayer.then(canDownload => {
             if (canDownload) {
-                return this._saveMapPng()
+                return downloadElementAsPng(this.$el, 'map.png');
             }
             else {
                 const nonDownloadableLayers = allLayers.then(layers =>
@@ -106,25 +106,6 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
             }
         })
     },
-
-    _saveMapPng() {
-       return new Promise((resolve, reject) => {
-           html2canvas(this.$el, {
-               useCORS: true,
-               onrendered: (canvas) => {
-                   const a = document.createElement("a");
-                   a.download = "map.png";
-                   a.href = canvas.toDataURL("image/png");
-                   document.body.appendChild(a);
-                   a.click();
-                   resolve();
-               },
-               onerror: (error) => {
-                   reject(error);
-               }
-           })
-       })
-    }
 
 })
 
