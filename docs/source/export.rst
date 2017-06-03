@@ -11,7 +11,7 @@ This will download a static copy of the map.
 This feature suffers from some know issues:
 
  - there is no way to set the quality of the rendering at present,
- - you cannot export maps that contain a `Directions` layer.
+ - you cannot export maps that contain a `Directions` layer (see `the issue <https://github.com/pbugnion/gmaps/issues/144>`_ on Github for details).
 
 
 Exporting to HTML
