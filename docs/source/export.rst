@@ -67,7 +67,7 @@ Additionally, you will need to import `jupyter-gmaps`, JQuery and the Bootstrap 
     </html>
 
     
-Thus, a valid HTML document containing a single map would look like:
+Thus, a valid HTML document containing a single map would look like this (the API key has been redacted, but apart from that, this will work out of the box):
 
 .. code-block:: html
 
@@ -78,7 +78,49 @@ Thus, a valid HTML document containing a single map would look like:
 
            <script src="https://unpkg.com/jupyter-js-widgets@~2.1.4/dist/embed.js"></script>
            <script type="application/vnd.jupyter.widget-state+json">
-               // widget state
+           {
+               "version_major": 1,
+               "version_minor": 0,
+               "state": {
+                   "acd855c3e79c4100bf23ac682b97fef6": {
+                       "model_name": "LayoutModel",
+                       "model_module": "jupyter-js-widgets",
+                       "model_module_version": "~2.1.4",
+                       "state": {
+                           "_model_module_version": "~2.1.4",
+                           "height": "400px",
+                           "_view_module_version": "~2.1.4",
+                           "align_self": "stretch"
+                       }
+                   },
+                   "e6333a5e4408424fa1d13bafe32e3ec8": {
+                       "model_name": "PlainmapModel",
+                       "model_module": "jupyter-gmaps",
+                       "model_module_version": "*",
+                       "state": {
+                           "layers": [],
+                           "_dom_classes": [],
+                           "msg_throttle": 1,
+                           "_model_module_version": "*",
+                           "_view_module_version": "*",
+                           "data_bounds": [
+                               [
+                                   46.2,
+                                   6.1
+                               ],
+                               [
+                                   47.2,
+                                   7.1
+                               ]
+                           ],
+                           "layout": "IPY_MODEL_acd855c3e79c4100bf23ac682b97fef6",
+                           "configuration": {
+                               "api_key": "AIza_FILL_ME_IN"
+                           }
+                       }
+                   }
+               }
+           }
            </script>
 
        </head>
