@@ -44,7 +44,11 @@ export const FigureView = widgets.VBoxView.extend({
         else {
             this.toolbarView = null;
         }
-        this.errorsBoxView = this.add_child_model(this.model.get("_errors_box"));
+        const errorsBoxModel = this.model.get('_errors_box');
+        if (errorsBoxModel) {
+            this.errorsBoxView =
+                this.add_child_model(this.model.get("_errors_box"));
+        }
         this.mapView = this.add_child_model(this.model.get("_map"));
     },
 
@@ -55,7 +59,10 @@ export const FigureView = widgets.VBoxView.extend({
     },
 
     addError(errorMessage) {
-        console.log(errorMessage);
-        this.model.get("_errors_box").addError(errorMessage);
+        console.log(`[Error]: ${errorMessage}`)
+        const errorsBoxModel = this.model.get("_errors_box")
+        if (errorsBoxModel) {
+            errorsBoxModel.addError(errorMessage);
+        }
     }
 })
