@@ -25,11 +25,7 @@ export const ErrorsBoxView = widgets.DOMWidgetView.extend({
     render() {
         this._renderErrors()
 
-        this.listenTo(
-            this.model,
-            'change:errors',
-            () => this._renderErrors()
-        )
+        this.model.on('change:errors', () => this._renderErrors())
     },
 
     _renderErrors() {
