@@ -11,8 +11,7 @@ This will download a static copy of the map.
 This feature suffers from some know issues:
 
  - there is no way to set the quality of the rendering at present,
- - on Google Chrome, if you pan or zoom into the map, it will fail to render,
- - on older versions of Safari, the map opens in the same window instead of downloading.
+ - you cannot export maps that contain a `Directions` layer (see `the issue <https://github.com/pbugnion/gmaps/issues/144>`_ on Github for details).
 
 
 Exporting to HTML
