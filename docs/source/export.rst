@@ -130,7 +130,7 @@ Thus, a valid HTML document containing a single map would look like this (the AP
            <div id="widget-embedded-here">
                <script type="application/vnd.jupyter.widget-view+json">
                {
-                   "model_id": "c05e9b0ca0dd405295d2adde29776c95"
+                   "model_id": "e6333a5e4408424fa1d13bafe32e3ec8"
                }
                </script>
            </div>
