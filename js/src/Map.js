@@ -100,8 +100,14 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
                         .map(layer => layer.model.get('_view_name'))
                 )
                 const error = nonDownloadableLayers
-                    .then(layers => layers.join(', '))
-                    .then(text => Promise.reject(`Cannot download layers: ${text}`))
+                    .then(layers => {
+                        const layersText = layers.join(', ');
+                        const layersWord = layers.length > 1 ? 'layers' : 'layer';
+                        const errorMessage =
+                            `Cannot download ${layersWord}: ${layersText}. ` +
+                            `Remove these layers to export the map.`
+                        return Promise.reject(errorMessage)
+                    })
                 return error
             }
         })
