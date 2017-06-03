@@ -16,6 +16,8 @@ export const DirectionsLayerModel = GMapsLayerModel.extend({
 
 
 export const DirectionsLayerView = GMapsLayerView.extend({
+    canDownloadAsPng: false,
+    
     render() {
         const rendererOptions = { map: this.mapView.map }
 

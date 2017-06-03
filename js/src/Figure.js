@@ -13,6 +13,7 @@ export const FigureModel = widgets.VBoxModel.extend({
         children: [],
         box_style: '',
         _map: undefined,
+        _errors_box: undefined,
         _toolbar: undefined
     }
 
@@ -21,6 +22,7 @@ export const FigureModel = widgets.VBoxModel.extend({
         children: {deserialize: widgets.unpack_models},
         _map: {deserialize: widgets.unpack_models},
         _toolbar: {deserialize: widgets.unpack_models},
+        _errors_box: {deserialize: widgets.unpack_models},
         ...widgets.DOMWidgetModel.serializers
     }
 })
@@ -42,10 +44,25 @@ export const FigureView = widgets.VBoxView.extend({
         else {
             this.toolbarView = null;
         }
+        const errorsBoxModel = this.model.get('_errors_box');
+        if (errorsBoxModel) {
+            this.errorsBoxView =
+                this.add_child_model(this.model.get("_errors_box"));
+        }
         this.mapView = this.add_child_model(this.model.get("_map"));
     },
 
     savePng() {
-        return this.mapView.then(view => view.savePng());
+        return this.mapView.then(view =>
+            view.savePng().catch(e => this.addError(e))
+        );
+    },
+
+    addError(errorMessage) {
+        console.log(`[Error]: ${errorMessage}`)
+        const errorsBoxModel = this.model.get("_errors_box")
+        if (errorsBoxModel) {
+            errorsBoxModel.addError(errorMessage);
+        }
     }
 })

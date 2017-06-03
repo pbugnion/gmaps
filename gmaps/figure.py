@@ -5,6 +5,7 @@ from traitlets import Unicode, Instance
 
 from .maps import Map
 from .toolbar import Toolbar
+from .errors_box import ErrorsBox
 
 __all__ = ["Figure", "figure"]
 
@@ -22,6 +23,8 @@ class Figure(widgets.DOMWidget):
     _model_name = Unicode("FigureModel").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     _toolbar = Instance(Toolbar, allow_none=True, default=None).tag(
+        sync=True, **widgets.widget_serialization)
+    _errors_box = Instance(ErrorsBox, allow_none=True, default=None).tag(
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
 
@@ -56,13 +59,17 @@ class Figure(widgets.DOMWidget):
         self._map.add_layer(layer)
 
 
-def figure(display_toolbar=True):
+def figure(display_toolbar=True, display_errors=True):
     """
     Create a gmaps figure
 
     This returns a `Figure` object to which you can add data layers.
 
-    :param display_toolbar: Boolean denoting whether to show the toolbar.
+    :param display_toolbar:
+        Boolean denoting whether to show the toolbar. Defaults to True.
+
+    :param display_errors:
+        Boolean denoting whether to show errors that arise in the client.
         Defaults to True.
 
     :returns:
@@ -77,4 +84,5 @@ def figure(display_toolbar=True):
     """
     _map = Map()
     _toolbar = Toolbar() if display_toolbar else None
-    return Figure(_map=_map, _toolbar=_toolbar)
+    _errors_box = ErrorsBox() if display_errors else None
+    return Figure(_map=_map, _toolbar=_toolbar, _errors_box=_errors_box)

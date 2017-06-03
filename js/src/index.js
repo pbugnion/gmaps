@@ -17,5 +17,6 @@ export * from './Heatmap';
 export * from './Marker';
 export * from './GeoJson';
 export * from './Directions';
+export * from './ErrorsBox'
 
 export { version } from '../package.json';
