@@ -49,9 +49,9 @@ export const FigureView = widgets.VBoxView.extend({
     },
 
     savePng() {
-        return this.mapView.then(view => {
+        return this.mapView.then(view =>
             view.savePng().catch(e => this.addError(e))
-        });
+        );
     },
 
     addError(errorMessage) {

@@ -85,20 +85,45 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
     },
 
     savePng() {
-        return new Promise((resolve, reject) => {
-            html2canvas(this.$el, {
-                useCORS: true,
-                logging: true,
-                onrendered: (canvas) => {
-                    const a = document.createElement("a");
-                    a.download = "map.png";
-                    a.href = canvas.toDataURL("image/png");
-                    document.body.appendChild(a);
-                    a.click();
-                    resolve();
-                }
-            })
+        const allLayers = Promise.all(this.layerViews.views);
+        const canDownloadEveryLayer = allLayers.then(layers =>
+            layers.every(layer => layer.canDownloadAsPng)
+        )
+        return canDownloadEveryLayer.then(canDownload => {
+            if (canDownload) {
+                return this._saveMapPng()
+            }
+            else {
+                const nonDownloadableLayers = allLayers.then(layers =>
+                    layers
+                        .filter(layer => !layer.canDownloadAsPng)
+                        .map(layer => layer.model.get('_view_name'))
+                )
+                const error = nonDownloadableLayers
+                    .then(layers => layers.join(', '))
+                    .then(text => Promise.reject(`Cannot download layers: ${text}`))
+                return error
+            }
         })
+    },
+
+    _saveMapPng() {
+       return new Promise((resolve, reject) => {
+           html2canvas(this.$el, {
+               useCORS: true,
+               onrendered: (canvas) => {
+                   const a = document.createElement("a");
+                   a.download = "map.png";
+                   a.href = canvas.toDataURL("image/png");
+                   document.body.appendChild(a);
+                   a.click();
+                   resolve();
+               },
+               onerror: (error) => {
+                   reject(error);
+               }
+           })
+       })
     }
 
 })
