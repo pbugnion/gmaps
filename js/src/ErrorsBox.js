@@ -1,4 +1,4 @@
-import widgets from 'jupyter-js-widgets'
+import widgets from 'jupyter-js-widgets';
 
 export const ErrorsBoxModel = widgets.DOMWidgetModel.extend({
     defaults: {
@@ -12,12 +12,14 @@ export const ErrorsBoxModel = widgets.DOMWidgetModel.extend({
 
     addError(errorMessage) {
         this.set('errors', this.get('errors').concat(errorMessage));
+        this.save_changes();
     },
 
     removeError(ierror) {
         const currentErrors = this.get('errors').slice();
         currentErrors.splice(ierror, 1);
         this.set('errors', currentErrors);
+        this.save_changes();
     }
 });
 
