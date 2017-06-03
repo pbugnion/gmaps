@@ -2,6 +2,18 @@
 Release notes
 -------------
 
+Version 0.5.1
+=============
+
+This patch release:
+ - fixes flakiness downloading images as PNGs (issue 129).
+ - adds an error box view for errors that come up in the frontend.
+
+It adds improvements to the development workflow:
+ - License is included in the source to facilicate deployment to conda-forge
+ - Facilitate installation in dev mode.
+ - Automation of release process.
+
 Version 0.5.0
 =============
 
