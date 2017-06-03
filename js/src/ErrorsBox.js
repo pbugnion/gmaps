@@ -12,6 +12,12 @@ export const ErrorsBoxModel = widgets.DOMWidgetModel.extend({
 
     addError(errorMessage) {
         this.set('errors', this.get('errors').concat(errorMessage));
+    },
+
+    removeError(ierror) {
+        const currentErrors = this.get('errors').slice();
+        currentErrors.splice(ierror, 1);
+        this.set('errors', currentErrors);
     }
 });
 
@@ -29,7 +35,9 @@ export const ErrorsBoxView = widgets.DOMWidgetView.extend({
     _renderErrors() {
         const errorContainer = $('<ul />').addClass("gmaps-error-box")
         this.model.get('errors').map(
-            message => $(`<li><pre>${message}</pre></li>`)
+            (message, ierror) =>
+                $(`<li><pre>${message}</pre></li>`)
+                    .click(() => this.model.removeError(ierror))
         ).forEach(element => errorContainer.append(element))
         this.$el.empty(); // Clear the current state
         this.$el.append(errorContainer);
