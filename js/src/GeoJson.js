@@ -75,6 +75,9 @@ export const GeoJsonFeatureView = GMapsLayerView.extend({
 
 
 export const GeoJsonLayerView = GMapsLayerView.extend({
+
+    canDownloadAsPng: true,
+
     render() {
         this.featureViews = new widgets.ViewList(this.addFeature, null, this)
         this.featureViews.update(this.model.get("features"))

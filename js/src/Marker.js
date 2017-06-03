@@ -199,6 +199,8 @@ export const MarkerView = BaseMarkerView.extend({
 
 
 export const MarkerLayerView = GMapsLayerView.extend({
+    canDownloadAsPng: true,
+    
     render() {
         this.markerViews = new widgets.ViewList(this.addMarker, null, this)
         this.markerViews.update(this.model.get("markers"))

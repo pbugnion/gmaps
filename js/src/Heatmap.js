@@ -23,6 +23,8 @@ export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
 
 
 const HeatmapLayerBaseView = GMapsLayerView.extend({
+    canDownloadAsPng: true,
+    
     render() {
         this.modelEvents() ;
         GoogleMapsLoader.load((google) => {
