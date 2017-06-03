@@ -27,9 +27,9 @@ export const ErrorsBoxView = widgets.DOMWidgetView.extend({
     },
 
     _renderErrors() {
-        const errorContainer = $('<ul />')
+        const errorContainer = $('<ul />').addClass("gmaps-error-box")
         this.model.get('errors').map(
-            message => $(`<li>${message}</li>`)
+            message => $(`<li><pre>${message}</pre></li>`)
         ).forEach(element => errorContainer.append(element))
         this.$el.empty(); // Clear the current state
         this.$el.append(errorContainer);
