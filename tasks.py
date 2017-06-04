@@ -95,6 +95,11 @@ def postrelease(ctx, version):
     run('git commit -m "Bump version to {}"'.format(version))
     run('git tag -a v{} -F changelog.tmp'.format(version))
     run('git push origin master --tags')
+    new_version = semver.bump_patch(version) + '-dev'
+    set_pyversion(new_version)
+    run('git add gmaps/_version.py')
+    run('git commit -m "Back to dev"')
+    run('git push origin master')
 
 
 def update_release_notes(version, new_lines):
