@@ -2,6 +2,8 @@
 import os
 import tempfile
 import itertools
+import shutil
+import re
 
 from invoke import task, run
 
@@ -40,7 +42,6 @@ def prerelease(ctx, version):
         run('npm publish')
     finally:
         os.chdir(GMAPS_DIR)
-    print('Remember to reset the active version on Pypi')
 
 
 @task(help={'version': 'Version number to release'})
@@ -95,6 +96,39 @@ def postrelease(ctx, version):
     run('git commit -m "Bump version to {}"'.format(version))
     run('git tag -a v{} -F changelog.tmp'.format(version))
     run('git push origin master --tags')
+    new_version = semver.bump_patch(version) + '-dev'
+    set_pyversion(new_version)
+    run('git add gmaps/_version.py')
+    run('git commit -m "Back to dev"')
+    run('git push origin master')
+
+
+@task(help={
+    'version': 'Version number to finalize. Must be '
+               'the same version number that was used in the release.'
+})
+def release_conda(ctx, version):
+    """
+    Open a PR for the new release in conda-forge.
+    """
+    sha256 = get_file_sha256('dist/gmaps-{}.tar.gz'.format(version))
+    print('Release SHA256 hash: {}'.format(sha256))
+    tempdir = tempfile.mkdtemp()
+    try:
+        print('Cloning gmaps-feedstock to {}'.format(tempdir))
+        os.chdir(tempdir)
+        run('git clone https://github.com/conda-forge/gmaps-feedstock.git')
+        os.chdir('gmaps-feedstock')
+        branch_name = 'release-version-{}'.format(version)
+        run('git checkout -b {}'.format(branch_name))
+        update_conda_recipe(version, sha256)
+        run('git add recipe/meta.yaml')
+        run('git commit -m "Release version {}"'.format(version))
+        run('git push origin {}'.format(branch_name))
+        print('URL: https://github.com/conda-forge/gmaps-feedstock')
+    finally:
+        print('Deleting temporary directory {}'.format(tempdir))
+        shutil.rmtree(tempdir)
 
 
 def update_release_notes(version, new_lines):
@@ -153,6 +187,37 @@ def set_jsversion(version):
         f.writelines(package_json)
 
 
+def update_conda_recipe(version, sha256):
+    with open('recipe/meta.yaml') as f:
+        lines = [line.rstrip() for line in f]
+    updated_lines = replace_line(
+        lines,
+        'set version = ',
+        '{{% set version = "{}" %}}'.format(version)
+    )
+    updated_lines = replace_line(
+        updated_lines,
+        'set sha256 = ',
+        '{{% set sha256 = "{}" %}}'.format(sha256)
+    )
+    with open('recipe/meta.yaml', 'w') as f:
+        f.writelines([line + '\n' for line in updated_lines])
+
+
+def get_file_sha256(path):
+    sha256_output = run(
+        'shasum -a 256 {}'.format(path),
+        hide=True
+    )
+    if not sha256_output.ok:
+        print('Error getting sha256.')
+        print(sha256_output.stdout)
+        exit()
+    else:
+        sha256 = sha256_output.stdout.split(' ', 1)[0]
+        return sha256
+
+
 def open_editor(initial_message):
     editor = os.environ.get('EDITOR', 'vim')
     tmp = tempfile.NamedTemporaryFile(suffix='.tmp')
@@ -168,3 +233,16 @@ def open_editor(initial_message):
         lines = f.readlines()
 
     return lines
+
+
+def replace_line(lines, regexp, new_line):
+    """
+    Replace a line that matches 'regexp'
+    """
+    for (iline, line) in enumerate(lines):
+        match_result = re.search(regexp, line)
+        if match_result is not None:
+            break
+    updated_lines = lines[:]
+    updated_lines[iline] = new_line
+    return updated_lines
