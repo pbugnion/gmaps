@@ -15,9 +15,3 @@ This is a set of instructions for releasing to Pypi. The release process is some
  - Verify that the new version is available by running ``pip install gmaps`` in a new virtual environment.
 
  - Run ``invoke postrelease <version>``, where ``version`` is the version number of the new release. This will commit the changes in version, add an annotated tag from the changelog and push the changes to Github.
-
- - Change the version number in ``_version.py`` back to a ``dev`` version. It's better to bump just the patch release, even if you think the next release may be a minor release.
-
- - Commit the change with a message like `Back to dev`.
-
- - Push the change to master.
