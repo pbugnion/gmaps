@@ -14,4 +14,6 @@ This is a set of instructions for releasing to Pypi. The release process is some
 
  - Verify that the new version is available by running ``pip install gmaps`` in a new virtual environment.
 
- - Run ``invoke postrelease <version>``, where ``version`` is the version number of the new release. This will commit the changes in version, add an annotated tag from the changelog and push the changes to Github.
+ - Run ``invoke postrelease <version>``, where ``version`` is the version number of the new release. This will commit the changes in version, add an annotated tag from the changelog and push the changes to Github. It will then change the version back to a ``-dev`` version.
+
+ - Run ``invoke release_conda <version>`` to release the new version to conda-forge.
