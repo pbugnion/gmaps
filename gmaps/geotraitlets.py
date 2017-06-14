@@ -59,7 +59,9 @@ _color_names = {
 
 _color_re = re.compile(r'#[a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?$')
 _rgb_re = re.compile(r'rgb\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3}\)')
-_rgba_re = re.compile(r'rgba\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3},(?:0?\.[0-9]*|1\.0)\)')
+_rgba_re = re.compile(
+    r'rgba\([0-9]{1,3},[0-9]{1,3},[0-9]{1,3},(?:0?\.[0-9]*|1\.0)\)'
+)
 
 
 class ColorString(traitlets.Unicode):
