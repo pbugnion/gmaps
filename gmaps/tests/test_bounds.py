@@ -59,8 +59,19 @@ class LongitudeBounds(unittest.TestCase):
 
 class MergeLongitudeBounds(unittest.TestCase):
 
+    def _verify_bounds(self, bounds, expected_lower, expected_upper):
+        lower, upper = merge_longitude_bounds(bounds)
+        assert lower == expected_lower
+        assert upper == expected_upper
+
     def test_merge_longitude_bounds(self):
-        longitude_bounds = [(10.0, 20.0), (15.0, 25.0)]
-        lower, upper = merge_longitude_bounds(longitude_bounds)
-        assert lower == 10.0
-        assert upper == 25.0
+        bounds = [(10.0, 20.0), (15.0, 25.0)]
+        self._verify_bounds(bounds, 10.0, 25.0)
+
+    def test_merge_overlapping_bounds(self):
+        bounds = [(5.0, 55.0), (20.0, 25.0)]
+        self._verify_bounds(bounds, 5.0, 55.0)
+
+    def test_merge_negative_bounds(self):
+        bounds = [(-25.0, 5.0), (10.0, 15.0)]
+        self._verify_bounds(bounds, -25.0, 15.0)
