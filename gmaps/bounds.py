@@ -1,6 +1,9 @@
 import math
 
 
+EPSILON = 1e-5
+
+
 def latitude_bounds(latitudes):
     """
     Estimate latitude bound with 2*sample standard deviation
@@ -11,8 +14,8 @@ def latitude_bounds(latitudes):
         (latitude-mean)**2 for latitude in latitudes
     )
     standard_deviation = math.sqrt(sum_squares/float(N))
-    lower_bound = max(mean - 2.0*standard_deviation, -89.9)
-    upper_bound = min(mean + 2.0*standard_deviation, 89.9)
+    lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
+    upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
     return lower_bound, upper_bound
 
 
