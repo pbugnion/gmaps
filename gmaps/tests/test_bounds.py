@@ -42,3 +42,8 @@ class LongitudeBounds(unittest.TestCase):
         assert -25.0 < lower < -15.0
         assert -15.0 < upper < -5.0
 
+    def test_longitudes_whole_earth(self):
+        longitudes = np.linspace(-179.0, 179.0, 100)
+        lower, upper = longitude_bounds(longitudes)
+        assert -180.0 < lower < -179.0
+        assert 179.0 < upper < 180.0

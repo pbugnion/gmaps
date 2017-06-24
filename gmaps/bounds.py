@@ -38,7 +38,7 @@ def longitude_bounds(longitudes):
     Rsq = (1/N**2) * (sum_cos+sum_sin)
     standard_deviation = math.sqrt(-math.log(Rsq))
     extent = 2.0*math.degrees(standard_deviation)
-    extent = min(extent, 180)
+    extent = min(extent, 180.0 - EPSILON)
 
     # centre the bound within [-180, 180]
     lower_bound = ((mean - extent + 180.0) % 360.0) - 180.0
