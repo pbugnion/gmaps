@@ -31,16 +31,19 @@ def longitude_bounds(longitudes):
     for how to calculate the relevant statistics.
     """
     N = float(len(longitudes))
-    mean = sum(longitudes) / N
     radians = [math.radians(longitude) for longitude in longitudes]
-    sum_cos = sum(math.cos(r) for r in radians)**2
-    sum_sin = sum(math.sin(r) for r in radians)**2
-    Rsq = (1/N**2) * (sum_cos+sum_sin)
+    sum_cos = sum(math.cos(r) for r in radians)
+    sum_cos_sq = sum_cos**2
+    sum_sin = sum(math.sin(r) for r in radians)
+    sum_sin_sq = sum_sin**2
+    mean_radians = math.atan2(sum_sin, sum_cos)
+    mean_degrees = math.degrees(mean_radians)
+    Rsq = (1/N**2) * (sum_cos_sq + sum_sin_sq)
     standard_deviation = math.sqrt(-math.log(Rsq))
     extent = 2.0*math.degrees(standard_deviation)
     extent = min(extent, 180.0 - EPSILON)
 
     # centre the bound within [-180, 180]
-    lower_bound = ((mean - extent + 180.0) % 360.0) - 180.0
-    upper_bound = ((mean + extent + 180.0) % 360.0) - 180.0
+    lower_bound = ((mean_degrees - extent + 180.0) % 360.0) - 180.0
+    upper_bound = ((mean_degrees + extent + 180.0) % 360.0) - 180.0
     return lower_bound, upper_bound
