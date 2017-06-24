@@ -1,10 +1,10 @@
 
 import unittest
-import pytest
 
 import numpy as np
 
 from ..bounds import latitude_bounds, longitude_bounds
+
 
 class LatitudeBounds(unittest.TestCase):
 
@@ -45,7 +45,7 @@ class LongitudeBounds(unittest.TestCase):
     def test_longitudes_whole_earth(self):
         longitudes = np.linspace(-179.0, 179.0, 100)
         lower, upper = longitude_bounds(longitudes)
-        # either of these conditions result in google maps 
+        # either of these conditions result in google maps
         # showing entire planet
         assert (upper - lower > 180.0) or (upper < lower)
 
@@ -55,4 +55,3 @@ class LongitudeBounds(unittest.TestCase):
         print(lower, upper)
         assert 177.0 < lower < 180.0
         assert -180.0 < upper < -177.0
-
