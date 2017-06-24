@@ -27,3 +27,18 @@ class LatitudeBounds(unittest.TestCase):
         assert -90.0 < lower < -87.0
         assert 87.0 < upper < 90.0
 
+
+class LongitudeBounds(unittest.TestCase):
+
+    def test_longitude_bounds(self):
+        longitudes = [10.0, 15.0, 20.0]
+        lower, upper = longitude_bounds(longitudes)
+        assert 5.0 < lower < 15.0
+        assert 15.0 < upper < 25.0
+
+    def test_negative_longitudes(self):
+        longitudes = [-10.0, -15.0, -20.0]
+        lower, upper = longitude_bounds(longitudes)
+        assert -25.0 < lower < -15.0
+        assert -15.0 < upper < -5.0
+
