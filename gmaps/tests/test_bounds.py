@@ -47,3 +47,9 @@ class LongitudeBounds(unittest.TestCase):
         lower, upper = longitude_bounds(longitudes)
         assert -180.0 < lower < -179.0
         assert 179.0 < upper < 180.0
+
+    def test_longitudes_around_dateline(self):
+	longitudes = [179.0, -179.0]
+	lower, upper = longitude_bounds(longitudes)
+	assert 178.0 < lower < 180.0
+	assert -180.0 < upper < -178.0
