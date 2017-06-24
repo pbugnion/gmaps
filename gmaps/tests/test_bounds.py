@@ -3,7 +3,7 @@ import unittest
 
 import numpy as np
 
-from ..bounds import latitude_bounds, longitude_bounds
+from ..bounds import latitude_bounds, longitude_bounds, merge_longitude_bounds
 
 
 class LatitudeBounds(unittest.TestCase):
@@ -55,3 +55,12 @@ class LongitudeBounds(unittest.TestCase):
         print(lower, upper)
         assert 177.0 < lower < 180.0
         assert -180.0 < upper < -177.0
+
+
+class MergeLongitudeBounds(unittest.TestCase):
+
+    def test_merge_longitude_bounds(self):
+        longitude_bounds = [(10.0, 20.0), (15.0, 25.0)]
+        lower, upper = merge_longitude_bounds(longitude_bounds)
+        assert lower == 10.0
+        assert upper == 25.0

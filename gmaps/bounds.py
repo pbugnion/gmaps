@@ -47,3 +47,93 @@ def longitude_bounds(longitudes):
     lower_bound = ((mean_degrees - extent + 180.0) % 360.0) - 180.0
     upper_bound = ((mean_degrees + extent + 180.0) % 360.0) - 180.0
     return lower_bound, upper_bound
+
+
+def merge_longitude_bounds(longitude_bounds_list):
+    """
+    Return a single set of bounds that encompasses a list of bounds
+    """
+
+    # I assume (lng0, lng1) in a layer's
+    # bounds means that the layer wants the map to
+    # cover all the longitudes that lie
+    # (going eastwards) from lng0 to lng1.
+    # For example: (170,-170) means we cover 20 degrees of
+    # latitude starting at 170 (through 180)
+    # Whereas (-170,170) means we start where the previous
+    # interval ended (at 170), go through lng 0, and eventually
+    # to 170 (340 degrees).
+    #
+    # As a side note, this definition means that (lng1,lng0) is
+    # the complement of (lng0,lng1) on this notation.
+    # It is important we have this direction information somehow,
+    # because otherwise the bounds are underspecified.
+    #
+    # As another side note, the meaning of (15, 30) in this notation
+    # is the same as that of (15+/-360, 30) and that of (15, 30 +/- 360),
+    # because we stop as soon as we hit the coordinate the first
+    # time.
+    #
+    # -180                                            180 = -180
+    #   |     >--------------->                        |
+    #   |         >------->                            |
+    #   |            >------------->                   |
+    #   |->    >------->                         >-----|
+    #   11000012223334433322221111100000000000000111111|
+    #                              ^ biggest empty range
+    # the bounds are then
+    #  First we find which longitude ranges are feasible
+    #  to cut (they have no range overlaps) by counting number of
+    #  intervals that overlap and finding 0s.
+    #  The initial condition (at -180)
+    #  we find from counting how many intervals have west > east.
+    #  then we go through our list.
+    #  Of all the segments with a 0 count, the longest one
+    #  is the one we should use to cut the map (here we
+    #  have two choices)
+    # extract and normalize lngs from bounds (if they arent normalized)
+    directed_intervals = [
+        (_normalize_longitude(lower), _normalize_longitude(upper))
+        for lower, upper in longitude_bounds_list
+    ]
+
+    # coverage is initially the number of wrap-around intervals. it can be 0.
+    coverage = sum(1 for lower, upper in directed_intervals if lower > upper)
+
+    starts = [(lower, 1) for (lower, _) in directed_intervals]
+
+    ends = [(upper, -1) for (_, upper) in directed_intervals]
+
+    endpoints = starts + ends
+    endpoints += [(x + 360, i) for (x, i) in endpoints]
+
+    # we repeat the longs shifted by 360 to handle gaps that overlap with 180
+    # without special-casing.
+    interleaved = sorted(endpoints)
+
+    # The largest clear gap we know of.
+    # We start by assuming there isn't one.
+    largest_gap = (-180.0, -180.0)
+    # current segment starts as -180
+    seg_start = -180.0
+    for (bnd, delta) in interleaved:
+        if coverage == 0 \
+          and (bnd - seg_start) > (largest_gap[1] - largest_gap[0]):
+            largest_gap = (seg_start, bnd)
+        seg_start = bnd
+        coverage += delta
+        assert(coverage >= 0)
+
+    # reversing the lng order in a gap gives us a valid bound
+    # the largest gap has the smallest bound
+    upper, lower = largest_gap
+    return _normalize_longitude(lower), _normalize_longitude(upper)
+
+
+def _normalize_longitude(longitude):
+    """ An equivalent longitude in the [-180,180) range """
+    longitude = longitude % 360
+    if longitude >= 180:
+        longitude = longitude - 360
+
+    return longitude
