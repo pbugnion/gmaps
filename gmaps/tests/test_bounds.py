@@ -75,3 +75,9 @@ class MergeLongitudeBounds(unittest.TestCase):
     def test_merge_negative_bounds(self):
         bounds = [(-25.0, 5.0), (10.0, 15.0)]
         self._verify_bounds(bounds, -25.0, 15.0)
+
+    def test_merge_whole_earth(self):
+        whole_earth_longitudes = np.linspace(-179.0, 179.0, 100)
+        whole_earth_bounds = longitude_bounds(whole_earth_longitudes)
+        bounds = [whole_earth_bounds, (10.0, 15.0)]
+        self._verify_bounds(bounds, *whole_earth_bounds)
