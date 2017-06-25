@@ -117,6 +117,14 @@ class TestColorAlpha(unittest.TestCase):
         a = self.A(x=(100, 0, 10, 0.5))
         assert a.x == 'rgba(100,0,10,0.5)'
 
+    def test_accept_rgba_tuple_alpha_one(self):
+        a = self.A(x=(100, 0, 250, 1.0))
+        assert a.x == 'rgba(100,0,250,1.0)'
+
+    def test_accept_rgba_tuple_alpha_zero(self):
+        a = self.A(x=(100, 0, 250, 0.0))
+        assert a.x == 'rgba(100,0,250,0.0)'
+
     def test_allow_none(self):
         class A(traitlets.HasTraits):
             x = geotraitlets.ColorAlpha(default_value=None, allow_none=True)
