@@ -41,11 +41,13 @@ def longitude_bounds(longitudes):
     Rsq = (1/N**2) * (sum_cos_sq + sum_sin_sq)
     standard_deviation = math.sqrt(-math.log(Rsq))
     extent = 2.0*math.degrees(standard_deviation)
-    extent = min(extent, 180.0 - EPSILON)
-
-    # centre the bound within [-180, 180]
-    lower_bound = ((mean_degrees - extent + 180.0) % 360.0) - 180.0
-    upper_bound = ((mean_degrees + extent + 180.0) % 360.0) - 180.0
+    if extent > 180.0:
+        # longitudes cover entire map
+        upper_bound = 180.0 - EPSILON
+        lower_bound = -upper_bound
+    else:
+        lower_bound = _normalize_longitude(mean_degrees - extent)
+        upper_bound = _normalize_longitude(mean_degrees + extent)
     return lower_bound, upper_bound
 
 
