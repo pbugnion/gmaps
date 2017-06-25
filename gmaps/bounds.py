@@ -3,6 +3,10 @@ import math
 
 EPSILON = 1e-5
 
+# GoogleMaps imposes latitude restrictions
+MAX_ALLOWED_LATITUDE = 85.0
+MIN_ALLOWED_LATITUDE = -85.0
+
 
 def latitude_bounds(latitudes):
     """
@@ -16,6 +20,8 @@ def latitude_bounds(latitudes):
     standard_deviation = math.sqrt(sum_squares/float(N))
     lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
     upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
+    lower_bound = max(lower_bound, MIN_ALLOWED_LATITUDE)
+    upper_bound = min(upper_bound, MAX_ALLOWED_LATITUDE)
     return lower_bound, upper_bound
 
 
@@ -41,11 +47,13 @@ def longitude_bounds(longitudes):
     Rsq = (1/N**2) * (sum_cos_sq + sum_sin_sq)
     standard_deviation = math.sqrt(-math.log(Rsq))
     extent = 2.0*math.degrees(standard_deviation)
-    extent = min(extent, 180.0 - EPSILON)
-
-    # centre the bound within [-180, 180]
-    lower_bound = ((mean_degrees - extent + 180.0) % 360.0) - 180.0
-    upper_bound = ((mean_degrees + extent + 180.0) % 360.0) - 180.0
+    if extent > 180.0:
+        # longitudes cover entire map
+        upper_bound = 180.0 - EPSILON
+        lower_bound = -upper_bound
+    else:
+        lower_bound = _normalize_longitude(mean_degrees - extent)
+        upper_bound = _normalize_longitude(mean_degrees + extent)
     return lower_bound, upper_bound
 
 
