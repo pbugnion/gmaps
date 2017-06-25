@@ -133,6 +133,10 @@ class TestColorAlpha(unittest.TestCase):
         a = self.A(x=(100, 0, 250, 1.0))
         assert a.x == 'rgba(100,0,250,1.0)'
 
+    def test_accept_rgba_tuple_alpha_one_int(self):
+        a = self.A(x=(100, 0, 250, 1))
+        assert a.x == 'rgba(100,0,250,1.0)'
+
     def test_accept_rgba_tuple_alpha_zero(self):
         a = self.A(x=(100, 0, 250, 0.0))
         assert a.x == 'rgba(100,0,250,0.0)'
