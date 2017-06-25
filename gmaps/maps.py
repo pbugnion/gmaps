@@ -3,6 +3,8 @@ import ipywidgets as widgets
 from traitlets import (Unicode, default, List, Tuple, Instance,
                        observe, Dict, HasTraits)
 
+from .bounds import merge_longitude_bounds
+
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
 
@@ -31,6 +33,7 @@ class ConfigurationMixin(HasTraits):
 
 
 class Map(widgets.DOMWidget, ConfigurationMixin):
+
     """
     Base map class
 
@@ -69,9 +72,14 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
         ]
         if bounds_list:
             min_latitude = min(bounds[0][0] for bounds in bounds_list)
-            min_longitude = min(bounds[0][1] for bounds in bounds_list)
-            max_latitude = min(bounds[1][0] for bounds in bounds_list)
-            max_longitude = min(bounds[1][1] for bounds in bounds_list)
+            max_latitude = max(bounds[1][0] for bounds in bounds_list)
+
+            longitude_bounds = [
+                (bounds[0][1], bounds[1][1]) for bounds in bounds_list
+            ]
+            min_longitude, max_longitude =\
+                merge_longitude_bounds(longitude_bounds)
+
             self.data_bounds = [
                 (min_latitude, min_longitude),
                 (max_latitude, max_longitude)
