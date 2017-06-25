@@ -3,6 +3,10 @@ import math
 
 EPSILON = 1e-5
 
+# GoogleMaps imposes latitude restrictions
+MAX_ALLOWED_LATITUDE = 85.0
+MIN_ALLOWED_LATITUDE = -85.0
+
 
 def latitude_bounds(latitudes):
     """
@@ -16,6 +20,8 @@ def latitude_bounds(latitudes):
     standard_deviation = math.sqrt(sum_squares/float(N))
     lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
     upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
+    lower_bound = max(lower_bound, MIN_ALLOWED_LATITUDE)
+    upper_bound = min(upper_bound, MAX_ALLOWED_LATITUDE)
     return lower_bound, upper_bound
 
 

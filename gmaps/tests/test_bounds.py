@@ -3,7 +3,10 @@ import unittest
 
 import numpy as np
 
-from ..bounds import latitude_bounds, longitude_bounds, merge_longitude_bounds
+from ..bounds import (
+    latitude_bounds, longitude_bounds, merge_longitude_bounds,
+    MAX_ALLOWED_LATITUDE, MIN_ALLOWED_LATITUDE
+)
 
 
 class LatitudeBounds(unittest.TestCase):
@@ -17,15 +20,14 @@ class LatitudeBounds(unittest.TestCase):
     def test_latitude_whole_earth(self):
         latitudes = np.linspace(-89.0, 89.0, 100)
         lower, upper = latitude_bounds(latitudes)
-        assert -90.0 < lower < -89.0
-        assert 89.0 < upper < 90.0
+        assert lower == MIN_ALLOWED_LATITUDE
+        assert upper == MAX_ALLOWED_LATITUDE
 
     def test_extrema(self):
         latitudes = [89.0, -89.0]
         lower, upper = latitude_bounds(latitudes)
-        print(lower, upper)
-        assert -90.0 < lower < -87.0
-        assert 87.0 < upper < 90.0
+        assert lower == MIN_ALLOWED_LATITUDE
+        assert upper == MAX_ALLOWED_LATITUDE
 
 
 class LongitudeBounds(unittest.TestCase):
