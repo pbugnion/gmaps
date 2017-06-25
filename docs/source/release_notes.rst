@@ -2,6 +2,14 @@
 Release notes
 -------------
 
+Version 0.5.2
+=============
+
+This is a bugfix release.
+ - Bounds are now calculated correctly when there are multiple layers (PR 148).
+ - Latitude bounds cannot exceed the maximum allowed by Google Maps (PR 149).
+ - Alpha values of 1.0 are now allowed.
+
 Version 0.5.1
 =============
 
