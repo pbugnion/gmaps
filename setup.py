@@ -24,8 +24,6 @@ def in_read_the_docs():
 
 from distutils import log
 log.set_verbosity(log.DEBUG)
-log.info('setup.py entered')
-log.info('$PATH=%s' % os.environ['PATH'])
 
 LONG_DESCRIPTION = """
 `gmaps` is a Jupyter plugin for embedding Google maps in Jupyter notebooks. It is designed to help visualize and interact with geographical data.
