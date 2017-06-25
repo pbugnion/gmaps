@@ -36,6 +36,18 @@ class ColorString(unittest.TestCase):
         a = self.A(x='rgba(100, 0, 0,0.5)')
         assert a.x == 'rgba(100,0,0,0.5)'
 
+    def test_accept_rgba_string_alpha_one(self):
+        a = self.A(x='rgba(100, 0, 0, 1.0)')
+        assert a.x == 'rgba(100,0,0,1.0)'
+
+    def test_accept_rgba_string_alpha_one_int(self):
+        a = self.A(x='rgba(100, 0, 0, 1)')
+        assert a.x == 'rgba(100,0,0,1)'
+
+    def test_accept_rgba_string_alpha_zero_int(self):
+        a = self.A(x='rgba(100, 0, 0, 0)')
+        assert a.x == 'rgba(100,0,0,0)'
+
     def test_allow_none(self):
         class A(traitlets.HasTraits):
             x = geotraitlets.ColorString(
@@ -116,6 +128,18 @@ class TestColorAlpha(unittest.TestCase):
     def test_accept_rgba_tuple(self):
         a = self.A(x=(100, 0, 10, 0.5))
         assert a.x == 'rgba(100,0,10,0.5)'
+
+    def test_accept_rgba_tuple_alpha_one(self):
+        a = self.A(x=(100, 0, 250, 1.0))
+        assert a.x == 'rgba(100,0,250,1.0)'
+
+    def test_accept_rgba_tuple_alpha_one_int(self):
+        a = self.A(x=(100, 0, 250, 1))
+        assert a.x == 'rgba(100,0,250,1.0)'
+
+    def test_accept_rgba_tuple_alpha_zero(self):
+        a = self.A(x=(100, 0, 250, 0.0))
+        assert a.x == 'rgba(100,0,250,0.0)'
 
     def test_allow_none(self):
         class A(traitlets.HasTraits):
