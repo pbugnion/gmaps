@@ -81,3 +81,10 @@ class MergeLongitudeBounds(unittest.TestCase):
         whole_earth_bounds = longitude_bounds(whole_earth_longitudes)
         bounds = [whole_earth_bounds, (10.0, 15.0)]
         self._verify_bounds(bounds, *whole_earth_bounds)
+
+    def test_single_bounds(self):
+        bounds = (10.0, 20.0)
+        self._verify_bounds([bounds], *bounds)
+
+    def test_verify_no_bounds(self):
+        self._verify_bounds([], -180.0, -180.0)
