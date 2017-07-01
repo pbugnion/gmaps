@@ -79,7 +79,10 @@ export class GeoJsonFeatureView extends GMapsLayerView {
 
 export class GeoJsonLayerView extends GMapsLayerView {
 
-    static canDownloadAsPng = true
+    constructor(options) {
+        super(options);
+        this.canDownloadAsPng = true;
+    }
 
     render() {
         this.featureViews = new widgets.ViewList(this.addFeature, null, this)

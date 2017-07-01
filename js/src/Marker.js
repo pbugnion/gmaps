@@ -203,7 +203,10 @@ export class MarkerView extends BaseMarkerView {
 
 
 export class MarkerLayerView extends GMapsLayerView {
-    static canDownloadAsPng = true
+    constructor(options) {
+        super(options);
+        this.canDownloadAsPng = true;
+    }
 
     render() {
         this.markerViews = new widgets.ViewList(this.addMarker, null, this)

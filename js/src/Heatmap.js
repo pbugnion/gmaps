@@ -27,8 +27,12 @@ export class WeightedHeatmapLayerModel extends GMapsLayerModel {
 
 
 class HeatmapLayerBaseView extends GMapsLayerView {
-    static canDownloadAsPng = true
-    
+
+    constructor(options) {
+        super(options)
+        this.canDownloadAsPng = true;
+    }
+
     render() {
         this.modelEvents() ;
         GoogleMapsLoader.load((google) => {

@@ -18,7 +18,10 @@ export class DirectionsLayerModel extends GMapsLayerModel {
 
 
 export class DirectionsLayerView extends GMapsLayerView {
-    static canDownloadAsPng = false
+    constructor(options) {
+        super(options);
+        this.canDownloadAsPng = false;
+    }
     
     render() {
         const rendererOptions = { map: this.mapView.map }
