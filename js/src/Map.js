@@ -23,6 +23,11 @@ function reloadGoogleMaps(configuration) {
     };
 }
 
+// Constants
+
+const DATA_BOUNDS = "DATA_BOUNDS";
+const ZOOM_CENTER = "ZOOM_CENTER";
+
 
 // Mixins
 
@@ -43,22 +48,21 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
         this.el.style["width"] = this.model.get("width");
         this.el.style["height"] = this.model.get("height");
 
-        const initialBounds = this.model.get("data_bounds");
-
         this.layerViews = new widgets.ViewList(this.addLayerModel, null, this);
         this.modelEvents() ;
 
         this.on("displayed", () => {
             GoogleMapsLoader.load((google) => {
                 this.map = new google.maps.Map(this.el) ;
-                this.updateBounds(initialBounds);
+
+                this.setViewport();
 
                 this.layerViews.update(this.model.get("layers"));
 
                 // hack to force the map to redraw
                 setTimeout(() => {
-                    google.maps.event.trigger(this.map, 'resize') ;
-                    this.updateBounds(initialBounds);
+                    google.maps.event.trigger(this.map, 'resize');
+                    this.setViewport();
                 }, 500);
             })
         })
@@ -68,7 +72,29 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
         this.model.on("change:data_bounds", this.updateBounds, this);
     }
 
-    updateBounds(bounds) {
+    setViewport() {
+        const viewportMode = this.model.get('viewport_mode');
+        if (viewportMode === DATA_BOUNDS) {
+            const bounds = this.model.get("data_bounds");
+            this.setViewportFromBounds(bounds)
+        }
+        else if (viewportMode === ZOOM_CENTER) {
+            const zoom = this.model.get("zoom");
+            const center = this.model.get("center");
+            this.setViewportFromZoomCenter(zoom, center);
+        }
+        else {
+            console.error(`Unexpected viewport mode: ${viewportMode}`);
+        }
+    }
+
+    setViewportFromZoomCenter(zoom, center) {
+        const [lat, lng] = center;
+        this.map.setCenter(new google.maps.LatLng(lat, lng));
+        this.map.setZoom(zoom);
+    }
+
+    setViewportFromBounds(bounds) {
         const [[latBL, lngBL], [latTR, lngTR]] = bounds
         const boundBL = new google.maps.LatLng(latBL, lngBL)
         const boundTR = new google.maps.LatLng(latTR, lngTR)
@@ -128,7 +154,10 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
             _model_module : 'jupyter-gmaps',
             width: "600px",
             height: "400px",
-            data_bounds: null
+            data_bounds: null,
+            viewport_mode: DATA_BOUNDS,
+            zoom: 8,
+            center: [51.0, 67.0]
         };
     }
         
