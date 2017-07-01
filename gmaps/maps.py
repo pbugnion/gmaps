@@ -1,7 +1,7 @@
 
 import ipywidgets as widgets
 from traitlets import (Unicode, default, List, Tuple, Instance,
-                       observe, Dict, HasTraits)
+                       observe, Dict, HasTraits, Integer)
 
 from .bounds import merge_longitude_bounds
 
@@ -56,6 +56,9 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
     layers = Tuple(trait=Instance(widgets.Widget)).tag(
         sync=True, **widgets.widget_serialization)
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
+    viewport_mode = Unicode("DATA_BOUNDS").tag(sync=True)
+    zoom = Integer().tag(sync=True)
+    center = List().tag(sync=True)
 
     def add_layer(self, layer):
         self.layers = tuple([l for l in self.layers] + [layer])
