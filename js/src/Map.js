@@ -26,7 +26,7 @@ function reloadGoogleMaps(configuration) {
 
 // Mixins
 
-const ConfigurationMixin = {
+const ConfigurationMixin = (superclass) => class extends superclass {
     loadConfiguration() {
         const modelConfiguration = this.model.get("configuration")
         reloadGoogleMaps(modelConfiguration)
@@ -36,7 +36,8 @@ const ConfigurationMixin = {
 
 // Views
 
-export const PlainmapView = widgets.DOMWidgetView.extend({
+export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
+
     render() {
         this.loadConfiguration();
         this.el.style["width"] = this.model.get("width");
@@ -61,11 +62,11 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
                 }, 500);
             })
         })
-    },
+    }
 
     modelEvents() {
         this.model.on("change:data_bounds", this.updateBounds, this);
-    },
+    }
 
     updateBounds(bounds) {
         const [[latBL, lngBL], [latTR, lngTR]] = bounds
@@ -73,7 +74,7 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
         const boundTR = new google.maps.LatLng(latTR, lngTR)
         const boundsAsGoogle = new google.maps.LatLngBounds(boundBL, boundTR)
         this.map.fitBounds(boundsAsGoogle);
-    },
+    }
 
     addLayerModel(childModel) {
         return this.create_child_view(
@@ -82,7 +83,7 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
             childView.addToMapView(this) ;
             return childView;
         })
-    },
+    }
 
     savePng() {
         const allLayers = Promise.all(this.layerViews.views);
@@ -111,29 +112,28 @@ export const PlainmapView = widgets.DOMWidgetView.extend({
                 return error
             }
         })
-    },
+    }
 
-})
-
-_.extend(PlainmapView.prototype, ConfigurationMixin);
-
+}
 
 // Models
 
-export const PlainmapModel = widgets.DOMWidgetModel.extend({
-    defaults: {
-        ...widgets.DOMWidgetModel.prototype.defaults,
-        _view_name: "PlainmapView",
-        _model_name: "PlainmapModel",
-        _view_module : 'jupyter-gmaps',
-        _model_module : 'jupyter-gmaps',
-        width: "600px",
-        height: "400px",
-        data_bounds: null
+export class PlainmapModel extends widgets.DOMWidgetModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _view_name: "PlainmapView",
+            _model_name: "PlainmapModel",
+            _view_module : 'jupyter-gmaps',
+            _model_module : 'jupyter-gmaps',
+            width: "600px",
+            height: "400px",
+            data_bounds: null
+        };
     }
-}, {
-    serializers: {
+        
+    static serializers = {
+        ...widgets.DOMWidgetModel.serializers,
         layers: {deserialize: widgets.unpack_models},
-        ...widgets.DOMWidgetModel.serializers
     }
-});
+}

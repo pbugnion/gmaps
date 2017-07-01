@@ -4,36 +4,42 @@ import widgets from 'jupyter-js-widgets';
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
 
-export const SymbolModel = GMapsLayerModel.extend({
-    defaults: {
-        ...GMapsLayerModel.prototype.defaults,
-        _view_name: "SymbolView",
-        _model_name: "SymbolModel"
+export class SymbolModel extends GMapsLayerModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _view_name: "SymbolView",
+            _model_name: "SymbolModel"
+        }
     }
-})
+}
 
 
-export const MarkerModel = GMapsLayerModel.extend({
-    defaults: {
-        ...GMapsLayerModel.prototype.defaults,
-        _view_name: "MarkerView",
-        _model_name: "MarkerModel"
+export class MarkerModel extends GMapsLayerModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _view_name: "MarkerView",
+            _model_name: "MarkerModel"
+        }
     }
-})
+}
 
 
-export const MarkerLayerModel = GMapsLayerModel.extend({
-    defaults: {
-        ...GMapsLayerModel.prototype.defaults,
-        _view_name: "MarkerLayerView",
-        _model_name: "MarkerLayerModel"
+export class MarkerLayerModel extends GMapsLayerModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _view_name: "MarkerLayerView",
+            _model_name: "MarkerLayerModel"
+        }
     }
-}, {
-    serializers: {
-        markers: {deserialize: widgets.unpack_models},
-        ...widgets.DOMWidgetModel.serializers
+
+    static serializers = {
+        ...widgets.DOMWidgetModel.serializers,
+        markers: {deserialize: widgets.unpack_models}
     }
-})
+}
 
 
 /* Base class for markers.
@@ -44,7 +50,7 @@ export const MarkerLayerModel = GMapsLayerModel.extend({
  * to add to the marker, and `setStyleEvents`, which must set
  * up events for those styles.
  */
-const BaseMarkerView = widgets.WidgetView.extend({
+class BaseMarkerView extends widgets.WidgetView {
     render() {
         const [lat, lng] = this.model.get("location")
         const title = this.model.get("hover_text")
@@ -60,18 +66,18 @@ const BaseMarkerView = widgets.WidgetView.extend({
         this.infoBoxListener = null;
         this.mapView = null;
         this.modelEvents()
-    },
+    }
 
     displayInfoBox() {
         return this.model.get("display_info_box");
-    },
+    }
 
     renderInfoBox() {
         const infoBox = new google.maps.InfoWindow({
             content: this.model.get("info_box_content")
         });
         return infoBox ;
-    },
+    }
 
     toggleInfoBoxListener() {
         if (this.displayInfoBox()) {
@@ -85,13 +91,13 @@ const BaseMarkerView = widgets.WidgetView.extend({
                 this.infoBoxListener.remove()
             }
         }
-    },
+    }
 
     addToMapView(mapView) {
         this.mapView = mapView;
         this.marker.setMap(mapView.map);
         this.toggleInfoBoxListener();
-    },
+    }
 
     modelEvents() {
         // Simple properties:
@@ -128,11 +134,9 @@ const BaseMarkerView = widgets.WidgetView.extend({
 
         this.setStyleEvents()
     }
+}
 
-
-})
-
-export const SymbolView = BaseMarkerView.extend({
+export class SymbolView extends BaseMarkerView {
 
     getStyleOptions() {
         const fillColor = this.model.get("fill_color")
@@ -150,7 +154,7 @@ export const SymbolView = BaseMarkerView.extend({
                 strokeOpacity
             }
         }
-    },
+    }
 
     setStyleEvents() {
         const iconProperties = [
@@ -169,16 +173,16 @@ export const SymbolView = BaseMarkerView.extend({
             this.model.on(`change:${nameInModel}`, callback, this)
         })
     }
-})
+}
 
 
-export const MarkerView = BaseMarkerView.extend({
+export class MarkerView extends BaseMarkerView {
 
     getStyleOptions() {
         this.modelEvents()
         const label = this.model.get("label")
         return { label }
-    },
+    }
 
     setStyleEvents() {
         const properties = [
@@ -195,21 +199,23 @@ export const MarkerView = BaseMarkerView.extend({
         })
     }
 
-})
+}
 
 
-export const MarkerLayerView = GMapsLayerView.extend({
-    canDownloadAsPng: true,
+export class MarkerLayerView extends GMapsLayerView {
+    constructor(options) {
+        super(options);
+        this.canDownloadAsPng = true;
+    }
 
     render() {
         this.markerViews = new widgets.ViewList(this.addMarker, null, this)
         this.markerViews.update(this.model.get("markers"))
-    },
+    }
 
     // No need to do anything here since the markers are added
     // when they are deserialized
-    addToMapView(mapView) {
-    },
+    addToMapView(mapView) { }
 
     addMarker(childModel) {
         return this.create_child_view(childModel)
@@ -218,4 +224,4 @@ export const MarkerLayerView = GMapsLayerView.extend({
                 return childView
             })
     }
-})
+}

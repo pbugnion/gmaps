@@ -1,16 +1,18 @@
 import widgets from 'jupyter-js-widgets'
 
-export const ToolbarModel = widgets.DOMWidgetModel.extend({
-    defaults: {
-        ...widgets.DOMWidgetModel.prototype.defaults,
-        _model_name: "ToolbarModel",
-        _view_name: "ToolbarView",
-        _model_module: "jupyter-gmaps",
-        _view_module: "jupyter-gmaps",
+export class ToolbarModel extends widgets.DOMWidgetModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _model_name: "ToolbarModel",
+            _view_name: "ToolbarView",
+            _model_module: "jupyter-gmaps",
+            _view_module: "jupyter-gmaps",
+        }
     }
-});
+};
 
-export const ToolbarView = widgets.DOMWidgetView.extend({
+export class ToolbarView extends widgets.DOMWidgetView {
 
     render() {
         const $toolbar = $("<div />");
@@ -60,10 +62,10 @@ export const ToolbarView = widgets.DOMWidgetView.extend({
         this.$el.append($toolbar)
 
         this.update();
-    },
+    }
 
     registerSavePngCallback(callback) {
         this.savePngCallback = callback;
     }
-})
+}
 

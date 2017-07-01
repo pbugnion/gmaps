@@ -1,19 +1,21 @@
 import widgets from 'jupyter-js-widgets';
 
-export const ErrorsBoxModel = widgets.DOMWidgetModel.extend({
-    defaults: {
-        ...widgets.DOMWidgetModel.prototype.defaults,
-        _model_name: 'ErrorsBoxModel',
-        _view_name: 'ErrorsBoxView',
-        _model_module: 'jupyter-gmaps',
-        _view_module: 'jupyter-gmaps',
-        errors: []
-    },
+export class ErrorsBoxModel extends widgets.DOMWidgetModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _model_name: 'ErrorsBoxModel',
+            _view_name: 'ErrorsBoxView',
+            _model_module: 'jupyter-gmaps',
+            _view_module: 'jupyter-gmaps',
+            errors: []
+        };
+    }
 
     addError(errorMessage) {
         this.set('errors', this.get('errors').concat(errorMessage));
         this.save_changes();
-    },
+    }
 
     removeError(ierror) {
         const currentErrors = this.get('errors').slice();
@@ -21,14 +23,14 @@ export const ErrorsBoxModel = widgets.DOMWidgetModel.extend({
         this.set('errors', currentErrors);
         this.save_changes();
     }
-});
+};
 
-export const ErrorsBoxView = widgets.DOMWidgetView.extend({
+
+export class ErrorsBoxView extends widgets.DOMWidgetView {
     render() {
         this._renderErrors()
-
         this.model.on('change:errors', () => this._renderErrors())
-    },
+    }
 
     _renderErrors() {
         const errorContainer = $('<ul />').addClass("gmaps-error-box")
@@ -40,4 +42,4 @@ export const ErrorsBoxView = widgets.DOMWidgetView.extend({
         this.$el.empty(); // Clear the current state
         this.$el.append(errorContainer);
     }
-});
+};

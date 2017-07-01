@@ -4,27 +4,35 @@ import GoogleMapsLoader from 'google-maps'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
 
-export const SimpleHeatmapLayerModel = GMapsLayerModel.extend({
-    defaults: {
-        ...GMapsLayerModel.prototype.defaults,
-        _view_name: "SimpleHeatmapLayerView",
-        _model_name: "SimpleHeatmapLayerModel"
+export class SimpleHeatmapLayerModel extends GMapsLayerModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _view_name: "SimpleHeatmapLayerView",
+            _model_name: "SimpleHeatmapLayerModel"
+        }
     }
-});
+};
 
 
-export const WeightedHeatmapLayerModel = GMapsLayerModel.extend({
-    defaults: {
-        ...GMapsLayerModel.prototype.defaults,
-        _view_name: "WeightedHeatmapLayerView",
-        _model_name: "WeightedHeatmapLayerModel"
+export class WeightedHeatmapLayerModel extends GMapsLayerModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _view_name: "WeightedHeatmapLayerView",
+            _model_name: "WeightedHeatmapLayerModel"
+        }
     }
-});
+};
 
 
-const HeatmapLayerBaseView = GMapsLayerView.extend({
-    canDownloadAsPng: true,
-    
+class HeatmapLayerBaseView extends GMapsLayerView {
+
+    constructor(options) {
+        super(options)
+        this.canDownloadAsPng = true;
+    }
+
     render() {
         this.modelEvents() ;
         GoogleMapsLoader.load((google) => {
@@ -37,11 +45,11 @@ const HeatmapLayerBaseView = GMapsLayerView.extend({
                 gradient: this.model.get("gradient")
             }) ;
         });
-    },
+    }
 
     addToMapView(mapView) {
         this.heatmap.setMap(mapView.map)
-    },
+    }
 
     modelEvents() {
         // Simple properties:
@@ -59,14 +67,11 @@ const HeatmapLayerBaseView = GMapsLayerView.extend({
             )
             this.model.on(`change:${nameInModel}`, callback, this)
         })
-    },
-
-    get_data() {},
-
-})
+    }
+}
 
 
-export const SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
+export class SimpleHeatmapLayerView extends HeatmapLayerBaseView {
     getData() {
         const data = this.model.get("data")
         const dataAsGoogle = new google.maps.MVCArray(
@@ -74,10 +79,10 @@ export const SimpleHeatmapLayerView = HeatmapLayerBaseView.extend({
         )
         return dataAsGoogle
     }
-})
+}
 
 
-export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
+export class WeightedHeatmapLayerView extends HeatmapLayerBaseView {
     getData() {
         const data = this.model.get("data")
         const dataAsGoogle = new google.maps.MVCArray(
@@ -88,4 +93,4 @@ export const WeightedHeatmapLayerView = HeatmapLayerBaseView.extend({
         );
         return dataAsGoogle
     }
-})
+}
