@@ -18,7 +18,7 @@ export class SymbolModel extends GMapsLayerModel {
 export class MarkerModel extends GMapsLayerModel {
     defaults() {
         return {
-            ...GMapsLayerModel.prototype.defaults,
+            ...super.defaults(),
             _view_name: "MarkerView",
             _model_name: "MarkerModel"
         }
@@ -29,7 +29,7 @@ export class MarkerModel extends GMapsLayerModel {
 export class MarkerLayerModel extends GMapsLayerModel {
     defaults() {
         return {
-            ...GMapsLayerModel.prototype.defaults,
+            ...super.defaults(),
             _view_name: "MarkerLayerView",
             _model_name: "MarkerLayerModel"
         }
