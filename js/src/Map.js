@@ -121,7 +121,7 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
 export class PlainmapModel extends widgets.DOMWidgetModel {
     defaults() {
         return {
-            ...widgets.DOMWidgetModel.prototype.defaults,
+            ...super.defaults(),
             _view_name: "PlainmapView",
             _model_name: "PlainmapModel",
             _view_module : 'jupyter-gmaps',
