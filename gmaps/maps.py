@@ -1,9 +1,10 @@
 
 import ipywidgets as widgets
 from traitlets import (Unicode, default, List, Tuple, Instance,
-                       observe, Dict, HasTraits, Integer, Enum)
+                       observe, Dict, HasTraits, Integer, Enum, Union)
 
 from .bounds import merge_longitude_bounds
+from .geotraitlets import Point
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
@@ -30,6 +31,27 @@ class ConfigurationMixin(HasTraits):
     @default("configuration")
     def _config_default(self):
         return _default_configuration
+
+
+class InitialViewport(Union):
+    def __init__(self, **metadata):
+        trait_types = [
+                Enum(["DATA_BOUNDS"]),
+                Instance(_ZoomCenter)
+        ]
+        super(InitialViewport, self).__init__(trait_types, **metadata)
+
+    @staticmethod
+    def from_data_bounds():
+        return "DATA_BOUNDS"
+
+    @staticmethod
+    def from_zoom_center(zoom, center):
+        return _ZoomCenter(zoom=zoom, center=center)
+
+class _ZoomCenter(HasTraits):
+    zoom = Integer(default_value=8)
+    center = Point(default_value=DEFAULT_CENTER)
 
 
 class Map(widgets.DOMWidget, ConfigurationMixin):
