@@ -73,14 +73,14 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
     }
 
     setViewport() {
-        const viewportMode = this.model.get('viewport_mode');
+        const viewportMode = this.model.get('initial_viewport_mode');
         if (viewportMode === DATA_BOUNDS) {
             const bounds = this.model.get("data_bounds");
             this.setViewportFromBounds(bounds)
         }
         else if (viewportMode === ZOOM_CENTER) {
-            const zoom = this.model.get("zoom");
-            const center = this.model.get("center");
+            const zoom = this.model.get("initial_zoom");
+            const center = this.model.get("initial_center");
             this.setViewportFromZoomCenter(zoom, center);
         }
         else {
