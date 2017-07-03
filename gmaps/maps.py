@@ -49,9 +49,11 @@ class InitialViewport(Union):
     def from_zoom_center(zoom, center):
         return _ZoomCenter(zoom=zoom, center=center)
 
+
 class _ZoomCenter(HasTraits):
     zoom = Integer(default_value=8)
     center = Point(default_value=DEFAULT_CENTER)
+
 
 def _serialize_viewport(viewport, manager):
     if viewport == "DATA_BOUNDS":
