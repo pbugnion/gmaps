@@ -53,6 +53,20 @@ class _ZoomCenter(HasTraits):
     zoom = Integer(default_value=8)
     center = Point(default_value=DEFAULT_CENTER)
 
+def _serialize_viewport(viewport, manager):
+    if viewport == "DATA_BOUNDS":
+        payload = {'type': 'DATA_BOUNDS'}
+    else:
+        try:
+            payload = {
+                    'type': 'ZOOM_CENTER',
+                    'center': viewport.center,
+                    'zoom': viewport.zoom
+            }
+        except AttributeError:
+            raise ValueError('viewport')
+    return payload
+
 
 class Map(widgets.DOMWidget, ConfigurationMixin):
 
