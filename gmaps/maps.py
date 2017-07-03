@@ -92,9 +92,8 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
     layers = Tuple(trait=Instance(widgets.Widget)).tag(
         sync=True, **widgets.widget_serialization)
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
-    initial_viewport_mode = Enum(["DATA_BOUNDS", "ZOOM_CENTER"]).tag(sync=True)
-    initial_zoom = Integer().tag(sync=True)
-    initial_center = List().tag(sync=True)
+    initial_viewport = InitialViewport().tag(
+            sync=True, to_json=_serialize_viewport)
 
     def add_layer(self, layer):
         self.layers = tuple([l for l in self.layers] + [layer])

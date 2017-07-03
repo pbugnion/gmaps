@@ -55,14 +55,12 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
             GoogleMapsLoader.load((google) => {
                 this.map = new google.maps.Map(this.el) ;
 
-                this.setViewport();
-
                 this.layerViews.update(this.model.get("layers"));
 
                 // hack to force the map to redraw
                 setTimeout(() => {
                     google.maps.event.trigger(this.map, 'resize');
-                    this.setViewport();
+                    this.setViewport(this.model.get('initial_viewport'));
                 }, 500);
             })
         })
@@ -72,15 +70,14 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
         this.model.on("change:data_bounds", this.updateBounds, this);
     }
 
-    setViewport() {
-        const viewportMode = this.model.get('initial_viewport_mode');
-        if (viewportMode === DATA_BOUNDS) {
+    setViewport(viewport) {
+        const { type } = viewport;
+        if (type === DATA_BOUNDS) {
             const bounds = this.model.get("data_bounds");
             this.setViewportFromBounds(bounds)
         }
-        else if (viewportMode === ZOOM_CENTER) {
-            const zoom = this.model.get("initial_zoom");
-            const center = this.model.get("initial_center");
+        else if (type === ZOOM_CENTER) {
+            const { zoom, center } = viewport
             this.setViewportFromZoomCenter(zoom, center);
         }
         else {
