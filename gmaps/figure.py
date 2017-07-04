@@ -74,6 +74,16 @@ def figure(
         Boolean denoting whether to show errors that arise in the client.
         Defaults to True.
 
+    :param zoom_level:
+        Integer between 0 and 21 indicating the initial zoom level.
+        By default, the zoom level is chosen to fit the data passed to the
+        map. If specified, you must also specify the map center.
+
+    :param center:
+        Latitude-longitude pair determining the map center.
+        By default, the map center is chosen to fir the data passed to the
+        map. If specified, you must also specify the zoom level.
+
     :returns:
         A :class:`gmaps.Figure` widget.
 
@@ -82,7 +92,12 @@ def figure(
     >>> import gmaps
     >>> gmaps.configure(api_key="AI...")
     >>> fig = gmaps.figure()
+    >>> locations = [(46.1, 5.2), (46.2, 5.3), (46.3, 5.4)]
     >>> fig.add_layer(gmaps.heatmap_layer(locations))
+
+    You can also explicitly specify the intiial map center and zoom:
+
+    >>> fig = gmaps.figure(center=(46.-0, 5.0), zoom_level=8)
     """
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
