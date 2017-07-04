@@ -71,7 +71,6 @@ def _serialize_viewport(viewport, manager):
 
 
 class Map(widgets.DOMWidget, ConfigurationMixin):
-
     """
     Base map class
 
