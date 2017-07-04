@@ -3,7 +3,7 @@ import ipywidgets as widgets
 
 from traitlets import Unicode, Instance
 
-from .maps import Map
+from .maps import Map, InitialViewport
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
 
@@ -59,7 +59,9 @@ class Figure(widgets.DOMWidget):
         self._map.add_layer(layer)
 
 
-def figure(display_toolbar=True, display_errors=True):
+def figure(
+        display_toolbar=True, display_errors=True, zoom_level=None,
+        map_center=None):
     """
     Create a gmaps figure
 
@@ -82,7 +84,18 @@ def figure(display_toolbar=True, display_errors=True):
     >>> fig = gmaps.figure()
     >>> fig.add_layer(gmaps.heatmap_layer(locations))
     """
-    _map = Map()
+    if zoom_level is not None or map_center is not None:
+        if zoom_level is None or map_center is None:
+            raise ValueError(
+                "Either both zoom_level and map_center "
+                "should be specified, or neither"
+            )
+        else:
+            initial_viewport = InitialViewport.from_zoom_center(
+                    zoom_level, map_center)
+    else:
+        initial_viewport = InitialViewport.from_data_bounds()
+    _map = Map(initial_viewport=initial_viewport)
     _toolbar = Toolbar() if display_toolbar else None
     _errors_box = ErrorsBox() if display_errors else None
     return Figure(_map=_map, _toolbar=_toolbar, _errors_box=_errors_box)
