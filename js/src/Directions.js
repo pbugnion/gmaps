@@ -22,14 +22,14 @@ export class DirectionsLayerView extends GMapsLayerView {
         super(options);
         this.canDownloadAsPng = false;
     }
-
+    
     render() {
         const rendererOptions = { map: this.mapView.map }
 
         const modelData = this.model.get("data");
 
         GoogleMapsLoader.load((google) => {
-            this.directionsDisplay = new google.maps.DirectionsService(rendererOptions)
+            this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
 
             const request = {
                 origin: this.getOrigin(modelData),
@@ -41,7 +41,8 @@ export class DirectionsLayerView extends GMapsLayerView {
                 avoidTolls: this.model.get("avoid_tolls"),
                 optimizeWaypoints: this.model.get("optimize_waypoints")
             };
-            const directionsService = new google.maps.DirecdctionsService();
+
+            const directionsService = new google.maps.DirectionsService();
 
             directionsService.route(request, (response, status) => {
                 // print to the browser console (mostly for debugging)
