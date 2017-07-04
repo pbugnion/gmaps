@@ -1,7 +1,7 @@
 
 import ipywidgets as widgets
 from traitlets import (Unicode, default, List, Tuple, Instance,
-                       observe, Dict, HasTraits, Integer, Enum, Union)
+                       observe, Dict, HasTraits, Enum, Union)
 
 from .bounds import merge_longitude_bounds
 from .geotraitlets import Point, ZoomLevel
