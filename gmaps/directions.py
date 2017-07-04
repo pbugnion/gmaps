@@ -48,16 +48,16 @@ class Directions(widgets.Widget):
         90 degrees north). Longitudes are expressed as a float
         between -180 (corresponding to 180 degrees west) and 180
         (corresponding to 180 degrees east).
-    :param avoid_ferries If true, instructs the Distance Matrix service to avoid 
-        ferries where possible.
-    :param avoid_highways If true, instructs the Distance Matrix service to 
-        avoid highways where possible.
-    :param avoid_tolls If true, instructs the Distance Matrix service to avoid 
-        toll roads where possible.
-    :param optimize_waypoints If set to true, the DirectionService will attempt 
-        to re-order the supplied intermediate waypoints to minimize overall 
-        cost of the route.
     :type data: list of tuples of length >= 2
+    :param avoid_ferries: Avoids ferries where possible.
+    :type avoid_ferries: bool, optional
+    :param avoid_highways: Avoids highways where possible.
+    :type avoid_highways: bool, optional
+    :param avoid_tolls: Avoids toll roads where possible.
+    :type avoid_tolls: bool, optional
+    :param optimize_waypoints: Attempt to re-order the supplied intermediate
+        waypoints to minimize overall cost of the route.
+    :type optimize_waypoints: bool, optional
     """
     has_bounds = True
     _view_name = Unicode("DirectionsLayerView").tag(sync=True)
@@ -65,7 +65,7 @@ class Directions(widgets.Widget):
     _model_name = Unicode("DirectionsLayerModel").tag(sync=True)
     _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
-    data = List(minlen=2).tag(sync=True)    
+    data = List(minlen=2).tag(sync=True)
     data_bounds = List().tag(sync=True)
     avoid_ferries = Bool(default_value=False).tag(sync=True)
     avoid_highways = Bool(default_value=False).tag(sync=True)
@@ -101,22 +101,28 @@ class Directions(widgets.Widget):
                 "No directions returned: " + change["new"])
 
 
-def _directions_options(start, end, waypoints, opts=None):
+def _directions_options(start, end, waypoints, avoid_ferries,
+                        avoid_highways, avoid_tolls, optimize_waypoints):
     start = tuple(start)
     end = tuple(end)
     if waypoints is None:
         data = [start, end]
     else:
         data = [start] + locations_to_list(waypoints) + [end]
-    
-    model = {"data": data}
-    
-    if opts is not None:
-        model.update(opts)
+
+    model = {
+        "data": data,
+        "avoid_ferries": avoid_ferries,
+        "avoid_highways": avoid_highways,
+        "avoid_tolls": avoid_tolls,
+        "optimize_waypoints": optimize_waypoints
+    }
     return model
 
 
-def directions_layer(start, end, waypoints=None, **kwargs):
+def directions_layer(
+        start, end, waypoints=None, avoid_ferries=False,
+        avoid_highways=False, avoid_tolls=False, optimize_waypoints=False):
     """
     Create a directions layer.
 
@@ -152,22 +158,24 @@ def directions_layer(start, end, waypoints=None, **kwargs):
         This limit is currently 23.
     :type waypoints: List of 2-element tuples, optional
 
-    :param avoid_ferries If true, instructs the Distance Matrix service to avoid 
-        ferries where possible.
+    :param avoid_ferries:
+        Avoid ferries where possible.
     :type avoid_ferries: bool, optional
 
-    :param avoid_highways If true, instructs the Distance Matrix service to 
-        avoid highways where possible.
+    :param avoid_highways:
+        Avoid highways where possible.
     :type avoid_highways: bool, optional
 
-    :param avoid_tolls If true, instructs the Distance Matrix service to avoid 
-        toll roads where possible.
+    :param avoid_tolls:
+        Avoid toll roads where possible.
     :type avoid_tolls: bool, optional
 
-    :param optimize_waypoints If set to true, the DirectionService will attempt 
-        to re-order the supplied intermediate waypoints to minimize overall 
-        cost of the route.
+    :param optimize_waypoints:
+        If set to true, will attempt to re-order the supplied intermediate
+        waypoints to minimize overall cost of the route.
     :type optimize_waypoints: bool, optional
     """
-    widget_args = _directions_options(start, end, waypoints, kwargs)
+    widget_args = _directions_options(
+            start, end, waypoints, avoid_ferries,
+            avoid_highways, avoid_tolls, optimize_waypoints)
     return Directions(**widget_args)
