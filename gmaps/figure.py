@@ -61,7 +61,7 @@ class Figure(widgets.DOMWidget):
 
 def figure(
         display_toolbar=True, display_errors=True, zoom_level=None,
-        map_center=None):
+        center=None):
     """
     Create a gmaps figure
 
@@ -84,15 +84,15 @@ def figure(
     >>> fig = gmaps.figure()
     >>> fig.add_layer(gmaps.heatmap_layer(locations))
     """
-    if zoom_level is not None or map_center is not None:
-        if zoom_level is None or map_center is None:
+    if zoom_level is not None or center is not None:
+        if zoom_level is None or center is None:
             raise ValueError(
-                "Either both zoom_level and map_center "
+                "Either both zoom_level and center "
                 "should be specified, or neither"
             )
         else:
             initial_viewport = InitialViewport.from_zoom_center(
-                    zoom_level, map_center)
+                    zoom_level, center)
     else:
         initial_viewport = InitialViewport.from_data_bounds()
     _map = Map(initial_viewport=initial_viewport)
