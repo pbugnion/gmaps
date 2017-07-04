@@ -4,7 +4,7 @@ from traitlets import (Unicode, default, List, Tuple, Instance,
                        observe, Dict, HasTraits, Integer, Enum, Union)
 
 from .bounds import merge_longitude_bounds
-from .geotraitlets import Point
+from .geotraitlets import Point, ZoomLevel
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
@@ -51,7 +51,7 @@ class InitialViewport(Union):
 
 
 class _ZoomCenter(HasTraits):
-    zoom = Integer(default_value=8)
+    zoom = ZoomLevel(default_value=8)
     center = Point(default_value=DEFAULT_CENTER)
 
 
