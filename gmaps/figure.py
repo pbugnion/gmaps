@@ -84,7 +84,7 @@ def figure(
 
     :param center:
         Latitude-longitude pair determining the map center.
-        By default, the map center is chosen to fir the data passed to the
+        By default, the map center is chosen to fit the data passed to the
         map. If specified, you must also specify the zoom level.
     :type center: tuple, optional
 
@@ -101,7 +101,7 @@ def figure(
 
     You can also explicitly specify the intiial map center and zoom:
 
-    >>> fig = gmaps.figure(center=(46.-0, 5.0), zoom_level=8)
+    >>> fig = gmaps.figure(center=(46.0, -5.0), zoom_level=8)
     """
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
