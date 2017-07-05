@@ -69,20 +69,24 @@ def figure(
 
     :param display_toolbar:
         Boolean denoting whether to show the toolbar. Defaults to True.
+    :type display_toolbar: boolean, optional
 
     :param display_errors:
         Boolean denoting whether to show errors that arise in the client.
         Defaults to True.
+    :type display_errors: boolean, optional
 
     :param zoom_level:
         Integer between 0 and 21 indicating the initial zoom level.
         By default, the zoom level is chosen to fit the data passed to the
         map. If specified, you must also specify the map center.
+    :type zoom_level: int, optional
 
     :param center:
         Latitude-longitude pair determining the map center.
         By default, the map center is chosen to fir the data passed to the
         map. If specified, you must also specify the zoom level.
+    :type center: tuple, optional
 
     :returns:
         A :class:`gmaps.Figure` widget.
