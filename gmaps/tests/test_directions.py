@@ -13,27 +13,46 @@ class DirectionsLayer(unittest.TestCase):
         self.waypoints = [(52.0, 1.0), (52.0, 0.0)]
         self.data_array_no_waypoints = [self.start, self.end]
         self.data_array = [self.start] + self.waypoints + [self.end]
+        self.kwargs = {
+            "avoid_ferries": False,
+            "avoid_highways": False,
+            "avoid_tolls": False,
+            "optimize_waypoints": False
+        }
+
+    def _add_default_options(self, **options):
+        new_options = self.kwargs.copy()
+        new_options.update(options)
+        return new_options
 
     def test_no_waypoints(self):
         options = _directions_options(
-            self.start, self.end, waypoints=None)["data"]
+            self.start, self.end, waypoints=None,
+            **self._add_default_options()
+        )["data"]
         assert options == self.data_array_no_waypoints
 
     def test_waypoints(self):
         options = _directions_options(
-            self.start, self.end, self.waypoints)["data"]
+            self.start, self.end, self.waypoints,
+            **self._add_default_options()
+        )["data"]
         assert options == self.data_array
 
     def test_no_waypoints_numpy_array(self):
         import numpy as np
         options = _directions_options(
-            np.array(self.start), self.end, None)["data"]
+            np.array(self.start), self.end, None,
+            **self._add_default_options()
+        )["data"]
         assert options == self.data_array_no_waypoints
 
     def test_waypoints_numpy_array(self):
         import numpy as np
         options = _directions_options(
-            np.array(self.start), self.end, np.array(self.waypoints))["data"]
+            np.array(self.start), self.end, np.array(self.waypoints),
+            **self._add_default_options()
+        )["data"]
         assert options == self.data_array
 
     def test_pandas_df(self):
@@ -41,5 +60,7 @@ class DirectionsLayer(unittest.TestCase):
         waypoints = pd.DataFrame.from_records(
             self.waypoints, columns=["latitude", "longitude"])
         options = _directions_options(
-            self.start, self.end, waypoints)["data"]
+            self.start, self.end, waypoints,
+            **self._add_default_options()
+        )["data"]
         assert options == self.data_array

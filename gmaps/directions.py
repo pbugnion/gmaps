@@ -101,9 +101,9 @@ class Directions(widgets.Widget):
                 "No directions returned: " + change["new"])
 
 
-def _directions_options(start, end, waypoints, avoid_ferries=False,
-                        avoid_highways=False, avoid_tolls=False,
-                        optimize_waypoints=False):
+def _directions_options(start, end, waypoints, avoid_ferries,
+                        avoid_highways, avoid_tolls,
+                        optimize_waypoints):
     start = tuple(start)
     end = tuple(end)
     if waypoints is None:
