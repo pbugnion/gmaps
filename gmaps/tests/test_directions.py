@@ -64,3 +64,16 @@ class DirectionsLayer(unittest.TestCase):
             **self._add_default_options()
         )["data"]
         assert options == self.data_array
+
+    def test_boolean_options(self):
+        options = _directions_options(
+            self.start, self.end, waypoints=None,
+            avoid_ferries=True,
+            avoid_highways=True,
+            avoid_tolls=True,
+            optimize_waypoints=True
+        )
+        assert options["avoid_ferries"]
+        assert options["avoid_highways"]
+        assert options["avoid_tolls"]
+        assert options["optimize_waypoints"]
