@@ -78,6 +78,7 @@ def figure(
 
     :param zoom_level:
         Integer between 0 and 21 indicating the initial zoom level.
+        High values are more zoomed in.
         By default, the zoom level is chosen to fit the data passed to the
         map. If specified, you must also specify the map center.
     :type zoom_level: int, optional
