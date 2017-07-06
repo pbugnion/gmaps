@@ -32,6 +32,9 @@ Low level widgets
 
 .. autoclass:: gmaps.Map
 
+.. autoclass:: gmaps.InitialViewport
+   :members:
+
 .. autoclass:: gmaps.Heatmap
 
 .. autoclass:: gmaps.WeightedHeatmap

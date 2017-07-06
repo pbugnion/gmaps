@@ -34,6 +34,9 @@ class ConfigurationMixin(HasTraits):
 
 
 class InitialViewport(Union):
+    """
+    Traitlet defining the initial viewport for a map.
+    """
     def __init__(self, **metadata):
         trait_types = [
                 Enum(["DATA_BOUNDS"]),
@@ -43,10 +46,35 @@ class InitialViewport(Union):
 
     @staticmethod
     def from_data_bounds():
+        """
+        Create a viewport centered on the map's data.
+
+        Most of the time, you should rely on the defaults provided by the
+        :func:`gmaps.figure` factory method, rather than creating a
+        viewport yourself.
+
+        :Examples:
+
+        >>> m = gmaps.Map(initial_viewport=InitialViewport.from_data_bounds())
+        """
         return "DATA_BOUNDS"
 
     @staticmethod
     def from_zoom_center(zoom, center):
+        """
+        Create a viewport by explicitly setting the zoom and center
+
+        Most of the time, you should rely on the defaults provided by the
+        :func:`gmaps.figure` factory method, rather than creating a
+        viewport yourself.
+
+        :Examples:
+
+        >>> zoom_level = 8
+        >>> center = (20.0, -10.0)
+        >>> viewport = InitialViewport.from_zoom_center(zoom_level, center)
+        >>> m = gmaps.figure(initial_viewport=viewport)
+        """
         return _ZoomCenter(zoom=zoom, center=center)
 
 
@@ -81,10 +109,23 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
     to instiate a figure, rather than building this class
     directly.
 
+    :param initial_viewport:
+        Define the initial zoom level and map centre. You should
+        construct this using one of the static methods on
+        :class:`gmaps.InitialViewport`. By default, the
+        map is centered on the data.
+
     :Examples:
 
     >>> m = gmaps.figure()
     >>> m.add_layer(gmaps.heatmap_layer(locations))
+
+    To explicitly set the initial map zoom and center:
+
+    >>> zoom_level = 8
+    >>> center = (20.0, -10.0)
+    >>> viewport = InitialViewport.from_zoom_center(zoom_level, center)
+    >>> m = gmaps.figure(initial_viewport=viewport)
     """
     _view_name = Unicode("PlainmapView").tag(sync=True)
     _view_module = Unicode("jupyter-gmaps").tag(sync=True)
