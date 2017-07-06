@@ -68,11 +68,21 @@ class InitialViewport(Union):
         :func:`gmaps.figure` factory method, rather than creating a
         viewport yourself.
 
+        :param zoom:
+            The zoom level for the map. A value between 0 (zoomed out) and
+            21 (zoomed in). Note that the highest zoom levels are only
+            available in some regions of the world (e.g. cities).
+        :type zoom: int
+
+        :param center:
+            (Latitude, longitude) pair denoting the map center.
+        :type center: tuple of floats
+
         :Examples:
 
-        >>> zoom_level = 8
+        >>> zoom = 8
         >>> center = (20.0, -10.0)
-        >>> viewport = InitialViewport.from_zoom_center(zoom_level, center)
+        >>> viewport = InitialViewport.from_zoom_center(zoom, center)
         >>> m = gmaps.figure(initial_viewport=viewport)
         """
         return _ZoomCenter(zoom=zoom, center=center)
