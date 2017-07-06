@@ -20,7 +20,7 @@ class InitialViewport(unittest.TestCase):
     def test_accept_zoom_center(self):
         viewport = maps.InitialViewport.from_zoom_center(3, (20.0, -5.0))
         a = self.A(initial_viewport=viewport)
-        assert a.initial_viewport.zoom == 3
+        assert a.initial_viewport.zoom_level == 3
         assert a.initial_viewport.center == (20.0, -5.0)
 
 
@@ -36,6 +36,6 @@ class SerializeViewport(unittest.TestCase):
         expected = {
                 'type': 'ZOOM_CENTER',
                 'center': (20.0, -5.0),
-                'zoom': 3
+                'zoom_level': 3
         }
         assert maps._serialize_viewport(viewport, None) == expected

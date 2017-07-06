@@ -77,18 +77,18 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
             this.setViewportFromBounds(bounds)
         }
         else if (type === ZOOM_CENTER) {
-            const { zoom, center } = viewport
-            this.setViewportFromZoomCenter(zoom, center);
+            const { zoom_level, center } = viewport
+            this.setViewportFromZoomCenter(zoom_level, center);
         }
         else {
             console.error(`Unexpected viewport mode: ${viewportMode}`);
         }
     }
 
-    setViewportFromZoomCenter(zoom, center) {
+    setViewportFromZoomCenter(zoom_level, center) {
         const [lat, lng] = center;
         this.map.setCenter(new google.maps.LatLng(lat, lng));
-        this.map.setZoom(zoom);
+        this.map.setZoom(zoom_level);
     }
 
     setViewportFromBounds(bounds) {
@@ -152,9 +152,7 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
             width: "600px",
             height: "400px",
             data_bounds: null,
-            viewport_mode: DATA_BOUNDS,
-            zoom: 8,
-            center: [51.0, 67.0]
+            initial_viewport: { type: DATA_BOUNDS }
         };
     }
         

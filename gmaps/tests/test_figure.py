@@ -17,7 +17,7 @@ class TestFigureFactory(unittest.TestCase):
         center = (10.0, 20.0)
         fig = figure(zoom_level=10, center=center)
         map_ = fig._map
-        assert map_.initial_viewport.zoom == 10
+        assert map_.initial_viewport.zoom_level == 10
         assert map_.initial_viewport.center == center
 
     def test_zoom_no_center(self):

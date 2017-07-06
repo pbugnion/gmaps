@@ -60,7 +60,7 @@ class InitialViewport(Union):
         return "DATA_BOUNDS"
 
     @staticmethod
-    def from_zoom_center(zoom, center):
+    def from_zoom_center(zoom_level, center):
         """
         Create a viewport by explicitly setting the zoom and center
 
@@ -68,11 +68,11 @@ class InitialViewport(Union):
         :func:`gmaps.figure` factory method, rather than creating a
         viewport yourself.
 
-        :param zoom:
+        :param zoom_level:
             The zoom level for the map. A value between 0 (zoomed out) and
             21 (zoomed in). Note that the highest zoom levels are only
             available in some regions of the world (e.g. cities).
-        :type zoom: int
+        :type zoom_level: int
 
         :param center:
             (Latitude, longitude) pair denoting the map center.
@@ -80,16 +80,16 @@ class InitialViewport(Union):
 
         :Examples:
 
-        >>> zoom = 8
+        >>> zoom_level = 8
         >>> center = (20.0, -10.0)
-        >>> viewport = InitialViewport.from_zoom_center(zoom, center)
+        >>> viewport = InitialViewport.from_zoom_center(zoom_level, center)
         >>> m = gmaps.figure(initial_viewport=viewport)
         """
-        return _ZoomCenter(zoom=zoom, center=center)
+        return _ZoomCenter(zoom_level=zoom_level, center=center)
 
 
 class _ZoomCenter(HasTraits):
-    zoom = ZoomLevel(default_value=8)
+    zoom_level = ZoomLevel(default_value=8)
     center = Point(default_value=DEFAULT_CENTER)
 
 
@@ -101,7 +101,7 @@ def _serialize_viewport(viewport, manager):
             payload = {
                     'type': 'ZOOM_CENTER',
                     'center': viewport.center,
-                    'zoom': viewport.zoom
+                    'zoom_level': viewport.zoom_level
             }
         except AttributeError:
             raise ValueError('viewport')
