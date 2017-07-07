@@ -58,7 +58,7 @@ You then add layers on top of the base map. For instance, to add a heatmap layer
 
 The `locations` array can either be a list of tuples, as in the example above, a numpy array of shape $N \times 2$ or a dataframe with two columns.
 
-Attributes on the base map and the layers can be set through named arguments in the constructor or as instance attributes once the instance is created. These two constructions are thus equivalent::
+Most attributes on the base map and the layers can be set through named arguments in the constructor or as instance attributes once the instance is created. These two constructions are thus equivalent::
 
   heatmap_layer = gmaps.heatmap_layer(locations)
   heatmap_layer.point_radius = 8
@@ -68,6 +68,27 @@ and::
   heatmap_layer = gmaps.heatmap_layer(locations, point_radius=8)
 
 The former construction is useful for modifying a map once it has been built. Any change in parameters will propagate to maps in which those layers are included.
+
+Base maps
+^^^^^^^^^
+
+Your first action with `gmaps` will usually be to build a base map::
+
+  import gmaps
+  gmaps.configure(api_key="AI...")
+
+  gmaps.figure()
+
+This builds an empty map. You can also set the zoom level and map center
+explicitly::
+
+  new_york_coordinates = (40.75, -74.00)
+  gmaps.figure(center=new_york_coordinates, zoom_level=12)
+
+.. image:: base_map_example.png
+
+If you do not set the map zoom and center, the viewport will automatically
+focus on the data as you add it to the map.
 
 Heatmaps
 ^^^^^^^^

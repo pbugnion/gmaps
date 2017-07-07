@@ -148,3 +148,23 @@ class TestColorAlpha(unittest.TestCase):
         assert a.x is None
         a = A(x="blue")
         assert a.x == "blue"
+
+
+class TestZoomLevel(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.ZoomLevel()
+        self.A = A
+
+    def test_accept_zoom(self):
+        a = self.A(x=8)
+        assert a.x == 8
+
+    def test_reject_high_value(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=22)
+
+    def test_reject_negative_value(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=-1)

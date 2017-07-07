@@ -54,3 +54,8 @@ If you then make changes to the code, you can make those changes available to a 
  - running ``npm run update``, refreshing the browser and restarting the kernel if you have made changes to both the Python and JavaScript source.
 
 You should not need to restart the notebook server.
+
+Source code
+^^^^^^^^^^^
+
+The `jupyter-gmaps` source is available on `GitHub <https://github.com/pbugnion/gmaps>`_.

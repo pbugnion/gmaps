@@ -120,6 +120,20 @@ class RgbaTuple(traitlets.Tuple):
         super(RgbaTuple, self).__init__(*traits, **metadata)
 
 
+class ZoomLevel(traitlets.Integer):
+    """
+    Integer representing a zoom value allowed by Google Maps
+    """
+    info_text = "a valid Google Maps zoom (0 <= zoom <= 21)"
+    default_value = traitlets.Undefined
+
+    def validate(self, obj, value):
+        if 0 <= value <= 21:
+            return value
+        else:
+            self.error(obj, value)
+
+
 class ColorAlpha(traitlets.Union):
     """
     Trait representing a color that can be passed to Google maps.
