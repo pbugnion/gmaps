@@ -49,12 +49,16 @@ class Directions(widgets.Widget):
         between -180 (corresponding to 180 degrees west) and 180
         (corresponding to 180 degrees east).
     :type data: list of tuples of length >= 2
+
     :param avoid_ferries: Avoids ferries where possible.
     :type avoid_ferries: bool, optional
+
     :param avoid_highways: Avoids highways where possible.
     :type avoid_highways: bool, optional
+
     :param avoid_tolls: Avoids toll roads where possible.
     :type avoid_tolls: bool, optional
+
     :param optimize_waypoints: Attempt to re-order the supplied intermediate
         waypoints to minimize overall cost of the route.
     :type optimize_waypoints: bool, optional
