@@ -2,6 +2,8 @@
 import unittest
 import pytest
 
+import traitlets
+
 from ..directions import directions_layer
 
 
@@ -70,3 +72,7 @@ class DirectionsLayer(unittest.TestCase):
     def test_travel_mode(self):
         layer = directions_layer(self.start, self.end, travel_mode='BICYCLING')
         assert layer.travel_mode == 'BICYCLING'
+
+    def test_invalid_travel_mode(self):
+        with self.assertRaises(traitlets.TraitError):
+            directions_layer(self.start, self.end, travel_mode='wrong')
