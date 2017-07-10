@@ -66,3 +66,7 @@ class DirectionsLayer(unittest.TestCase):
         assert layer.avoid_highways
         assert layer.avoid_tolls
         assert layer.optimize_waypoints
+
+    def test_travel_mode(self):
+        layer = directions_layer(self.start, self.end, travel_mode='BICYCLING')
+        assert layer.travel_mode == 'BICYCLING'

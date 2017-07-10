@@ -1,10 +1,14 @@
 
 import ipywidgets as widgets
 
-from traitlets import Bool, Unicode, CUnicode, List, observe, validate
+from traitlets import Bool, Unicode, CUnicode, List, Enum, observe, validate
 
 from . import geotraitlets
 from .locations import locations_to_list
+
+
+ALLOWED_TRAVEL_MODES = {'BICYCLING', 'DRIVING', 'TRANSIT', 'WALKING'}
+DEFAULT_TRAVEL_MODE = 'DRIVING'
 
 
 class DirectionsServiceException(RuntimeError):
@@ -75,6 +79,10 @@ class Directions(widgets.Widget):
     avoid_highways = Bool(default_value=False).tag(sync=True)
     avoid_tolls = Bool(default_value=False).tag(sync=True)
     optimize_waypoints = Bool(default_value=False).tag(sync=True)
+    travel_mode = Enum(
+            ALLOWED_TRAVEL_MODES,
+            default_value=DEFAULT_TRAVEL_MODE
+    ).tag(sync=True)
 
     layer_status = CUnicode().tag(sync=True)
 
@@ -105,9 +113,10 @@ class Directions(widgets.Widget):
                 "No directions returned: " + change["new"])
 
 
-def _directions_options(start, end, waypoints, avoid_ferries,
-                        avoid_highways, avoid_tolls,
-                        optimize_waypoints):
+def _directions_options(
+        start, end, waypoints, travel_mode,
+        avoid_ferries, avoid_highways, avoid_tolls,
+        optimize_waypoints):
     start = tuple(start)
     end = tuple(end)
     if waypoints is None:
@@ -117,6 +126,7 @@ def _directions_options(start, end, waypoints, avoid_ferries,
 
     model = {
         "data": data,
+        "travel_mode": travel_mode,
         "avoid_ferries": avoid_ferries,
         "avoid_highways": avoid_highways,
         "avoid_tolls": avoid_tolls,
@@ -127,6 +137,7 @@ def _directions_options(start, end, waypoints, avoid_ferries,
 
 def directions_layer(
         start, end, waypoints=None, avoid_ferries=False,
+        travel_mode=DEFAULT_TRAVEL_MODE,
         avoid_highways=False, avoid_tolls=False, optimize_waypoints=False):
     """
     Create a directions layer.
@@ -181,6 +192,6 @@ def directions_layer(
     :type optimize_waypoints: bool, optional
     """
     widget_args = _directions_options(
-            start, end, waypoints, avoid_ferries,
+            start, end, waypoints, travel_mode, avoid_ferries,
             avoid_highways, avoid_tolls, optimize_waypoints)
     return Directions(**widget_args)
