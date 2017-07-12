@@ -54,6 +54,12 @@ class Directions(widgets.Widget):
         (corresponding to 180 degrees east).
     :type data: list of tuples of length >= 2
 
+    :param travel_mode: 
+        Choose the mode of transport. One of BICYCLING, DRIVING, 
+        WALKING or TRANSIT. A travel mode of TRANSIT indicates
+        public transportation. Defaults to DRIVING.
+    :type travel_mode: str, optional
+
     :param avoid_ferries: Avoids ferries where possible.
     :type avoid_ferries: bool, optional
 
@@ -160,6 +166,10 @@ def directions_layer(
     >>> waypoints = [(46.4, 6.9), (46.9, 8.0)]
     >>> directions = gmaps.directions_layer(start, end, waypoints=waypoints)
 
+    You can choose the travel mode:
+
+    >>> directions = gmaps.directions_layer(start, end, travel_mode='WALKING')
+
     :param start:
         (Latitude, longitude) pair denoting the start of the journey.
     :type start: 2-element tuple
@@ -173,6 +183,12 @@ def directions_layer(
         Google maps imposes a limitation on the total number of waypoints.
         This limit is currently 23.
     :type waypoints: List of 2-element tuples, optional
+
+    :param travel_mode: 
+        Choose the mode of transport. One of BICYCLING, DRIVING, 
+        WALKING or TRANSIT. A travel mode of TRANSIT indicates
+        public transportation. Defaults to DRIVING.
+    :type travel_mode: str, optional
 
     :param avoid_ferries:
         Avoid ferries where possible.
