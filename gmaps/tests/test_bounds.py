@@ -11,6 +11,12 @@ from ..bounds import (
 
 class LatitudeBounds(unittest.TestCase):
 
+    def test_latitude_bounds_single(self):
+        EPSILON = 1e-5
+        latitudes = [-87.6297]
+        lower, upper = latitude_bounds(latitudes)
+        assert abs(upper - lower) < 2.01*EPSILON
+
     def test_latitude_bounds(self):
         latitudes = [10.0, 15.0, 20.0]
         lower, upper = latitude_bounds(latitudes)
@@ -33,10 +39,10 @@ class LatitudeBounds(unittest.TestCase):
 class LongitudeBounds(unittest.TestCase):
 
     def test_longitude_bounds_single(self):
+        EPSILON = 1e-5
         longitudes = [-87.6297]
         lower, upper = longitude_bounds(longitudes)
-        assert lower == -87.6297
-        assert upper == -87.6297
+        assert abs(upper - lower) < 2.01*EPSILON
 
     def test_longitude_bounds(self):
         longitudes = [10.0, 15.0, 20.0]

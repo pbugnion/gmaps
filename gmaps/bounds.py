@@ -13,15 +13,19 @@ def latitude_bounds(latitudes):
     Estimate latitude bound with 2*sample standard deviation
     """
     N = float(len(latitudes))
-    mean = sum(latitudes) / N
-    sum_squares = sum(
-        (latitude-mean)**2 for latitude in latitudes
-    )
-    standard_deviation = math.sqrt(sum_squares/float(N))
-    lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
-    upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
-    lower_bound = max(lower_bound, MIN_ALLOWED_LATITUDE)
-    upper_bound = min(upper_bound, MAX_ALLOWED_LATITUDE)
+    if N == 1.0:
+        lower_bound = latitudes[0] - EPSILON
+        upper_bound = latitudes[0] + EPSILON
+    else:
+        mean = sum(latitudes) / N
+        sum_squares = sum(
+            (latitude-mean)**2 for latitude in latitudes
+        )
+        standard_deviation = math.sqrt(sum_squares/float(N))
+        lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
+        upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
+        lower_bound = max(lower_bound, MIN_ALLOWED_LATITUDE)
+        upper_bound = min(upper_bound, MAX_ALLOWED_LATITUDE)
     return lower_bound, upper_bound
 
 
@@ -37,8 +41,11 @@ def longitude_bounds(longitudes):
     for how to calculate the relevant statistics.
     """
     N = float(len(longitudes))
-    # Change to N > 1 and N == 1 cases
-    if N > 1:
+    # Change to N == 1 and N > 1 cases
+    if N == 1:
+        lower_bound = longitudes[0] - EPSILON
+        upper_bound = longitudes[0] + EPSILON
+    else:
         radians = [math.radians(longitude) for longitude in longitudes]
         sum_cos = sum(math.cos(r) for r in radians)
         sum_cos_sq = sum_cos**2
@@ -56,8 +63,6 @@ def longitude_bounds(longitudes):
         else:
             lower_bound = _normalize_longitude(mean_degrees - extent)
             upper_bound = _normalize_longitude(mean_degrees + extent)
-    elif N == 1:
-        lower_bound = upper_bound = longitudes[0]
     return lower_bound, upper_bound
 
 
