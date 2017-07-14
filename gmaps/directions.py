@@ -54,8 +54,8 @@ class Directions(widgets.Widget):
         (corresponding to 180 degrees east).
     :type data: list of tuples of length >= 2
 
-    :param travel_mode: 
-        Choose the mode of transport. One of BICYCLING, DRIVING, 
+    :param travel_mode:
+        Choose the mode of transport. One of BICYCLING, DRIVING,
         WALKING or TRANSIT. A travel mode of TRANSIT indicates
         public transportation. Defaults to DRIVING.
     :type travel_mode: str, optional
@@ -184,8 +184,8 @@ def directions_layer(
         This limit is currently 23.
     :type waypoints: List of 2-element tuples, optional
 
-    :param travel_mode: 
-        Choose the mode of transport. One of BICYCLING, DRIVING, 
+    :param travel_mode:
+        Choose the mode of transport. One of BICYCLING, DRIVING,
         WALKING or TRANSIT. A travel mode of TRANSIT indicates
         public transportation. Defaults to DRIVING.
     :type travel_mode: str, optional
