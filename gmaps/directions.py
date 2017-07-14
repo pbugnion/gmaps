@@ -21,8 +21,6 @@ class Directions(widgets.Widget):
 
     Add this to a :class:`gmaps.Figure` instance to draw directions.
 
-    The directions are requested with the ``DRIVING`` option.
-
     Use the :func:`gmaps.directions_layer` factory function to
     instantiate this class, rather than the constructor.
 
@@ -149,8 +147,7 @@ def directions_layer(
     Create a directions layer.
 
     Add this layer to a :class:`gmaps.Figure` instance to draw
-    directions on the map. Currently, directions are limited
-    to ``DRIVING`` directions.
+    directions on the map.
 
     :Examples:
 
