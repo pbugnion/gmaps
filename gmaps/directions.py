@@ -53,9 +53,9 @@ class Directions(widgets.Widget):
     :type data: list of tuples of length >= 2
 
     :param travel_mode:
-        Choose the mode of transport. One of BICYCLING, DRIVING,
-        WALKING or TRANSIT. A travel mode of TRANSIT indicates
-        public transportation. Defaults to DRIVING.
+        Choose the mode of transport. One of ``'BICYCLING'``, ``'DRIVING'``,
+        ``'WALKING'`` or ``'TRANSIT'``. A travel mode of ``'TRANSIT'`` 
+        indicates public transportation. Defaults to ``'DRIVING'``.
     :type travel_mode: str, optional
 
     :param avoid_ferries: Avoids ferries where possible.
@@ -182,9 +182,9 @@ def directions_layer(
     :type waypoints: List of 2-element tuples, optional
 
     :param travel_mode:
-        Choose the mode of transport. One of BICYCLING, DRIVING,
-        WALKING or TRANSIT. A travel mode of TRANSIT indicates
-        public transportation. Defaults to DRIVING.
+        Choose the mode of transport. One of ``'BICYCLING'``, ``'DRIVING'``,
+        ``'WALKING'`` or ``'TRANSIT'``. A travel mode of ``'TRANSIT'`` 
+        indicates public transportation. Defaults to ``'DRIVING'``.
     :type travel_mode: str, optional
 
     :param avoid_ferries:
