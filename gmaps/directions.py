@@ -178,7 +178,8 @@ def directions_layer(
     :param waypoints:
         Iterable of (latitude, longitude) pair denoting waypoints.
         Google maps imposes a limitation on the total number of waypoints.
-        This limit is currently 23.
+        This limit is currently 23. You cannot use waypoints when the 
+        travel_mode is ``'TRANSIT'``.
     :type waypoints: List of 2-element tuples, optional
 
     :param travel_mode:
