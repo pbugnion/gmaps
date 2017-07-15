@@ -35,7 +35,7 @@ export class DirectionsLayerView extends GMapsLayerView {
                 origin: this.getOrigin(modelData),
                 destination: this.getDestination(modelData),
                 waypoints: this.getWaypoints(modelData),
-                travelMode: google.maps.TravelMode.DRIVING,
+                travelMode: this.model.get("travel_mode"),
                 avoidFerries: this.model.get("avoid_ferries"),
                 avoidHighways: this.model.get("avoid_highways"),
                 avoidTolls: this.model.get("avoid_tolls"),

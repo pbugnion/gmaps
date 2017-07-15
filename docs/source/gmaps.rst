@@ -454,7 +454,7 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
 Directions layer
 ^^^^^^^^^^^^^^^^
 
-`gmaps` supports drawing routes based on the Google maps `directions service <https://developers.google.com/maps/documentation/javascript/examples/directions-simple>`_. At the moment, this only supports driving directions between points denoted by latitude and longitude::
+`gmaps` supports drawing routes based on the Google maps `directions service <https://developers.google.com/maps/documentation/javascript/examples/directions-simple>`_. At the moment, this only supports directions between points denoted by latitude and longitude::
 
   import gmaps
   import gmaps.datasets
@@ -472,12 +472,16 @@ Directions layer
 
 .. image:: directions_layer_simple.png
 
-You can also pass waypoints. The can pass up to 23 waypoints (this is a limitation of the Google Maps directions service)::
+You can also pass waypoints and customise the directions request. You can pass up to 23 waypoints, and waypoints are not supported when the travel mode is ``'TRANSIT'`` (this is a limitation of the Google Maps directions service)::
 
   fig = gmaps.figure()
-  geneva2zurich_via_montreux =\
-      gmaps.directions_layer(geneva, zurich, waypoints=[montreux])
+  geneva2zurich_via_montreux = gmaps.directions_layer(
+          geneva, zurich, waypoints=[montreux],
+          travel_mode='BICYCLING')
   fig.add_layer(geneva2zurich_via_montreux)
   fig
 
 .. image:: directions_layer_waypoints.png
+
+The full list of options is given as part of the documentation for the
+:func:`gmaps.directions_layer`.

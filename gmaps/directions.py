@@ -1,10 +1,14 @@
 
 import ipywidgets as widgets
 
-from traitlets import Bool, Unicode, CUnicode, List, observe, validate
+from traitlets import Bool, Unicode, CUnicode, List, Enum, observe, validate
 
 from . import geotraitlets
 from .locations import locations_to_list
+
+
+ALLOWED_TRAVEL_MODES = {'BICYCLING', 'DRIVING', 'TRANSIT', 'WALKING'}
+DEFAULT_TRAVEL_MODE = 'DRIVING'
 
 
 class DirectionsServiceException(RuntimeError):
@@ -16,8 +20,6 @@ class Directions(widgets.Widget):
     Directions layer.
 
     Add this to a :class:`gmaps.Figure` instance to draw directions.
-
-    The directions are requested with the ``DRIVING`` option.
 
     Use the :func:`gmaps.directions_layer` factory function to
     instantiate this class, rather than the constructor.
@@ -49,12 +51,22 @@ class Directions(widgets.Widget):
         between -180 (corresponding to 180 degrees west) and 180
         (corresponding to 180 degrees east).
     :type data: list of tuples of length >= 2
+
+    :param travel_mode:
+        Choose the mode of transport. One of ``'BICYCLING'``, ``'DRIVING'``,
+        ``'WALKING'`` or ``'TRANSIT'``. A travel mode of ``'TRANSIT'``
+        indicates public transportation. Defaults to ``'DRIVING'``.
+    :type travel_mode: str, optional
+
     :param avoid_ferries: Avoids ferries where possible.
     :type avoid_ferries: bool, optional
+
     :param avoid_highways: Avoids highways where possible.
     :type avoid_highways: bool, optional
+
     :param avoid_tolls: Avoids toll roads where possible.
     :type avoid_tolls: bool, optional
+
     :param optimize_waypoints: Attempt to re-order the supplied intermediate
         waypoints to minimize overall cost of the route.
     :type optimize_waypoints: bool, optional
@@ -71,6 +83,10 @@ class Directions(widgets.Widget):
     avoid_highways = Bool(default_value=False).tag(sync=True)
     avoid_tolls = Bool(default_value=False).tag(sync=True)
     optimize_waypoints = Bool(default_value=False).tag(sync=True)
+    travel_mode = Enum(
+            ALLOWED_TRAVEL_MODES,
+            default_value=DEFAULT_TRAVEL_MODE
+    ).tag(sync=True)
 
     layer_status = CUnicode().tag(sync=True)
 
@@ -101,9 +117,10 @@ class Directions(widgets.Widget):
                 "No directions returned: " + change["new"])
 
 
-def _directions_options(start, end, waypoints, avoid_ferries,
-                        avoid_highways, avoid_tolls,
-                        optimize_waypoints):
+def _directions_options(
+        start, end, waypoints, travel_mode,
+        avoid_ferries, avoid_highways, avoid_tolls,
+        optimize_waypoints):
     start = tuple(start)
     end = tuple(end)
     if waypoints is None:
@@ -113,6 +130,7 @@ def _directions_options(start, end, waypoints, avoid_ferries,
 
     model = {
         "data": data,
+        "travel_mode": travel_mode,
         "avoid_ferries": avoid_ferries,
         "avoid_highways": avoid_highways,
         "avoid_tolls": avoid_tolls,
@@ -123,13 +141,13 @@ def _directions_options(start, end, waypoints, avoid_ferries,
 
 def directions_layer(
         start, end, waypoints=None, avoid_ferries=False,
+        travel_mode=DEFAULT_TRAVEL_MODE,
         avoid_highways=False, avoid_tolls=False, optimize_waypoints=False):
     """
     Create a directions layer.
 
     Add this layer to a :class:`gmaps.Figure` instance to draw
-    directions on the map. Currently, directions are limited
-    to ``DRIVING`` directions.
+    directions on the map.
 
     :Examples:
 
@@ -145,6 +163,10 @@ def directions_layer(
     >>> waypoints = [(46.4, 6.9), (46.9, 8.0)]
     >>> directions = gmaps.directions_layer(start, end, waypoints=waypoints)
 
+    You can choose the travel mode:
+
+    >>> directions = gmaps.directions_layer(start, end, travel_mode='WALKING')
+
     :param start:
         (Latitude, longitude) pair denoting the start of the journey.
     :type start: 2-element tuple
@@ -156,8 +178,15 @@ def directions_layer(
     :param waypoints:
         Iterable of (latitude, longitude) pair denoting waypoints.
         Google maps imposes a limitation on the total number of waypoints.
-        This limit is currently 23.
+        This limit is currently 23. You cannot use waypoints when the
+        travel_mode is ``'TRANSIT'``.
     :type waypoints: List of 2-element tuples, optional
+
+    :param travel_mode:
+        Choose the mode of transport. One of ``'BICYCLING'``, ``'DRIVING'``,
+        ``'WALKING'`` or ``'TRANSIT'``. A travel mode of ``'TRANSIT'``
+        indicates public transportation. Defaults to ``'DRIVING'``.
+    :type travel_mode: str, optional
 
     :param avoid_ferries:
         Avoid ferries where possible.
@@ -177,6 +206,6 @@ def directions_layer(
     :type optimize_waypoints: bool, optional
     """
     widget_args = _directions_options(
-            start, end, waypoints, avoid_ferries,
+            start, end, waypoints, travel_mode, avoid_ferries,
             avoid_highways, avoid_tolls, optimize_waypoints)
     return Directions(**widget_args)
