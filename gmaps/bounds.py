@@ -12,16 +12,20 @@ def latitude_bounds(latitudes):
     """
     Estimate latitude bound with 2*sample standard deviation
     """
-    N = float(len(latitudes))
-    mean = sum(latitudes) / N
-    sum_squares = sum(
-        (latitude-mean)**2 for latitude in latitudes
-    )
-    standard_deviation = math.sqrt(sum_squares/float(N))
-    lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
-    upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
-    lower_bound = max(lower_bound, MIN_ALLOWED_LATITUDE)
-    upper_bound = min(upper_bound, MAX_ALLOWED_LATITUDE)
+    if len(latitudes) == 1:
+        lower_bound = latitudes[0] - EPSILON
+        upper_bound = latitudes[0] + EPSILON
+    else:
+        N = float(len(latitudes))
+        mean = sum(latitudes) / N
+        sum_squares = sum(
+            (latitude-mean)**2 for latitude in latitudes
+        )
+        standard_deviation = math.sqrt(sum_squares/float(N))
+        lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
+        upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
+        lower_bound = max(lower_bound, MIN_ALLOWED_LATITUDE)
+        upper_bound = min(upper_bound, MAX_ALLOWED_LATITUDE)
     return lower_bound, upper_bound
 
 
@@ -36,24 +40,28 @@ def longitude_bounds(longitudes):
     and https://en.wikipedia.org/wiki/Directional_statistics
     for how to calculate the relevant statistics.
     """
-    N = float(len(longitudes))
-    radians = [math.radians(longitude) for longitude in longitudes]
-    sum_cos = sum(math.cos(r) for r in radians)
-    sum_cos_sq = sum_cos**2
-    sum_sin = sum(math.sin(r) for r in radians)
-    sum_sin_sq = sum_sin**2
-    mean_radians = math.atan2(sum_sin, sum_cos)
-    mean_degrees = math.degrees(mean_radians)
-    Rsq = (1/N**2) * (sum_cos_sq + sum_sin_sq)
-    standard_deviation = math.sqrt(-math.log(Rsq))
-    extent = 2.0*math.degrees(standard_deviation)
-    if extent > 180.0:
-        # longitudes cover entire map
-        upper_bound = 180.0 - EPSILON
-        lower_bound = -upper_bound
+    if len(longitudes) == 1:
+        lower_bound = longitudes[0] - EPSILON
+        upper_bound = longitudes[0] + EPSILON
     else:
-        lower_bound = _normalize_longitude(mean_degrees - extent)
-        upper_bound = _normalize_longitude(mean_degrees + extent)
+        N = float(len(longitudes))
+        radians = [math.radians(longitude) for longitude in longitudes]
+        sum_cos = sum(math.cos(r) for r in radians)
+        sum_cos_sq = sum_cos**2
+        sum_sin = sum(math.sin(r) for r in radians)
+        sum_sin_sq = sum_sin**2
+        mean_radians = math.atan2(sum_sin, sum_cos)
+        mean_degrees = math.degrees(mean_radians)
+        Rsq = (1/N**2) * (sum_cos_sq + sum_sin_sq)
+        standard_deviation = math.sqrt(-math.log(Rsq))
+        extent = 2.0*math.degrees(standard_deviation)
+        if extent > 180.0:
+            # longitudes cover entire map
+            upper_bound = 180.0 - EPSILON
+            lower_bound = -upper_bound
+        else:
+            lower_bound = _normalize_longitude(mean_degrees - extent)
+            upper_bound = _normalize_longitude(mean_degrees + extent)
     return lower_bound, upper_bound
 
 
