@@ -2,6 +2,14 @@
 Release notes
 -------------
 
+Version 0.5.4
+=============
+
+This release:
+ - Fixes a bug where bounds were incorrectly calculated for the case where there was a single point in the data (PR 160).
+ - Allows setting the travel mode in the directions layer (PR 157).
+ - Fixes the release script to use a fork of the conda-forge feedstock (PR 156).
+
 Version 0.5.3
 =============
 
