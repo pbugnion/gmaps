@@ -117,8 +117,10 @@ def release_conda(ctx, version):
     try:
         print('Cloning gmaps-feedstock to {}'.format(tempdir))
         os.chdir(tempdir)
-        run('git clone https://github.com/pbugnion/gmaps-feedstock.git')
+        run('git clone git@github.com:pbugnion/gmaps-feedstock.git')
         os.chdir('gmaps-feedstock')
+        run('git remote add upstream git@github.com:conda-forge/gmaps-feedstock.git')
+        run('git pull --rebase upstream master')
         branch_name = 'release-version-{}'.format(version)
         run('git checkout -b {}'.format(branch_name))
         update_conda_recipe(version, sha256)
