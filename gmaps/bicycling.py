@@ -7,3 +7,7 @@ class Bicycling(widgets.Widget):
     _model_name = Unicode('BicyclingLayerModel').tag(sync=True)
     _model_module = Unicode('jupyter-gmaps').tag(sync=True)
     has_bounds = False
+
+
+def bicycling_layer():
+    return Bicycling()
