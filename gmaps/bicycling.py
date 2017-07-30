@@ -1,11 +1,12 @@
 import ipywidgets as widgets
 from traitlets import Unicode
 
+
 class Bicycling(widgets.Widget):
     """
     Bicycling layer.
 
-    Add this to a :class:`gmaps.Map` or :class:`gmaps.Figure` 
+    Add this to a :class:`gmaps.Map` or :class:`gmaps.Figure`
     instance to add cycling routes.
 
     You should not instantiate this directly. Instead,
