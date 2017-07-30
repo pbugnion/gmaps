@@ -17,6 +17,8 @@ Figures and layers
 
 .. autofunction:: gmaps.directions_layer
 
+.. autofunction:: gmaps.bicycling_layer
+
 Utility functions
 -----------------
 
@@ -50,6 +52,8 @@ Low level widgets
 .. autoclass:: gmaps.GeoJson
 
 .. autoclass:: gmaps.Directions
+
+.. autoclass:: gmaps.Bicycling
 
 Datasets
 --------
