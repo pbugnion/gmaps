@@ -6,6 +6,7 @@ from .marker import *  # noqa
 from .heatmap import *  # noqa
 from .directions import *  # noqa
 from .geojson_layer import *  # noqa
+from .bicycling import *  # noqa
 
 
 def _jupyter_nbextension_paths():
