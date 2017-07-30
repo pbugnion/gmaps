@@ -485,3 +485,22 @@ You can also pass waypoints and customise the directions request. You can pass u
 
 The full list of options is given as part of the documentation for the
 :func:`gmaps.directions_layer`.
+
+
+Bicycling layer
+^^^^^^^^^^^^^^^
+
+You can add a bicycling layer to a map to draw cycle lanes. This will also
+change the style of the base layer to de-emphasize streets which are not
+cycle-friendly.
+
+::
+
+  import gmaps
+  gmaps.configure(api_key="AI...")
+
+  fig = gmaps.figure()
+  fig.add_layer(gmaps.bicycling_layer())
+  fig
+
+.. image:: bicycling-layer.png
