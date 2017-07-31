@@ -55,6 +55,12 @@ class Figure(widgets.DOMWidget):
 
             :func:`gmaps.directions_layer`
                 Create a layer with directions
+
+            :func:`gmaps.bicycling_layer`
+                Create a layer showing cycle routes
+
+            :func:`gmaps.transit_layer`
+                Create a layer showing public transport
         """
         self._map.add_layer(layer)
 
