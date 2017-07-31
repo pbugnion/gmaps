@@ -40,6 +40,9 @@ def transit_layer():
     `public transport information
     <https://www.google.com/landing/transit/cities/index.html>`_.
 
+    :returns:
+        A :class:`gmaps.Transit` widget.
+
     :Examples:
 
     ::
