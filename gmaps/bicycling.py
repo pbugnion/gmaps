@@ -31,6 +31,9 @@ def bicycling_layer():
     Adds cycle routes and decreases the weight of main routes
     on the map.
 
+    :returns:
+        A :class:`gmaps.Bicycling` widget.
+
     :Examples:
 
     >>> fig = gmaps.figure()

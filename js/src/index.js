@@ -19,5 +19,6 @@ export * from './GeoJson';
 export * from './Directions';
 export * from './ErrorsBox';
 export * from './Bicycling';
+export * from './Transit';
 
 export { version } from '../package.json';

@@ -6,8 +6,8 @@ export class BicyclingLayerModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
-            _view_name: 'BicyclingLayerModel',
-            _model_name: 'BicyclingLayerView'
+            _view_name: 'BicyclingLayerView',
+            _model_name: 'BicyclingLayerModel'
         }
     }
 }
