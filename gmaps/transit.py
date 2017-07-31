@@ -6,9 +6,9 @@ class Transit(widgets.Widget):
     """
     Transit layer.
 
-    Add this to a :class:`gmaps.Map` or a :class:`gmaps.Figure` 
-    instance to add transit (public transport) information. 
-    This only affects regions for which Google has 
+    Add this to a :class:`gmaps.Map` or a :class:`gmaps.Figure`
+    instance to add transit (public transport) information.
+    This only affects regions for which Google has
     `transit information
     <https://www.google.com/landing/transit/cities/index.html>`_.
 
