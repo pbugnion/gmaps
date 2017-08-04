@@ -42,7 +42,7 @@ module.exports = [
         module: {
             loaders: loaders
         },
-        externals: ['jupyter-js-widgets']
+        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls']
     },
     {// Embeddable jupyter-gmaps bundle
      //
@@ -69,6 +69,6 @@ module.exports = [
         module: {
             loaders: loaders
         },
-        externals: ['jupyter-js-widgets']
+        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls']
     }
 ];
