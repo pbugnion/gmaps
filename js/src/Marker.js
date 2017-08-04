@@ -1,5 +1,5 @@
 
-import widgets from 'jupyter-js-widgets';
+import widgets from '@jupyter-widgets/base';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 

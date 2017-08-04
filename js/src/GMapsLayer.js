@@ -1,4 +1,4 @@
-import widgets from 'jupyter-js-widgets';
+import widgets from '@jupyter-widgets/base';
 
 export class GMapsLayerView extends widgets.WidgetView {
     initialize(parameters) {

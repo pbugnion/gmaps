@@ -1,4 +1,4 @@
-import widgets from 'jupyter-js-widgets';
+import widgets from '@jupyter-widgets/base';
 import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
