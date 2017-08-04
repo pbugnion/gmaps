@@ -7,8 +7,7 @@ if (window.require) {
     window.require.config({
         map: {
             "*" : {
-                "jupyter-gmaps": "nbextensions/jupyter-gmaps/index",
-                "jupyter-js-widgets": "nbextensions/jupyter-js-widgets/extension"
+                "jupyter-gmaps": "nbextensions/jupyter-gmaps/index"
             }
         }
     });
