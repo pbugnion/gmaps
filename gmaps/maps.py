@@ -5,6 +5,7 @@ from traitlets import (Unicode, default, List, Tuple, Instance,
 
 from .bounds import merge_longitude_bounds
 from .geotraitlets import Point, ZoomLevel
+from ._version import CLIENT_VERSION
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
@@ -31,6 +32,16 @@ class ConfigurationMixin(HasTraits):
     @default("configuration")
     def _config_default(self):
         return _default_configuration
+
+
+class GMapsWidgetMixin(HasTraits):
+    """
+    Traitlets that are constant across all of gmaps
+    """
+    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
+    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
+    _model_module_version = Unicode(CLIENT_VERSION).tag(sync=True)
+    _view_module_version = Unicode(CLIENT_VERSION).tag(sync=True)
 
 
 class InitialViewport(Union):
@@ -108,7 +119,7 @@ def _serialize_viewport(viewport, manager):
     return payload
 
 
-class Map(widgets.DOMWidget, ConfigurationMixin):
+class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     """
     Base map class
 
@@ -138,9 +149,7 @@ class Map(widgets.DOMWidget, ConfigurationMixin):
     >>> m = gmaps.figure(initial_viewport=viewport)
     """
     _view_name = Unicode("PlainmapView").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("PlainmapModel").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     layers = Tuple(trait=Instance(widgets.Widget)).tag(
         sync=True, **widgets.widget_serialization)
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)

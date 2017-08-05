@@ -5,6 +5,7 @@ from traitlets import Bool, Unicode, CUnicode, List, Enum, observe, validate
 
 from . import geotraitlets
 from .locations import locations_to_list
+from .maps import GMapsWidgetMixin
 
 
 ALLOWED_TRAVEL_MODES = {'BICYCLING', 'DRIVING', 'TRANSIT', 'WALKING'}
@@ -15,7 +16,7 @@ class DirectionsServiceException(RuntimeError):
     pass
 
 
-class Directions(widgets.Widget):
+class Directions(GMapsWidgetMixin, widgets.Widget):
     """
     Directions layer.
 

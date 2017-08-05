@@ -7,7 +7,7 @@ from traitlets import (
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
 
-from .maps import DEFAULT_CENTER
+from .maps import DEFAULT_CENTER, GMapsWidgetMixin
 from .locations import locations_to_list
 from .options import merge_option_dicts, is_atomic, is_color_atomic
 
@@ -15,15 +15,13 @@ __all__ = ["Symbol", "Marker", "Markers", "marker_layer", "symbol_layer"]
 
 
 class _BaseMarkerMixin(HasTraits):
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     hover_text = Unicode("").tag(sync=True)
     display_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode("").tag(sync=True)
 
 
-class Symbol(_BaseMarkerMixin, widgets.Widget):
+class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     """
     Class representing a single symbol.
 
@@ -48,7 +46,7 @@ class Symbol(_BaseMarkerMixin, widgets.Widget):
     ).tag(sync=True)
 
 
-class Marker(_BaseMarkerMixin, widgets.Widget):
+class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     """
     Class representing a marker.
 
@@ -60,15 +58,13 @@ class Marker(_BaseMarkerMixin, widgets.Widget):
     label = Unicode("").tag(sync=True)
 
 
-class Markers(widgets.Widget):
+class Markers(GMapsWidgetMixin, widgets.Widget):
     """
     A collection of markers or symbols.
     """
     has_bounds = True
     _view_name = Unicode("MarkerLayerView").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("MarkerLayerModel").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     markers = List(minlen=1).tag(sync=True,  **widgets.widget_serialization)
     data_bounds = List().tag(sync=True)

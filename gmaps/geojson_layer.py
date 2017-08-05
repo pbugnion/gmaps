@@ -11,6 +11,7 @@ from . import geotraitlets
 from . import bounds
 from .options import (
     merge_option_dicts, broadcast_if_atomic, broadcast_if_color_atomic)
+from .maps import GMapsWidgetMixin
 
 __all__ = ["GeoJson", "geojson_layer", "GeoJsonFeature", "InvalidGeoJson"]
 
@@ -19,7 +20,7 @@ class InvalidGeoJson(Exception):
     pass
 
 
-class GeoJsonFeature(widgets.Widget):
+class GeoJsonFeature(GMapsWidgetMixin, widgets.Widget):
     """
     Widget for a single GeoJSON feature.
 
@@ -28,8 +29,6 @@ class GeoJsonFeature(widgets.Widget):
     """
     _view_name = Unicode("GeoJsonFeatureView").tag(sync=True)
     _model_name = Unicode("GeoJsonFeatureModel").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     feature = Dict().tag(sync=True)
     has_bounds = False
     fill_color = geotraitlets.ColorAlpha(
@@ -46,7 +45,7 @@ class GeoJsonFeature(widgets.Widget):
         return geojson.utils.coords(self.feature)
 
 
-class GeoJson(widgets.Widget):
+class GeoJson(GMapsWidgetMixin, widgets.Widget):
     """
     Widget for a collection of GeoJSON features.
 
@@ -58,8 +57,6 @@ class GeoJson(widgets.Widget):
     """
     _view_name = Unicode("GeoJsonLayerView").tag(sync=True)
     _model_name = Unicode("GeoJsonLayerModel").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     has_bounds = True
     data_bounds = List().tag(sync=True)
     features = List().tag(sync=True, **widgets.widget_serialization)

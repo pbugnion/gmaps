@@ -1,8 +1,10 @@
 import ipywidgets as widgets
 from traitlets import Unicode
 
+from .maps import GMapsWidgetMixin
 
-class Bicycling(widgets.Widget):
+
+class Bicycling(GMapsWidgetMixin, widgets.Widget):
     """
     Bicycling layer.
 
@@ -18,9 +20,7 @@ class Bicycling(widgets.Widget):
     >>> fig.add_layer(gmaps.bicycling_layer())
     """
     _view_name = Unicode('BicyclingLayerView').tag(sync=True)
-    _view_module = Unicode('jupyter-gmaps').tag(sync=True)
     _model_name = Unicode('BicyclingLayerModel').tag(sync=True)
-    _model_module = Unicode('jupyter-gmaps').tag(sync=True)
     has_bounds = False
 
 
