@@ -22,7 +22,7 @@ You can export maps to HTML using the infrastructure provided by `ipywidgets`. I
 .. code-block:: html
 
   <!-- Script tags that need to go into the head of the document -->
-  <script src="https://unpkg.com/jupyter-js-widgets@~2.1.4/dist/embed.js"></script>
+  <script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed.js"></script>
 
   <script type="application/vnd.jupyter.widget-state+json">
       // State of the widgets
@@ -75,7 +75,7 @@ Thus, a valid HTML document containing a single map would look like this (the AP
            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
            <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
-           <script src="https://unpkg.com/jupyter-js-widgets@~2.1.4/dist/embed.js"></script>
+           <script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed.js"></script>
            <script type="application/vnd.jupyter.widget-state+json">
            {
                "version_major": 1,
