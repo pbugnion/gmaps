@@ -1,4 +1,4 @@
-import widgets from '@jupyter-widgets/base'
+import * as widgets from '@jupyter-widgets/base'
 import _ from 'underscore'
 
 import GoogleMapsLoader from 'google-maps'

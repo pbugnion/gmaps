@@ -1,7 +1,7 @@
 
 import _ from 'underscore';
 
-import widgets from '@jupyter-widgets/base';
+import * as widgets from '@jupyter-widgets/base';
 import { VBoxModel, VBoxView } from '@jupyter-widgets/controls';
 
 export class FigureModel extends VBoxModel {
