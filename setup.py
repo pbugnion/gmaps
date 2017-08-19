@@ -150,7 +150,7 @@ setup_args = {
     ],
     'install_requires': [
         'ipython>=5.3.0',
-        'ipywidgets>=7.0.0b6',
+        'ipywidgets>=7.0.0',
         'traitlets>=4.3.0',
         'geojson>=1.3.4',
         'six'
