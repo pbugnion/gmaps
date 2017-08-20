@@ -106,10 +106,17 @@ def _validate_feature(feature):
 
 
 def _validate_geojson(geojson_document):
-    is_valid = geojson.validation.is_valid(
-        geojson.loads(json.dumps(geojson_document)))
-    if is_valid["valid"] != "yes":
-        raise InvalidGeoJson(is_valid["message"])
+    try:
+        geojson_instance = geojson.loads(json.dumps(geojson_document))
+    except ValueError as e:
+        raise InvalidGeoJson(e.message)
+    if not isinstance(geojson_instance, geojson.GeoJSON):
+        # Sometimes GeoJSON.to_instance fails silently and just returns
+        # the original type, rather than validation errors.
+        # Try with, e.g. an empty dictionary.
+        raise InvalidGeoJson('Could not convert document to GeoJSON.')
+    if not geojson_instance.is_valid:
+        raise InvalidGeoJson(", ".join(geojson_instance.errors()))
     if geojson_document["type"] != "FeatureCollection":
         raise InvalidGeoJson(
             "Only FeatureCollection GeoJSON is currently supported")

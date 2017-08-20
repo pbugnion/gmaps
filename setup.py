@@ -152,7 +152,7 @@ setup_args = {
         'ipython>=5.3.0',
         'ipywidgets>=7.0.0',
         'traitlets>=4.3.0',
-        'geojson>=1.3.4',
+        'geojson>=2.0.0',
         'six'
     ],
     'packages': find_packages(),
