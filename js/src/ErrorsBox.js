@@ -1,5 +1,7 @@
 import * as widgets from '@jupyter-widgets/base';
 
+import $ from 'jquery';
+
 export class ErrorsBoxModel extends widgets.DOMWidgetModel {
     defaults() {
         return {

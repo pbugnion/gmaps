@@ -1,4 +1,5 @@
 import * as widgets from '@jupyter-widgets/base'
+import $ from 'jquery'
 
 export class ToolbarModel extends widgets.DOMWidgetModel {
     defaults() {
