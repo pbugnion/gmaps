@@ -13,6 +13,12 @@ export class BicyclingLayerModel extends GMapsLayerModel {
 }
 
 export class BicyclingLayerView extends GMapsLayerView {
+
+    constructor(options) {
+        super(options);
+        this.canDownloadAsPng = true;
+    }
+
     render() {
         GoogleMapsLoader.load((google) => {
             this.bicyclingLayer = new google.maps.BicyclingLayer();
