@@ -7,6 +7,7 @@ from traitlets import (
 from . import bounds
 from .locations import locations_to_list, locations_docstring
 from . import geotraitlets
+from .maps import GMapsWidgetMixin
 
 
 _heatmap_options_docstring = """
@@ -77,7 +78,7 @@ class _HeatmapOptionsMixin(HasTraits):
         return bounds.longitude_bounds(longitudes)
 
 
-class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
+class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     __doc__ = """
     Heatmap layer.
 
@@ -108,9 +109,7 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
     """ + _heatmap_options_docstring
     has_bounds = True
     _view_name = Unicode("SimpleHeatmapLayerView").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("SimpleHeatmapLayerModel").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     data = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
@@ -129,7 +128,7 @@ class Heatmap(widgets.Widget, _HeatmapOptionsMixin):
         self.set_bounds(data)
 
 
-class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
+class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     __doc__ = """
     Heatmap with weighted points.
 
@@ -161,9 +160,7 @@ class WeightedHeatmap(widgets.Widget, _HeatmapOptionsMixin):
     """ + _heatmap_options_docstring
     has_bounds = True
     _view_name = Unicode("WeightedHeatmapLayerView").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("WeightedHeatmapLayerModel").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     data = List().tag(sync=True)
     data_bounds = List().tag(sync=True)

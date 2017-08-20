@@ -11,6 +11,7 @@ from . import geotraitlets
 from . import bounds
 from .options import (
     merge_option_dicts, broadcast_if_atomic, broadcast_if_color_atomic)
+from .maps import GMapsWidgetMixin
 
 __all__ = ["GeoJson", "geojson_layer", "GeoJsonFeature", "InvalidGeoJson"]
 
@@ -19,7 +20,7 @@ class InvalidGeoJson(Exception):
     pass
 
 
-class GeoJsonFeature(widgets.Widget):
+class GeoJsonFeature(GMapsWidgetMixin, widgets.Widget):
     """
     Widget for a single GeoJSON feature.
 
@@ -28,8 +29,6 @@ class GeoJsonFeature(widgets.Widget):
     """
     _view_name = Unicode("GeoJsonFeatureView").tag(sync=True)
     _model_name = Unicode("GeoJsonFeatureModel").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     feature = Dict().tag(sync=True)
     has_bounds = False
     fill_color = geotraitlets.ColorAlpha(
@@ -46,7 +45,7 @@ class GeoJsonFeature(widgets.Widget):
         return geojson.utils.coords(self.feature)
 
 
-class GeoJson(widgets.Widget):
+class GeoJson(GMapsWidgetMixin, widgets.Widget):
     """
     Widget for a collection of GeoJSON features.
 
@@ -58,8 +57,6 @@ class GeoJson(widgets.Widget):
     """
     _view_name = Unicode("GeoJsonLayerView").tag(sync=True)
     _model_name = Unicode("GeoJsonLayerModel").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     has_bounds = True
     data_bounds = List().tag(sync=True)
     features = List().tag(sync=True, **widgets.widget_serialization)
@@ -109,10 +106,17 @@ def _validate_feature(feature):
 
 
 def _validate_geojson(geojson_document):
-    is_valid = geojson.validation.is_valid(
-        geojson.loads(json.dumps(geojson_document)))
-    if is_valid["valid"] != "yes":
-        raise InvalidGeoJson(is_valid["message"])
+    try:
+        geojson_instance = geojson.loads(json.dumps(geojson_document))
+    except ValueError as e:
+        raise InvalidGeoJson(e.message)
+    if not isinstance(geojson_instance, geojson.GeoJSON):
+        # Sometimes GeoJSON.to_instance fails silently and just returns
+        # the original type, rather than validation errors.
+        # Try with, e.g. an empty dictionary.
+        raise InvalidGeoJson('Could not convert document to GeoJSON.')
+    if not geojson_instance.is_valid:
+        raise InvalidGeoJson(", ".join(geojson_instance.errors()))
     if geojson_document["type"] != "FeatureCollection":
         raise InvalidGeoJson(
             "Only FeatureCollection GeoJSON is currently supported")

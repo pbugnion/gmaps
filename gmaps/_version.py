@@ -1,3 +1,8 @@
 
 # This file is generated programatically.
-__version__ = '0.5.5-dev'
+
+# Version of the Python package
+__version__ = '0.6.0-alpha4'
+
+# Version of the JS client. This must match the version field in package.json.
+CLIENT_VERSION = '0.6.0-alpha4'

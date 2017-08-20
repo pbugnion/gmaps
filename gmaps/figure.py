@@ -3,14 +3,14 @@ import ipywidgets as widgets
 
 from traitlets import Unicode, Instance
 
-from .maps import Map, InitialViewport
+from .maps import Map, InitialViewport, GMapsWidgetMixin
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
 
 __all__ = ["Figure", "figure"]
 
 
-class Figure(widgets.DOMWidget):
+class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     """
     Figure widget
 
@@ -19,9 +19,7 @@ class Figure(widgets.DOMWidget):
     factory method.
     """
     _view_name = Unicode("FigureView").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("FigureModel").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
     _toolbar = Instance(Toolbar, allow_none=True, default=None).tag(
         sync=True, **widgets.widget_serialization)
     _errors_box = Instance(ErrorsBox, allow_none=True, default=None).tag(

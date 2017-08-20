@@ -117,7 +117,7 @@ Installing `gmaps` with `pip`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you do not use conda, you can install `gmaps` with pip. The current version
-of `gmaps` is only tested with *IPython 4.2* or later and *ipywidgets 6.0.0* or
+of `gmaps` is only tested with *IPython 4.3* or later and *ipywidgets 7.0.0* or
 later. To upgrade to the latest versions, use::
 
     $ pip install -U jupyter

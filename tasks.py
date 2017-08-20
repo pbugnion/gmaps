@@ -13,7 +13,12 @@ import semver
 
 VERSION_TEMPLATE = '''
 # This file is generated programatically.
+
+# Version of the Python package
 __version__ = '{version_string}'
+
+# Version of the JS client. This must match the version field in package.json.
+CLIENT_VERSION = '{version_string}'
 '''
 
 RELEASE_NOTES_TEMPLATE = '''# Write the release notes here
@@ -98,6 +103,7 @@ def postrelease(ctx, version):
     run('git push origin master --tags')
     new_version = semver.bump_patch(version) + '-dev'
     set_pyversion(new_version)
+    set_jsversion(new_version)
     run('git add gmaps/_version.py')
     run('git commit -m "Back to dev"')
     run('git push origin master')

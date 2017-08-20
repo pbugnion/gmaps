@@ -1,9 +1,10 @@
 
 import _ from 'underscore';
 
-import widgets from 'jupyter-js-widgets';
+import * as widgets from '@jupyter-widgets/base';
+import { VBoxModel, VBoxView } from '@jupyter-widgets/controls';
 
-export class FigureModel extends widgets.VBoxModel {
+export class FigureModel extends VBoxModel {
     defaults() {
         return {
             ...super.defaults(),
@@ -28,7 +29,7 @@ export class FigureModel extends widgets.VBoxModel {
     }
 }
 
-export class FigureView extends widgets.VBoxView {
+export class FigureView extends VBoxView {
     initialize(parameters) {
         super.initialize(parameters)
         const toolbarModel = this.model.get("_toolbar");
