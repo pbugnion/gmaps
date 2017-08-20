@@ -13,6 +13,12 @@ export class TransitLayerModel extends GMapsLayerModel {
 }
 
 export class TransitLayerView extends GMapsLayerView {
+
+    constructor(options) {
+        super(options);
+        this.canDownloadAsPng = true;
+    }
+
     render() {
         GoogleMapsLoader.load((google) => {
             this.transitLayer = new google.maps.TransitLayer();
