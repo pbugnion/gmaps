@@ -1,6 +1,6 @@
 import ipywidgets as widgets
 
-from traitlets import Unicode
+from traitlets import Unicode, Bool
 
 from .maps import GMapsWidgetMixin
 
@@ -27,10 +27,11 @@ class Traffic(GMapsWidgetMixin, widgets.Widget):
     """
     _view_name = Unicode('TrafficLayerView').tag(sync=True)
     _model_name = Unicode('TrafficLayerModel').tag(sync=True)
+    auto_refresh = Bool(True).tag(sync=True)
     has_bounds = False
 
 
-def traffic_layer():
+def traffic_layer(auto_refresh=True):
     """
     Traffic layer.
 
@@ -51,4 +52,4 @@ def traffic_layer():
         >>> fig.add_layer(gmaps.traffic_layer())
         >>> fig
     """
-    return Traffic()
+    return Traffic(auto_refresh=auto_refresh)
