@@ -20,5 +20,6 @@ export * from './Directions';
 export * from './ErrorsBox';
 export * from './Bicycling';
 export * from './Transit';
+export * from './Traffic';
 
 export { version } from '../package.json';

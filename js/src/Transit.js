@@ -20,7 +20,7 @@ export class TransitLayerView extends GMapsLayerView {
     }
 
     render() {
-        GoogleMapsLoader.load((google) => {
+        GoogleMapsLoader.load(google => {
             this.transitLayer = new google.maps.TransitLayer();
         });
     }

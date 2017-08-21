@@ -487,11 +487,12 @@ The full list of options is given as part of the documentation for the
 :func:`gmaps.directions_layer`.
 
 
-Bicycling layer
-^^^^^^^^^^^^^^^
+Bicycling, transit and traffic layers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You can add a bicycling layer to a map to draw cycle lanes. This will also
-change the style of the base layer to de-emphasize streets which are not
+You can add bicycling, transit and traffic information to a base map. For
+instance, use :func:`gmaps.bicycling_layer` to draw cycle lanes. This will
+also change the style of the base layer to de-emphasize streets which are not
 cycle-friendly.
 
 ::
@@ -499,8 +500,24 @@ cycle-friendly.
   import gmaps
   gmaps.configure(api_key="AI...")
 
-  fig = gmaps.figure()
+  # Map centered on London
+  fig = gmaps.figure(center=(51.5, -0.2), zoom_level=11)
   fig.add_layer(gmaps.bicycling_layer())
   fig
 
 .. image:: bicycling-layer.png
+
+Similarly, the transit layer, available as :func:`gmaps.transit_layer`,
+adds information about public transport, where available.
+
+.. image:: transit-layer.png
+
+The traffic layer, available as :func:`gmaps.traffic_layer`, adds information
+about the current state of traffic.
+
+.. image:: traffic-layer.png
+
+Unlike the other layers, these layers do not take any user data. Thus,
+*jupyter-gmaps* will not use them to center the map. This means that,
+if you use these layers by themselves, you will often want to center the
+figure explicitly, using the ``center`` and ``zoom_level`` attributes.

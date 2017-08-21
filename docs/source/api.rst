@@ -21,6 +21,8 @@ Figures and layers
 
 .. autofunction:: gmaps.transit_layer
 
+.. autofunction:: gmaps.traffic_layer
+
 Utility functions
 -----------------
 
@@ -58,6 +60,8 @@ Low level widgets
 .. autoclass:: gmaps.Bicycling
 
 .. autoclass:: gmaps.Transit
+
+.. autoclass:: gmaps.Traffic
 
 Datasets
 --------
