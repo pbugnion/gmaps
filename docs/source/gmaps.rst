@@ -491,9 +491,9 @@ Bicycling, transit and traffic layers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can add bicycling, transit and traffic information to a base map. For
-instance, you can add a bicycling layer to a map to draw cycle lanes. This
-will also change the style of the base layer to de-emphasize streets which
-are not cycle-friendly.
+instance, use :func:`gmaps.bicycling_layer` to draw cycle lanes. This will
+also change the style of the base layer to de-emphasize streets which are not
+cycle-friendly.
 
 ::
 
@@ -507,12 +507,13 @@ are not cycle-friendly.
 
 .. image:: bicycling-layer.png
 
-Similarly, the transit layer adds information about public transport, where
-available.
+Similarly, the transit layer, available as :func:`gmaps.transit_layer`,
+adds information about public transport, where available.
 
 .. image:: transit-layer.png
 
-The traffic layer adds information about the current state of traffic.
+The traffic layer, available as :func:`gmaps.traffic_layer`, adds information
+about the current state of traffic.
 
 .. image:: traffic-layer.png
 
