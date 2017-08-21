@@ -59,6 +59,9 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
 
             :func:`gmaps.transit_layer`
                 Create a layer showing public transport
+
+            :func:`gmaps.traffic_layer`
+                Create a layer showing current traffic information
         """
         self._map.add_layer(layer)
 
