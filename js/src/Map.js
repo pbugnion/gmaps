@@ -5,6 +5,7 @@ import GoogleMapsLoader from 'google-maps'
 
 import { downloadElementAsPng } from './services/downloadElement'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
+import { defaultAttributes } from './defaults'
 
 function needReloadGoogleMaps(configuration) {
     return GoogleMapsLoader.KEY !== configuration["api_key"];
@@ -145,10 +146,9 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
     defaults() {
         return {
             ...super.defaults(),
+            ...defaultAttributes,
             _view_name: "PlainmapView",
             _model_name: "PlainmapModel",
-            _view_module : 'jupyter-gmaps',
-            _model_module : 'jupyter-gmaps',
             width: "600px",
             height: "400px",
             data_bounds: null,

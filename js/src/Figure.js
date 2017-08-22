@@ -3,15 +3,15 @@ import _ from 'underscore';
 
 import * as widgets from '@jupyter-widgets/base';
 import { VBoxModel, VBoxView } from '@jupyter-widgets/controls';
+import { defaultAttributes } from './defaults';
 
 export class FigureModel extends VBoxModel {
     defaults() {
         return {
             ...super.defaults(),
+            ...defaultAttributes,
             _model_name: "FigureModel",
             _view_name: "FigureView",
-            _model_module: "jupyter-gmaps",
-            _view_module: "jupyter-gmaps",
             children: [],
             box_style: '',
             _map: undefined,
