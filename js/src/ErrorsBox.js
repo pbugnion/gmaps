@@ -1,4 +1,5 @@
 import * as widgets from '@jupyter-widgets/base';
+import { defaultAttributes } from './defaults'
 
 import $ from 'jquery';
 
@@ -6,10 +7,9 @@ export class ErrorsBoxModel extends widgets.DOMWidgetModel {
     defaults() {
         return {
             ...super.defaults(),
+            ...defaultAttributes,
             _model_name: 'ErrorsBoxModel',
             _view_name: 'ErrorsBoxView',
-            _model_module: 'jupyter-gmaps',
-            _view_module: 'jupyter-gmaps',
             errors: []
         };
     }

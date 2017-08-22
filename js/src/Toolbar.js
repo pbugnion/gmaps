@@ -1,14 +1,15 @@
 import * as widgets from '@jupyter-widgets/base'
 import $ from 'jquery'
 
+import { defaultAttributes } from './defaults'
+
 export class ToolbarModel extends widgets.DOMWidgetModel {
     defaults() {
         return {
             ...super.defaults(),
+            ...defaultAttributes,
             _model_name: "ToolbarModel",
             _view_name: "ToolbarView",
-            _model_module: "jupyter-gmaps",
-            _view_module: "jupyter-gmaps",
         }
     }
 };
