@@ -5,3 +5,5 @@
 // already be loaded by the notebook otherwise.
 
 export * from './index'
+
+require('bootstrap/dist/css/bootstrap.min.css')  // Ensure bootstrap is present when embedding
