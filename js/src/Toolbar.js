@@ -19,27 +19,27 @@ export class ToolbarView extends widgets.DOMWidgetView {
     render() {
         const $toolbar = $("<div />");
         $toolbar
-            .addClass("toolbar-inner navbar-inner");
+            .addClass("gmaps-toolbar toolbar-inner navbar-inner");
 
         const $toolbarContainer = $("<div />")
         $toolbarContainer
-            .addClass("container toolbar gmaps-toolbar-container");
+            .addClass("toolbar");
 
         const $saveButton = $("<button />")
         $saveButton
-            .addClass("btn btn-default gmaps-toolbar-button")
+            .addClass("btn btn-default")
             .attr("title", "Download the map as PNG")
             .append("<i />")
             .addClass("fa fa-download");
 
         const $notificationArea = $("<span />");
         $notificationArea
-            .addClass("gmaps-toolbar-notification-area");
+            .addClass("notification-area");
 
         const $savingNotification = $("<button />")
         $savingNotification
             .addClass("notification_widget btn btn-xs navbar-btn")
-            .addClass("warning gmaps-notification-widget")
+            .addClass("warning notification-widget")
             .html("<span>Downloading</span>")
             .hide();
 

@@ -52,6 +52,7 @@ export class FigureView extends VBoxView {
                 this.add_child_model(this.model.get("_errors_box"));
         }
         this.mapView = this.add_child_model(this.model.get("_map"));
+        this.pWidget.addClass("gmaps-figure")
     }
 
     savePng() {
