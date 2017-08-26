@@ -2,6 +2,17 @@
 Release notes
 -------------
 
+Version 0.6.0
+=============
+
+This release:
+ - PRs 166, 171 and 172 migrate jupyter-gmaps to ipywidgets 7.0.0 (released on the 18th August 2017). This is a breaking change: jupyter-gmaps will not work with ipywidgets 6.x versions.
+ - PRs 163 and 169 add a layer for displaying bicycling information.
+ - PRs 165 and 169 add a layer for displaying transit (public transport) information.
+ - PR 170 adds a layer for displaying traffic information.
+ - PR 173 improves the layout of the CSS
+ - PR 173 improves the CSS used for embedding
+
 Version 0.5.4
 =============
 
