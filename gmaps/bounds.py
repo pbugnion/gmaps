@@ -40,7 +40,7 @@ def longitude_bounds(longitudes):
     and https://en.wikipedia.org/wiki/Directional_statistics
     for how to calculate the relevant statistics.
     """
-    if len(longitudes) == 1:
+    if len(set(longitudes)) == 1:
         lower_bound = longitudes[0] - EPSILON
         upper_bound = longitudes[0] + EPSILON
     else:
