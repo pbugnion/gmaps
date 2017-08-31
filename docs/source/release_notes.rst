@@ -2,6 +2,12 @@
 Release notes
 -------------
 
+Version 0.6.1
+=============
+
+This is a patch release that is identical to 0.6.0. The dependencies in the
+conda-forge release of 0.6.0 were badly specified.
+
 Version 0.6.0
 =============
 
