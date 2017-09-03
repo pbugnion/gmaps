@@ -22,10 +22,16 @@ export class DrawingLayerView extends GMapsLayerView {
     }
 
     render() {
-        console.log('rendered drawing layer')
+        const options = {
+            drawingControl: true,
+        }
+        GoogleMapsLoader.load(google => {
+            this.drawingManager = 
+                new google.maps.drawing.DrawingManager(options);
+        });
     }
 
-    addToMapView() {
-        console.log('added to map view')
+    addToMapView(mapView) {
+        this.drawingManager.setMap(mapView.map);
     }
 }
