@@ -21,5 +21,6 @@ export * from './ErrorsBox';
 export * from './Bicycling';
 export * from './Transit';
 export * from './Traffic';
+export * from './Drawing';
 
 export { version } from '../package.json';
