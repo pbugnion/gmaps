@@ -74,9 +74,7 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
     """
     has_bounds = True
     _view_name = Unicode("DirectionsLayerView").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
     _model_name = Unicode("DirectionsLayerModel").tag(sync=True)
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
 
     data = List(minlen=2).tag(sync=True)
     data_bounds = List().tag(sync=True)
