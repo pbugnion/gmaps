@@ -32,6 +32,11 @@ export class DrawingLayerView extends GMapsLayerView {
     render() {
         this.overlays = new widgets.ViewList(this.addMarker, this.removeMarker, this)
         this.overlays.update(this.model.get('overlays'))
+        this.model.on(
+            'change:overlays', 
+            () => {console.log('updating overlays') ; this.overlays.update(this.model.get('overlays'))}, 
+            this
+        );
     }
 
     addMarker(childModel) {
@@ -46,11 +51,23 @@ export class DrawingLayerView extends GMapsLayerView {
 
     addToMapView(mapView) {
         mapView.map.addListener('click', (event) => {
-            const newMarker = new google.maps.Marker({
-                position: event.latLng
-            })
-            newMarker.setMap(mapView.map)
+            const { latLng } = event;
+            const latitude = latLng.lat();
+            const longitude = latLng.lng();
+            this.send(this.newMarkerMessage(latitude, longitude))
         });
     };
+
+    newMarkerMessage(latitude, longitude) {
+        const payload = {
+            event: 'OVERLAY_ADDED',
+            payload: {
+                overlayType: 'MARKER',
+                latitude,
+                longitude
+            }
+        };
+        return payload;
+    }
 
 }
