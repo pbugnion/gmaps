@@ -10,9 +10,29 @@ export class ToolbarModel extends widgets.DOMWidgetModel {
             ...defaultAttributes,
             _model_name: "ToolbarModel",
             _view_name: "ToolbarView",
+            layer_controls: [],
+        }
+    }
+
+    static serializers = {
+        ...widgets.DOMWidgetModel.serializers,
+        layer_controls: {deserialize: widgets.unpack_models}
+    }
+};
+
+export class DrawingControlsModel extends widgets.DOMWidgetModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            ...defaultAttributes,
+            _model_name: "DrawingControlsModel",
+            _view_name: "DrawingControlsView",
+            show_controls: false,
+            options: {mode: 'MARKER'}
         }
     }
 };
+
 
 export class ToolbarView extends widgets.DOMWidgetView {
 
@@ -31,6 +51,9 @@ export class ToolbarView extends widgets.DOMWidgetView {
             .attr("title", "Download the map as PNG")
             .append("<i />")
             .addClass("fa fa-download");
+
+        this.$additionalControlsContainer = $('<div />')
+        this.$additionalControlsContainer.addClass('additional-controls-container')
 
         const $notificationArea = $("<span />");
         $notificationArea
@@ -55,13 +78,23 @@ export class ToolbarView extends widgets.DOMWidgetView {
                     });
                 };
             })
+        
 
         $toolbarContainer
             .append($saveButton)
+            .append(this.$additionalControlsContainer)
             .append($notificationArea);
+
         $notificationArea.append($savingNotification);
         $toolbar.append($toolbarContainer)
         this.$el.append($toolbar)
+
+        this.additionalControlViews = new widgets.ViewList(this.addControlsModel, null, this);
+        this.additionalControlViews.update(this.model.get('layer_controls'))
+
+        this.model.on('change:layer_controls', () => {
+            this.additionalControlViews.update(this.model.get('layer_controls'))
+        });
 
         this.update();
     }
@@ -69,5 +102,17 @@ export class ToolbarView extends widgets.DOMWidgetView {
     registerSavePngCallback(callback) {
         this.savePngCallback = callback;
     }
+
+    addControlsModel(model) {
+        return this.create_child_view(model).then(view => {
+            this.$additionalControlsContainer.append(view.el)
+            return view;
+        });
+    }
 }
 
+export class DrawingControlsView extends widgets.DOMWidgetView {
+    render() {
+        this.el.innerHTML = 'hello drawing controls';
+    }
+}
