@@ -41,7 +41,7 @@ def longitude_bounds(longitudes):
     for how to calculate the relevant statistics.
     """
     if max(longitudes) - min(longitudes) < EPSILON:
-        mean_longitude = 0.5 * (max(longitudes) - min(longitudes))
+        mean_longitude = 0.5 * (max(longitudes) + min(longitudes))
         upper_bound = _normalize_longitude(mean_longitude + EPSILON)
         lower_bound = _normalize_longitude(mean_longitude - EPSILON)
     else:
