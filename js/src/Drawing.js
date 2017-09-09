@@ -49,9 +49,10 @@ export class DrawingLayerView extends GMapsLayerView {
         this.overlays.update(this.model.get('overlays'))
         this.model.on(
             'change:overlays', 
-            () => {console.log('updating overlays') ; this.overlays.update(this.model.get('overlays'))}, 
-            this
+            () => { this.overlays.update(this.model.get('overlays')) },
         );
+        this.model.on('change:options', () => this._onNewOptions());
+        this._clickListener = null
     }
 
     addMarker(childModel) {
@@ -64,13 +65,28 @@ export class DrawingLayerView extends GMapsLayerView {
 
     removeMarker() {};
 
+    _onNewOptions() {
+        const options = this.model.get('options');
+        this._setClickListener(this.mapView.map, options);
+    }
+
+    _setClickListener(map, options) {
+        if (options.mode === 'DISABLED') {
+            if (this._clickListener) { this._clickListener.remove(); }
+        } else {
+            if (this._clickListener) { this._clickListener.remove(); }
+            this._clickListener = map.addListener('click', event => {
+                const { latLng } = event;
+                const latitude = latLng.lat();
+                const longitude = latLng.lng();
+                this.send(this.newMarkerMessage(latitude, longitude))
+            });
+        }
+    }
+
     addToMapView(mapView) {
-        mapView.map.addListener('click', (event) => {
-            const { latLng } = event;
-            const latitude = latLng.lat();
-            const longitude = latLng.lng();
-            this.send(this.newMarkerMessage(latitude, longitude))
-        });
+        const options = this.model.get('options');
+        this._setClickListener(mapView.map, options)
     };
 
     newMarkerMessage(latitude, longitude) {
