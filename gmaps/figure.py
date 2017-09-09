@@ -63,6 +63,12 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
             :func:`gmaps.traffic_layer`
                 Create a layer showing current traffic information
         """
+        try:
+            toolbar_controls = layer.toolbar_controls
+            if self._toolbar is not None and toolbar_controls is not None:
+                self._toolbar.add_controls(toolbar_controls)
+        except AttributeError:
+            pass
         self._map.add_layer(layer)
 
 

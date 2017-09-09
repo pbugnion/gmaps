@@ -1,7 +1,7 @@
 
 import ipywidgets as widgets
 
-from traitlets import Unicode, List, Enum, Instance, Bool, HasTraits
+from traitlets import Unicode, List, Enum, Instance, Bool, HasTraits, default
 
 from .maps import GMapsWidgetMixin
 from .marker import Marker
@@ -29,7 +29,7 @@ class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
         sync=True)
     options = Instance(
         DrawingLayerOptions,
-        allow_none=True
+        allow_none=False
     ).tag(sync=True, to_json=serialize_drawing_layer_options)
 
 
@@ -40,15 +40,19 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     overlays = List().tag(sync=True, **widgets.widget_serialization)
     options = Instance(
         DrawingLayerOptions,
-        allow_none=False,
-        default=DrawingLayerOptions()
-    ).tag(sync=True, **widgets.widget_serialization)
-    toolbar_controls = Instance(DrawingControls).tag(
+        allow_none=False
+    ).tag(sync=True, to_json=serialize_drawing_layer_options)
+    toolbar_controls = Instance(DrawingControls, allow_none=True).tag(
         sync=True, **widgets.widget_serialization)
 
     def __init__(self, **kwargs):
         super(Drawing, self).__init__(**kwargs)
+        self.toolbar_controls = DrawingControls(options=self.options)
         self.on_msg(self._handle_message)
+
+    @default('options')
+    def default_options(self):
+        return DrawingLayerOptions()
 
     def _handle_message(self, _, content, buffers):
         if content.get('event') == 'OVERLAY_ADDED':
