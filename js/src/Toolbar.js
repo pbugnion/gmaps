@@ -113,6 +113,24 @@ export class ToolbarView extends widgets.DOMWidgetView {
 
 export class DrawingControlsView extends widgets.DOMWidgetView {
     render() {
-        this.el.innerHTML = 'hello drawing controls';
+        const $container = $("<span />")
+        $container
+            .addClass("btn-group")
+
+        const $disableButton = $("<button />")
+        $disableButton
+            .addClass("btn btn-default")
+            .append("<i />")
+            .addClass("fa fa-ban")
+
+        const $markerButton = $("<button />")
+        $markerButton
+            .addClass("btn btn-default")
+            .append("<i />")
+            .addClass("fa fa-map-marker")
+        
+        $container.append($disableButton, $markerButton);
+        this.$el.append($container);
+        this.$el.addClass("additional-controls")
     }
 }
