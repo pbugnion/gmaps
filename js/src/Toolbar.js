@@ -27,7 +27,7 @@ export class DrawingControlsModel extends widgets.DOMWidgetModel {
             ...defaultAttributes,
             _model_name: "DrawingControlsModel",
             _view_name: "DrawingControlsView",
-            show_controls: false,
+            show_controls: true,
             options: {mode: 'MARKER'}
         }
     }
@@ -128,6 +128,14 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             .addClass("btn btn-default")
             .append("<i />")
             .addClass("fa fa-map-marker")
+
+        $markerButton.click(
+            () => { this.model.set('options', {'mode': 'MARKER'}); }
+        )
+
+        $disableButton.click(
+            () => { this.model.set('options', {'mode': 'DISABLED'}); }
+        )
         
         $container.append($disableButton, $markerButton);
         this.$el.append($container);

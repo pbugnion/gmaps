@@ -7,18 +7,33 @@ import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 
 
 export class DrawingLayerModel extends GMapsLayerModel {
+
+    initialize(attributes, options) {
+        super.initialize(attributes, options);
+        const controls = this.get('toolbar_controls');
+        if (controls) {
+            controls.on(
+                'change:options', 
+                (model, newOptions) => this.set('options', newOptions)
+            )
+        }
+    }
+
     defaults() {
         return {
             ...super.defaults(),
             _view_name: 'DrawingLayerView',
             _model_name: 'DrawingLayerModel',
-            overlays: []
+            overlays: [],
+            options: {mode: 'MARKER'},
+            toolbar_controls: null
         }
     }
 
     static serializers = {
         ...widgets.DOMWidgetModel.serializers,
-        overlays: {deserialize: widgets.unpack_models}
+        overlays: {deserialize: widgets.unpack_models},
+        toolbar_controls: {deserialize: widgets.unpack_models}
     }
 }
 
