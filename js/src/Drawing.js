@@ -127,29 +127,45 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         const $container = $('<span />')
         $container
             .addClass('btn-group')
+            .attr('data-toggle', 'buttons');
 
-        const $disableButton = $('<button />')
-        $disableButton
-            .addClass('btn btn-default')
-            .append('<i />')
-            .addClass('fa fa-ban')
+        this.$disableButton = this._createModeButton('fa-ban')
+        this._createButtonEvent(this.$disableButton, 'DISABLED')
+        this.$markerButton = this._createModeButton('fa-map-marker')
+        this._createButtonEvent(this.$markerButton, 'MARKER')
 
-        const $markerButton = $('<button />')
-        $markerButton
-            .addClass('btn btn-default')
-            .append('<i />')
-            .addClass('fa fa-map-marker')
-
-        $markerButton.click(
-            () => { this.model.set('options', {'mode': 'MARKER'}); }
-        )
-
-        $disableButton.click(
-            () => { this.model.set('options', {'mode': 'DISABLED'}); }
-        )
+        const { mode } = this.model.get('options')
+        this._setButtonSelected(mode);
         
-        $container.append($disableButton, $markerButton);
+        $container.append(this.$disableButton, this.$markerButton);
         this.$el.append($container);
         this.$el.addClass('additional-controls')
+    }
+
+    _createModeButton(icon) {
+        const $button = $('<button />')
+        $button
+            .addClass('btn btn-default')
+            .append('<i />')
+            .addClass(`fa ${icon}`)
+        
+        return $button
+    }
+
+    _createButtonEvent($button, mode) {
+        $button.click(() => {
+            this._setButtonSelected(mode);
+            this.model.set('options', { mode });
+        })
+    }
+
+    _setButtonSelected(mode) {
+        if (mode === 'MARKER') {
+            this.$markerButton.addClass('active')
+            this.$disableButton.removeClass('active')
+        } else if (mode === 'DISABLED') {
+            this.$markerButton.removeClass('active')
+            this.$disableButton.addClass('active')
+        }
     }
 }
