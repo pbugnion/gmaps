@@ -1,7 +1,10 @@
 
 import ipywidgets as widgets
 
-from traitlets import Unicode, List, Enum, Instance, Bool, HasTraits, default
+from traitlets import (
+    Unicode, List, Enum, Instance,
+    Bool, HasTraits, default, observe
+)
 
 from .maps import GMapsWidgetMixin
 from .marker import Marker
@@ -49,6 +52,12 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         super(Drawing, self).__init__(**kwargs)
         self.toolbar_controls = DrawingControls(options=self.options)
         self.on_msg(self._handle_message)
+
+    @observe('options')
+    def _handle_options_change(self, change):
+        new_options = change['new']
+        if self.toolbar_controls is not None:
+            self.toolbar_controls.options = new_options
 
     @default('options')
     def default_options(self):
