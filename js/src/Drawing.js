@@ -1,9 +1,11 @@
 
 import * as widgets from '@jupyter-widgets/base';
+import $ from 'jquery'
 
 import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
+import { defaultAttributes } from './defaults'
 
 
 export class DrawingLayerModel extends GMapsLayerModel {
@@ -36,6 +38,20 @@ export class DrawingLayerModel extends GMapsLayerModel {
         toolbar_controls: {deserialize: widgets.unpack_models}
     }
 }
+
+
+export class DrawingControlsModel extends widgets.DOMWidgetModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            ...defaultAttributes,
+            _model_name: 'DrawingControlsModel',
+            _view_name: 'DrawingControlsView',
+            show_controls: true,
+            options: {mode: 'MARKER'}
+        }
+    }
+};
 
 
 export class DrawingLayerView extends GMapsLayerView {
@@ -103,4 +119,37 @@ export class DrawingLayerView extends GMapsLayerView {
         return payload;
     }
 
+}
+
+
+export class DrawingControlsView extends widgets.DOMWidgetView {
+    render() {
+        const $container = $('<span />')
+        $container
+            .addClass('btn-group')
+
+        const $disableButton = $('<button />')
+        $disableButton
+            .addClass('btn btn-default')
+            .append('<i />')
+            .addClass('fa fa-ban')
+
+        const $markerButton = $('<button />')
+        $markerButton
+            .addClass('btn btn-default')
+            .append('<i />')
+            .addClass('fa fa-map-marker')
+
+        $markerButton.click(
+            () => { this.model.set('options', {'mode': 'MARKER'}); }
+        )
+
+        $disableButton.click(
+            () => { this.model.set('options', {'mode': 'DISABLED'}); }
+        )
+        
+        $container.append($disableButton, $markerButton);
+        this.$el.append($container);
+        this.$el.addClass('additional-controls')
+    }
 }
