@@ -134,9 +134,9 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         this.$markerButton = this._createModeButton('fa-map-marker')
         this._createButtonEvent(this.$markerButton, 'MARKER')
 
-        const { mode } = this.model.get('options')
-        this._setButtonSelected(mode);
-        
+        this._onNewOptions();
+        this.model.on('change:options', () => this._onNewOptions())
+
         $container.append(this.$disableButton, this.$markerButton);
         this.$el.append($container);
         this.$el.addClass('additional-controls')
@@ -167,5 +167,10 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             this.$markerButton.removeClass('active')
             this.$disableButton.addClass('active')
         }
+    }
+
+    _onNewOptions() {
+        const { mode } = this.model.get('options')
+        this._setButtonSelected(mode);
     }
 }
