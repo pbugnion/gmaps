@@ -99,6 +99,14 @@ class BaseMarkerView extends widgets.WidgetView {
         this.toggleInfoBoxListener();
     }
 
+    removeFromMapView() {
+        this.mapView = null;
+        this.marker.setMap(null);
+        if (this.infoBoxListener !== null) {
+            this.infoBoxListener.remove();
+        }
+    }
+
     modelEvents() {
         // Simple properties:
         const properties = [

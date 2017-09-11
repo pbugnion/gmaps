@@ -63,7 +63,9 @@ export class DrawingLayerView extends GMapsLayerView {
             })
     }
 
-    removeMarker() {};
+    removeMarker(markerView) {
+        markerView.removeFromMapView();
+    };
 
     _onNewOptions() {
         const options = this.model.get('options');
