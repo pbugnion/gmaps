@@ -2,16 +2,39 @@
 import * as widgets from '@jupyter-widgets/base';
 import $ from 'jquery'
 
+import ReduceStore from 'flux/lib/FluxReduceStore';
+import { Dispatcher } from 'flux'
+
 import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 
 
+class DrawingStore extends ReduceStore {
+    getInitialState() {
+        return { options: { mode: 'MARKER' } } 
+    }
+
+    reduce(prevState, action) {
+        switch (action.type) {
+            case 'MODE_CHANGE':
+                const { mode } = action.payload
+                const newState = { options: { mode } }
+                return newState;
+            default:
+                return prevState
+        }
+    }
+}
+
+
 export class DrawingLayerModel extends GMapsLayerModel {
 
     initialize(attributes, options) {
         super.initialize(attributes, options);
+        this.dispatcher = new Dispatcher();
+        this.store = new DrawingStore(this.dispatcher);
         this._initializeControls();
         this.on('change:toolbar_controls', () => this._initializeControls());
     }
@@ -19,11 +42,8 @@ export class DrawingLayerModel extends GMapsLayerModel {
     _initializeControls() {
         const controls = this.get('toolbar_controls');
         if (controls) {
-            controls.options = this.get('options')
-            controls.on(
-                'change:options',
-                (model, newOptions) => this.set('options', newOptions)
-            )
+            controls.set('dispatcher', this.dispatcher);
+            controls.set('store', this.store)
         }
     }
 
@@ -47,17 +67,6 @@ export class DrawingLayerModel extends GMapsLayerModel {
 
 
 export class DrawingControlsModel extends widgets.DOMWidgetModel {
-
-    initialize(attributes, options) {
-        super.initialize(attributes, options)
-        this.options = null;
-    }
-
-    changeOptions(newOptions) {
-        this.options = newOptions;
-        this.trigger('change:options', this, newOptions);
-    }
-
     defaults() {
         return {
             ...super.defaults(),
@@ -65,6 +74,8 @@ export class DrawingControlsModel extends widgets.DOMWidgetModel {
             _model_name: 'DrawingControlsModel',
             _view_name: 'DrawingControlsView',
             show_controls: true,
+            dispatcher: null,
+            store: null            
         }
     }
 };
@@ -83,7 +94,7 @@ export class DrawingLayerView extends GMapsLayerView {
             'change:overlays', 
             () => { this.overlays.update(this.model.get('overlays')) },
         );
-        this.model.on('change:options', () => this._onNewOptions());
+        this.model.store.addListener(() => { this._onNewOptions() })
         this._clickListener = null
     }
 
@@ -100,7 +111,7 @@ export class DrawingLayerView extends GMapsLayerView {
     };
 
     _onNewOptions() {
-        const options = this.model.get('options');
+        const { options } = this.model.store.getState()
         this._setClickListener(this.mapView.map, options);
     }
 
@@ -150,12 +161,21 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         this.$markerButton = this._createModeButton('fa-map-marker')
         this._createButtonEvent(this.$markerButton, 'MARKER')
 
+        this._setStore();
+        this.model.on('change:store', () => this._setStore())
+
         this._onNewOptions();
-        this.model.on('change:options', () => this._onNewOptions())
 
         $container.append(this.$disableButton, this.$markerButton);
         this.$el.append($container);
         this.$el.addClass('additional-controls')
+    }
+
+    _setStore() {
+        const store = this.model.get('store');
+        if (store) {
+            store.addListener(() => this._onNewOptions());
+        }
     }
 
     _createModeButton(icon) {
@@ -170,8 +190,11 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
 
     _createButtonEvent($button, mode) {
         $button.click(() => {
-            this._setButtonSelected(mode);
-            this.model.changeOptions({ mode });
+            const dispatcher = this.model.get('dispatcher');
+            dispatcher.dispatch({
+                type: 'MODE_CHANGE',
+                payload: { mode }
+            })
         })
     }
 
@@ -186,8 +209,10 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
     }
 
     _onNewOptions() {
-        if (this.model.options) {
-            const { mode } = this.model.options;
+        const store = this.model.get('store');
+        if (store) {
+            const { options } = store.getState();
+            const { mode } = options;
             this._setButtonSelected(mode);
         }
     }
