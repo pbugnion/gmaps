@@ -1,8 +1,9 @@
 
 import * as widgets from '@jupyter-widgets/base';
 import $ from 'jquery'
+import _ from 'underscore'
 
-import ReduceStore from 'flux/lib/FluxReduceStore';
+import { Store } from './ReduceStore';
 import { Dispatcher } from 'flux'
 
 import GoogleMapsLoader from 'google-maps';
@@ -11,9 +12,9 @@ import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 
 
-class DrawingStore extends ReduceStore {
-    getInitialState() {
-        return { options: { mode: 'MARKER' } } 
+class DrawingStore extends Store {
+    areEqual(firstState, secondState) {
+        return _.isEqual(firstState, secondState)
     }
 
     reduce(prevState, action) {
@@ -34,9 +35,25 @@ export class DrawingLayerModel extends GMapsLayerModel {
     initialize(attributes, options) {
         super.initialize(attributes, options);
         this.dispatcher = new Dispatcher();
-        this.store = new DrawingStore(this.dispatcher);
+        this.store = new DrawingStore({options: attributes.options}, this.dispatcher);
+        this.store.addListener(() => this._onStoreChange());
         this._initializeControls();
-        this.on('change:toolbar_controls', () => this._initializeControls());
+        this._bindModelEvents();
+    }
+
+    // Handle changes made in the Python layer
+    _bindModelEvents() {
+        this.on(
+            'change:toolbar_controls', 
+            () => this._initializeControls()
+        );
+        this.on('change:options', () => {
+            const { mode } = this.get('options');
+            this.dispatcher.dispatch({
+                type: 'MODE_CHANGE',
+                payload: { mode }
+            })
+        })
     }
 
     _initializeControls() {
@@ -45,6 +62,20 @@ export class DrawingLayerModel extends GMapsLayerModel {
             controls.set('dispatcher', this.dispatcher);
             controls.set('store', this.store)
         }
+    }
+
+    _onStoreChange() {
+        const { options } = this.store.getState();
+        const message = this._newOptionsMessage(options)
+        this.send(message, this.callbacks());
+    }
+
+    _newOptionsMessage(options) {
+        const payload = {
+            event: 'NEW_OPTIONS',
+            payload: options
+        }
+        return payload
     }
 
     defaults() {
