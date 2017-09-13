@@ -30,6 +30,13 @@ class DrawingStore extends Store {
 }
 
 
+class DrawingActions {
+    static modeChange(mode) {
+        return { type: 'MODE_CHANGE', payload: { mode } };
+    }
+}
+
+
 export class DrawingLayerModel extends GMapsLayerModel {
 
     initialize(attributes, options) {
@@ -49,10 +56,7 @@ export class DrawingLayerModel extends GMapsLayerModel {
         );
         this.on('change:options', () => {
             const { mode } = this.get('options');
-            this.dispatcher.dispatch({
-                type: 'MODE_CHANGE',
-                payload: { mode }
-            })
+            this.dispatcher.dispatch(DrawingActions.modeChange(mode));
         })
     }
 
@@ -222,10 +226,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
     _createButtonEvent($button, mode) {
         $button.click(() => {
             const dispatcher = this.model.get('dispatcher');
-            dispatcher.dispatch({
-                type: 'MODE_CHANGE',
-                payload: { mode }
-            })
+            dispatcher.dispatch(DrawingActions.modeChange(mode));
         })
     }
 
