@@ -12,10 +12,16 @@ export class DrawingLayerModel extends GMapsLayerModel {
 
     initialize(attributes, options) {
         super.initialize(attributes, options);
+        this._initializeControls();
+        this.on('change:toolbar_controls', () => this._initializeControls());
+    }
+
+    _initializeControls() {
         const controls = this.get('toolbar_controls');
         if (controls) {
+            controls.options = this.get('options')
             controls.on(
-                'change:options', 
+                'change:options',
                 (model, newOptions) => this.set('options', newOptions)
             )
         }
@@ -41,6 +47,17 @@ export class DrawingLayerModel extends GMapsLayerModel {
 
 
 export class DrawingControlsModel extends widgets.DOMWidgetModel {
+
+    initialize(attributes, options) {
+        super.initialize(attributes, options)
+        this.options = null;
+    }
+
+    changeOptions(newOptions) {
+        this.options = newOptions;
+        this.trigger('change:options', this, newOptions);
+    }
+
     defaults() {
         return {
             ...super.defaults(),
@@ -48,7 +65,6 @@ export class DrawingControlsModel extends widgets.DOMWidgetModel {
             _model_name: 'DrawingControlsModel',
             _view_name: 'DrawingControlsView',
             show_controls: true,
-            options: {mode: 'MARKER'}
         }
     }
 };
@@ -155,7 +171,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
     _createButtonEvent($button, mode) {
         $button.click(() => {
             this._setButtonSelected(mode);
-            this.model.set('options', { mode });
+            this.model.changeOptions({ mode });
         })
     }
 
@@ -170,7 +186,9 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
     }
 
     _onNewOptions() {
-        const { mode } = this.model.get('options')
-        this._setButtonSelected(mode);
+        if (this.model.options) {
+            const { mode } = this.model.options;
+            this._setButtonSelected(mode);
+        }
     }
 }

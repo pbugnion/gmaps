@@ -30,10 +30,6 @@ class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
     _view_name = Unicode('DrawingControlsView').tag(sync=True)
     show_controls = Bool(default_value=True, allow_none=False).tag(
         sync=True)
-    options = Instance(
-        DrawingLayerOptions,
-        allow_none=False
-    ).tag(sync=True, to_json=serialize_drawing_layer_options)
 
 
 class Drawing(GMapsWidgetMixin, widgets.Widget):
@@ -50,14 +46,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
 
     def __init__(self, **kwargs):
         super(Drawing, self).__init__(**kwargs)
-        self.toolbar_controls = DrawingControls(options=self.options)
+        self.toolbar_controls = DrawingControls()
         self.on_msg(self._handle_message)
-
-    @observe('options')
-    def _handle_options_change(self, change):
-        new_options = change['new']
-        if self.toolbar_controls is not None:
-            self.toolbar_controls.options = new_options
 
     @default('options')
     def default_options(self):
