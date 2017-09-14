@@ -3,7 +3,7 @@ import ipywidgets as widgets
 
 from traitlets import (
     Unicode, List, Enum, Instance,
-    Bool, HasTraits, default, observe
+    Bool, HasTraits, default
 )
 
 from .maps import GMapsWidgetMixin
