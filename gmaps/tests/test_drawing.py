@@ -16,7 +16,8 @@ class Drawing(unittest.TestCase):
         overlays = layer.get_state()['overlays']
         assert len(overlays) == 1
         [serialized_marker] = overlays
-        assert serialized_marker == 'IPY_MODEL_{}'.format(marker_widget.model_id)
+        expected = 'IPY_MODEL_{}'.format(marker_widget.model_id)
+        assert serialized_marker == expected
 
     def test_adding_marker(self):
         layer = drawing.Drawing()
