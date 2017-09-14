@@ -45,3 +45,14 @@ class Drawing(unittest.TestCase):
         assert layer.get_state()['options'] == {
             'mode': 'DISABLED'
         }
+
+    def test_receiving_option_changes(self):
+        layer = drawing.Drawing()
+        message = {
+            'event': 'NEW_OPTIONS',
+            'payload': {
+                'mode': 'DISABLED'
+            }
+        }
+        layer._handle_custom_msg(message, None)
+        assert layer.options.mode == 'DISABLED'
