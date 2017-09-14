@@ -7,7 +7,7 @@ from traitlets import (
 )
 
 from .maps import GMapsWidgetMixin
-from .marker import Marker, MarkerOptions
+from .marker import MarkerOptions
 
 
 ALLOWED_DRAWING_MODES = {'DISABLED', 'MARKER'}
