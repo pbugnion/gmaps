@@ -29,10 +29,34 @@ class DrawingStore extends Store {
     }
 }
 
-
+// Action creators for changing the store
 class DrawingActions {
     static modeChange(mode) {
         return { type: 'MODE_CHANGE', payload: { mode } };
+    }
+}
+
+
+// Messages for changing the backend state
+class DrawingMessages {
+    static newMarker(latitude, longitude) {
+        const payload = {
+            event: 'OVERLAY_ADDED',
+            payload: {
+                overlayType: 'MARKER',
+                latitude,
+                longitude
+            }
+        };
+        return payload;
+    }
+
+    static newOptions(options) {
+        const payload = {
+            event: 'NEW_OPTIONS',
+            payload: options
+        }
+        return payload;
     }
 }
 
@@ -48,7 +72,8 @@ export class DrawingLayerModel extends GMapsLayerModel {
         this._bindModelEvents();
     }
 
-    // Handle changes made in the Python layer
+    // Handle changes made in the Python layer,
+    // propagating them to the store if necessary
     _bindModelEvents() {
         this.on(
             'change:toolbar_controls', 
@@ -70,16 +95,8 @@ export class DrawingLayerModel extends GMapsLayerModel {
 
     _onStoreChange() {
         const { options } = this.store.getState();
-        const message = this._newOptionsMessage(options)
+        const message = DrawingMessages.newOptions(options);
         this.send(message, this.callbacks());
-    }
-
-    _newOptionsMessage(options) {
-        const payload = {
-            event: 'NEW_OPTIONS',
-            payload: options
-        }
-        return payload
     }
 
     defaults() {
@@ -159,7 +176,7 @@ export class DrawingLayerView extends GMapsLayerView {
                 const { latLng } = event;
                 const latitude = latLng.lat();
                 const longitude = latLng.lng();
-                this.send(this.newMarkerMessage(latitude, longitude))
+                this.send(DrawingMessages.newMarker(latitude, longitude))
             });
         }
     }
@@ -168,18 +185,6 @@ export class DrawingLayerView extends GMapsLayerView {
         const options = this.model.get('options');
         this._setClickListener(mapView.map, options)
     };
-
-    newMarkerMessage(latitude, longitude) {
-        const payload = {
-            event: 'OVERLAY_ADDED',
-            payload: {
-                overlayType: 'MARKER',
-                latitude,
-                longitude
-            }
-        };
-        return payload;
-    }
 
 }
 
