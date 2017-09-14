@@ -51,10 +51,10 @@ class DrawingMessages {
         return payload;
     }
 
-    static newOptions(options) {
+    static modeChange(mode) {
         const payload = {
-            event: 'NEW_OPTIONS',
-            payload: options
+            event: 'MODE_CHANGED',
+            payload: { mode }
         }
         return payload;
     }
@@ -95,7 +95,8 @@ export class DrawingLayerModel extends GMapsLayerModel {
 
     _onStoreChange() {
         const { options } = this.store.getState();
-        const message = DrawingMessages.newOptions(options);
+        const { mode } = options; // at the moment, only the mode can change
+        const message = DrawingMessages.modeChange(mode);
         this.send(message, this.callbacks());
     }
 
