@@ -186,6 +186,11 @@ export class DrawingLayerView extends GMapsLayerView {
 
 export class DrawingControlsView extends widgets.DOMWidgetView {
     render() {
+        this._createLayout();
+        this._setInitialState();
+    }
+
+    _createLayout() {
         const $container = $('<span />')
         $container
             .addClass('btn-group')
@@ -196,14 +201,16 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         this.$markerButton = this._createModeButton('fa-map-marker')
         this._createButtonEvent(this.$markerButton, 'MARKER')
 
+        $container.append(this.$disableButton, this.$markerButton);
+        this.$el.append($container);
+        this.$el.addClass('additional-controls')
+    }
+
+    _setInitialState() {
         this._setStore();
         this.model.on('change:store', () => this._setStore())
 
         this._onNewOptions();
-
-        $container.append(this.$disableButton, this.$markerButton);
-        this.$el.append($container);
-        this.$el.addClass('additional-controls')
     }
 
     _setStore() {
@@ -212,7 +219,6 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             store.addListener(() => this._onNewOptions());
         }
     }
-
     _createModeButton(icon) {
         const $button = $('<button />')
         $button
