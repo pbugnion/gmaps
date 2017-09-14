@@ -25,7 +25,7 @@ def serialize_drawing_layer_options(options, manager):
 
 class DrawingLayerOptions(HasTraits):
     mode = Enum(
-        ALLOWED_DRAWING_MODES, 
+        ALLOWED_DRAWING_MODES,
         default_value=DEFAULT_DRAWING_MODE
     )
 
@@ -46,7 +46,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         DrawingLayerOptions,
         allow_none=False
     ).tag(
-        sync=True, 
+        sync=True,
         to_json=serialize_drawing_layer_options
     )
     toolbar_controls = Instance(DrawingControls, allow_none=True).tag(
