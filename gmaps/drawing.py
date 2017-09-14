@@ -14,11 +14,6 @@ ALLOWED_DRAWING_MODES = {'DISABLED', 'MARKER'}
 DEFAULT_DRAWING_MODE = 'MARKER'
 
 
-def deserialize_drawing_layer_options(options):
-    mode = options['mode']
-    return DrawingLayerOptions(mode=mode)
-
-
 def serialize_drawing_layer_options(options, manager):
     return {'mode': options.mode}
 
@@ -73,7 +68,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             longitude = payload['longitude']
             marker = self.options.marker_options.to_marker(latitude, longitude)
             self.overlays = self.overlays + [marker]
-        elif content.get('event') == 'NEW_OPTIONS':
+        elif content.get('event') == 'MODE_CHANGED':
             payload = content['payload']
-            deserialized_options = deserialize_drawing_layer_options(payload)
-            self.options = deserialized_options
+            mode = payload['mode']
+            self.options.mode = mode

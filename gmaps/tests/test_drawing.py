@@ -50,7 +50,7 @@ class Drawing(unittest.TestCase):
     def test_receiving_option_changes(self):
         layer = drawing.Drawing()
         message = {
-            'event': 'NEW_OPTIONS',
+            'event': 'MODE_CHANGED',
             'payload': {
                 'mode': 'DISABLED'
             }
