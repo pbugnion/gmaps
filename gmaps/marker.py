@@ -14,6 +14,23 @@ from .options import merge_option_dicts, is_atomic, is_color_atomic
 __all__ = ["Symbol", "Marker", "Markers", "marker_layer", "symbol_layer"]
 
 
+class MarkerOptions(HasTraits):
+    hover_text = Unicode("").tag(sync=True)
+    display_info_box = Bool(False).tag(sync=True)
+    info_box_content = Unicode("").tag(sync=True)
+    label = Unicode("").tag(sync=True)
+
+    def to_marker(self, latitude, longitude):
+        new_marker = Marker(
+            location=(latitude, longitude),
+            hover_text=self.hover_text,
+            display_info_box=self.display_info_box,
+            info_box_content=self.info_box_content,
+            label=self.label
+        )
+        return new_marker
+
+
 class _BaseMarkerMixin(HasTraits):
     location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
     hover_text = Unicode("").tag(sync=True)

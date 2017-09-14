@@ -7,7 +7,7 @@ from traitlets import (
 )
 
 from .maps import GMapsWidgetMixin
-from .marker import Marker
+from .marker import Marker, MarkerOptions
 
 
 ALLOWED_DRAWING_MODES = {'DISABLED', 'MARKER'}
@@ -28,6 +28,11 @@ class DrawingLayerOptions(HasTraits):
         ALLOWED_DRAWING_MODES,
         default_value=DEFAULT_DRAWING_MODE
     )
+    marker_options = Instance(MarkerOptions)
+
+    @default('marker_options')
+    def default_marker_options(self):
+        return MarkerOptions()
 
 
 class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
@@ -66,7 +71,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             payload = content['payload']
             latitude = payload['latitude']
             longitude = payload['longitude']
-            marker = Marker(location=(latitude, longitude))
+            marker = self.options.marker_options.to_marker(latitude, longitude)
             self.overlays = self.overlays + [marker]
         elif content.get('event') == 'NEW_OPTIONS':
             payload = content['payload']
