@@ -32,3 +32,16 @@ class Drawing(unittest.TestCase):
         assert len(layer.overlays) == 1
         [new_marker] = layer.overlays
         assert new_marker.location == (25.0, -5.0)
+
+    def test_default_options(self):
+        layer = drawing.Drawing()
+        assert layer.get_state()['options'] == {
+            'mode': drawing.DEFAULT_DRAWING_MODE
+        }
+
+    def test_changing_options(self):
+        new_options = drawing.DrawingLayerOptions(mode='DISABLED')
+        layer = drawing.Drawing(options=new_options)
+        assert layer.get_state()['options'] == {
+            'mode': 'DISABLED'
+        }
