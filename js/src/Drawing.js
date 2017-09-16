@@ -19,9 +19,9 @@ class DrawingStore extends Store {
 
     reduce(prevState, action) {
         switch (action.type) {
-            case 'MODE_CHANGE':
+            case 'MODE_CHANGED':
                 const { mode } = action.payload
-                const newState = { options: { mode } }
+                const newState = { mode }
                 return newState;
             default:
                 return prevState
@@ -32,7 +32,7 @@ class DrawingStore extends Store {
 // Action creators for changing the store
 class DrawingActions {
     static modeChange(mode) {
-        return { type: 'MODE_CHANGE', payload: { mode } };
+        return { type: 'MODE_CHANGED', payload: { mode } };
     }
 }
 
@@ -66,7 +66,7 @@ export class DrawingLayerModel extends GMapsLayerModel {
     initialize(attributes, options) {
         super.initialize(attributes, options);
         this.dispatcher = new Dispatcher();
-        this.store = new DrawingStore({options: attributes.options}, this.dispatcher);
+        this.store = new DrawingStore({mode: attributes.mode}, this.dispatcher);
         this.store.addListener(() => this._onStoreChange());
         this._initializeControls();
         this._bindModelEvents();
@@ -79,8 +79,8 @@ export class DrawingLayerModel extends GMapsLayerModel {
             'change:toolbar_controls', 
             () => this._initializeControls()
         );
-        this.on('change:options', () => {
-            const { mode } = this.get('options');
+        this.on('change:mode', () => {
+            const mode = this.get('mode');
             this.dispatcher.dispatch(DrawingActions.modeChange(mode));
         })
     }
@@ -94,8 +94,7 @@ export class DrawingLayerModel extends GMapsLayerModel {
     }
 
     _onStoreChange() {
-        const { options } = this.store.getState();
-        const { mode } = options; // at the moment, only the mode can change
+        const { mode } = this.store.getState();
         const message = DrawingMessages.modeChange(mode);
         this.send(message, this.callbacks());
     }
@@ -106,7 +105,7 @@ export class DrawingLayerModel extends GMapsLayerModel {
             _view_name: 'DrawingLayerView',
             _model_name: 'DrawingLayerModel',
             overlays: [],
-            options: {mode: 'MARKER'},
+            mode: 'MARKER',
             toolbar_controls: null
         }
     }
@@ -147,7 +146,7 @@ export class DrawingLayerView extends GMapsLayerView {
             'change:overlays', 
             () => { this.overlays.update(this.model.get('overlays')) },
         );
-        this.model.store.addListener(() => { this._onNewOptions() })
+        this.model.store.addListener(() => { this._onNewMode() })
         this._clickListener = null
     }
 
@@ -163,13 +162,13 @@ export class DrawingLayerView extends GMapsLayerView {
         markerView.removeFromMapView();
     };
 
-    _onNewOptions() {
-        const { options } = this.model.store.getState()
-        this._setClickListener(this.mapView.map, options);
+    _onNewMode() {
+        const { mode } = this.model.store.getState()
+        this._setClickListener(this.mapView.map, mode);
     }
 
-    _setClickListener(map, options) {
-        if (options.mode === 'DISABLED') {
+    _setClickListener(map, mode) {
+        if (mode === 'DISABLED') {
             if (this._clickListener) { this._clickListener.remove(); }
         } else {
             if (this._clickListener) { this._clickListener.remove(); }
@@ -183,8 +182,8 @@ export class DrawingLayerView extends GMapsLayerView {
     }
 
     addToMapView(mapView) {
-        const options = this.model.get('options');
-        this._setClickListener(mapView.map, options)
+        const { mode } = this.model.store.getState()
+        this._setClickListener(mapView.map, mode)
     };
 
 }
@@ -216,13 +215,13 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         this._setStore();
         this.model.on('change:store', () => this._setStore())
 
-        this._onNewOptions();
+        this._onNewMode();
     }
 
     _setStore() {
         const store = this.model.get('store');
         if (store) {
-            store.addListener(() => this._onNewOptions());
+            store.addListener(() => this._onNewMode());
         }
     }
     _createModeButton(icon) {
@@ -252,11 +251,10 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         }
     }
 
-    _onNewOptions() {
+    _onNewMode() {
         const store = this.model.get('store');
         if (store) {
-            const { options } = store.getState();
-            const { mode } = options;
+            const { mode } = store.getState();
             this._setButtonSelected(mode);
         }
     }
