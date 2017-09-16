@@ -3,10 +3,13 @@ import copy
 
 import ipywidgets as widgets
 
-from traitlets import Unicode, List, Enum, Instance, Bool, default
+from traitlets import (
+    Unicode, List, Enum, Instance, 
+    Bool, default, observe
+)
 
 from .maps import GMapsWidgetMixin
-from .marker import MarkerOptions
+from .marker import Marker, MarkerOptions
 
 
 ALLOWED_DRAWING_MODES = {'DISABLED', 'MARKER'}
@@ -34,6 +37,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         sync=True, **widgets.widget_serialization)
 
     def __init__(self, **kwargs):
+        self._new_marker_callbacks = []
+
         super(Drawing, self).__init__(**kwargs)
         self.on_msg(self._handle_message)
 
@@ -41,6 +46,9 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         # to let users change these directly
         # and still trigger appropriate changes
         self.marker_options.observe(self._on_marker_options_change)
+
+    def on_new_marker(self, callback):
+        self._new_marker_callbacks.append(callback)
 
     def _on_marker_options_change(self, change):
         self.marker_options = copy.deepcopy(self.marker_options)
@@ -52,6 +60,24 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     @default('toolbar_controls')
     def _default_toolbar_controls(self):
         return DrawingControls()
+
+    @observe('overlays')
+    def _on_new_overlay(self, change):
+        if self._new_marker_callbacks:
+            old_overlays = change['old']
+            new_overlays = change['new']
+            old_markers = set([
+                overlay for overlay in old_overlays
+                if isinstance(overlay, Marker)
+            ])
+            new_markers = [
+                overlay for overlay in new_overlays
+                if isinstance(overlay, Marker)
+                and overlay not in old_markers
+            ]
+            for marker in new_markers:
+                for callback in self._new_marker_callbacks:
+                    callback(marker)
 
     def _handle_message(self, _, content, buffers):
         if content.get('event') == 'OVERLAY_ADDED':
