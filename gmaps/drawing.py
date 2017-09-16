@@ -4,7 +4,7 @@ import copy
 import ipywidgets as widgets
 
 from traitlets import (
-    Unicode, List, Enum, Instance, 
+    Unicode, List, Enum, Instance,
     Bool, default, observe
 )
 
