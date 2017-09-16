@@ -34,20 +34,15 @@ class Drawing(unittest.TestCase):
         [new_marker] = layer.overlays
         assert new_marker.location == (25.0, -5.0)
 
-    def test_default_options(self):
+    def test_default_mode(self):
         layer = drawing.Drawing()
-        assert layer.get_state()['options'] == {
-            'mode': drawing.DEFAULT_DRAWING_MODE
-        }
+        assert layer.get_state()['mode'] == drawing.DEFAULT_DRAWING_MODE
 
-    def test_changing_options(self):
-        new_options = drawing.DrawingLayerOptions(mode='DISABLED')
-        layer = drawing.Drawing(options=new_options)
-        assert layer.get_state()['options'] == {
-            'mode': 'DISABLED'
-        }
+    def test_changing_mode(self):
+        layer = drawing.Drawing(mode='DISABLED')
+        assert layer.get_state()['mode'] == 'DISABLED'
 
-    def test_receiving_option_changes(self):
+    def test_receiving_mode_changes(self):
         layer = drawing.Drawing()
         message = {
             'event': 'MODE_CHANGED',
@@ -56,4 +51,4 @@ class Drawing(unittest.TestCase):
             }
         }
         layer._handle_custom_msg(message, None)
-        assert layer.options.mode == 'DISABLED'
+        assert layer.mode == 'DISABLED'
