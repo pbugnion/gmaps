@@ -3,7 +3,6 @@ import unittest
 
 from .. import drawing, marker
 
-
 class Drawing(unittest.TestCase):
 
     def test_default_overlays(self):
@@ -52,3 +51,27 @@ class Drawing(unittest.TestCase):
         }
         layer._handle_custom_msg(message, None)
         assert layer.mode == 'DISABLED'
+
+    def test_marker_options_change(self):
+        observer_calls = []
+        mock_observer = lambda change: observer_calls.append(change)
+        layer = drawing.Drawing()
+        layer.observe(mock_observer)
+        new_options = marker.MarkerOptions(label='X')
+        layer.marker_options = new_options
+        assert layer.marker_options.label == 'X'
+        assert len(observer_calls) == 1
+        [call] = observer_calls
+        assert call['new'] == new_options
+
+    def test_single_marker_options_change(self):
+        observer_calls = []
+        mock_observer = lambda change: observer_calls.append(change)
+        layer = drawing.Drawing()
+        layer.observe(mock_observer)
+        layer.marker_options.label = 'X'
+        assert layer.marker_options.label == 'X'
+        assert len(observer_calls) == 1
+        [call] = observer_calls
+        assert call['new'].label == 'X'
+        assert call['name'] == 'marker_options'
