@@ -1,4 +1,6 @@
 
+import copy
+
 import ipywidgets as widgets
 
 from traitlets import Unicode, List, Enum, Instance, Bool, default
@@ -34,6 +36,14 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     def __init__(self, **kwargs):
         super(Drawing, self).__init__(**kwargs)
         self.on_msg(self._handle_message)
+
+        # Observe all changes to the marker_options
+        # to let users change these directly
+        # and still trigger appropriate changes
+        self.marker_options.observe(self._on_marker_options_change)
+
+    def _on_marker_options_change(self, change):
+        self.marker_options = copy.deepcopy(self.marker_options)
 
     @default('marker_options')
     def _default_marker_options(self):
