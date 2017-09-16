@@ -28,17 +28,20 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         default_value=DEFAULT_DRAWING_MODE
     ).tag(sync=True)
     marker_options = Instance(MarkerOptions, allow_none=False)
-    toolbar_controls = Instance(DrawingControls, allow_none=True).tag(
+    toolbar_controls = Instance(DrawingControls, allow_none=False).tag(
         sync=True, **widgets.widget_serialization)
 
     def __init__(self, **kwargs):
         super(Drawing, self).__init__(**kwargs)
-        self.toolbar_controls = DrawingControls()
         self.on_msg(self._handle_message)
 
     @default('marker_options')
-    def default_marker_options(self):
+    def _default_marker_options(self):
         return MarkerOptions()
+
+    @default('toolbar_controls')
+    def _default_toolbar_controls(self):
+        return DrawingControls()
 
     def _handle_message(self, _, content, buffers):
         if content.get('event') == 'OVERLAY_ADDED':
