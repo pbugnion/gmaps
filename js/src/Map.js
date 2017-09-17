@@ -17,7 +17,7 @@ function reloadGoogleMaps(configuration) {
         GoogleMapsLoader.release();
     }
 
-    GoogleMapsLoader.LIBRARIES = ["visualization", "drawing"] ;
+    GoogleMapsLoader.LIBRARIES = ["visualization"] ;
     if (configuration["api_key"] !== null &&
         configuration["api_key"] !== undefined) {
             GoogleMapsLoader.KEY = configuration["api_key"];
