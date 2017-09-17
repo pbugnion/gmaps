@@ -55,9 +55,9 @@ class DrawingActions {
 class DrawingMessages {
     static newMarker(latitude, longitude) {
         const payload = {
-            event: 'OVERLAY_ADDED',
+            event: 'FEATURE_ADDED',
             payload: {
-                overlayType: 'MARKER',
+                featureType: 'MARKER',
                 latitude,
                 longitude
             }
@@ -126,7 +126,7 @@ export class DrawingLayerModel extends GMapsLayerModel {
             ...super.defaults(),
             _view_name: 'DrawingLayerView',
             _model_name: 'DrawingLayerModel',
-            overlays: [],
+            features: [],
             mode: 'MARKER',
             toolbar_controls: null
         }
@@ -134,7 +134,7 @@ export class DrawingLayerModel extends GMapsLayerModel {
 
     static serializers = {
         ...widgets.DOMWidgetModel.serializers,
-        overlays: {deserialize: widgets.unpack_models},
+        features: {deserialize: widgets.unpack_models},
         toolbar_controls: {deserialize: widgets.unpack_models}
     }
 }
@@ -180,11 +180,11 @@ export class DrawingLayerView extends GMapsLayerView {
     }
 
     render() {
-        this.overlays = new widgets.ViewList(this.addMarker, this.removeMarker, this)
-        this.overlays.update(this.model.get('overlays'))
+        this.features = new widgets.ViewList(this.addMarker, this.removeMarker, this)
+        this.features.update(this.model.get('features'))
         this.model.on(
-            'change:overlays', 
-            () => { this.overlays.update(this.model.get('overlays')) },
+            'change:features', 
+            () => { this.features.update(this.model.get('features')) },
         );
         this.model.store.addListener(() => { this._onNewMode() })
         this._clickListener = null
