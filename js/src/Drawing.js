@@ -3,7 +3,7 @@ import * as widgets from '@jupyter-widgets/base';
 import $ from 'jquery'
 import _ from 'underscore'
 
-import { Store } from './ReduceStore';
+import { Store } from './Store';
 import { Dispatcher } from 'flux'
 
 import GoogleMapsLoader from 'google-maps';
