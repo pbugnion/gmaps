@@ -4,7 +4,11 @@ import pytest
 
 import numpy as np
 
-from ..marker import _marker_layer_options, _symbol_layer_options
+from ..marker import (
+    MarkerOptions,
+    _marker_layer_options,
+    _symbol_layer_options
+)
 
 
 class MarkerLayer(unittest.TestCase):
@@ -183,3 +187,33 @@ class SymbolLayer(unittest.TestCase):
         marker_options = _symbol_layer_options(self.locations, **options)
         display_infos = [opts["display_info_box"] for opts in marker_options]
         assert tuple(display_infos) == (True, False)
+
+
+class MarkerOptionsTests(unittest.TestCase):
+
+    def test_defaults(self):
+        options = MarkerOptions()
+        assert options.hover_text == ''
+        assert not options.display_info_box
+        assert options.info_box_content == ''
+        assert options.label == ''
+
+    def test_hover_text(self):
+        options = MarkerOptions(hover_text='some text')
+        assert options.hover_text == 'some text'
+
+    def test_label(self):
+        options = MarkerOptions(label='C')
+        assert options.label == 'C'
+
+    def test_with_info_box(self):
+        options = MarkerOptions(info_box_content='some text')
+        assert options.display_info_box
+        assert options.info_box_content == 'some text'
+
+    def test_no_info_box(self):
+        options = MarkerOptions(
+            info_box_content='some text',
+            display_info_box=False)
+        assert not options.display_info_box
+        assert options.info_box_content == 'some text'
