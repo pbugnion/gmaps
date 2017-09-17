@@ -114,3 +114,25 @@ class Drawing(unittest.TestCase):
         [call] = observer.calls
         assert call['new'].label == 'X'
         assert call['name'] == 'marker_options'
+
+
+class DrawingFactory(unittest.TestCase):
+
+    def test_defaults(self):
+        layer = drawing.drawing_layer()
+        assert layer.toolbar_controls.show_controls
+        assert layer.mode == drawing.DEFAULT_DRAWING_MODE
+        assert layer.overlays == []
+
+    def test_hide_controls(self):
+        layer = drawing.drawing_layer(show_controls=False)
+        assert not layer.toolbar_controls.show_controls
+
+    def test_different_mode(self):
+        layer = drawing.drawing_layer(mode='DISABLED')
+        assert layer.mode == 'DISABLED'
+
+    def test_with_overlays(self):
+        new_marker = marker.Marker(location=(-25.0, 5.0))
+        layer = drawing.drawing_layer(overlays=[new_marker])
+        assert layer.overlays == [new_marker]

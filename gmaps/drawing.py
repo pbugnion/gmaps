@@ -90,3 +90,20 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             payload = content['payload']
             mode = payload['mode']
             self.mode = mode
+
+
+def drawing_layer(
+        overlays=None, mode=DEFAULT_DRAWING_MODE, 
+        show_controls=True, marker_options=None):
+    """
+    Create an interactive drawing layer
+    """
+    if overlays is None:
+        overlays = []
+    controls = DrawingControls(show_controls=show_controls)
+    kwargs = {
+        'overlays': overlays,
+        'mode': mode,
+        'toolbar_controls': controls
+    }
+    return Drawing(**kwargs)
