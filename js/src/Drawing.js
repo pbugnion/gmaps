@@ -19,10 +19,16 @@ class DrawingStore extends Store {
 
     reduce(prevState, action) {
         switch (action.type) {
-            case 'MODE_CHANGED':
+            case 'MODE_CHANGED': {
                 const { mode } = action.payload
                 const newState = { ...prevState, mode }
                 return newState;
+            }
+            case 'SHOW_CONTROLS_CHANGED': {
+                const { showControls } = action.payload
+                const newState = { ...prevState, showControls }
+                return newState
+            }
             default:
                 return prevState
         }
@@ -34,6 +40,14 @@ class DrawingActions {
     static modeChange(mode) {
         return { type: 'MODE_CHANGED', payload: { mode } };
     }
+
+    static showControlsChange(showControls) {
+        return { 
+            type: 'SHOW_CONTROLS_CHANGED', 
+            payload: { showControls } 
+        };
+    }
+
 }
 
 
@@ -127,6 +141,24 @@ export class DrawingLayerModel extends GMapsLayerModel {
 
 
 export class DrawingControlsModel extends widgets.DOMWidgetModel {
+    initialize(attributes, options) {
+        super.initialize(attributes, options);
+        this._bindModelEvents();
+    }
+
+    // Handle changes made in the Python layer,
+    // propagating them to the store if necessary
+    _bindModelEvents() {
+        this.on('change:show_controls', () => {
+            const showControls = this.get('show_controls');
+            const dispatcher = this.get('dispatcher')
+            if (dispatcher) {
+                const message = DrawingActions.showControlsChange(showControls);
+                dispatcher.dispatch(message)
+            }
+        });
+    }
+
     defaults() {
         return {
             ...super.defaults(),
@@ -231,6 +263,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         const store = this.model.get('store');
         if (store) {
             store.addListener(() => this._onNewMode());
+            store.addListener(() => this._onNewShowControls());
         }
     }
     _createModeButton(icon) {
