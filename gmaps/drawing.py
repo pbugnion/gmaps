@@ -98,7 +98,7 @@ def _marker_options_from_dict(options_dict):
 
 
 def drawing_layer(
-        features=None, mode=DEFAULT_DRAWING_MODE, 
+        features=None, mode=DEFAULT_DRAWING_MODE,
         show_controls=True, marker_options=None):
     """
     Create an interactive drawing layer
