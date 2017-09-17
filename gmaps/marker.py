@@ -20,6 +20,17 @@ class MarkerOptions(HasTraits):
     info_box_content = Unicode("").tag(sync=True)
     label = Unicode("").tag(sync=True)
 
+    def __init__(self, **kwargs):
+        if kwargs.get('display_info_box') is None:
+            # Not explicitly specified: infer from info_box_content
+            is_content_empty = kwargs.get('info_box_content') is None
+            if is_content_empty:
+                kwargs['display_info_box'] = False
+                kwargs['info_box_content'] = ''
+            else:
+                kwargs['display_info_box'] = True
+        super(MarkerOptions, self).__init__(**kwargs)
+
     def to_marker(self, latitude, longitude):
         new_marker = Marker(
             location=(latitude, longitude),
