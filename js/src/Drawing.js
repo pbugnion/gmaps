@@ -21,7 +21,7 @@ class DrawingStore extends Store {
         switch (action.type) {
             case 'MODE_CHANGED':
                 const { mode } = action.payload
-                const newState = { mode }
+                const newState = { ...prevState, mode }
                 return newState;
             default:
                 return prevState
@@ -66,10 +66,18 @@ export class DrawingLayerModel extends GMapsLayerModel {
     initialize(attributes, options) {
         super.initialize(attributes, options);
         this.dispatcher = new Dispatcher();
-        this.store = new DrawingStore({mode: attributes.mode}, this.dispatcher);
+        const initialState = this._initialStoreState(attributes)
+        this.store = new DrawingStore(initialState, this.dispatcher);
         this.store.addListener(() => this._onStoreChange());
         this._initializeControls();
         this._bindModelEvents();
+    }
+
+    _initialStoreState(attributes) {
+        return {
+            mode: attributes.mode,
+            showControls: attributes.toolbar_controls.get('show_controls')
+        }
     }
 
     // Handle changes made in the Python layer,
@@ -216,6 +224,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         this.model.on('change:store', () => this._setStore())
 
         this._onNewMode();
+        this._onNewShowControls();
     }
 
     _setStore() {
@@ -251,11 +260,23 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         }
     }
 
+    _setVisibility(showControls) {
+        this.$el.toggle(showControls)
+    }
+
     _onNewMode() {
         const store = this.model.get('store');
         if (store) {
             const { mode } = store.getState();
             this._setButtonSelected(mode);
+        }
+    }
+
+    _onNewShowControls() {
+        const store = this.model.get('store');
+        if (store) {
+            const { showControls } = store.getState();
+            this._setVisibility(showControls);
         }
     }
 }
