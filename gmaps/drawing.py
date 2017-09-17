@@ -1,5 +1,6 @@
 
 import copy
+import collections
 
 import ipywidgets as widgets
 
@@ -92,6 +93,10 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             self.mode = mode
 
 
+def _marker_options_from_dict(options_dict):
+    return MarkerOptions(**options_dict)
+
+
 def drawing_layer(
         overlays=None, mode=DEFAULT_DRAWING_MODE, 
         show_controls=True, marker_options=None):
@@ -101,9 +106,14 @@ def drawing_layer(
     if overlays is None:
         overlays = []
     controls = DrawingControls(show_controls=show_controls)
+    if marker_options is None:
+        marker_options = MarkerOptions()
+    elif isinstance(marker_options, collections.Mapping):
+        marker_options = _marker_options_from_dict(marker_options)
     kwargs = {
         'overlays': overlays,
         'mode': mode,
-        'toolbar_controls': controls
+        'toolbar_controls': controls,
+        'marker_options': marker_options
     }
     return Drawing(**kwargs)

@@ -136,3 +136,19 @@ class DrawingFactory(unittest.TestCase):
         new_marker = marker.Marker(location=(-25.0, 5.0))
         layer = drawing.drawing_layer(overlays=[new_marker])
         assert layer.overlays == [new_marker]
+
+    def test_accept_marker_options(self):
+        layer = drawing.drawing_layer(
+            marker_options=marker.MarkerOptions(label='B'))
+        assert layer.marker_options.label == 'B'
+
+    def test_accept_marker_options_dict(self):
+        layer = drawing.drawing_layer(
+            marker_options={'label': 'B'})
+        assert layer.marker_options.label == 'B'
+
+    def test_accept_marker_options_info_box(self):
+        layer = drawing.drawing_layer(
+            marker_options={'info_box_content': 'hello world'})
+        assert layer.marker_options.info_box_content == 'hello world'
+        assert layer.marker_options.display_info_box
