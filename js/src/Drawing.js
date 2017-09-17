@@ -241,9 +241,13 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             .addClass('btn-group')
             .attr('data-toggle', 'buttons');
 
-        this.$disableButton = this._createModeButton('fa-ban')
+        this.$disableButton = this._createModeButton(
+            'fa-ban', 'Disable drawing layer'
+        )
         this._createButtonEvent(this.$disableButton, 'DISABLED')
-        this.$markerButton = this._createModeButton('fa-map-marker')
+        this.$markerButton = this._createModeButton(
+            'fa-map-marker', 'Drawing layer: switch to \'marker\' mode'
+        )
         this._createButtonEvent(this.$markerButton, 'MARKER')
 
         $container.append(this.$disableButton, this.$markerButton);
@@ -266,10 +270,11 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             store.addListener(() => this._onNewShowControls());
         }
     }
-    _createModeButton(icon) {
+    _createModeButton(icon, hoverText) {
         const $button = $('<button />')
         $button
             .addClass('btn btn-default')
+            .attr('title', hoverText)
             .append('<i />')
             .addClass(`fa ${icon}`)
         
