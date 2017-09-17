@@ -18,7 +18,7 @@ class UnaryFunctionMock():
 
 def new_marker_message(latitude, longitude):
     message = {
-        'event': 'OVERLAY_ADDED',
+        'event': 'FEATURE_ADDED',
         'payload': {
             'overlayType': 'MARKER',
             'latitude': latitude,
@@ -30,16 +30,16 @@ def new_marker_message(latitude, longitude):
 
 class Drawing(unittest.TestCase):
 
-    def test_default_overlays(self):
+    def test_default_features(self):
         layer = drawing.Drawing()
-        assert layer.get_state()['overlays'] == []
+        assert layer.get_state()['features'] == []
 
-    def test_with_overlays(self):
+    def test_with_features(self):
         marker_widget = marker.Marker()
-        layer = drawing.Drawing(overlays=[marker_widget])
-        overlays = layer.get_state()['overlays']
-        assert len(overlays) == 1
-        [serialized_marker] = overlays
+        layer = drawing.Drawing(features=[marker_widget])
+        features = layer.get_state()['features']
+        assert len(features) == 1
+        [serialized_marker] = features
         expected = 'IPY_MODEL_{}'.format(marker_widget.model_id)
         assert serialized_marker == expected
 
@@ -47,8 +47,8 @@ class Drawing(unittest.TestCase):
         layer = drawing.Drawing()
         message = new_marker_message(latitude=25.0, longitude=-5.0)
         layer._handle_custom_msg(message, None)
-        assert len(layer.overlays) == 1
-        [new_marker] = layer.overlays
+        assert len(layer.features) == 1
+        [new_marker] = layer.features
         assert new_marker.location == (25.0, -5.0)
 
     def test_adding_new_marker_callback(self):
@@ -65,7 +65,7 @@ class Drawing(unittest.TestCase):
         observer = UnaryFunctionMock()
         layer = drawing.Drawing()
         layer.on_new_marker(observer)
-        layer.overlays = [
+        layer.features = [
             marker.Marker(location=(25.0, -5.0)),
             marker.Marker(location=(10.0, 30.0))
         ]
@@ -122,7 +122,7 @@ class DrawingFactory(unittest.TestCase):
         layer = drawing.drawing_layer()
         assert layer.toolbar_controls.show_controls
         assert layer.mode == drawing.DEFAULT_DRAWING_MODE
-        assert layer.overlays == []
+        assert layer.features == []
 
     def test_hide_controls(self):
         layer = drawing.drawing_layer(show_controls=False)
@@ -134,8 +134,8 @@ class DrawingFactory(unittest.TestCase):
 
     def test_with_overlays(self):
         new_marker = marker.Marker(location=(-25.0, 5.0))
-        layer = drawing.drawing_layer(overlays=[new_marker])
-        assert layer.overlays == [new_marker]
+        layer = drawing.drawing_layer(features=[new_marker])
+        assert layer.features == [new_marker]
 
     def test_accept_marker_options(self):
         layer = drawing.drawing_layer(

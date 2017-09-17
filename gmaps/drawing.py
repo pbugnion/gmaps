@@ -28,7 +28,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     has_bounds = False
     _view_name = Unicode('DrawingLayerView').tag(sync=True)
     _model_name = Unicode('DrawingLayerModel').tag(sync=True)
-    overlays = List().tag(sync=True, **widgets.widget_serialization)
+    features = List().tag(sync=True, **widgets.widget_serialization)
     mode = Enum(
         ALLOWED_DRAWING_MODES,
         default_value=DEFAULT_DRAWING_MODE
@@ -62,31 +62,31 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     def _default_toolbar_controls(self):
         return DrawingControls()
 
-    @observe('overlays')
+    @observe('features')
     def _on_new_overlay(self, change):
         if self._new_marker_callbacks:
-            old_overlays = change['old']
-            new_overlays = change['new']
+            old_features = change['old']
+            new_features = change['new']
             old_markers = set([
-                overlay for overlay in old_overlays
-                if isinstance(overlay, Marker)
+                feature for feature in old_features
+                if isinstance(feature, Marker)
             ])
             new_markers = [
-                overlay for overlay in new_overlays
-                if isinstance(overlay, Marker)
-                and overlay not in old_markers
+                feature for feature in new_features
+                if isinstance(feature, Marker)
+                and feature not in old_markers
             ]
             for marker in new_markers:
                 for callback in self._new_marker_callbacks:
                     callback(marker)
 
     def _handle_message(self, _, content, buffers):
-        if content.get('event') == 'OVERLAY_ADDED':
+        if content.get('event') == 'FEATURE_ADDED':
             payload = content['payload']
             latitude = payload['latitude']
             longitude = payload['longitude']
             marker = self.marker_options.to_marker(latitude, longitude)
-            self.overlays = self.overlays + [marker]
+            self.features = self.features + [marker]
         elif content.get('event') == 'MODE_CHANGED':
             payload = content['payload']
             mode = payload['mode']
@@ -98,20 +98,20 @@ def _marker_options_from_dict(options_dict):
 
 
 def drawing_layer(
-        overlays=None, mode=DEFAULT_DRAWING_MODE, 
+        features=None, mode=DEFAULT_DRAWING_MODE, 
         show_controls=True, marker_options=None):
     """
     Create an interactive drawing layer
     """
-    if overlays is None:
-        overlays = []
+    if features is None:
+        features = []
     controls = DrawingControls(show_controls=show_controls)
     if marker_options is None:
         marker_options = MarkerOptions()
     elif isinstance(marker_options, collections.Mapping):
         marker_options = _marker_options_from_dict(marker_options)
     kwargs = {
-        'overlays': overlays,
+        'features': features,
         'mode': mode,
         'toolbar_controls': controls,
         'marker_options': marker_options
