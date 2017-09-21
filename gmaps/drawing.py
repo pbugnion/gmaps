@@ -13,7 +13,7 @@ from .maps import GMapsWidgetMixin
 from .marker import Marker, MarkerOptions
 
 
-ALLOWED_DRAWING_MODES = {'DISABLED', 'MARKER'}
+ALLOWED_DRAWING_MODES = {'DISABLED', 'MARKER', 'LINE'}
 DEFAULT_DRAWING_MODE = 'MARKER'
 
 
