@@ -249,8 +249,16 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             'fa-map-marker', 'Drawing layer: switch to \'marker\' mode'
         )
         this._createButtonEvent(this.$markerButton, 'MARKER')
+        this.$lineButton = this._createModeButton(
+            'fa-italic', 'Drawing layer: switch to \'line\' mode'
+        )
+        this._createButtonEvent(this.$lineButton, 'LINE')
 
-        $container.append(this.$disableButton, this.$markerButton);
+        $container.append(
+            this.$disableButton, 
+            this.$markerButton,
+            this.$lineButton
+        );
         this.$el.append($container);
         this.$el.addClass('additional-controls')
     }
