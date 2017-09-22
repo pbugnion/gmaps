@@ -272,24 +272,26 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             .addClass('btn-group')
             .attr('data-toggle', 'buttons');
 
-        this.$disableButton = this._createModeButton(
+        const $disableButton = this._createModeButton(
             'fa-ban', 'Disable drawing layer'
         )
-        this._createButtonEvent(this.$disableButton, 'DISABLED')
-        this.$markerButton = this._createModeButton(
+        this._createButtonEvent($disableButton, 'DISABLED')
+        const $markerButton = this._createModeButton(
             'fa-map-marker', 'Drawing layer: switch to \'marker\' mode'
         )
-        this._createButtonEvent(this.$markerButton, 'MARKER')
-        this.$lineButton = this._createModeButton(
+        this._createButtonEvent($markerButton, 'MARKER')
+        const $lineButton = this._createModeButton(
             'fa-italic', 'Drawing layer: switch to \'line\' mode'
         )
-        this._createButtonEvent(this.$lineButton, 'LINE')
+        this._createButtonEvent($lineButton, 'LINE')
 
-        $container.append(
-            this.$disableButton, 
-            this.$markerButton,
-            this.$lineButton
-        );
+        this.modeButtons = {
+            'DISABLED': $disableButton,
+            'MARKER': $markerButton,
+            'LINE': $lineButton
+        }
+
+        $container.append($disableButton, $markerButton, $lineButton);
         this.$el.append($container);
         this.$el.addClass('additional-controls')
     }
@@ -327,14 +329,14 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         })
     }
 
-    _setButtonSelected(mode) {
-        if (mode === 'MARKER') {
-            this.$markerButton.addClass('active')
-            this.$disableButton.removeClass('active')
-        } else if (mode === 'DISABLED') {
-            this.$markerButton.removeClass('active')
-            this.$disableButton.addClass('active')
-        }
+    _setButtonSelected(selectedMode) {
+        Object.entries(this.modeButtons).forEach(([mode, $button]) => {
+            if (mode === selectedMode) {
+                $button.addClass('active')
+            } else {
+                $button.removeClass('active')
+            }
+        });
     }
 
     _setVisibility(showControls) {
