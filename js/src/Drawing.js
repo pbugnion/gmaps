@@ -72,6 +72,18 @@ class DrawingMessages {
         return payload;
     }
 
+    static newLine(start, end) {
+        const payload = {
+            event: 'FEATURE_ADDED',
+            payload: {
+                featureType: 'LINE',
+                start,
+                end
+            }
+        }
+        return payload
+    }
+
     static modeChange(mode) {
         const payload = {
             event: 'MODE_CHANGED',
@@ -228,7 +240,7 @@ export class DrawingLayerView extends GMapsLayerView {
             if (this._clickHandler) { this._clickHandler.remove(); }
             this._clickHandler = new LineClickHandler(
                 map,
-                path => console.log(path)
+                ([start, end]) => this.send(DrawingMessages.newLine(start, end))
             )
         }
     }
