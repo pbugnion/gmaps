@@ -177,6 +177,7 @@ export class DrawingLayerView extends GMapsLayerView {
     constructor(options) {
         super(options);
         this.canDownloadAsPng = false;
+        this._clickHandler = null;
     }
 
     render() {
@@ -209,15 +210,13 @@ export class DrawingLayerView extends GMapsLayerView {
 
     _setClickListener(map, mode) {
         if (mode === 'DISABLED') {
-            if (this._clickListener) { this._clickListener.remove(); }
+            if (this._clickHandler) { this._clickHandler.remove(); }
         } else {
-            if (this._clickListener) { this._clickListener.remove(); }
-            this._clickListener = map.addListener('click', event => {
-                const { latLng } = event;
-                const latitude = latLng.lat();
-                const longitude = latLng.lng();
-                this.send(DrawingMessages.newMarker(latitude, longitude))
-            });
+            if (this._clickHandler) { this._clickHandler.remove(); }
+            this._clickHandler = new MarkerClickHandler(
+                map, 
+                (latitude, longitude) => this.send(DrawingMessages.newMarker(latitude, longitude))
+            )
         }
     }
 
@@ -225,7 +224,21 @@ export class DrawingLayerView extends GMapsLayerView {
         const { mode } = this.model.store.getState()
         this._setClickListener(mapView.map, mode)
     };
+}
 
+class MarkerClickHandler {
+    constructor(map, onNewMarker) {
+        this._clickListener = map.addListener('click', event => {
+            const { latLng } = event;
+            const latitude = latLng.lat();
+            const longitude = latLng.lng();
+            onNewMarker(latitude, longitude)
+        });
+    }
+
+    remove() {
+        this._clickListener.remove();
+    }
 }
 
 
