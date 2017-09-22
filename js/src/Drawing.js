@@ -12,6 +12,13 @@ import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 
 
+function latLngToArray(latLng) {
+    const latitude = latLng.lat();
+    const longitude = latLng.lng();
+    return [latitude, longitude];
+}
+
+
 class DrawingStore extends Store {
     areEqual(firstState, secondState) {
         return _.isEqual(firstState, secondState)
@@ -250,28 +257,16 @@ class MarkerClickHandler {
 class LineClickHandler {
     constructor(map, onNewLine) {
         this.currentLine = null;
+        this.map = map;
         this._clickListener = map.addListener('click', event => {
             const { latLng } = event;
             if (this.currentLine === null) {
-                const path = new google.maps.MVCArray([latLng, latLng])
-                this.currentLine = new google.maps.Polyline({
-                    path,
-                    clickable: false
-                })
-                this.currentLine.setMap(map);
+                this.currentLine = this._createLineStartingAt(latLng);
             } else {
-                const currentPath = this.currentLine.getPath();
-                const latLngStart = currentPath.getAt(0)
-                const latitudeStart = latLngStart.lat();
-                const longitudeStart = latLngStart.lng();
-                const latitudeEnd = latLng.lat();
-                const longitudeEnd = latLng.lng();
-                onNewLine([
-                    [latitudeStart, longitudeStart],
-                    [latitudeEnd, longitudeEnd]
-                ])
+                const path = this._finishLineAt(this.currentLine, latLng);
                 this.currentLine.setMap(null);
                 this.currentLine = null;
+                onNewLine(path)
             }
         });
         this._moveListener = map.addListener('mousemove', event => {
@@ -280,6 +275,25 @@ class LineClickHandler {
                 this.currentLine.getPath().setAt(1, latLng);
             }
         });
+    }
+
+    _createLineStartingAt(latLng) {
+        const path = new google.maps.MVCArray([latLng, latLng])
+        const line = new google.maps.Polyline({ path, clickable: false })
+        line.setMap(this.map);
+        return line
+    }
+
+    _finishLineAt(line, latLngEnd) {
+        const linePath = line.getPath();
+        const latLngStart = linePath.getAt(0)
+        const [latitudeStart, longitudeStart] = latLngToArray(latLngStart);
+        const [latitudeEnd, longitudeEnd] = latLngToArray(latLngEnd);
+        const path = [
+            [latitudeStart, longitudeStart],
+            [latitudeEnd, longitudeEnd]
+        ]
+        return path;
     }
 
     remove() {
