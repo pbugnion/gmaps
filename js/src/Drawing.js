@@ -219,7 +219,10 @@ export class DrawingLayerView extends GMapsLayerView {
             )
         } else if (mode === 'LINE') {
             if (this._clickHandler) { this._clickHandler.remove(); }
-            this._clickHandler = new LineClickHandler(map)
+            this._clickHandler = new LineClickHandler(
+                map,
+                path => console.log(path)
+            )
         }
     }
 
@@ -245,17 +248,46 @@ class MarkerClickHandler {
 }
 
 class LineClickHandler {
-    constructor(map) {
+    constructor(map, onNewLine) {
+        this.currentLine = null;
         this._clickListener = map.addListener('click', event => {
             const { latLng } = event;
-            const latitude = latLng.lat();
-            const longitude = latLng.lng();
-            console.log(latitude, longitude)
+            if (this.currentLine === null) {
+                const path = new google.maps.MVCArray([latLng, latLng])
+                this.currentLine = new google.maps.Polyline({
+                    path,
+                    clickable: false
+                })
+                this.currentLine.setMap(map);
+            } else {
+                const currentPath = this.currentLine.getPath();
+                const latLngStart = currentPath.getAt(0)
+                const latitudeStart = latLngStart.lat();
+                const longitudeStart = latLngStart.lng();
+                const latitudeEnd = latLng.lat();
+                const longitudeEnd = latLng.lng();
+                onNewLine([
+                    [latitudeStart, longitudeStart],
+                    [latitudeEnd, longitudeEnd]
+                ])
+                this.currentLine.setMap(null);
+                this.currentLine = null;
+            }
+        });
+        this._moveListener = map.addListener('mousemove', event => {
+            if (this.currentLine !== null) {
+                const { latLng } = event;
+                this.currentLine.getPath().setAt(1, latLng);
+            }
         });
     }
 
     remove() {
         this._clickListener.remove();
+        this._moveListener.remove();
+        if (this.currentLine) {
+            this.currentLine.setMap(null);
+        }
     }
 }
 
