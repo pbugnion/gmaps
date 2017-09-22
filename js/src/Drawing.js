@@ -211,12 +211,15 @@ export class DrawingLayerView extends GMapsLayerView {
     _setClickListener(map, mode) {
         if (mode === 'DISABLED') {
             if (this._clickHandler) { this._clickHandler.remove(); }
-        } else {
+        } else if (mode === 'MARKER') {
             if (this._clickHandler) { this._clickHandler.remove(); }
             this._clickHandler = new MarkerClickHandler(
                 map, 
                 (latitude, longitude) => this.send(DrawingMessages.newMarker(latitude, longitude))
             )
+        } else if (mode === 'LINE') {
+            if (this._clickHandler) { this._clickHandler.remove(); }
+            this._clickHandler = new LineClickHandler(map)
         }
     }
 
@@ -233,6 +236,21 @@ class MarkerClickHandler {
             const latitude = latLng.lat();
             const longitude = latLng.lng();
             onNewMarker(latitude, longitude)
+        });
+    }
+
+    remove() {
+        this._clickListener.remove();
+    }
+}
+
+class LineClickHandler {
+    constructor(map) {
+        this._clickListener = map.addListener('click', event => {
+            const { latLng } = event;
+            const latitude = latLng.lat();
+            const longitude = latLng.lng();
+            console.log(latitude, longitude)
         });
     }
 
