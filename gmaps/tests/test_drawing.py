@@ -28,6 +28,17 @@ def new_marker_message(latitude, longitude):
     return message
 
 
+def new_line_message(start, end):
+    message = {
+        'event': 'FEATURE_ADDED',
+        'payload': {
+            'overlayType': 'LINE',
+            'start': start,
+            'end': end
+        }
+    }
+
+
 class Drawing(unittest.TestCase):
 
     def test_default_features(self):
@@ -73,6 +84,12 @@ class Drawing(unittest.TestCase):
         [call1, call2] = observer.calls
         assert call1.location == (25.0, -5.0)
         assert call2.location == (10.0, 30.0)
+
+    def test_adding_polyline(self):
+        layer = drawing.Drawing()
+        message = new_line_message(start=(5.0, 10.0), end=(-5.0, -2.0))
+        layer._handle_custom_msg(message, None)
+        # TODO implement test
 
     def test_default_mode(self):
         layer = drawing.Drawing()

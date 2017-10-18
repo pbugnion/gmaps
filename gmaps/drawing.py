@@ -83,10 +83,13 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     def _handle_message(self, _, content, buffers):
         if content.get('event') == 'FEATURE_ADDED':
             payload = content['payload']
-            latitude = payload['latitude']
-            longitude = payload['longitude']
-            marker = self.marker_options.to_marker(latitude, longitude)
-            self.features = self.features + [marker]
+            if payload['overlayType'] == 'MARKER':
+                latitude = payload['latitude']
+                longitude = payload['longitude']
+                feature = self.marker_options.to_marker(latitude, longitude)
+            elif payload['overlayType'] == 'LINE':
+                pass
+            self.features = self.features + [feature]
         elif content.get('event') == 'MODE_CHANGED':
             payload = content['payload']
             mode = payload['mode']
