@@ -200,17 +200,17 @@ export class DrawingLayerView extends GMapsLayerView {
     }
 
     render() {
-        this.features = new widgets.ViewList(this.addMarker, this.removeMarker, this)
+        this.features = new widgets.ViewList(this.addFeature, this.removeFeature, this)
         this.features.update(this.model.get('features'))
         this.model.on(
-            'change:features', 
+            'change:features',
             () => { this.features.update(this.model.get('features')) },
         );
         this.model.store.addListener(() => { this._onNewMode() })
         this._clickListener = null
     }
 
-    addMarker(childModel) {
+    addFeature(childModel) {
         return this.create_child_view(childModel)
             .then((childView) => {
                 childView.addToMapView(this.mapView)
@@ -218,8 +218,8 @@ export class DrawingLayerView extends GMapsLayerView {
             })
     }
 
-    removeMarker(markerView) {
-        markerView.removeFromMapView();
+    removeFeature(featureView) {
+        featureView.removeFromMapView();
     };
 
     _onNewMode() {
