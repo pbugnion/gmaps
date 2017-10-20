@@ -9,6 +9,7 @@ from traitlets import (
     Bool, default, observe
 )
 
+from . import geotraitlets
 from .maps import GMapsWidgetMixin
 from .marker import Marker, MarkerOptions
 
@@ -22,6 +23,13 @@ class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
     _view_name = Unicode('DrawingControlsView').tag(sync=True)
     show_controls = Bool(default_value=True, allow_none=False).tag(
         sync=True)
+
+
+class Line(GMapsWidgetMixin, widgets.Widget):
+    _view_name = Unicode('LineView').tag(sync=True)
+    _model_name = Unicode('LineModel').tag(sync=True)
+    start = geotraitlets.Point().tag(sync=True)
+    end = geotraitlets.Point().tag(sync=True)
 
 
 class Drawing(GMapsWidgetMixin, widgets.Widget):
