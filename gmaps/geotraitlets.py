@@ -46,7 +46,7 @@ class Point(traitlets.Tuple):
     """
     info_text = "a valid (latitude, longitude) pair"
 
-    def __init__(self, default_value):
+    def __init__(self, default_value=traitlets.Undefined):
         super(Point, self).__init__(
             Latitude(), Longitude(), default_value=default_value)
 
