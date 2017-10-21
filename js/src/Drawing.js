@@ -49,9 +49,9 @@ class DrawingActions {
     }
 
     static showControlsChange(showControls) {
-        return { 
-            type: 'SHOW_CONTROLS_CHANGED', 
-            payload: { showControls } 
+        return {
+            type: 'SHOW_CONTROLS_CHANGED',
+            payload: { showControls }
         };
     }
 
@@ -117,7 +117,7 @@ export class DrawingLayerModel extends GMapsLayerModel {
     // propagating them to the store if necessary
     _bindModelEvents() {
         this.on(
-            'change:toolbar_controls', 
+            'change:toolbar_controls',
             () => this._initializeControls()
         );
         this.on('change:mode', () => {
@@ -186,7 +186,7 @@ export class DrawingControlsModel extends widgets.DOMWidgetModel {
             _view_name: 'DrawingControlsView',
             show_controls: true,
             dispatcher: null,
-            store: null            
+            store: null
         }
     }
 };
@@ -233,7 +233,7 @@ export class DrawingLayerView extends GMapsLayerView {
         } else if (mode === 'MARKER') {
             if (this._clickHandler) { this._clickHandler.remove(); }
             this._clickHandler = new MarkerClickHandler(
-                map, 
+                map,
                 (latitude, longitude) => this.send(DrawingMessages.newMarker(latitude, longitude))
             )
         } else if (mode === 'LINE') {
@@ -376,7 +376,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             .attr('title', hoverText)
             .append('<i />')
             .addClass(`fa ${icon}`)
-        
+
         return $button
     }
 
