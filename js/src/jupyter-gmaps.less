@@ -57,3 +57,35 @@
     cursor: pointer;
   }
 }
+
+
+@font-face {
+  font-family: 'gmaps-icon-font';
+  src:  url('fonts/gmaps-icons.eot?khz269');
+  src:  url('fonts/gmaps-icons.eot?khz269#iefix') format('embedded-opentype'),
+  url('fonts/gmaps-icons.ttf?khz269') format('truetype'),
+  url('fonts/gmaps-icons.woff?khz269') format('woff'),
+  url('fonts/gmaps-icons.svg?khz269#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.gmaps-icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'gmaps-icon-font' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &.line:before {
+    content: "\1f322";
+  }
+}
+
