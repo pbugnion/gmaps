@@ -84,6 +84,17 @@ class DrawingMessages {
         return payload
     }
 
+    static newPolygon(path) {
+        const payload = {
+            event: 'FEATURE_ADDED',
+            payload: {
+                featureType: 'POLYGON',
+                path
+            }
+        }
+        return payload ;
+    }
+
     static modeChange(mode) {
         const payload = {
             event: 'MODE_CHANGED',
@@ -246,7 +257,8 @@ export class DrawingLayerView extends GMapsLayerView {
             if (this._clickHandler) { this._clickHandler.remove(); }
             this._clickHandler = new PolygonClickHandler(
                 map,
-                () => {}
+                (path) => {
+                    console.log(path) ; this.send(DrawingMessages.newPolygon(path))}
             )
         }
     }
@@ -339,7 +351,10 @@ class PolygonClickHandler {
         });
         this._dblclickListener = map.addListener('dblclick', event => {
             if (this.currentPolygon !== null) {
-                this._completePolygon();
+                const path = this._completePolygon();
+                this.currentPolygon.setMap(null);
+                this.currentPolygon = null;
+                onNewPolygon(path)
             };
         })
         this._moveListener = map.addListener('mousemove', event => {
@@ -376,8 +391,8 @@ class PolygonClickHandler {
 
     _completePolygon() {
         const currentPath = this.currentPolygon.getPath();
-        currentPath.setAt(currentPath.getLength()-1, currentPath.getAt(0));
-        this.currentPolygon = null;
+        const path = currentPath.getArray().map(point => latLngToArray(point))
+        return path;
     }
 }
 
