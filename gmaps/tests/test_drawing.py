@@ -86,7 +86,7 @@ class Drawing(unittest.TestCase):
         assert call1.location == (25.0, -5.0)
         assert call2.location == (10.0, 30.0)
 
-    def test_adding_polyline(self):
+    def test_adding_line(self):
         layer = drawing.Drawing()
         message = new_line_message(start=(5.0, 10.0), end=(-5.0, -2.0))
         layer._handle_custom_msg(message, None)
@@ -94,6 +94,17 @@ class Drawing(unittest.TestCase):
         [new_line] = layer.features
         assert new_line.start == (5.0, 10.0)
         assert new_line.end == (-5.0, -2.0)
+
+    def test_adding_line_callback(self):
+        observer = UnaryFunctionMock()
+        layer = drawing.Drawing()
+        layer.on_new_feature(observer)
+        message = new_line_message(start=(5.0, 10.0), end=(-5.0, -2.0))
+        layer._handle_custom_msg(message, None)
+        assert len(observer.calls) == 1
+        [call] = observer.calls
+        assert call.start == (5.0, 10.0)
+        assert call.end == (-5.0, -2.0)
 
     def test_default_mode(self):
         layer = drawing.Drawing()
