@@ -106,6 +106,18 @@ class Drawing(unittest.TestCase):
         assert call.start == (5.0, 10.0)
         assert call.end == (-5.0, -2.0)
 
+    def test_adding_line_features(self):
+        observer = UnaryFunctionMock()
+        layer = drawing.Drawing()
+        layer.on_new_feature(observer)
+        layer.features = [
+            drawing.Line(start=(5.0, 10.0), end=(-5.0, -2.0))
+        ]
+        assert len(observer.calls) == 1
+        [call] = observer.calls
+        assert call.start == (5.0, 10.0)
+        assert call.end == (-5.0, -2.0)
+
     def test_default_mode(self):
         layer = drawing.Drawing()
         assert layer.get_state()['mode'] == drawing.DEFAULT_DRAWING_MODE
