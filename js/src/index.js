@@ -23,5 +23,6 @@ export * from './Transit';
 export * from './Traffic';
 export * from './Drawing';
 export * from './Line';
+export * from './Polygon';
 
 export { version } from '../package.json';

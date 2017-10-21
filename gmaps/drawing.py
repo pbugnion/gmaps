@@ -32,6 +32,12 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     end = geotraitlets.Point().tag(sync=True)
 
 
+class Polygon(GMapsWidgetMixin, widgets.Widget):
+    _view_name = Unicode('PolygonView').tag(sync=True)
+    _model_name = Unicode('PolygonModel').tag(sync=True)
+    path = List(geotraitlets.Point()).tag(sync=True)
+
+
 class Drawing(GMapsWidgetMixin, widgets.Widget):
     has_bounds = False
     _view_name = Unicode('DrawingLayerView').tag(sync=True)
