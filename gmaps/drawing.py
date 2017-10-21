@@ -99,6 +99,9 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
                 start = payload['start']
                 end = payload['end']
                 feature = Line(start=start, end=end)
+            elif payload['featureType'] == 'POLYGON':
+                path = payload['path']
+                feature = Polygon(path=path)
             self.features = self.features + [feature]
         elif content.get('event') == 'MODE_CHANGED':
             payload = content['payload']
