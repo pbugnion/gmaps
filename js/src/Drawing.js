@@ -390,7 +390,10 @@ class PolygonClickHandler {
 
     _completePolygon() {
         const currentPath = this.currentPolygon.getPath();
-        const path = currentPath.getArray().map(point => latLngToArray(point))
+        const pathElems = currentPath.getArray().map(point => latLngToArray(point))
+        // last element is duplicate since we always introduce
+        // two new elements on click.
+        const path = _.initial(pathElems);
         return path;
     }
 }
