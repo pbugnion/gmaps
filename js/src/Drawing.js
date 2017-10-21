@@ -331,15 +331,15 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             .attr('data-toggle', 'buttons');
 
         const $disableButton = this._createModeButton(
-            'fa-ban', 'Disable drawing layer'
+            'fa fa-ban', 'Disable drawing layer'
         )
         this._createButtonEvent($disableButton, 'DISABLED')
         const $markerButton = this._createModeButton(
-            'fa-map-marker', 'Drawing layer: switch to \'marker\' mode'
+            'fa fa-map-marker', 'Drawing layer: switch to \'marker\' mode'
         )
         this._createButtonEvent($markerButton, 'MARKER')
         const $lineButton = this._createModeButton(
-            'fa-italic', 'Drawing layer: switch to \'line\' mode'
+            'gmaps-icon line', 'Drawing layer: switch to \'line\' mode'
         )
         this._createButtonEvent($lineButton, 'LINE')
 
@@ -375,7 +375,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             .addClass('btn btn-default')
             .attr('title', hoverText)
             .append('<i />')
-            .addClass(`fa ${icon}`)
+            .addClass(`${icon}`)
 
         return $button
     }
