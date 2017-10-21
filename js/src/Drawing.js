@@ -328,7 +328,8 @@ class PolygonClickHandler {
     constructor(map, onNewPolygon) {
         this.map = map;
         this.currentPolygon = null;
-        map.addListener('click', event => {
+        this.map.setOptions({ disableDoubleClickZoom: true })
+        this._clickListener = map.addListener('click', event => {
             const { latLng } = event;
             if (this.currentPolygon === null) {
                 this.currentPolygon = this._createPolygonStartingAt(latLng);
@@ -336,16 +337,28 @@ class PolygonClickHandler {
                 this._finishCurrentLine(latLng);
             }
         });
-        map.addListener('dblclick', event => {
-            this._completePolygon();
+        this._dblclickListener = map.addListener('dblclick', event => {
+            if (this.currentPolygon !== null) {
+                this._completePolygon();
+            };
         })
-        map.addListener('mousemove', event => {
+        this._moveListener = map.addListener('mousemove', event => {
             if (this.currentPolygon !== null) {
                 const { latLng } = event;
                 const currentPath = this.currentPolygon.getPath();
                 currentPath.setAt(currentPath.getLength()-1, latLng);
             }
         });
+    }
+
+    remove() {
+        this._clickListener.remove();
+        this._dblclickListener.remove();
+        this._moveListener.remove();
+        if (this.currentPolygon) {
+            this.currentPolygon.setMap(null);
+        }
+        this.map.setOptions({ disableDoubleClickZoom: false })
     }
 
     _createPolygonStartingAt(latLng) {
