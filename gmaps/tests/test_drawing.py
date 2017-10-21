@@ -20,7 +20,7 @@ def new_marker_message(latitude, longitude):
     message = {
         'event': 'FEATURE_ADDED',
         'payload': {
-            'overlayType': 'MARKER',
+            'featureType': 'MARKER',
             'latitude': latitude,
             'longitude': longitude
         }
@@ -32,11 +32,12 @@ def new_line_message(start, end):
     message = {
         'event': 'FEATURE_ADDED',
         'payload': {
-            'overlayType': 'LINE',
+            'featureType': 'LINE',
             'start': start,
             'end': end
         }
     }
+    return message
 
 
 class Drawing(unittest.TestCase):
@@ -89,7 +90,10 @@ class Drawing(unittest.TestCase):
         layer = drawing.Drawing()
         message = new_line_message(start=(5.0, 10.0), end=(-5.0, -2.0))
         layer._handle_custom_msg(message, None)
-        # TODO implement test
+        assert len(layer.features) == 1
+        [new_line] = layer.features
+        assert new_line.start == (5.0, 10.0)
+        assert new_line.end == (-5.0, -2.0)
 
     def test_default_mode(self):
         layer = drawing.Drawing()
