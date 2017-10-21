@@ -242,6 +242,12 @@ export class DrawingLayerView extends GMapsLayerView {
                 map,
                 ([start, end]) => this.send(DrawingMessages.newLine(start, end))
             )
+        } else if (mode === 'POLYGON') {
+            if (this._clickHandler) { this._clickHandler.remove(); }
+            this._clickHandler = new LineClickHandler(
+                map,
+                ([start, end]) => this.send(DrawingMessages.newLine(start, end))
+            )
         }
     }
 
@@ -342,14 +348,24 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             'gmaps-icon line', 'Drawing layer: switch to \'line\' mode'
         )
         this._createButtonEvent($lineButton, 'LINE')
+        const $polygonButton = this._createModeButton(
+            'gmaps-icon line', 'Drawing layer: switch to \'polygon\' mode'
+        )
+        this._createButtonEvent($polygonButton, 'POLYGON')
 
         this.modeButtons = {
             'DISABLED': $disableButton,
             'MARKER': $markerButton,
-            'LINE': $lineButton
+            'LINE': $lineButton,
+            'POLYGON': $polygonButton
         }
 
-        $container.append($disableButton, $markerButton, $lineButton);
+        $container.append(
+            $disableButton,
+            $markerButton,
+            $lineButton,
+            $polygonButton
+        );
         this.$el.append($container);
         this.$el.addClass('additional-controls')
     }

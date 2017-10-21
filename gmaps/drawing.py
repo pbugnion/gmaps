@@ -14,7 +14,7 @@ from .maps import GMapsWidgetMixin
 from .marker import MarkerOptions
 
 
-ALLOWED_DRAWING_MODES = {'DISABLED', 'MARKER', 'LINE'}
+ALLOWED_DRAWING_MODES = {'DISABLED', 'MARKER', 'LINE', 'POLYGON'}
 DEFAULT_DRAWING_MODE = 'MARKER'
 
 
