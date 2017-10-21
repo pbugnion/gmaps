@@ -257,8 +257,7 @@ export class DrawingLayerView extends GMapsLayerView {
             if (this._clickHandler) { this._clickHandler.remove(); }
             this._clickHandler = new PolygonClickHandler(
                 map,
-                (path) => {
-                    console.log(path) ; this.send(DrawingMessages.newPolygon(path))}
+                path => this.send(DrawingMessages.newPolygon(path))
             )
         }
     }
