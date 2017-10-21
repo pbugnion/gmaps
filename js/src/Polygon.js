@@ -24,7 +24,8 @@ export class PolygonView extends GMapsLayerView {
         const points = this.model.get('path').map(
             latLngArray => arrayToLatLng(latLngArray)
         )
-        const path = new google.maps.MVCArray(points);
+        const pathElems = [...points, points[0]] // make sure we close the polygon
+        const path = new google.maps.MVCArray(pathElems);
         this.polygon = new google.maps.Polyline({ path })
     }
 
