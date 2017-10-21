@@ -244,9 +244,9 @@ export class DrawingLayerView extends GMapsLayerView {
             )
         } else if (mode === 'POLYGON') {
             if (this._clickHandler) { this._clickHandler.remove(); }
-            this._clickHandler = new LineClickHandler(
+            this._clickHandler = new PolygonClickHandler(
                 map,
-                ([start, end]) => this.send(DrawingMessages.newLine(start, end))
+                () => {}
             )
         }
     }
@@ -320,6 +320,51 @@ class LineClickHandler {
         if (this.currentLine) {
             this.currentLine.setMap(null);
         }
+    }
+}
+
+
+class PolygonClickHandler {
+    constructor(map, onNewPolygon) {
+        this.map = map;
+        this.currentPolygon = null;
+        map.addListener('click', event => {
+            const { latLng } = event;
+            if (this.currentPolygon === null) {
+                this.currentPolygon = this._createPolygonStartingAt(latLng);
+            } else {
+                this._finishCurrentLine(latLng);
+            }
+        });
+        map.addListener('dblclick', event => {
+            this._completePolygon();
+        })
+        map.addListener('mousemove', event => {
+            if (this.currentPolygon !== null) {
+                const { latLng } = event;
+                const currentPath = this.currentPolygon.getPath();
+                currentPath.setAt(currentPath.getLength()-1, latLng);
+            }
+        });
+    }
+
+    _createPolygonStartingAt(latLng) {
+        const path = new google.maps.MVCArray([latLng, latLng])
+        const polygon = new google.maps.Polyline({ path, clickable: false })
+        polygon.setMap(this.map);
+        return polygon;
+    }
+
+    _finishCurrentLine(latLng) {
+        const currentPath = this.currentPolygon.getPath();
+        const lastLatLng = currentPath.getAt(currentPath.getLength()-1);
+        currentPath.push(lastLatLng);
+    }
+
+    _completePolygon() {
+        const currentPath = this.currentPolygon.getPath();
+        currentPath.setAt(currentPath.getLength()-1, currentPath.getAt(0));
+        this.currentPolygon = null;
     }
 }
 
