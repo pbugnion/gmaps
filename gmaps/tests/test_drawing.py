@@ -66,7 +66,7 @@ class Drawing(unittest.TestCase):
     def test_adding_new_marker_callback(self):
         observer = UnaryFunctionMock()
         layer = drawing.Drawing()
-        layer.on_new_marker(observer)
+        layer.on_new_feature(observer)
         message = new_marker_message(latitude=25.0, longitude=-5.0)
         layer._handle_custom_msg(message, None)
         assert len(observer.calls) == 1
@@ -76,7 +76,7 @@ class Drawing(unittest.TestCase):
     def test_adding_new_markers_via_overlays_callback(self):
         observer = UnaryFunctionMock()
         layer = drawing.Drawing()
-        layer.on_new_marker(observer)
+        layer.on_new_feature(observer)
         layer.features = [
             marker.Marker(location=(25.0, -5.0)),
             marker.Marker(location=(10.0, 30.0))

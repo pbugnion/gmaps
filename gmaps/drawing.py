@@ -46,7 +46,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         sync=True, **widgets.widget_serialization)
 
     def __init__(self, **kwargs):
-        self._new_marker_callbacks = []
+        self._new_feature_callbacks = []
 
         super(Drawing, self).__init__(**kwargs)
         self.on_msg(self._handle_message)
@@ -56,8 +56,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         # and still trigger appropriate changes
         self.marker_options.observe(self._on_marker_options_change)
 
-    def on_new_marker(self, callback):
-        self._new_marker_callbacks.append(callback)
+    def on_new_feature(self, callback):
+        self._new_feature_callbacks.append(callback)
 
     def _on_marker_options_change(self, change):
         self.marker_options = copy.deepcopy(self.marker_options)
@@ -71,22 +71,16 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         return DrawingControls()
 
     @observe('features')
-    def _on_new_overlay(self, change):
-        if self._new_marker_callbacks:
-            old_features = change['old']
-            new_features = change['new']
-            old_markers = set([
-                feature for feature in old_features
-                if isinstance(feature, Marker)
-            ])
-            new_markers = [
-                feature for feature in new_features
-                if isinstance(feature, Marker)
-                and feature not in old_markers
+    def _on_new_feature(self, change):
+        if self._new_feature_callbacks:
+            old_features = set(change['old'])
+            new_features = [
+                feature for feature in change['new']
+                if feature not in old_features
             ]
-            for marker in new_markers:
-                for callback in self._new_marker_callbacks:
-                    callback(marker)
+            for feature in new_features:
+                for callback in self._new_feature_callbacks:
+                    callback(feature)
 
     def _handle_message(self, _, content, buffers):
         if content.get('event') == 'FEATURE_ADDED':
