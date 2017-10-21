@@ -12,16 +12,16 @@ export class LineModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
-            _view_name: "LineView",
-            _model_name: "LineModel"
+            _view_name: 'LineView',
+            _model_name: 'LineModel'
         }
     }
 }
 
 export class LineView extends widgets.WidgetView {
     render() {
-        const start = arrayToLatLng(this.model.get("start"));
-        const end = arrayToLatLng(this.model.get("end"));
+        const start = arrayToLatLng(this.model.get('start'));
+        const end = arrayToLatLng(this.model.get('end'));
         const path = new google.maps.MVCArray([start, end])
         this.line = new google.maps.Polyline({ path });
     }
