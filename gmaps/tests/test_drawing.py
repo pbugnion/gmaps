@@ -40,6 +40,17 @@ def new_line_message(start, end):
     return message
 
 
+def new_polygon_message(path):
+    message = {
+        'event': 'FEATURE_ADDED',
+        'payload': {
+            'featureType': 'POLYGON',
+            'path': path
+        }
+    }
+    return message
+
+
 class Drawing(unittest.TestCase):
 
     def test_default_features(self):
@@ -117,6 +128,15 @@ class Drawing(unittest.TestCase):
         [call] = observer.calls
         assert call.start == (5.0, 10.0)
         assert call.end == (-5.0, -2.0)
+
+    def test_adding_polygon(self):
+        layer = drawing.Drawing()
+        path = [(5.0, 10.0), (15.0, 20.0), (25.0, 50.0)]
+        message = new_polygon_message(path)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_polygon] = layer.features
+        assert new_polygon.path == path
 
     def test_default_mode(self):
         layer = drawing.Drawing()
