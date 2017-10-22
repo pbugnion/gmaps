@@ -23,7 +23,7 @@ export class LineView extends widgets.WidgetView {
             strokeColor: '#696969',
             strokeWeight: 2,
             strokeOpacity: 0.6,
-            clickable: false
+            clickable: true
         }
         this.line = new google.maps.Polyline({ path, ...lineOptions });
     }
@@ -36,5 +36,9 @@ export class LineView extends widgets.WidgetView {
     removeFromMapView() {
         this.mapView = null;
         this.line.setMap(null);
+    }
+
+    addClickListener(callback) {
+        this.line.addListener('click', event => callback())
     }
 }
