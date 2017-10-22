@@ -2,12 +2,8 @@
 import * as widgets from '@jupyter-widgets/base'
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer'
+import { arrayToLatLng } from './services/googleConverters'
 
-
-function arrayToLatLng(array) {
-    const [lat, lng] = array;
-    return new google.maps.LatLng({lat, lng})
-}
 
 export class PolygonModel extends GMapsLayerModel {
     defaults() {
