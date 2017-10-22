@@ -426,19 +426,25 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             'gmaps-icon polygon', 'Drawing layer: switch to \'polygon\' mode'
         )
         this._createButtonEvent($polygonButton, 'POLYGON')
+        const $deleteButton = this._createModeButton(
+            'fa fa-ban', 'Delete a feature'
+        )
+        this._createButtonEvent($deleteButton, 'DELETE')
 
         this.modeButtons = {
             'DISABLED': $disableButton,
             'MARKER': $markerButton,
             'LINE': $lineButton,
-            'POLYGON': $polygonButton
+            'POLYGON': $polygonButton,
+            'DELETE': $deleteButton
         }
 
         $container.append(
             $disableButton,
             $markerButton,
             $lineButton,
-            $polygonButton
+            $polygonButton,
+            $deleteButton
         );
         this.$el.append($container);
         this.$el.addClass('additional-controls')
