@@ -2,11 +2,7 @@
 import * as widgets from '@jupyter-widgets/base'
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
-
-function arrayToLatLng(array) {
-    const [lat, lng] = array;
-    return new google.maps.LatLng({lat, lng})
-}
+import { arrayToLatLng } from './services/googleConverters'
 
 export class LineModel extends GMapsLayerModel {
     defaults() {

@@ -10,13 +10,7 @@ import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
-
-
-function latLngToArray(latLng) {
-    const latitude = latLng.lat();
-    const longitude = latLng.lng();
-    return [latitude, longitude];
-}
+import { latLngToArray } from './services/googleConverters'
 
 
 class DrawingStore extends Store {
