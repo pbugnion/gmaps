@@ -253,6 +253,9 @@ export class DrawingLayerView extends GMapsLayerView {
                 map,
                 path => this.send(DrawingMessages.newPolygon(path))
             )
+        } else if (mode === 'DELETE') {
+            if (this._clickHandler) { this._clickHandler.remove(); }
+            this._clickHandler = new DeleteClickHandler(this.features.views);
         }
     }
 
@@ -394,6 +397,17 @@ class PolygonClickHandler {
         // two new elements on click.
         const path = _.initial(pathElems);
         return path;
+    }
+}
+
+
+class DeleteClickHandler {
+    constructor(features, onDeleteFeature) {
+        features.forEach(featurePromise =>
+            featurePromise.then(feature =>
+                feature.addClickListener(() => console.log(feature.model.model_id))
+            )
+        )
     }
 }
 
