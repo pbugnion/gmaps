@@ -347,7 +347,12 @@ class PolygonClickHandler {
                 const path = this._completePolygon();
                 this.currentPolygon.setMap(null);
                 this.currentPolygon = null;
-                onNewPolygon(path)
+                if (path.length > 2) {
+                    // Only dispatch an event if there are at
+                    // least three points. Otherwise, it's
+                    // likely to just be user error.
+                    onNewPolygon(path);
+                }
             };
         })
         this._moveListener = map.addListener('mousemove', event => {
