@@ -423,7 +423,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         )
         this._createButtonEvent($lineButton, 'LINE')
         const $polygonButton = this._createModeButton(
-            'gmaps-icon line', 'Drawing layer: switch to \'polygon\' mode'
+            'gmaps-icon polygon', 'Drawing layer: switch to \'polygon\' mode'
         )
         this._createButtonEvent($polygonButton, 'POLYGON')
 
