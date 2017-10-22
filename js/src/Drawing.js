@@ -89,6 +89,16 @@ class DrawingMessages {
         return payload ;
     }
 
+    static deleteFeature(modelId) {
+        const payload = {
+            event: 'FEATURE_DELETED',
+            payload: {
+                modelId
+            }
+        }
+        return payload
+    }
+
     static modeChange(mode) {
         const payload = {
             event: 'MODE_CHANGED',
@@ -255,7 +265,10 @@ export class DrawingLayerView extends GMapsLayerView {
             )
         } else if (mode === 'DELETE') {
             if (this._clickHandler) { this._clickHandler.remove(); }
-            this._clickHandler = new DeleteClickHandler(this.features.views);
+            this._clickHandler = new DeleteClickHandler(
+                this.features.views,
+                feature => this.send(DrawingMessages.deleteFeature(feature.model.model_id))
+            );
         }
     }
 
@@ -405,7 +418,7 @@ class DeleteClickHandler {
     constructor(features, onDeleteFeature) {
         features.forEach(featurePromise =>
             featurePromise.then(feature =>
-                feature.addClickListener(() => console.log(feature.model.model_id))
+                feature.addClickListener(() => onDeleteFeature(feature))
             )
         )
     }
