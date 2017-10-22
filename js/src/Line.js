@@ -19,7 +19,13 @@ export class LineView extends widgets.WidgetView {
         const start = arrayToLatLng(this.model.get('start'));
         const end = arrayToLatLng(this.model.get('end'));
         const path = new google.maps.MVCArray([start, end])
-        this.line = new google.maps.Polyline({ path });
+        const lineOptions = {
+            strokeColor: '#696969',
+            strokeWeight: 2,
+            strokeOpacity: 0.6,
+            clickable: false
+        }
+        this.line = new google.maps.Polyline({ path, ...lineOptions });
     }
 
     addToMapView(mapView) {
