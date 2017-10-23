@@ -2,6 +2,7 @@
 import * as widgets from '@jupyter-widgets/base';
 import $ from 'jquery'
 import _ from 'underscore'
+import * as Backbone from 'backbone'
 
 import { Store } from './Store';
 import { Dispatcher } from 'flux'
@@ -416,11 +417,20 @@ class PolygonClickHandler {
 
 class DeleteClickHandler {
     constructor(features, onDeleteFeature) {
+        const eventBus = { ...Backbone.Events };
         features.forEach(featurePromise =>
             featurePromise.then(feature =>
-                feature.addClickListener(() => onDeleteFeature(feature))
+                eventBus.listenTo(
+                    feature,
+                    'click',
+                    () => this.onFeatureClick(feature)
+                )
             )
         )
+    }
+
+    onFeatureClick(feature) {
+        console.log(feature)
     }
 }
 
