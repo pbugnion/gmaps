@@ -15,6 +15,7 @@ export class LineModel extends GMapsLayerModel {
 }
 
 export class LineView extends widgets.WidgetView {
+
     render() {
         const start = arrayToLatLng(this.model.get('start'));
         const end = arrayToLatLng(this.model.get('end'));
@@ -26,6 +27,7 @@ export class LineView extends widgets.WidgetView {
             clickable: true
         }
         this.line = new google.maps.Polyline({ path, ...lineOptions });
+        this.line.addListener('click', event => this.trigger('click'))
     }
 
     addToMapView(mapView) {
@@ -36,9 +38,5 @@ export class LineView extends widgets.WidgetView {
     removeFromMapView() {
         this.mapView = null;
         this.line.setMap(null);
-    }
-
-    addClickListener(callback) {
-        this.line.addListener('click', event => callback())
     }
 }
