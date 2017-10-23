@@ -90,6 +90,13 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
                 for callback in self._new_feature_callbacks:
                     callback(feature)
 
+    def _delete_feature(self, model_id):
+        updated_features = [
+            feature for feature in self.features
+            if feature.model_id != model_id
+        ]
+        self.features = updated_features
+
     def _handle_message(self, _, content, buffers):
         if content.get('event') == 'FEATURE_ADDED':
             payload = content['payload']
@@ -109,6 +116,10 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             payload = content['payload']
             mode = payload['mode']
             self.mode = mode
+        elif content.get('event') == 'FEATURE_DELETED':
+            payload = content['payload']
+            model_id = payload['modelId']
+            self._delete_feature(model_id)
 
 
 def _marker_options_from_dict(options_dict):
