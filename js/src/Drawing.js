@@ -417,20 +417,20 @@ class PolygonClickHandler {
 
 class DeleteClickHandler {
     constructor(features, onDeleteFeature) {
-        const eventBus = { ...Backbone.Events };
+        this.eventBus = { ...Backbone.Events };
         features.forEach(featurePromise =>
             featurePromise.then(feature =>
-                eventBus.listenTo(
+                this.eventBus.listenTo(
                     feature,
                     'click',
-                    () => this.onFeatureClick(feature)
+                    () => onDeleteFeature(feature)
                 )
             )
         )
     }
 
-    onFeatureClick(feature) {
-        console.log(feature)
+    remove() {
+        this.eventBus.stopListening();
     }
 }
 
