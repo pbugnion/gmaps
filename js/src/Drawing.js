@@ -301,6 +301,8 @@ class MarkerClickHandler {
         });
     }
 
+    onNewFeatures(features) {}
+
     remove() {
         this._clickListener.remove();
     }
@@ -328,6 +330,8 @@ class LineClickHandler {
             }
         });
     }
+
+    onNewFeatures(features) {}
 
     _createLineStartingAt(latLng) {
         const path = new google.maps.MVCArray([latLng, latLng])
@@ -392,6 +396,8 @@ class PolygonClickHandler {
             }
         });
     }
+
+    onNewFeatures(features) {}
 
     remove() {
         this._clickListener.remove();
