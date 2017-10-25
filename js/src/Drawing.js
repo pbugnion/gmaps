@@ -220,10 +220,17 @@ export class DrawingLayerView extends GMapsLayerView {
         this.features.update(this.model.get('features'))
         this.model.on(
             'change:features',
-            () => { this.features.update(this.model.get('features')) },
+            () => {
+                this.features.update(this.model.get('features'))
+                    .then(features => {
+                        if (this._clickHandler) {
+                            this._clickHandler.onNewFeatures(features);
+                        }
+                    })
+            },
         );
         this.model.store.addListener(() => { this._onNewMode() })
-        this._clickListener = null
+        this._clickHandler = null
     }
 
     addFeature(childModel) {
@@ -266,10 +273,15 @@ export class DrawingLayerView extends GMapsLayerView {
             )
         } else if (mode === 'DELETE') {
             if (this._clickHandler) { this._clickHandler.remove(); }
-            this._clickHandler = new DeleteClickHandler(
-                this.features.views,
-                feature => this.send(DrawingMessages.deleteFeature(feature.model.model_id))
-            );
+            Promise.all(this.features.views).then(features => {
+                this._clickHandler = new DeleteClickHandler(
+                    features,
+                    feature => {
+                        console.log(feature.model.model_id)
+                        this.send(DrawingMessages.deleteFeature(feature.model.model_id))
+                    }
+                );
+            })
         }
     }
 
@@ -418,13 +430,21 @@ class PolygonClickHandler {
 class DeleteClickHandler {
     constructor(features, onDeleteFeature) {
         this.eventBus = { ...Backbone.Events };
-        features.forEach(featurePromise =>
-            featurePromise.then(feature =>
-                this.eventBus.listenTo(
-                    feature,
-                    'click',
-                    () => onDeleteFeature(feature)
-                )
+        this.onDeleteFeature = onDeleteFeature
+        this.registerFeatureListeners(features)
+    }
+
+    onNewFeatures(features) {
+        this.eventBus.stopListening();
+        this.registerFeatureListeners(features)
+    }
+
+    registerFeatureListeners(features) {
+        features.forEach(feature =>
+            this.eventBus.listenTo(
+                feature,
+                'click',
+                () => this.onDeleteFeature(feature)
             )
         )
     }
