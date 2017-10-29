@@ -30,7 +30,7 @@ class ConfigurationMixin(HasTraits):
         traits={"api_key": Unicode(allow_none=True)}).tag(sync=True)
 
     @default("configuration")
-    def _config_default(self):
+    def _configuration_default(self):
         return _default_configuration
 
 
