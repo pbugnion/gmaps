@@ -58,6 +58,7 @@ class BaseMarkerView extends widgets.WidgetView {
         const markerOptions = {
             position: {lat, lng},
             draggable: false,
+            clickable: true,
             title,
             ...styleOptions
         }
@@ -66,6 +67,7 @@ class BaseMarkerView extends widgets.WidgetView {
         this.infoBoxListener = null;
         this.mapView = null;
         this.modelEvents()
+        this.marker.addListener('click', event => this.trigger('click'));
     }
 
     displayInfoBox() {
