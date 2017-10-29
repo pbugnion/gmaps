@@ -500,7 +500,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         )
         this._createButtonEvent($polygonButton, 'POLYGON')
         const $deleteButton = this._createModeButton(
-            'fa fa-ban', 'Delete a feature'
+            'fa fa-trash', 'Delete a feature'
         )
         this._createButtonEvent($deleteButton, 'DELETE')
 
