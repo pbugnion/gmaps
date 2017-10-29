@@ -28,9 +28,10 @@ export class PolygonView extends GMapsLayerView {
             strokeWeight: 1,
             strokeOpacity: 0.6,
             fillOpacity: 0.2,
-            clickable: false
+            clickable: true
         };
         this.polygon = new google.maps.Polygon({ paths: [path], ...polygonOptions })
+        this.polygon.addListener('click', event => this.trigger('click'));
     }
 
     addToMapView(mapView) {
