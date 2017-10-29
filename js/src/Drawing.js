@@ -273,13 +273,13 @@ export class DrawingLayerView extends GMapsLayerView {
             )
         } else if (mode === 'DELETE') {
             if (this._clickHandler) { this._clickHandler.remove(); }
+            const sendDeleteMessage =
+                (feature) => this.send(
+                    DrawingMessages.deleteFeature(feature.model.model_id)
+                )
             Promise.all(this.features.views).then(features => {
                 this._clickHandler = new DeleteClickHandler(
-                    features,
-                    feature => {
-                        console.log(feature.model.model_id)
-                        this.send(DrawingMessages.deleteFeature(feature.model.model_id))
-                    }
+                    features, sendDeleteMessage
                 );
             })
         }
