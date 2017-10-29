@@ -444,7 +444,7 @@ class DeleteClickHandler {
     onNewFeatures(features) {
         this._deregisterCurrentFeatureListeners()
         this.currentFeatures = features;
-        this.registerFeatureListeners(features)
+        this._registerFeatureListeners(features)
     }
 
     remove() {
