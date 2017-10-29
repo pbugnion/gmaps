@@ -1,4 +1,4 @@
-pytest
-flake8
+pytest==3.2.3
+flake8==3.5.0
 numpy
 pandas
