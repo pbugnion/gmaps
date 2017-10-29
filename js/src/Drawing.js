@@ -437,26 +437,36 @@ class DeleteClickHandler {
     constructor(features, onDeleteFeature) {
         this.eventBus = { ...Backbone.Events };
         this.onDeleteFeature = onDeleteFeature
-        this.registerFeatureListeners(features)
+        this.currentFeatures = features;
+        this._registerFeatureListeners(features)
     }
 
     onNewFeatures(features) {
-        this.eventBus.stopListening();
+        this._deregisterCurrentFeatureListeners()
+        this.currentFeatures = features;
         this.registerFeatureListeners(features)
     }
 
-    registerFeatureListeners(features) {
-        features.forEach(feature =>
+    remove() {
+        this._deregisterCurrentFeatureListeners()
+    }
+
+    _deregisterCurrentFeatureListeners() {
+        this.currentFeatures.forEach(
+            feature => feature.restoreClickable()
+        )
+        this.eventBus.stopListening();
+    }
+
+    _registerFeatureListeners(features) {
+        features.forEach(feature => {
+            feature.ensureClickable();
             this.eventBus.listenTo(
                 feature,
                 'click',
                 () => this.onDeleteFeature(feature)
             )
-        )
-    }
-
-    remove() {
-        this.eventBus.stopListening();
+        })
     }
 }
 
