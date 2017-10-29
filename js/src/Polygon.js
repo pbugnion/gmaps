@@ -28,7 +28,7 @@ export class PolygonView extends GMapsLayerView {
             strokeWeight: 1,
             strokeOpacity: 0.6,
             fillOpacity: 0.2,
-            clickable: true
+            clickable: false
         };
         this.polygon = new google.maps.Polygon({ paths: [path], ...polygonOptions })
         this.polygon.addListener('click', event => this.trigger('click'));
@@ -42,5 +42,13 @@ export class PolygonView extends GMapsLayerView {
     removeFromMapView() {
         this.mapView = null;
         this.polygon.setMap(null);
+    }
+
+    ensureClickable() {
+        this.polygon.setOptions({ clickable: true })
+    }
+
+    restoreClickable() {
+        this.polygon.setOptions({ clickable: false })
     }
 }
