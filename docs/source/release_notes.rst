@@ -2,6 +2,13 @@
 Release notes
 -------------
 
+Version 0.6.2
+=============
+
+This minor release:
+ - fixes a bug that was introduced by shadowing a reserved traitlets method (PR 184)
+ - migrates the codebase to flake8 3.5.0 (PR 195)
+
 Version 0.6.1
 =============
 
