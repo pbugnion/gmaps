@@ -131,6 +131,22 @@ def drawing_layer(
         show_controls=True, marker_options=None):
     """
     Create an interactive drawing layer
+
+    Adding a drawing layer to a map allows adding custom shapes,
+    both programatically and interactive (by drawing on the map).
+
+    :Examples:
+
+    You can use the drawing layer to add lines, markers and
+    polygons to a map:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(features=[
+         gmaps.Line(end=(46.23, 5.86), start=(46.44, 5.24)),
+         gmaps.Marker(location=(46.88, 5.45)),
+         gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+    ])
+    >>> fig.add_layer(drawing)
     """
     if features is None:
         features = []
