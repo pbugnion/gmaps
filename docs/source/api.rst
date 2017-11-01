@@ -15,6 +15,8 @@ Figures and layers
 
 .. autofunction:: gmaps.geojson_layer
 
+.. autofunction:: gmaps.drawing_layer
+
 .. autofunction:: gmaps.directions_layer
 
 .. autofunction:: gmaps.bicycling_layer
@@ -22,6 +24,7 @@ Figures and layers
 .. autofunction:: gmaps.transit_layer
 
 .. autofunction:: gmaps.traffic_layer
+
 
 Utility functions
 -----------------

@@ -147,6 +147,47 @@ def drawing_layer(
          gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
     ])
     >>> fig.add_layer(drawing)
+    >>> fig
+
+    You can also use the drawing layer as a way to get user input.
+    The user can draw features on the map. You can then get the
+    list of features programatically.
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer()
+    >>> fig.add_layer(drawing)
+    >>> fig
+    >>> # Now draw on the map
+    >>> drawing.features
+    [Marker(location=(46.83, 5.56)),
+    Marker(location=(46.46, 5.91)),
+    Line(end=(46.32, 5.98), start=(46.42, 5.12))]
+
+    You can bind callbacks that are executed when a new feature is
+    added. For instance, you can use `geopy` to get the address
+    corresponding to markers that you add on the map::
+
+        API_KEY = "Aiz..."
+
+        import gmaps
+        import geopy
+
+        gmaps.configure(api_key=API_KEY)
+        fig = gmaps.figure()
+        drawing = gmaps.drawing_layer()
+
+        geocoder = geopy.geocoders.GoogleV3(api_key=API_KEY)
+
+        def print_address(feature):
+            try:
+                print(geocoder.reverse(feature.location, exactly_one=True))
+            except AttributeError as e:
+                # Not a marker
+                pass
+
+        drawing.on_new_feature(print_feature)
+        fig.add_layer(drawing)
+        fig  # display the figure
     """
     if features is None:
         features = []
