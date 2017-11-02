@@ -51,6 +51,10 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
             :func:`gmaps.geojson_layer`
                 Create a GeoJSON layer
 
+            :func:`gmaps.drawing_layer`
+                Create a layer of custom features, and allow users to draw
+                on the map
+
             :func:`gmaps.directions_layer`
                 Create a layer with directions
 
