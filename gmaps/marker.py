@@ -78,8 +78,8 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     """
     Class representing a marker.
 
-    Markers should be added to the map via the 'Markers'
-    widget.
+    Markers should be added to the map via the :func:`gmaps.marker_layer`
+    function or the :func:`gmaps.drawing_layer` function.
     """
     _view_name = Unicode("MarkerView").tag(sync=True)
     _model_name = Unicode("MarkerModel").tag(sync=True)
