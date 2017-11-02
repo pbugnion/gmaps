@@ -188,6 +188,28 @@ def drawing_layer(
         drawing.on_new_feature(print_feature)
         fig.add_layer(drawing)
         fig  # display the figure
+
+
+    :param features:
+        List of features to draw on the map. Features must be one of
+        :class:`gmaps.Marker`, :class:`gmaps.Line` or :class:`gmaps.Polygon`.
+    :type features: list of features, optional
+
+    :param mode:
+        Current drawing mode. One of 'DISABLED', 'MARKER', 'LINE',
+        'POLYGON' or 'DELETE'.
+    :type mode: string
+
+    :param show_controls:
+        Whether to show the drawing controls in the map toolbar.
+    :type show_controls: bool
+
+    :param marker_options:
+        Options controlling how markers are drawn on the map.
+        Either pass in an instance of :class:`gmaps.MarkerOptions`,
+        or a dictionary with keys `hover_text`, `display_info_box`,
+        `info_box_content`, `label` (or a subset of these).
+    :type marker_options: :class:`gmaps.MarkerOptions`, `dict` or `None`
     """
     if features is None:
         features = []
