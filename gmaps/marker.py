@@ -16,11 +16,7 @@ __all__ = [
     "marker_layer", "symbol_layer"
 ]
 
-
-class MarkerOptions(HasTraits):
-    """
-    Style options for a marker
-
+_marker_options_docstring = """
     :param label:
         Text to be displayed inside the marker. Google maps only displays
         the first letter of this string.
@@ -42,7 +38,13 @@ class MarkerOptions(HasTraits):
         Content to be displayed in a box above a marker, when the user clicks
         on it.
     :type info_box_content: string, optional
-    """
+"""
+
+
+class MarkerOptions(HasTraits):
+    __doc__ = """
+    Style options for a marker
+    """ + _marker_options_docstring
     hover_text = Unicode("").tag(sync=True)
     display_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode("").tag(sync=True)
@@ -119,12 +121,20 @@ class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
 
 
 class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
-    """
+    __doc__ = """
     Class representing a marker.
 
     Markers should be added to the map via the :func:`gmaps.marker_layer`
     function or the :func:`gmaps.drawing_layer` function.
-    """
+
+    :param location:
+        (latitude, longitude) pair denoting the location of the marker.
+        Latitudes are expressed as a float between -90 (corresponding to 90
+        degrees south) and +90 (corresponding to 90 degrees north). Longitudes
+        are expressed as a float between -180 (corresponding to 180 degrees
+        west) and +180 (corresponding to 180 degrees east).
+    :type location: tuple of floats
+    """ + _marker_options_docstring
     _view_name = Unicode("MarkerView").tag(sync=True)
     _model_name = Unicode("MarkerModel").tag(sync=True)
     label = Unicode("").tag(sync=True)
