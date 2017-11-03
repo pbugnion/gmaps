@@ -11,7 +11,10 @@ from .maps import DEFAULT_CENTER, GMapsWidgetMixin
 from .locations import locations_to_list
 from .options import merge_option_dicts, is_atomic, is_color_atomic
 
-__all__ = ["Symbol", "Marker", "Markers", "marker_layer", "symbol_layer"]
+__all__ = [
+    "Symbol", "Marker", "Markers", "MarkerOptions",
+    "marker_layer", "symbol_layer"
+]
 
 
 class MarkerOptions(HasTraits):
