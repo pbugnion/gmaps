@@ -28,6 +28,38 @@ class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
 
 
 class Line(GMapsWidgetMixin, widgets.Widget):
+    """
+    Widget representing a single line on a map
+
+    Add this line to a map via the :func:`gmaps.drawing_layer`
+    function, or by passing it directly to the ``.features``
+    of an existing instance of :class:`gmaps.Drawing`.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(features=[
+        gmaps.Line(end=(46.23, 5.86), start=(46.44, 5.24)),
+        gmaps.Line(end=(47.13, 3.91), start=(48.44, 1.32))
+    ])
+    >>> fig.add_layer(drawing)
+
+    :param start:
+        (latitude, longitude) pair denoting the start of the line. Latitudes
+        are expressed as a float between -90 (corresponding to 90 degrees
+        south) and +90 (corresponding to 90 degrees north). Longitudes are
+        expressed as a float between -180 (corresponding to 180 degrees west)
+        and +180 (corresponding to 180 degrees east).
+    :type start: tuple of floats
+
+    :param end:
+        (latitude, longitude) pair denoting the end of the line. Latitudes
+        are expressed as a float between -90 (corresponding to 90 degrees
+        south) and +90 (corresponding to 90 degrees north). Longitudes are
+        expressed as a float between -180 (corresponding to 180 degrees west)
+        and +180 (corresponding to 180 degrees east).
+    :type start: tuple of floats
+    """
     _view_name = Unicode('LineView').tag(sync=True)
     _model_name = Unicode('LineModel').tag(sync=True)
     start = geotraitlets.Point().tag(sync=True)

@@ -66,6 +66,8 @@ Low level widgets
 
 .. autoclass:: gmaps.Traffic
 
+.. autoclass:: gmaps.Line
+
 Datasets
 --------
 
