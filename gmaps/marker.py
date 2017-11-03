@@ -60,6 +60,22 @@ class MarkerOptions(HasTraits):
         super(MarkerOptions, self).__init__(**kwargs)
 
     def to_marker(self, latitude, longitude):
+        """
+        Construct a marker with these options
+
+        This constructs an instance of :class:`gmaps.Marker` with these
+        style options.
+
+        :param latitude: Latitude of the marker, expressed as a float
+            between -90 (corresponding to 90 degrees south) and +90
+            (corresponding to 90 degrees north).
+        :type latitude: float
+
+        :param longitude: Longitude of the marker, expressed as a
+            float between -180 (corresponding to 180 degrees west)
+            and +180 (corresponding to 180 degrees east).
+        :type longitude: float
+        """
         new_marker = Marker(
             location=(latitude, longitude),
             hover_text=self.hover_text,
