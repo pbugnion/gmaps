@@ -81,6 +81,42 @@ class Line(GMapsWidgetMixin, widgets.Widget):
 
 
 class Polygon(GMapsWidgetMixin, widgets.Widget):
+    """
+    Widget representing a closed polygon on a map
+
+    Add this polygon to a map via the :func:`gmaps.drwing_layer`
+    function, or by passing it directly to the ``.features`` array
+    of an existing instance of :class:`gmaps.Drawing`.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(features=[
+         gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+    ])
+    >>> fig.add_layer(drawing)
+
+    You can also add a polygon to an existing :class:`gmaps.Drawing`
+    instance:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer()
+    >>> fig # display the figure
+
+    You can now add polygons directly on the map:
+
+    >>> drawing.features = [
+         gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+    ]
+
+    :param path:
+        List of (latitude, longitude) pairs denoting each point on the polygon.
+        Latitudes are expressed as a float between -90 (corresponding to 90
+        degrees south) and +90 (corresponding to 90 degrees north). Longitudes
+        are expressed as a float between -180 (corresponding to 180 degrees
+        west) and +180 (corresponding to 180 degrees east).
+    :type path: list of tuples of floats
+    """
     _view_name = Unicode('PolygonView').tag(sync=True)
     _model_name = Unicode('PolygonModel').tag(sync=True)
     path = List(geotraitlets.Point()).tag(sync=True)
