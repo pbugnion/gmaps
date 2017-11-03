@@ -31,9 +31,9 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     """
     Widget representing a single line on a map
 
-    Add this line to a map via the :func:`gmaps.drawing_layer`
-    function, or by passing it directly to the ``.features``
-    of an existing instance of :class:`gmaps.Drawing`.
+    Add this line to a map via the :func:`gmaps.drawing_layer` function, or by
+    passing it directly to the ``.features`` array of an existing instance of
+    :class:`gmaps.Drawing`.
 
     :Examples:
 
