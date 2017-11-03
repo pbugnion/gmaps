@@ -50,6 +50,8 @@ Low level widgets
 
 .. autoclass:: gmaps.Symbol
 
+.. autoclass:: gmaps.MarkerOptions
+
 .. autoclass:: gmaps.Marker
 
 .. autoclass:: gmaps.Markers

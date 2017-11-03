@@ -18,6 +18,31 @@ __all__ = [
 
 
 class MarkerOptions(HasTraits):
+    """
+    Style options for a marker
+
+    :param label:
+        Text to be displayed inside the marker. Google maps only displays
+        the first letter of this string.
+    :type label: string, optional
+
+    :param hover_text:
+        Text to be displayed when a user's mouse is hovering over the marker.
+        If this is set to an empty string, nothing will appear when the user's
+        mouse hovers over a marker.
+    :type hover_text: string, optional
+
+    :param display_info_box:
+        Whether to display an info box when the user clicks on a marker.
+        Defaults to ``True`` if ``info_box_content`` is not an empty string,
+        or ``False`` otherwise.
+    :type display_info_box: bool, optional
+
+    :param info_box_content:
+        Content to be displayed in a box above a marker, when the user clicks
+        on it.
+    :type info_box_content: string, optional
+    """
     hover_text = Unicode("").tag(sync=True)
     display_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode("").tag(sync=True)
