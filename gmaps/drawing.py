@@ -39,12 +39,13 @@ class Line(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-        gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86)),
-        gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91))
+         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86)),
+         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91))
     ])
     >>> fig.add_layer(drawing)
 
-    You can also add a line to an existing drawing instance:
+    You can also add a line to an existing :class:`gmaps.Drawing`
+    instance:
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer()
@@ -53,8 +54,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     You can now add lines directly on the map:
 
     >>> drawing.features = [
-        gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86)),
-        gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91))
+         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86)),
+         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91))
     ]
 
     :param start:
