@@ -12,12 +12,92 @@ from traitlets import (
 from . import geotraitlets
 from .maps import GMapsWidgetMixin
 from .marker import MarkerOptions
+from ._docutils import doc_subst
 
 
 ALLOWED_DRAWING_MODES = {
     'DISABLED', 'MARKER', 'LINE', 'POLYGON', 'DELETE'
 }
 DEFAULT_DRAWING_MODE = 'MARKER'
+
+
+_doc_snippets = {}
+_doc_snippets['params'] = """
+    :param features:
+        List of features to draw on the map. Features must be one of
+        :class:`gmaps.Marker`, :class:`gmaps.Line` or :class:`gmaps.Polygon`.
+    :type features: list of features, optional
+
+    :param mode:
+        Current drawing mode. One of 'DISABLED', 'MARKER', 'LINE',
+        'POLYGON' or 'DELETE'.
+    :type mode: string
+
+    :param show_controls:
+        Whether to show the drawing controls in the map toolbar.
+    :type show_controls: bool
+
+    :param marker_options:
+        Options controlling how markers are drawn on the map.
+        Either pass in an instance of :class:`gmaps.MarkerOptions`,
+        or a dictionary with keys `hover_text`, `display_info_box`,
+        `info_box_content`, `label` (or a subset of these).
+    :type marker_options: :class:`gmaps.MarkerOptions`, `dict` or `None`
+"""
+
+_doc_snippets['examples'] = """
+    You can use the drawing layer to add lines, markers and
+    polygons to a map:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(features=[
+         gmaps.Line(end=(46.23, 5.86), start=(46.44, 5.24)),
+         gmaps.Marker(location=(46.88, 5.45)),
+         gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+    ])
+    >>> fig.add_layer(drawing)
+    >>> fig
+
+    You can also use the drawing layer as a way to get user input.
+    The user can draw features on the map. You can then get the
+    list of features programatically.
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer()
+    >>> fig.add_layer(drawing)
+    >>> fig
+    >>> # Now draw on the map
+    >>> drawing.features
+    [Marker(location=(46.83, 5.56)),
+    Marker(location=(46.46, 5.91)),
+    Line(end=(46.32, 5.98), start=(46.42, 5.12))]
+
+    You can bind callbacks that are executed when a new feature is
+    added. For instance, you can use `geopy` to get the address
+    corresponding to markers that you add on the map::
+
+        API_KEY = "Aiz..."
+
+        import gmaps
+        import geopy
+
+        gmaps.configure(api_key=API_KEY)
+        fig = gmaps.figure()
+        drawing = gmaps.drawing_layer()
+
+        geocoder = geopy.geocoders.GoogleV3(api_key=API_KEY)
+
+        def print_address(feature):
+            try:
+                print(geocoder.reverse(feature.location, exactly_one=True))
+            except AttributeError as e:
+                # Not a marker
+                pass
+
+        drawing.on_new_feature(print_feature)
+        fig.add_layer(drawing)
+        fig  # display the figure
+"""
 
 
 class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
@@ -208,6 +288,7 @@ def _marker_options_from_dict(options_dict):
     return MarkerOptions(**options_dict)
 
 
+@doc_subst(_doc_snippets)
 def drawing_layer(
         features=None, mode=DEFAULT_DRAWING_MODE,
         show_controls=True, marker_options=None):
@@ -219,79 +300,12 @@ def drawing_layer(
 
     :Examples:
 
-    You can use the drawing layer to add lines, markers and
-    polygons to a map:
+    {examples}
 
-    >>> fig = gmaps.figure()
-    >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Line(end=(46.23, 5.86), start=(46.44, 5.24)),
-         gmaps.Marker(location=(46.88, 5.45)),
-         gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
-    ])
-    >>> fig.add_layer(drawing)
-    >>> fig
+    {params}
 
-    You can also use the drawing layer as a way to get user input.
-    The user can draw features on the map. You can then get the
-    list of features programatically.
-
-    >>> fig = gmaps.figure()
-    >>> drawing = gmaps.drawing_layer()
-    >>> fig.add_layer(drawing)
-    >>> fig
-    >>> # Now draw on the map
-    >>> drawing.features
-    [Marker(location=(46.83, 5.56)),
-    Marker(location=(46.46, 5.91)),
-    Line(end=(46.32, 5.98), start=(46.42, 5.12))]
-
-    You can bind callbacks that are executed when a new feature is
-    added. For instance, you can use `geopy` to get the address
-    corresponding to markers that you add on the map::
-
-        API_KEY = "Aiz..."
-
-        import gmaps
-        import geopy
-
-        gmaps.configure(api_key=API_KEY)
-        fig = gmaps.figure()
-        drawing = gmaps.drawing_layer()
-
-        geocoder = geopy.geocoders.GoogleV3(api_key=API_KEY)
-
-        def print_address(feature):
-            try:
-                print(geocoder.reverse(feature.location, exactly_one=True))
-            except AttributeError as e:
-                # Not a marker
-                pass
-
-        drawing.on_new_feature(print_feature)
-        fig.add_layer(drawing)
-        fig  # display the figure
-
-
-    :param features:
-        List of features to draw on the map. Features must be one of
-        :class:`gmaps.Marker`, :class:`gmaps.Line` or :class:`gmaps.Polygon`.
-    :type features: list of features, optional
-
-    :param mode:
-        Current drawing mode. One of 'DISABLED', 'MARKER', 'LINE',
-        'POLYGON' or 'DELETE'.
-    :type mode: string
-
-    :param show_controls:
-        Whether to show the drawing controls in the map toolbar.
-    :type show_controls: bool
-
-    :param marker_options:
-        Options controlling how markers are drawn on the map.
-        Either pass in an instance of :class:`gmaps.MarkerOptions`,
-        or a dictionary with keys `hover_text`, `display_info_box`,
-        `info_box_content`, `label` (or a subset of these).
-    :type marker_options: :class:`gmaps.MarkerOptions`, `dict` or `None`
+    :returns:
+        A :class:`gmaps.Drawing` widget.
     """
     if features is None:
         features = []
