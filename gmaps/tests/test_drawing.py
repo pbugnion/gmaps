@@ -240,3 +240,11 @@ class Line(unittest.TestCase):
         line = drawing.Line((5.0, 10.0), (20.0, 30.0))
         assert line.get_state()['start'] == (5.0, 10.0)
         assert line.get_state()['end'] == (20.0, 30.0)
+
+
+class Polygon(unittest.TestCase):
+
+    def test_path_kwarg(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        polygon = drawing.Polygon(path=path)
+        assert polygon.get_state()['path'] == path
