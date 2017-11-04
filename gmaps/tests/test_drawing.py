@@ -233,3 +233,7 @@ class Line(unittest.TestCase):
     def test_missing_start(self):
         with self.assertRaises(traitlets.TraitError):
             drawing.Line(end=(20.0, 30.0))
+
+    def test_missing_end(self):
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Line(start=(20.0, 30.0))
