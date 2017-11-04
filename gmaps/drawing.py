@@ -55,7 +55,7 @@ _doc_snippets['examples'] = """
     >>> drawing = gmaps.drawing_layer(features=[
          gmaps.Line(end=(46.23, 5.86), start=(46.44, 5.24)),
          gmaps.Marker(location=(46.88, 5.45)),
-         gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
     ])
     >>> fig.add_layer(drawing)
     >>> fig
@@ -161,6 +161,13 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     start = geotraitlets.Point().tag(sync=True)
     end = geotraitlets.Point().tag(sync=True)
 
+    def __init__(self, start, end):
+        kwargs = dict(
+            start=start,
+            end=end
+        )
+        super(Line, self).__init__(**kwargs)
+
 
 class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
@@ -174,7 +181,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
     ])
     >>> fig.add_layer(drawing)
 
@@ -188,7 +195,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     You can now add polygons directly on the map:
 
     >>> drawing.features = [
-         gmaps.Polygon(path=[(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
     ]
 
     :param path:
@@ -201,7 +208,11 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
     _view_name = Unicode('PolygonView').tag(sync=True)
     _model_name = Unicode('PolygonModel').tag(sync=True)
-    path = List(geotraitlets.Point()).tag(sync=True)
+    path = List(geotraitlets.Point(), minlen=3).tag(sync=True)
+
+    def __init__(self, path):
+        kwargs = dict(path=path)
+        super(Polygon, self).__init__(**kwargs)
 
 
 @doc_subst(_doc_snippets)
@@ -301,7 +312,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
                 feature = Line(start=start, end=end)
             elif payload['featureType'] == 'POLYGON':
                 path = payload['path']
-                feature = Polygon(path=path)
+                feature = Polygon(path)
             self.features = self.features + [feature]
         elif content.get('event') == 'MODE_CHANGED':
             payload = content['payload']

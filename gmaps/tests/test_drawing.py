@@ -1,6 +1,8 @@
 
 import unittest
 
+import traitlets
+
 from .. import drawing, marker
 
 
@@ -58,7 +60,7 @@ class Drawing(unittest.TestCase):
         assert layer.get_state()['features'] == []
 
     def test_with_features(self):
-        marker_widget = marker.Marker()
+        marker_widget = marker.Marker((5.0, 10.0))
         layer = drawing.Drawing(features=[marker_widget])
         features = layer.get_state()['features']
         assert len(features) == 1
@@ -216,3 +218,49 @@ class DrawingFactory(unittest.TestCase):
             marker_options={'info_box_content': 'hello world'})
         assert layer.marker_options.info_box_content == 'hello world'
         assert layer.marker_options.display_info_box
+
+
+class Line(unittest.TestCase):
+
+    def test_start_end_kwargs(self):
+        line = drawing.Line(
+            start=(5.0, 10.0),
+            end=(20.0, 30.0)
+        )
+        assert line.get_state()['start'] == (5.0, 10.0)
+        assert line.get_state()['end'] == (20.0, 30.0)
+
+    def test_missing_start(self):
+        with self.assertRaises(TypeError):
+            drawing.Line(end=(20.0, 30.0))
+
+    def test_missing_end(self):
+        with self.assertRaises(TypeError):
+            drawing.Line(start=(20.0, 30.0))
+
+    def test_normal_arguments(self):
+        line = drawing.Line((5.0, 10.0), (20.0, 30.0))
+        assert line.get_state()['start'] == (5.0, 10.0)
+        assert line.get_state()['end'] == (20.0, 30.0)
+
+
+class Polygon(unittest.TestCase):
+
+    def test_path_kwarg(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        polygon = drawing.Polygon(path=path)
+        assert polygon.get_state()['path'] == path
+
+    def test_normal_path_arg(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        polygon = drawing.Polygon(path)
+        assert polygon.get_state()['path'] == path
+
+    def test_missing_path(self):
+        with self.assertRaises(TypeError):
+            drawing.Polygon()
+
+    def test_insufficient_points_path(self):
+        with self.assertRaises(traitlets.TraitError):
+            path = [(5.0, 30.0), (-5.0, 10.0)]
+            drawing.Polygon(path)

@@ -139,6 +139,10 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     _model_name = Unicode("MarkerModel").tag(sync=True)
     label = Unicode("").tag(sync=True)
 
+    def __init__(self, location, **kwargs):
+        kwargs['location'] = location
+        super(Marker, self).__init__(**kwargs)
+
 
 class Markers(GMapsWidgetMixin, widgets.Widget):
     """
