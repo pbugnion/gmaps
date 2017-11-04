@@ -1,8 +1,6 @@
 
 import unittest
 
-import traitlets
-
 from .. import drawing, marker
 
 
@@ -231,9 +229,14 @@ class Line(unittest.TestCase):
         assert line.get_state()['end'] == (20.0, 30.0)
 
     def test_missing_start(self):
-        with self.assertRaises(traitlets.TraitError):
+        with self.assertRaises(TypeError):
             drawing.Line(end=(20.0, 30.0))
 
     def test_missing_end(self):
-        with self.assertRaises(traitlets.TraitError):
+        with self.assertRaises(TypeError):
             drawing.Line(start=(20.0, 30.0))
+
+    def test_normal_arguments(self):
+        line = drawing.Line((5.0, 10.0), (20.0, 30.0))
+        assert line.get_state()['start'] == (5.0, 10.0)
+        assert line.get_state()['end'] == (20.0, 30.0)

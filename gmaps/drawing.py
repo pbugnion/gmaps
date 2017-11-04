@@ -161,6 +161,13 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     start = geotraitlets.Point().tag(sync=True)
     end = geotraitlets.Point().tag(sync=True)
 
+    def __init__(self, start, end):
+        kwargs = dict(
+            start=start,
+            end=end
+        )
+        super(Line, self).__init__(**kwargs)
+
 
 class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
