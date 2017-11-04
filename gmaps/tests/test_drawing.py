@@ -216,3 +216,14 @@ class DrawingFactory(unittest.TestCase):
             marker_options={'info_box_content': 'hello world'})
         assert layer.marker_options.info_box_content == 'hello world'
         assert layer.marker_options.display_info_box
+
+
+class Line(unittest.TestCase):
+
+    def test_start_end_kwargs(self):
+        line = drawing.Line(
+            start=(5.0, 10.0),
+            end=(20.0, 30.0)
+        )
+        assert line.get_state()['start'] == (5.0, 10.0)
+        assert line.get_state()['end'] == (20.0, 30.0)
