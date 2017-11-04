@@ -41,7 +41,9 @@ _doc_snippets['params'] = """
         Options controlling how markers are drawn on the map.
         Either pass in an instance of :class:`gmaps.MarkerOptions`,
         or a dictionary with keys `hover_text`, `display_info_box`,
-        `info_box_content`, `label` (or a subset of these).
+        `info_box_content`, `label` (or a subset of these). See
+        :class:`gmaps.MarkerOptions` for documentation on possible
+        values.
     :type marker_options: :class:`gmaps.MarkerOptions`, `dict` or `None`
 """
 
@@ -72,9 +74,9 @@ _doc_snippets['examples'] = """
     Marker(location=(46.46, 5.91)),
     Line(end=(46.32, 5.98), start=(46.42, 5.12))]
 
-    You can bind callbacks that are executed when a new feature is
-    added. For instance, you can use `geopy` to get the address
-    corresponding to markers that you add on the map::
+    You can bind callbacks that are executed when a new feature is added. For
+    instance, you can use `geopy <http://geopy.readthedocs.io/en/latest/>`_ to
+    get the address corresponding to markers that you add on the map::
 
         API_KEY = "Aiz..."
 
@@ -164,7 +166,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
     Widget representing a closed polygon on a map
 
-    Add this polygon to a map via the :func:`gmaps.drwing_layer`
+    Add this polygon to a map via the :func:`gmaps.drawing_layer`
     function, or by passing it directly to the ``.features`` array
     of an existing instance of :class:`gmaps.Drawing`.
 
@@ -323,7 +325,7 @@ def drawing_layer(
     Create an interactive drawing layer
 
     Adding a drawing layer to a map allows adding custom shapes,
-    both programatically and interactive (by drawing on the map).
+    both programatically and interactively (by drawing on the map).
 
     :Examples:
 
