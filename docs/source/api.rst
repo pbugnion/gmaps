@@ -68,6 +68,8 @@ Low level widgets
 
 .. autoclass:: gmaps.Traffic
 
+.. autoclass:: gmaps.Drawing
+
 .. autoclass:: gmaps.Line
 
 .. autoclass:: gmaps.Polygon
