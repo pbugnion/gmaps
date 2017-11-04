@@ -69,6 +69,7 @@ Low level widgets
 .. autoclass:: gmaps.Traffic
 
 .. autoclass:: gmaps.Drawing
+   :members:
 
 .. autoclass:: gmaps.Line
 
