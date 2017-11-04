@@ -11,10 +11,40 @@ from .maps import DEFAULT_CENTER, GMapsWidgetMixin
 from .locations import locations_to_list
 from .options import merge_option_dicts, is_atomic, is_color_atomic
 
-__all__ = ["Symbol", "Marker", "Markers", "marker_layer", "symbol_layer"]
+__all__ = [
+    "Symbol", "Marker", "Markers", "MarkerOptions",
+    "marker_layer", "symbol_layer"
+]
+
+_marker_options_docstring = """
+    :param label:
+        Text to be displayed inside the marker. Google maps only displays
+        the first letter of this string.
+    :type label: string, optional
+
+    :param hover_text:
+        Text to be displayed when a user's mouse is hovering over the marker.
+        If this is set to an empty string, nothing will appear when the user's
+        mouse hovers over a marker.
+    :type hover_text: string, optional
+
+    :param display_info_box:
+        Whether to display an info box when the user clicks on a marker.
+        Defaults to ``True`` if ``info_box_content`` is not an empty string,
+        or ``False`` otherwise.
+    :type display_info_box: bool, optional
+
+    :param info_box_content:
+        Content to be displayed in a box above a marker, when the user clicks
+        on it.
+    :type info_box_content: string, optional
+"""
 
 
 class MarkerOptions(HasTraits):
+    __doc__ = """
+    Style options for a marker
+    """ + _marker_options_docstring
     hover_text = Unicode("").tag(sync=True)
     display_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode("").tag(sync=True)
@@ -32,6 +62,22 @@ class MarkerOptions(HasTraits):
         super(MarkerOptions, self).__init__(**kwargs)
 
     def to_marker(self, latitude, longitude):
+        """
+        Construct a marker with these options
+
+        This constructs an instance of :class:`gmaps.Marker` with these
+        style options.
+
+        :param latitude: Latitude of the marker, expressed as a float
+            between -90 (corresponding to 90 degrees south) and +90
+            (corresponding to 90 degrees north).
+        :type latitude: float
+
+        :param longitude: Longitude of the marker, expressed as a
+            float between -180 (corresponding to 180 degrees west)
+            and +180 (corresponding to 180 degrees east).
+        :type longitude: float
+        """
         new_marker = Marker(
             location=(latitude, longitude),
             hover_text=self.hover_text,
@@ -75,12 +121,20 @@ class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
 
 
 class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
-    """
+    __doc__ = """
     Class representing a marker.
 
-    Markers should be added to the map via the 'Markers'
-    widget.
-    """
+    Markers should be added to the map via the :func:`gmaps.marker_layer`
+    function or the :func:`gmaps.drawing_layer` function.
+
+    :param location:
+        (latitude, longitude) pair denoting the location of the marker.
+        Latitudes are expressed as a float between -90 (corresponding to 90
+        degrees south) and +90 (corresponding to 90 degrees north). Longitudes
+        are expressed as a float between -180 (corresponding to 180 degrees
+        west) and +180 (corresponding to 180 degrees east).
+    :type location: tuple of floats
+    """ + _marker_options_docstring
     _view_name = Unicode("MarkerView").tag(sync=True)
     _model_name = Unicode("MarkerModel").tag(sync=True)
     label = Unicode("").tag(sync=True)
