@@ -1,6 +1,8 @@
 
 import unittest
 
+import traitlets
+
 from .. import drawing, marker
 
 
@@ -257,3 +259,8 @@ class Polygon(unittest.TestCase):
     def test_missing_path(self):
         with self.assertRaises(TypeError):
             drawing.Polygon()
+
+    def test_insufficient_points_path(self):
+        with self.assertRaises(traitlets.TraitError):
+            path = [(5.0, 30.0), (-5.0, 10.0)]
+            drawing.Polygon(path)

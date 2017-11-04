@@ -208,7 +208,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
     _view_name = Unicode('PolygonView').tag(sync=True)
     _model_name = Unicode('PolygonModel').tag(sync=True)
-    path = List(geotraitlets.Point()).tag(sync=True)
+    path = List(geotraitlets.Point(), minlen=3).tag(sync=True)
 
     def __init__(self, path):
         kwargs = dict(path=path)
