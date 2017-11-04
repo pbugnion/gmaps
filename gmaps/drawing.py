@@ -243,6 +243,17 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         self.marker_options.observe(self._on_marker_options_change)
 
     def on_new_feature(self, callback):
+        """
+        Register a callback called when new features are added
+
+        :param callback:
+            Callable to be called when a new feature is added.
+            The callback should take a single argument, the
+            feature that has been added. This can be an instance
+            of :class:`gmaps.Line`, :class:`gmaps.Marker` or
+            :class:`gmaps.Polygon`.
+        :type callback: callable
+        """
         self._new_feature_callbacks.append(callback)
 
     def _on_marker_options_change(self, change):
