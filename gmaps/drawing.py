@@ -210,6 +210,10 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     _model_name = Unicode('PolygonModel').tag(sync=True)
     path = List(geotraitlets.Point()).tag(sync=True)
 
+    def __init__(self, path):
+        kwargs = dict(path=path)
+        super(Polygon, self).__init__(**kwargs)
+
 
 @doc_subst(_doc_snippets)
 class Drawing(GMapsWidgetMixin, widgets.Widget):

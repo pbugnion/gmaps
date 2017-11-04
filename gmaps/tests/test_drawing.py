@@ -248,3 +248,12 @@ class Polygon(unittest.TestCase):
         path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
         polygon = drawing.Polygon(path=path)
         assert polygon.get_state()['path'] == path
+
+    def test_normal_path_arg(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        polygon = drawing.Polygon(path)
+        assert polygon.get_state()['path'] == path
+
+    def test_missing_path(self):
+        with self.assertRaises(TypeError):
+            drawing.Polygon()
