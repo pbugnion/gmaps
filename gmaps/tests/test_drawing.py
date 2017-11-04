@@ -60,7 +60,7 @@ class Drawing(unittest.TestCase):
         assert layer.get_state()['features'] == []
 
     def test_with_features(self):
-        marker_widget = marker.Marker()
+        marker_widget = marker.Marker((5.0, 10.0))
         layer = drawing.Drawing(features=[marker_widget])
         features = layer.get_state()['features']
         assert len(features) == 1
