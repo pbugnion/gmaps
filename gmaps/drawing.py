@@ -202,7 +202,23 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     path = List(geotraitlets.Point()).tag(sync=True)
 
 
+@doc_subst(_doc_snippets)
 class Drawing(GMapsWidgetMixin, widgets.Widget):
+    """
+    Widget for a drawing layer
+
+    Add this to a :class:`gmaps.Map` or :class:`gmaps.Figure` instance to let
+    you draw on the map.
+
+    You should not need to instantiate this directly. Instead, use the
+    :func:`gmaps.drawing_layer` factory function.
+
+    :Examples:
+
+    {examples}
+
+    {params}
+    """
     has_bounds = False
     _view_name = Unicode('DrawingLayerView').tag(sync=True)
     _model_name = Unicode('DrawingLayerModel').tag(sync=True)
