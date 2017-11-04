@@ -6,6 +6,7 @@ import numpy as np
 
 from ..marker import (
     MarkerOptions,
+    Marker,
     _marker_layer_options,
     _symbol_layer_options
 )
@@ -217,3 +218,14 @@ class MarkerOptionsTests(unittest.TestCase):
             display_info_box=False)
         assert not options.display_info_box
         assert options.info_box_content == 'some text'
+
+
+class MarkerTest(unittest.TestCase):
+
+    def test_location_kwargs(self):
+        marker = Marker(location=(10.0, 5.0))
+        assert marker.get_state()['location'] == (10.0, 5.0)
+
+    def test_location_non_kwarg(self):
+        marker = Marker((10.0, 5.0))
+        assert marker.get_state()['location'] == (10.0, 5.0)
