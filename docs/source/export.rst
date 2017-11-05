@@ -44,7 +44,7 @@ Or, if you use Python 2::
 
 Navigate to `http://0.0.0.0:8080/export.html` and you should see the export!
 
-.. image:: export-example.png
+.. image:: _images/export-example.png
 
 The module ``ipywidgets.embed`` contains other functions for exporting that
 will give you greater control over what is exported. See the `documentation
