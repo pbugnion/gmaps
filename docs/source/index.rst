@@ -11,7 +11,7 @@ jupyter-gmaps
 
    install
    authentication
-   gmaps
+   tutorial
    export
    api
    contributing
