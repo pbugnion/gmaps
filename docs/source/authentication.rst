@@ -4,7 +4,7 @@ Authentication
 
 Most operations on Google Maps require that you tell Google who you are. To authenticate with Google Maps, follow the `instructions <https://console.developers.google.com/flows/enableapi?apiid=maps_backend,geocoding_backend,directions_backend,distance_matrix_backend,elevation_backend&keyType=CLIENT_SIDE&reusekey=true>`_ for creating an API key. You will probably want to create a new project, then click on the `Credentials` section and create a `Browser key`. The API key is a string that starts with the letters ``AI``.
 
-.. image:: api_key.*
+.. image:: _images/api_key.*
 
 You can pass this key to `gmaps` with the ``configure`` method::
 
