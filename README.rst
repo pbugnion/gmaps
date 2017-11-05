@@ -20,7 +20,7 @@ Let's plot a `heatmap <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#
             fig.add_layer(gmaps.heatmap_layer(locations))
             fig
 
-.. image:: docs/source/taxi_example.png
+.. image:: docs/source/_images/taxi_example.png
 
 We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#geojson-layer>`_:
 
@@ -82,7 +82,7 @@ We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedo
               fig.add_layer(gini_layer)
               fig
 
-.. image:: docs/source/geojson-2.png
+.. image:: docs/source/_images/geojson-2.png
 
 Or, for coffee fans, a map of all Starbucks in the UK:
 
@@ -100,7 +100,7 @@ Or, for coffee fans, a map of all Starbucks in the UK:
             fig.add_layer(starbucks_layer)
             fig
 
-.. image:: docs/source/starbucks-symbols.png
+.. image:: docs/source/_images/starbucks-symbols.png
 
 
 Installation
