@@ -22,7 +22,7 @@ The earthquake data has three columns: a latitude and longitude indicating the e
   fig.add_layer(gmaps.heatmap_layer(locations, weights=weights))
   fig
 
-.. image:: tutorial-earthquakes.*
+.. image:: _images/tutorial-earthquakes.*
 
 This gives you a fully-fledged Google map. You can zoom in and out, switch to satellite view and even to street view if you really want. The heatmap adjusts as you zoom in and out.
 
@@ -38,7 +38,7 @@ Basic concepts
   fig = gmaps.figure()
   fig
 
-.. image:: plainmap2.*
+.. image:: _images/plainmap2.*
 
 You then add layers on top of the base map. For instance, to add a heatmap layer::
 
@@ -54,7 +54,7 @@ You then add layers on top of the base map. For instance, to add a heatmap layer
   fig.add_layer(heatmap_layer)
   fig
 
-.. image:: plainmap3.*
+.. image:: _images/plainmap3.*
 
 The `locations` array can either be a list of tuples, as in the example above, a numpy array of shape $N \times 2$ or a dataframe with two columns.
 
@@ -85,7 +85,7 @@ explicitly::
   new_york_coordinates = (40.75, -74.00)
   gmaps.figure(center=new_york_coordinates, zoom_level=12)
 
-.. image:: base_map_example.png
+.. image:: _images/base_map_example.png
 
 If you do not set the map zoom and center, the viewport will automatically
 focus on the data as you add it to the map.
@@ -117,7 +117,7 @@ We already know how to build a heatmap layer::
   fig.add_layer(heatmap_layer)
   fig
 
-.. image:: acled_africa_heatmap_basic.png
+.. image:: _images/acled_africa_heatmap_basic.png
 
 Preventing dissipation on zoom
 ++++++++++++++++++++++++++++++
@@ -130,7 +130,7 @@ If you zoom in sufficiently, you will notice that individual points disappear. Y
 To avoid re-drawing the whole map every time you tweak these settings, you may want to set them in another noteobook cell:
 
 
-.. image:: acled_africa_heatmap.png
+.. image:: _images/acled_africa_heatmap.png
 
 Google maps also exposes a ``dissipating`` option, which is true by default. If this is true, the radius of influence of each point is tied to the zoom level: as you zoom out, a given point covers more physical kilometres. If you set it to false, the physical radius covered by each point stays fixed. Your points will therefore either be tiny at high zoom levels or large at low zoom levels.
 
@@ -154,7 +154,7 @@ If you need more flexibility, you can represent colours as an RGB triple or an R
       (50, 50, 50, 0.3)
   ]
 
-.. image:: acled_africa_heatmap_gradient.png
+.. image:: _images/acled_africa_heatmap_gradient.png
 
 You can also use the ``opacity`` option to set a single opacity across the entire colour gradient::
 
@@ -183,7 +183,7 @@ By default, heatmaps assume that every row is of equal importance. You can overr
   fig
 
 
-.. image:: weighted-heatmap-example.png
+.. image:: _images/weighted-heatmap-example.png
 
 
 Markers and symbols
@@ -207,7 +207,7 @@ We can add a layer of markers to a Google map. Each marker represents an individ
   fig.add_layer(markers)
   fig
 
-.. image:: marker-example.png
+.. image:: _images/marker-example.png
 
 We can also attach a pop-up box to each marker. Clicking on the marker will bring up the info box. The content of the box can be either plain text or html::
 
@@ -237,7 +237,7 @@ We can also attach a pop-up box to each marker. Clicking on the marker will brin
   fig.add_layer(marker_layer)
   fig
 
-.. image:: marker-info-box-example.png
+.. image:: _images/marker-info-box-example.png
 
 Markers are currently limited to the Google maps style drop icon. If you need to draw more complex shape on maps, use the ``symbol_layer`` function. Symbols represent each `latitude`, `longitude` pair with a circle whose colour and size you can customize. Let's, for instance, plot the location of every Starbuck's coffee shop in the UK::
 
@@ -258,7 +258,7 @@ Markers are currently limited to the Google maps style drop icon. If you need to
     fig.add_layer(starbucks_layer)
     fig
 
-.. image:: starbucks-symbols.png
+.. image:: _images/starbucks-symbols.png
 
 You can have several layers of markers. For instance, we can compare the locations of Starbucks coffee shops and KFC outlets in the UK by plotting both on the same map::
 
@@ -291,7 +291,7 @@ You can have several layers of markers. For instance, we can compare the locatio
     fig.add_layer(kfc_layer)
     fig
 
-.. image:: starbucks-kfc-example.png
+.. image:: _images/starbucks-kfc-example.png
 
 
 Dataset size limitations
@@ -322,7 +322,7 @@ Let's start by just plotting the raw GeoJSON::
 
 This just plots the country boundaries on top of a Google map.
 
-.. image:: geojson-1.png
+.. image:: _images/geojson-1.png
 
 Next, we want to colour each country by a colour derived from its GINI index. We first need to map from each item in the GeoJSON document to a GINI value. GeoJSON documents are organised as a collection of `features`, each of which has the keys `geometry` and `properties`. For instance, for our countries::
 
@@ -396,7 +396,7 @@ We can now pass our array of colors to the GeoJSON layer::
   fig.add_layer(gini_layer)
   fig
 
-.. image:: geojson-2.png
+.. image:: _images/geojson-2.png
 
 GeoJSON geometries bundled with Gmaps
 +++++++++++++++++++++++++++++++++++++
@@ -470,7 +470,7 @@ Directions layer
   fig.add_layer(geneva2zurich)
   fig
 
-.. image:: directions_layer_simple.png
+.. image:: _images/directions_layer_simple.png
 
 You can also pass waypoints and customise the directions request. You can pass up to 23 waypoints, and waypoints are not supported when the travel mode is ``'TRANSIT'`` (this is a limitation of the Google Maps directions service)::
 
@@ -481,7 +481,7 @@ You can also pass waypoints and customise the directions request. You can pass u
   fig.add_layer(geneva2zurich_via_montreux)
   fig
 
-.. image:: directions_layer_waypoints.png
+.. image:: _images/directions_layer_waypoints.png
 
 The full list of options is given as part of the documentation for the
 :func:`gmaps.directions_layer`.
@@ -505,17 +505,17 @@ cycle-friendly.
   fig.add_layer(gmaps.bicycling_layer())
   fig
 
-.. image:: bicycling-layer.png
+.. image:: _images/bicycling-layer.png
 
 Similarly, the transit layer, available as :func:`gmaps.transit_layer`,
 adds information about public transport, where available.
 
-.. image:: transit-layer.png
+.. image:: _images/transit-layer.png
 
 The traffic layer, available as :func:`gmaps.traffic_layer`, adds information
 about the current state of traffic.
 
-.. image:: traffic-layer.png
+.. image:: _images/traffic-layer.png
 
 Unlike the other layers, these layers do not take any user data. Thus,
 *jupyter-gmaps* will not use them to center the map. This means that,
