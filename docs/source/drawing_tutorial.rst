@@ -2,15 +2,23 @@
 Building applications with `jupyter-gmaps`
 ------------------------------------------
 
-You can use `jupyter-gmaps` as a component in a larger application based on Jupyter widgets (TODO link to widgets):
+You can use `jupyter-gmaps` as a component in a `Jupyter widgets <https://ipywidgets.readthedocs.io/en/stable/>`_ application. Jupyter widgets let you embed rich user interfaces in Jupyter notebooks. For instance:
  - you can use maps as a way to get user input. The drawing layer lets users draw markers, lines or polygons on the map. We can specify arbitrary Python code that runs whenever a shape is added to the map. As an example, we will build an application where, whenever the user places a marker, we retrieve the address of the marker and write it in a text widget. 
- - you can use maps as a way to display the result of an external computation TODO example.
+ - you can use maps as a way to display the result of an external computation. For instance, if you have timestamped geographical data (for instance, you have the date and coordinates of a series of events), you can combine a heatmap with a slider to see how events unfold over time.
 
 Reacting to user actions on the map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The drawing layer lets us specify Python code to be executed whenever the user
-adds a feature (like a marker, a line or a polygon) to the map. To demonstrate this, we will build a small application for *reverse geocoding*: when the user places a marker on the map, we will find the address closest to that marker and write it in a text widget (TODO link to jupyter text widget). This is the entire code listing::
+adds a feature (like a marker, a line or a polygon) to the map. To demonstrate
+this, we will build a small application for *reverse geocoding*: when the user
+places a marker on the map, we will find the address closest to that marker and
+write it in a `text widget
+<https://ipywidgets.readthedocs.io/en/stable/examples/Widget%20List.html#Text>`_.
+We will use `geopy <https://pypi.python.org/pypi/geopy>`_, a wrapper around
+several geocoding APIs, to calculate the address from the marker's coordinates.
+
+This is the entire code listing::
 
   from tabulate import tabulate
   import ipywidgets as widgets
@@ -78,10 +86,31 @@ adds a feature (like a marker, a line or a polygon) to the map. To demonstrate t
 
 There are several things to note on this:
 
-- We wrap the application in a ``ReverseGeocoder`` class. This helps with encapsulation and lets you instantiate this widget multiple times in a notebook. Since the flow through widget applications is often more complex than linear data analysis workflows, encapsulation will improve your ability to reason about the code.
-- As part of the class constructor, we use :func:`gmaps.figure` to create a figure, and we add a :func:`drawing_layer` to this figure. We also create a ``widgets.Text`` widget. This is a text box in which we will write the address. We then wrap our figure and the text box in a single ``widgets.VBox``, a widget container that stacks widgets vertically.
-- We register a callback on the drawing layer using ``.on_new_feature``. The function that we pass in to ``.on_new_feature`` will get called whenever the user adds a feature to the map. This is the hook that lets us build complex applications on top of the drawing layer: we can run arbitrary Python code when the user adds a marker to the map.
-- In the ``.on_new_feature`` callback, we first check whether the feature that has been added is a marker (the user could, in principle, have added another feature type, like a line, to the map).
-- Assuming the feature is a valid marker, we first clear the text widget containing the address. This gives feedback to the user that something is happening.
-- We then re-write the ``.features`` array of the drawing layer, keeping just the marker that the user has just added. This clears previous markers, avoiding clutter on the map.
-- We then use `geopy` TODO link to find the adddress and, assuming the address is valid, display it in the text widget.
+- We wrap the application in a ``ReverseGeocoder`` class. Wrapping your
+  application in a class (rather than using the notebook's global namespace)
+  helps with encapsulation and lets you instantiate this widget multiple times.
+  Since the flow through widget applications is often more complex than linear
+  data analysis workflows, encapsulation will improve your ability to reason
+  about the code.
+- As part of the class constructor, we use :func:`gmaps.figure` to create a
+  figure. We add use :func:`gmaps.drawing_layer` to create a drawing layer,
+  which we add to the figure. We also create a ``widgets.Text`` widget. This is
+  a text box in which we will write the address. We then wrap our figure and the
+  text box in a single ``widgets.VBox``, a widget container that stacks widgets
+  vertically.
+- We register a callback on the drawing layer using ``.on_new_feature``. The
+  function that we pass in to ``.on_new_feature`` will get called whenever the
+  user adds a feature to the map. This is the hook that lets us build complex
+  applications on top of the drawing layer: we can run arbitrary Python code
+  when the user adds a marker to the map.
+- In the ``.on_new_feature`` callback, we first check whether the feature that
+  has been added is a marker (the user could, in principle, have added another
+  feature type, like a line, to the map).
+- Assuming the feature is a valid marker, we first clear the text widget
+  containing the address. This gives feedback to the user that something is
+  happening.
+- We then re-write the ``.features`` array of the drawing layer, keeping just
+  the marker that the user has just added. This clears previous markers,
+  avoiding clutter on the map.
+- We then use `geopy <https://pypi.python.org/pypi/geopy>`_ to find the
+  adddress. Assuming the address is valid, display it in the text widget.
