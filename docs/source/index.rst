@@ -12,7 +12,7 @@ jupyter-gmaps
    install
    authentication
    tutorial
-   drawing_tutorial
+   app_tutorial
    export
    api
    contributing
