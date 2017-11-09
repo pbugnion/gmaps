@@ -6,6 +6,8 @@ You can use `jupyter-gmaps` as a component in a `Jupyter widgets <https://ipywid
  - you can use maps as a way to get user input. The drawing layer lets users draw markers, lines or polygons on the map. We can specify arbitrary Python code that runs whenever a shape is added to the map. As an example, we will build an application where, whenever the user places a marker, we retrieve the address of the marker and write it in a text widget. 
  - you can use maps as a way to display the result of an external computation. For instance, if you have timestamped geographical data (for instance, you have the date and coordinates of a series of events), you can combine a heatmap with a slider to see how events unfold over time.
 
+.. _reacting-to-user-actions:
+
 Reacting to user actions on the map
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 

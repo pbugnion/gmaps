@@ -471,7 +471,9 @@ The drawing layer lets you draw complex shapes on the map. You can add markers, 
 
 .. image:: _images/drawing_example1.png
 
-This displays drawing controls that let you draw additional shapes on the map. To hide these controls, pass ``show_controls=False`` as argument to the drawing layer::
+This displays drawing controls that let you draw additional shapes on the map. This are useful if you want to react to user events (for instance, if you want to run some Python code every time the user adds a marker). This is discussed in the :ref:`reacting-to-user-actions` section.
+
+To hide the drawing controls, pass ``show_controls=False`` as argument to the drawing layer::
 
 
   drawing = gmaps.drawing_layer(
@@ -479,9 +481,26 @@ This displays drawing controls that let you draw additional shapes on the map. T
       show_controls=False
   )
 
+You can also draw polygons on the map. This is useful for drawing complex shapes. For instance, we can draw the London congestion charge zone. `jupyter-gmaps` has a built-in dataset with the coordinates of this zone::
 
-TODO example of drawing layer
+  import gmaps
+  import gmaps.datasets
 
+  london_congestion_zone_path = gmaps.datasets.load_dataset('london_congestion_zone')
+  london_congestion_zone_path[:2]
+  # [(51.530318, -0.123026), (51.530078, -0.123614)]
+
+We can draw this on the map with a :class:`gmaps.Polygon`::
+
+  fig = gmaps.figure(center=(51.5, -0.1), zoom_level=12)
+  drawing = gmaps.drawing_layer(
+      features=[gmaps.Polygon(london_congestion_zone_path)],
+      show_controls=False
+  )
+  fig.add_layer(drawing)
+  fig 
+
+.. image:: _images/drawing_example2.png
 
 Directions layer
 ^^^^^^^^^^^^^^^^
