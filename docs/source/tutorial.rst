@@ -454,7 +454,23 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
 Drawing markers, lines and polygons
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The drawing layer lets you draw complex shapes on the map. You can add markers, lines and polygons.
+The drawing layer lets you draw complex shapes on the map. You can add markers, lines and polygons. Let's, for instance, draw the GMT meridian on a map, and add a marker on Greenwich::
+
+  import gmaps
+  gmaps.configure(api_key="AIza...")
+
+  fig = gmaps.figure(center=(51.5, 0.1), zoom_level=9)
+
+  # Features to draw on the map
+  gmt_meridian = gmaps.Line(start=(52.0, 0.0), end=(50.0, 0.0))
+  greenwich = gmaps.Marker((51.3, 0.0), info_box_content="Greenwich")
+
+  drawing = gmaps.drawing_layer(features=[greenwich, gmt_meridian])
+  fig.add_layer(drawing)
+  fig
+
+.. image:: _images/drawing_example1.png
+
 
 TODO example of drawing layer
 
