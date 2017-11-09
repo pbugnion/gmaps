@@ -471,6 +471,14 @@ The drawing layer lets you draw complex shapes on the map. You can add markers, 
 
 .. image:: _images/drawing_example1.png
 
+This displays drawing controls that let you draw additional shapes on the map. To hide these controls, pass ``show_controls=False`` as argument to the drawing layer::
+
+
+  drawing = gmaps.drawing_layer(
+      features=[greenwich, gmt_meridian],
+      show_controls=False
+  )
+
 
 TODO example of drawing layer
 
