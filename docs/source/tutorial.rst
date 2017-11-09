@@ -454,7 +454,10 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
 Drawing markers, lines and polygons
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The drawing layer lets you draw complex shapes on the map. You can add markers, lines and polygons. Let's, for instance, draw the GMT meridian on a map, and add a marker on Greenwich::
+The drawing layer lets you draw complex shapes on the map. You can add markers,
+lines and polygons directly to maps. Let's, for instance, draw the `Greenwich
+meridian <https://en.wikipedia.org/wiki/Greenwich_Mean_Time>`_ and add
+a marker on Greenwich itself::
 
   import gmaps
   gmaps.configure(api_key="AIza...")
@@ -471,9 +474,14 @@ The drawing layer lets you draw complex shapes on the map. You can add markers, 
 
 .. image:: _images/drawing_example1.png
 
-This displays drawing controls that let you draw additional shapes on the map. This are useful if you want to react to user events (for instance, if you want to run some Python code every time the user adds a marker). This is discussed in the :ref:`reacting-to-user-actions` section.
+Adding the drawing layer to a map displays drawing controls that let you draw
+additional shapes on the map, and lets users add arbitrary shapes to the map.
+This is useful if you want to react to user events (for instance, if you want
+to run some Python code every time the user adds a marker). This is discussed in
+the :ref:`reacting-to-user-actions` section.
 
-To hide the drawing controls, pass ``show_controls=False`` as argument to the drawing layer::
+To hide the drawing controls, pass ``show_controls=False`` as argument to the
+drawing layer::
 
 
   drawing = gmaps.drawing_layer(
@@ -481,7 +489,10 @@ To hide the drawing controls, pass ``show_controls=False`` as argument to the dr
       show_controls=False
   )
 
-You can also draw polygons on the map. This is useful for drawing complex shapes. For instance, we can draw the London congestion charge zone. `jupyter-gmaps` has a built-in dataset with the coordinates of this zone::
+Besides lines and markers, you can also draw polygons on the map. This is useful
+for drawing complex shapes. For instance, we can draw the `London congestion
+charge zone <https://en.wikipedia.org/wiki/London_congestion_charge>`_.
+`jupyter-gmaps` has a built-in dataset with the coordinates of this zone::
 
   import gmaps
   import gmaps.datasets
