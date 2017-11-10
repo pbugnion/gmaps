@@ -451,6 +451,73 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
   fig.add_layer(geojson_layer)
   fig
 
+Drawing markers, lines and polygons
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The `drawing layer` lets you draw complex shapes on the map. You can add markers,
+lines and polygons directly to maps. Let's, for instance, draw the `Greenwich
+meridian <https://en.wikipedia.org/wiki/Greenwich_Mean_Time>`_ and add
+a marker on Greenwich itself::
+
+  import gmaps
+  gmaps.configure(api_key="AIza...")
+
+  fig = gmaps.figure(center=(51.5, 0.1), zoom_level=9)
+
+  # Features to draw on the map
+  gmt_meridian = gmaps.Line(start=(52.0, 0.0), end=(50.0, 0.0))
+  greenwich = gmaps.Marker((51.3, 0.0), info_box_content="Greenwich")
+
+  drawing = gmaps.drawing_layer(features=[greenwich, gmt_meridian])
+  fig.add_layer(drawing)
+  fig
+
+.. image:: _images/drawing_example1.png
+
+Adding the drawing layer to a map displays drawing controls that lets users add
+arbitrary shapes to the map. This is useful if you want to react to user events
+(for instance, if you want to run some Python code every time the user adds a
+marker). This is discussed in the :ref:`reacting-to-user-actions` section.
+
+To hide the drawing controls, pass ``show_controls=False`` as argument to the
+drawing layer::
+
+
+  drawing = gmaps.drawing_layer(
+      features=[greenwich, gmt_meridian],
+      show_controls=False
+  )
+
+Besides lines and markers, you can also draw polygons on the map. This is useful
+for drawing complex shapes. For instance, we can draw the `London congestion
+charge zone <https://en.wikipedia.org/wiki/London_congestion_charge>`_.
+`jupyter-gmaps` has a built-in dataset with the coordinates of this zone::
+
+  import gmaps
+  import gmaps.datasets
+
+  london_congestion_zone_path = gmaps.datasets.load_dataset('london_congestion_zone')
+  london_congestion_zone_path[:2]
+  # [(51.530318, -0.123026), (51.530078, -0.123614)]
+
+We can draw this on the map with a :class:`gmaps.Polygon`::
+
+  fig = gmaps.figure(center=(51.5, -0.1), zoom_level=12)
+  drawing = gmaps.drawing_layer(
+      features=[gmaps.Polygon(london_congestion_zone_path)],
+      show_controls=False
+  )
+  fig.add_layer(drawing)
+  fig 
+
+.. image:: _images/drawing_example2.png
+
+We can pass an arbitrary list of `(latitude, longitude)` pairs to
+`gmaps.Polygon` to specify complex shapes.
+
+See the API documentation for :func:`gmaps.drawing_layer` for an exhaustive list
+of options for the drawing layer.
+
 Directions layer
 ^^^^^^^^^^^^^^^^
 

@@ -39,6 +39,13 @@ METADATA = {
         "headers": ["latitude", "longitude"],
         "types": [float, float]
     },
+    "london_congestion_zone": {
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/london_congestion_zone.csv",  # noqa
+        "description": "Central part of the London congestion zone",
+        "source": "https://www.google.com/maps/d/u/0/viewer?mid=1EnGO0p4-UuGlSMKyfRrMT21jfRs",  # noqa
+        "headers": ["latitude", "longitude"],
+        "types": [float, float]
+    },
     "nuclear_plants": {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/nuclear_power_plants.csv",  # noqa
         "description": "All nuclear power plants worldwide",
