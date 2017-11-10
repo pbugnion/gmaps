@@ -454,7 +454,7 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
 Drawing markers, lines and polygons
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The drawing layer lets you draw complex shapes on the map. You can add markers,
+The `drawing layer` lets you draw complex shapes on the map. You can add markers,
 lines and polygons directly to maps. Let's, for instance, draw the `Greenwich
 meridian <https://en.wikipedia.org/wiki/Greenwich_Mean_Time>`_ and add
 a marker on Greenwich itself::
@@ -474,11 +474,10 @@ a marker on Greenwich itself::
 
 .. image:: _images/drawing_example1.png
 
-Adding the drawing layer to a map displays drawing controls that let you draw
-additional shapes on the map, and lets users add arbitrary shapes to the map.
-This is useful if you want to react to user events (for instance, if you want
-to run some Python code every time the user adds a marker). This is discussed in
-the :ref:`reacting-to-user-actions` section.
+Adding the drawing layer to a map displays drawing controls that lets users add
+arbitrary shapes to the map. This is useful if you want to react to user events
+(for instance, if you want to run some Python code every time the user adds a
+marker). This is discussed in the :ref:`reacting-to-user-actions` section.
 
 To hide the drawing controls, pass ``show_controls=False`` as argument to the
 drawing layer::
@@ -512,6 +511,12 @@ We can draw this on the map with a :class:`gmaps.Polygon`::
   fig 
 
 .. image:: _images/drawing_example2.png
+
+We can pass an arbitrary list of `(latitude, longitude)` pairs to
+`gmaps.Polygon` to specify complex shapes.
+
+See the API documentation for :func:`gmaps.drawing_layer` for an exhaustive list
+of options for the drawing layer.
 
 Directions layer
 ^^^^^^^^^^^^^^^^
