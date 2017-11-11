@@ -247,4 +247,3 @@ class MarkerTest(unittest.TestCase):
         )
         assert not marker.display_info_box
         assert marker.info_box_content == 'test-content'
-
