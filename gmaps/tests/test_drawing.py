@@ -144,20 +144,25 @@ class Drawing(unittest.TestCase):
         layer = drawing.Drawing()
         assert layer.get_state()['mode'] == drawing.DEFAULT_DRAWING_MODE
 
-    def test_changing_mode(self):
-        layer = drawing.Drawing(mode='DISABLED')
+    def test_default_mode_hide_controls(self):
+        controls = drawing.DrawingControls(show_controls=False)
+        layer = drawing.Drawing(toolbar_controls=controls)
         assert layer.get_state()['mode'] == 'DISABLED'
+
+    def test_changing_mode(self):
+        layer = drawing.Drawing(mode='LINE')
+        assert layer.get_state()['mode'] == 'LINE'
 
     def test_receiving_mode_changes(self):
         layer = drawing.Drawing()
         message = {
             'event': 'MODE_CHANGED',
             'payload': {
-                'mode': 'DISABLED'
+                'mode': 'LINE'
             }
         }
         layer._handle_custom_msg(message, None)
-        assert layer.mode == 'DISABLED'
+        assert layer.mode == 'LINE'
 
     def test_marker_options_change(self):
         observer = UnaryFunctionMock()

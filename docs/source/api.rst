@@ -71,6 +71,8 @@ Low level widgets
 .. autoclass:: gmaps.Drawing
    :members:
 
+.. autoclass:: gmaps.DrawingControls
+
 .. autoclass:: gmaps.Line
 
 .. autoclass:: gmaps.Polygon
