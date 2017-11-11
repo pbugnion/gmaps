@@ -28,15 +28,6 @@ _doc_snippets['params'] = """
         :class:`gmaps.Marker`, :class:`gmaps.Line` or :class:`gmaps.Polygon`.
     :type features: list of features, optional
 
-    :param mode:
-        Current drawing mode. One of 'DISABLED', 'MARKER', 'LINE',
-        'POLYGON' or 'DELETE'.
-    :type mode: string
-
-    :param show_controls:
-        Whether to show the drawing controls in the map toolbar.
-    :type show_controls: bool
-
     :param marker_options:
         Options controlling how markers are drawn on the map.
         Either pass in an instance of :class:`gmaps.MarkerOptions`,
@@ -44,7 +35,8 @@ _doc_snippets['params'] = """
         `info_box_content`, `label` (or a subset of these). See
         :class:`gmaps.MarkerOptions` for documentation on possible
         values.
-    :type marker_options: :class:`gmaps.MarkerOptions`, `dict` or `None`
+    :type marker_options:
+        :class:`gmaps.MarkerOptions`, `dict` or `None`, optional
 """
 
 _doc_snippets['examples'] = """
@@ -103,6 +95,13 @@ _doc_snippets['examples'] = """
 
 
 class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
+    """
+    Widget for the toolbar snippet representing the drawing controls
+
+    :param show_controls:
+        Whether the drawing controls should be shown. Defaults to True.
+    :type show_controls: bool, optional
+    """
     _model_name = Unicode('DrawingControlsModel').tag(sync=True)
     _view_name = Unicode('DrawingControlsView').tag(sync=True)
     show_controls = Bool(default_value=True, allow_none=False).tag(
@@ -231,6 +230,17 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     {examples}
 
     {params}
+
+    :param mode:
+        Initial drawing mode. One of ``DISABLED``, ``MARKER``, ``LINE``,
+        ``POLYGON`` or ``DELETE``. Defaults to ``MARKER`` if
+        ``toolbar_controls.show_controls`` is True, otherwise defaults to
+        ``DISABLED``.
+    :type mode: str, optional
+
+    :param toolbar_controls:
+        Instance representing the toolbar.
+    :type toolbar_controls: :class:`gmaps.DrawingControls`, optional
     """
     has_bounds = False
     _view_name = Unicode('DrawingLayerView').tag(sync=True)
@@ -356,6 +366,17 @@ def drawing_layer(
     {examples}
 
     {params}
+
+    :param mode:
+        Initial drawing mode. One of ``DISABLED``, ``MARKER``, ``LINE``,
+        ``POLYGON`` or ``DELETE``. Defaults to ``MARKER`` if ``show_controls`` is
+        True, otherwise defaults to ``DISABLED``.
+    :type mode: str, optional
+
+    :param show_controls:
+        Whether to show the drawing controls in the map toolbar.
+        Defaults to True.
+    :type show_controls: bool, optional
 
     :returns:
         A :class:`gmaps.Drawing` widget.
