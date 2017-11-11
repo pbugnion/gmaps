@@ -14,7 +14,10 @@ class LatitudeBounds(unittest.TestCase):
     def test_latitude_bounds_single(self):
         latitudes = [-87.6297]
         lower, upper = latitude_bounds(latitudes)
-        assert abs(upper - lower) < 2.01*EPSILON
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99 * EPSILON < diff < 2.01*EPSILON
+        assert lower < -87.6297 < upper
 
     def test_latitude_bounds(self):
         latitudes = [10.0, 15.0, 20.0]
