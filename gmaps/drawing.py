@@ -239,7 +239,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     :type mode: str, optional
 
     :param toolbar_controls:
-        Instance representing the toolbar.
+        Widget representing the drawing toolbar.
     :type toolbar_controls: :class:`gmaps.DrawingControls`, optional
     """
     has_bounds = False
