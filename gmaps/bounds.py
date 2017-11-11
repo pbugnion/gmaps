@@ -40,13 +40,20 @@ def longitude_bounds(longitudes):
     and https://en.wikipedia.org/wiki/Directional_statistics
     for how to calculate the relevant statistics.
     """
-    if max(longitudes) - min(longitudes) < EPSILON:
-        mean_longitude = 0.5 * (max(longitudes) + min(longitudes))
-        upper_bound = _normalize_longitude(mean_longitude + EPSILON)
-        lower_bound = _normalize_longitude(mean_longitude - EPSILON)
+    normalized_longitudes = [
+        _normalize_longitude(longitude) for longitude in longitudes
+    ]
+    if max(normalized_longitudes) - min(normalized_longitudes) < 2.0*EPSILON:
+        mean_longitude = 0.5 * (
+            max(normalized_longitudes) + min(normalized_longitudes)
+        )
+        upper_bound = mean_longitude + EPSILON
+        lower_bound = mean_longitude - EPSILON
     else:
         N = float(len(longitudes))
-        radians = [math.radians(longitude) for longitude in longitudes]
+        radians = [
+            math.radians(longitude) for longitude in normalized_longitudes
+        ]
         sum_cos = sum(math.cos(r) for r in radians)
         sum_cos_sq = sum_cos**2
         sum_sin = sum(math.sin(r) for r in radians)

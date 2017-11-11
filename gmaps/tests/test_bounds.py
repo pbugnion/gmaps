@@ -87,6 +87,14 @@ class LongitudeBounds(unittest.TestCase):
         assert 1.99*EPSILON < diff < 2.01*EPSILON
         assert lower < -81.123 < upper
 
+    def test_same_longitudes_up_to_full_circle_rotation(self):
+        longitudes = [10.0, 370.0]
+        lower, upper = longitude_bounds(longitudes)
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < 10.0 < upper
+
 
 class MergeLongitudeBounds(unittest.TestCase):
 
