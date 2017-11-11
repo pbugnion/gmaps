@@ -12,7 +12,7 @@ def latitude_bounds(latitudes):
     """
     Estimate latitude bound with 2*sample standard deviation
     """
-    if len(latitudes) == 1:
+    if max(latitudes) - min(latitudes) < 2.0*EPSILON:
         lower_bound = latitudes[0] - EPSILON
         upper_bound = latitudes[0] + EPSILON
     else:
