@@ -124,6 +124,11 @@ class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         default_value=4, allow_none=True, min=1
     ).tag(sync=True)
 
+    def __init__(self, location, **kwargs):
+        kwargs = _resolve_info_box_kwargs(**kwargs)
+        kwargs['location'] = location
+        super(Symbol, self).__init__(**kwargs)
+
 
 class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     __doc__ = """
