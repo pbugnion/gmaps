@@ -71,8 +71,16 @@ class LongitudeBounds(unittest.TestCase):
         assert 177.0 < lower < 180.0
         assert -180.0 < upper < -177.0
 
-    def test_similar_longitudes(self):
+    def test_same_longitudes(self):
         longitudes = [-81.123, -81.123]
+        lower, upper = longitude_bounds(longitudes)
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < -81.123 < upper
+
+    def test_similar_longitudes(self):
+        longitudes = [-81.123, -81.123 + 0.01*EPSILON]
         lower, upper = longitude_bounds(longitudes)
         assert upper > lower
         diff = abs(upper - lower)
