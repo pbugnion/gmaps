@@ -63,9 +63,20 @@ class BaseMarkerView extends widgets.WidgetView {
         }
         this.marker = new google.maps.Marker(markerOptions)
         this.infoBox = this.renderInfoBox()
+        this.restoreClickable();
         this.infoBoxListener = null;
         this.mapView = null;
         this.modelEvents()
+        this.marker.addListener('click', event => this.trigger('click'));
+    }
+
+    ensureClickable() {
+        this.marker.setClickable(true);
+    }
+
+    restoreClickable() {
+        const clickable = this.displayInfoBox();
+        this.marker.setClickable(clickable);
     }
 
     displayInfoBox() {
@@ -80,6 +91,7 @@ class BaseMarkerView extends widgets.WidgetView {
     }
 
     toggleInfoBoxListener() {
+        this.restoreClickable();
         if (this.displayInfoBox()) {
             this.infoBoxListener = this.marker.addListener(
                 "click",
@@ -97,6 +109,14 @@ class BaseMarkerView extends widgets.WidgetView {
         this.mapView = mapView;
         this.marker.setMap(mapView.map);
         this.toggleInfoBoxListener();
+    }
+
+    removeFromMapView() {
+        this.mapView = null;
+        this.marker.setMap(null);
+        if (this.infoBoxListener !== null) {
+            this.infoBoxListener.remove();
+        }
     }
 
     modelEvents() {

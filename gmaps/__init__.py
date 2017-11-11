@@ -9,6 +9,7 @@ from .geojson_layer import *  # noqa
 from .bicycling import *  # noqa
 from .transit import *  # noqa
 from .traffic import *  # noqa
+from .drawing import *  # noqa
 
 
 def _jupyter_nbextension_paths():

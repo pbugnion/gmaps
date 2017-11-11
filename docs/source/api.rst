@@ -15,6 +15,8 @@ Figures and layers
 
 .. autofunction:: gmaps.geojson_layer
 
+.. autofunction:: gmaps.drawing_layer
+
 .. autofunction:: gmaps.directions_layer
 
 .. autofunction:: gmaps.bicycling_layer
@@ -22,6 +24,7 @@ Figures and layers
 .. autofunction:: gmaps.transit_layer
 
 .. autofunction:: gmaps.traffic_layer
+
 
 Utility functions
 -----------------
@@ -47,6 +50,8 @@ Low level widgets
 
 .. autoclass:: gmaps.Symbol
 
+.. autoclass:: gmaps.MarkerOptions
+
 .. autoclass:: gmaps.Marker
 
 .. autoclass:: gmaps.Markers
@@ -62,6 +67,15 @@ Low level widgets
 .. autoclass:: gmaps.Transit
 
 .. autoclass:: gmaps.Traffic
+
+.. autoclass:: gmaps.Drawing
+   :members:
+
+.. autoclass:: gmaps.DrawingControls
+
+.. autoclass:: gmaps.Line
+
+.. autoclass:: gmaps.Polygon
 
 Datasets
 --------

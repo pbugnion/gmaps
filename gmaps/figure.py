@@ -51,6 +51,10 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
             :func:`gmaps.geojson_layer`
                 Create a GeoJSON layer
 
+            :func:`gmaps.drawing_layer`
+                Create a layer of custom features, and allow users to draw
+                on the map
+
             :func:`gmaps.directions_layer`
                 Create a layer with directions
 
@@ -63,6 +67,12 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
             :func:`gmaps.traffic_layer`
                 Create a layer showing current traffic information
         """
+        try:
+            toolbar_controls = layer.toolbar_controls
+            if self._toolbar is not None and toolbar_controls is not None:
+                self._toolbar.add_controls(toolbar_controls)
+        except AttributeError:
+            pass
         self._map.add_layer(layer)
 
 
