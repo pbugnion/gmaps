@@ -29,18 +29,6 @@ def latitude_bounds(latitudes):
     return lower_bound, upper_bound
 
 
-def _constrain_latitude_bounds(lower_bound, upper_bound):
-    if lower_bound < MIN_ALLOWED_LATITUDE:
-        lower_bound = MIN_ALLOWED_LATITUDE
-        if upper_bound < lower_bound + EPSILON:
-            upper_bound = lower_bound + EPSILON
-    if upper_bound > MAX_ALLOWED_LATITUDE:
-        upper_bound = MAX_ALLOWED_LATITUDE
-        if lower_bound > upper_bound - EPSILON:
-            lower_bound = upper_bound - EPSILON
-    return lower_bound, upper_bound
-
-
 def longitude_bounds(longitudes):
     """
     Estimate longitude bound with 2*sample standard deviation
@@ -173,3 +161,15 @@ def _normalize_longitude(longitude):
         longitude = longitude - 360
 
     return longitude
+
+
+def _constrain_latitude_bounds(lower_bound, upper_bound):
+    if lower_bound < MIN_ALLOWED_LATITUDE:
+        lower_bound = MIN_ALLOWED_LATITUDE
+        if upper_bound < lower_bound + EPSILON:
+            upper_bound = lower_bound + EPSILON
+    if upper_bound > MAX_ALLOWED_LATITUDE:
+        upper_bound = MAX_ALLOWED_LATITUDE
+        if lower_bound > upper_bound - EPSILON:
+            lower_bound = upper_bound - EPSILON
+    return lower_bound, upper_bound
