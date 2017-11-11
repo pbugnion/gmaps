@@ -24,7 +24,8 @@ def latitude_bounds(latitudes):
         standard_deviation = math.sqrt(sum_squares/float(N))
         lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
         upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
-    lower_bound, upper_bound = _constrain_latitude_bounds(lower_bound, upper_bound)
+    lower_bound, upper_bound = _constrain_latitude_bounds(
+        lower_bound, upper_bound)
     return lower_bound, upper_bound
 
 
