@@ -58,12 +58,12 @@ class BaseMarkerView extends widgets.WidgetView {
         const markerOptions = {
             position: {lat, lng},
             draggable: false,
-            clickable: false,
             title,
             ...styleOptions
         }
         this.marker = new google.maps.Marker(markerOptions)
         this.infoBox = this.renderInfoBox()
+        this.restoreClickable();
         this.infoBoxListener = null;
         this.mapView = null;
         this.modelEvents()
@@ -75,7 +75,8 @@ class BaseMarkerView extends widgets.WidgetView {
     }
 
     restoreClickable() {
-        this.marker.setClickable(false);
+        const clickable = this.displayInfoBox();
+        this.marker.setClickable(clickable);
     }
 
     displayInfoBox() {
@@ -90,6 +91,7 @@ class BaseMarkerView extends widgets.WidgetView {
     }
 
     toggleInfoBoxListener() {
+        this.restoreClickable();
         if (this.displayInfoBox()) {
             this.infoBoxListener = this.marker.addListener(
                 "click",
