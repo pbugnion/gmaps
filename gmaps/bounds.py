@@ -12,7 +12,7 @@ def latitude_bounds(latitudes):
     """
     Estimate latitude bound with 2*sample standard deviation
     """
-    if len(latitudes) == 1:
+    if max(latitudes) - min(latitudes) < 2.0*EPSILON:
         lower_bound = latitudes[0] - EPSILON
         upper_bound = latitudes[0] + EPSILON
     else:
@@ -24,8 +24,8 @@ def latitude_bounds(latitudes):
         standard_deviation = math.sqrt(sum_squares/float(N))
         lower_bound = max(mean - 2.0*standard_deviation, -(90.0 - EPSILON))
         upper_bound = min(mean + 2.0*standard_deviation, (90.0 - EPSILON))
-        lower_bound = max(lower_bound, MIN_ALLOWED_LATITUDE)
-        upper_bound = min(upper_bound, MAX_ALLOWED_LATITUDE)
+    lower_bound, upper_bound = _constrain_latitude_bounds(
+        lower_bound, upper_bound)
     return lower_bound, upper_bound
 
 
@@ -40,12 +40,20 @@ def longitude_bounds(longitudes):
     and https://en.wikipedia.org/wiki/Directional_statistics
     for how to calculate the relevant statistics.
     """
-    if len(longitudes) == 1:
-        lower_bound = longitudes[0] - EPSILON
-        upper_bound = longitudes[0] + EPSILON
+    normalized_longitudes = [
+        _normalize_longitude(longitude) for longitude in longitudes
+    ]
+    if max(normalized_longitudes) - min(normalized_longitudes) < 2.0*EPSILON:
+        mean_longitude = 0.5 * (
+            max(normalized_longitudes) + min(normalized_longitudes)
+        )
+        upper_bound = mean_longitude + EPSILON
+        lower_bound = mean_longitude - EPSILON
     else:
         N = float(len(longitudes))
-        radians = [math.radians(longitude) for longitude in longitudes]
+        radians = [
+            math.radians(longitude) for longitude in normalized_longitudes
+        ]
         sum_cos = sum(math.cos(r) for r in radians)
         sum_cos_sq = sum_cos**2
         sum_sin = sum(math.sin(r) for r in radians)
@@ -153,3 +161,15 @@ def _normalize_longitude(longitude):
         longitude = longitude - 360
 
     return longitude
+
+
+def _constrain_latitude_bounds(lower_bound, upper_bound):
+    if lower_bound < MIN_ALLOWED_LATITUDE:
+        lower_bound = MIN_ALLOWED_LATITUDE
+        if upper_bound < lower_bound + EPSILON:
+            upper_bound = lower_bound + EPSILON
+    if upper_bound > MAX_ALLOWED_LATITUDE:
+        upper_bound = MAX_ALLOWED_LATITUDE
+        if lower_bound > upper_bound - EPSILON:
+            lower_bound = upper_bound - EPSILON
+    return lower_bound, upper_bound

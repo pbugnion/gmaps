@@ -5,17 +5,19 @@ import numpy as np
 
 from ..bounds import (
     latitude_bounds, longitude_bounds, merge_longitude_bounds,
-    MAX_ALLOWED_LATITUDE, MIN_ALLOWED_LATITUDE
+    MAX_ALLOWED_LATITUDE, MIN_ALLOWED_LATITUDE, EPSILON
 )
 
 
 class LatitudeBounds(unittest.TestCase):
 
     def test_latitude_bounds_single(self):
-        EPSILON = 1e-5
-        latitudes = [-87.6297]
+        latitudes = [-81.6297]
         lower, upper = latitude_bounds(latitudes)
-        assert abs(upper - lower) < 2.01*EPSILON
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99 * EPSILON < diff < 2.01*EPSILON
+        assert lower < -81.6297 < upper
 
     def test_latitude_bounds(self):
         latitudes = [10.0, 15.0, 20.0]
@@ -35,14 +37,46 @@ class LatitudeBounds(unittest.TestCase):
         assert lower == MIN_ALLOWED_LATITUDE
         assert upper == MAX_ALLOWED_LATITUDE
 
+    def test_same_latitudes(self):
+        latitudes = [-71.123, -71.123]
+        lower, upper = latitude_bounds(latitudes)
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < -71.123 < upper
+
+    def test_similar_latitudes(self):
+        latitudes = [-71.123, -71.123 + 0.01*EPSILON]
+        lower, upper = latitude_bounds(latitudes)
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < -71.123 < upper
+
+    def test_latitude_single_extreme_low(self):
+        latitudes = [-87.0]
+        lower, upper = latitude_bounds(latitudes)
+        assert upper > lower
+        assert lower == MIN_ALLOWED_LATITUDE
+        assert 0.9*EPSILON < upper - lower < 1.1*EPSILON
+
+    def test_latitude_single_extreme_high(self):
+        latitudes = [87.0]
+        lower, upper = latitude_bounds(latitudes)
+        assert upper > lower
+        assert upper == MAX_ALLOWED_LATITUDE
+        assert 0.9*EPSILON < upper - lower < 1.1*EPSILON
+
 
 class LongitudeBounds(unittest.TestCase):
 
     def test_longitude_bounds_single(self):
-        EPSILON = 1e-5
         longitudes = [-87.6297]
         lower, upper = longitude_bounds(longitudes)
-        assert abs(upper - lower) < 2.01*EPSILON
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < -87.6297 < upper
 
     def test_longitude_bounds(self):
         longitudes = [10.0, 15.0, 20.0]
@@ -69,6 +103,30 @@ class LongitudeBounds(unittest.TestCase):
         print(lower, upper)
         assert 177.0 < lower < 180.0
         assert -180.0 < upper < -177.0
+
+    def test_same_longitudes(self):
+        longitudes = [-81.123, -81.123]
+        lower, upper = longitude_bounds(longitudes)
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < -81.123 < upper
+
+    def test_similar_longitudes(self):
+        longitudes = [-81.123, -81.123 + 0.01*EPSILON]
+        lower, upper = longitude_bounds(longitudes)
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < -81.123 < upper
+
+    def test_same_longitudes_up_to_full_circle_rotation(self):
+        longitudes = [10.0, 370.0]
+        lower, upper = longitude_bounds(longitudes)
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < 10.0 < upper
 
 
 class MergeLongitudeBounds(unittest.TestCase):
