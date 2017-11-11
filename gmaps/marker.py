@@ -53,7 +53,6 @@ def _resolve_info_box_kwargs(**kwargs):
     return kwargs
 
 
-
 class MarkerOptions(HasTraits):
     __doc__ = """
     Style options for a marker
