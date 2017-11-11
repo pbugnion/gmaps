@@ -41,6 +41,18 @@ _marker_options_docstring = """
 """
 
 
+def _resolve_info_box_kwargs(**kwargs):
+    if kwargs.get('display_info_box') is None:
+        # Not explicitly specified: infer from info_box_content
+        is_content_empty = kwargs.get('info_box_content') is None
+        if is_content_empty:
+            kwargs['display_info_box'] = False
+            kwargs['info_box_content'] = ''
+        else:
+            kwargs['display_info_box'] = True
+    return kwargs
+
+
 class MarkerOptions(HasTraits):
     __doc__ = """
     Style options for a marker
@@ -51,14 +63,7 @@ class MarkerOptions(HasTraits):
     label = Unicode("").tag(sync=True)
 
     def __init__(self, **kwargs):
-        if kwargs.get('display_info_box') is None:
-            # Not explicitly specified: infer from info_box_content
-            is_content_empty = kwargs.get('info_box_content') is None
-            if is_content_empty:
-                kwargs['display_info_box'] = False
-                kwargs['info_box_content'] = ''
-            else:
-                kwargs['display_info_box'] = True
+        kwargs = _resolve_info_box_kwargs(**kwargs)
         super(MarkerOptions, self).__init__(**kwargs)
 
     def to_marker(self, latitude, longitude):
@@ -119,6 +124,11 @@ class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         default_value=4, allow_none=True, min=1
     ).tag(sync=True)
 
+    def __init__(self, location, **kwargs):
+        kwargs = _resolve_info_box_kwargs(**kwargs)
+        kwargs['location'] = location
+        super(Symbol, self).__init__(**kwargs)
+
 
 class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     __doc__ = """
@@ -140,6 +150,7 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     label = Unicode("").tag(sync=True)
 
     def __init__(self, location, **kwargs):
+        kwargs = _resolve_info_box_kwargs(**kwargs)
         kwargs['location'] = location
         super(Marker, self).__init__(**kwargs)
 

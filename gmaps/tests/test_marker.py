@@ -229,3 +229,21 @@ class MarkerTest(unittest.TestCase):
     def test_location_non_kwarg(self):
         marker = Marker((10.0, 5.0))
         assert marker.get_state()['location'] == (10.0, 5.0)
+
+    def test_with_info_box(self):
+        marker = Marker((10.0, 5.0), info_box_content='test-content')
+        assert marker.display_info_box
+        assert marker.info_box_content == 'test-content'
+
+    def test_no_info_box(self):
+        marker = Marker(location=(10.0, 5.0))
+        assert not marker.display_info_box
+
+    def test_explicit_hide_info_box(self):
+        marker = Marker(
+            (10.0, 5.0),
+            display_info_box=False,
+            info_box_content='test-content'
+        )
+        assert not marker.display_info_box
+        assert marker.info_box_content == 'test-content'
