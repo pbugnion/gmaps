@@ -369,8 +369,8 @@ def drawing_layer(
 
     :param mode:
         Initial drawing mode. One of ``DISABLED``, ``MARKER``, ``LINE``,
-        ``POLYGON`` or ``DELETE``. Defaults to ``MARKER`` if ``show_controls`` is
-        True, otherwise defaults to ``DISABLED``.
+        ``POLYGON`` or ``DELETE``. Defaults to ``MARKER`` if ``show_controls``
+        is True, otherwise defaults to ``DISABLED``.
     :type mode: str, optional
 
     :param show_controls:
