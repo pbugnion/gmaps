@@ -236,15 +236,13 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     _view_name = Unicode('DrawingLayerView').tag(sync=True)
     _model_name = Unicode('DrawingLayerModel').tag(sync=True)
     features = List().tag(sync=True, **widgets.widget_serialization)
-    mode = Enum(
-        ALLOWED_DRAWING_MODES,
-        default_value=DEFAULT_DRAWING_MODE
-    ).tag(sync=True)
+    mode = Enum(ALLOWED_DRAWING_MODES).tag(sync=True)
     marker_options = Instance(MarkerOptions, allow_none=False)
     toolbar_controls = Instance(DrawingControls, allow_none=False).tag(
         sync=True, **widgets.widget_serialization)
 
     def __init__(self, **kwargs):
+        kwargs['mode'] = self._get_initial_mode(kwargs)
         self._new_feature_callbacks = []
 
         super(Drawing, self).__init__(**kwargs)
@@ -268,6 +266,21 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         :type callback: callable
         """
         self._new_feature_callbacks.append(callback)
+
+    def _get_initial_mode(self, constructor_kwargs):
+        try:
+            mode = constructor_kwargs['mode']
+        except KeyError:
+            # mode not explicitly specified
+            controls_hidden = (
+                'toolbar_controls' in constructor_kwargs and
+                not constructor_kwargs['toolbar_controls'].show_controls
+            )
+            if controls_hidden:
+                mode = 'DISABLED'
+            else:
+                mode = DEFAULT_DRAWING_MODE
+        return mode
 
     def _on_marker_options_change(self, change):
         self.marker_options = copy.deepcopy(self.marker_options)
