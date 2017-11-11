@@ -40,7 +40,10 @@ class LongitudeBounds(unittest.TestCase):
     def test_longitude_bounds_single(self):
         longitudes = [-87.6297]
         lower, upper = longitude_bounds(longitudes)
-        assert abs(upper - lower) < 2.01*EPSILON
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < -87.6297 < upper
 
     def test_longitude_bounds(self):
         longitudes = [10.0, 15.0, 20.0]
@@ -71,7 +74,10 @@ class LongitudeBounds(unittest.TestCase):
     def test_similar_longitudes(self):
         longitudes = [-81.123, -81.123]
         lower, upper = longitude_bounds(longitudes)
-        assert abs(upper - lower) < 2.01*EPSILON
+        assert upper > lower
+        diff = abs(upper - lower)
+        assert 1.99*EPSILON < diff < 2.01*EPSILON
+        assert lower < -81.123 < upper
 
 
 class MergeLongitudeBounds(unittest.TestCase):
