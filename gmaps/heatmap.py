@@ -163,6 +163,7 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode("WeightedHeatmapLayerModel").tag(sync=True)
 
     data = List().tag(sync=True)
+    weights = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @validate("data")
@@ -193,18 +194,13 @@ def _heatmap_options(
     locations_as_list = locations_to_list(locations)
     if weights is None:
         is_weighted = False
-        data = locations_as_list
+        widget_args = {"data": locations_as_list}
     else:
         if len(weights) != len(locations):
             raise ValueError(
                 "weights must be of the same length as locations or None")
         is_weighted = True
-        data = [
-            (latitude, longitude, weight) for
-            ((latitude, longitude), weight) in
-            zip(locations_as_list, weights)
-        ]
-    widget_args = {"data": data}
+        widget_args = {"data": locations_as_list, "weights": weights}
     widget_args.update(options)
     return widget_args, is_weighted
 
