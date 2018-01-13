@@ -132,6 +132,11 @@ class TestHeatmap(unittest.TestCase):
         heatmap = Heatmap(data=self.locations)
         assert heatmap.locations == self.locations
 
+    def test_change_data(self):
+        heatmap = Heatmap(locations=self.locations)
+        heatmap.data = self.locations * 2
+        assert heatmap.locations == self.locations * 2
+
 
 class TestWeightedHeatmap(unittest.TestCase):
 
@@ -147,3 +152,10 @@ class TestWeightedHeatmap(unittest.TestCase):
         heatmap = WeightedHeatmap(data=self.merged_location_weights)
         assert heatmap.locations == self.locations
         assert heatmap.weights == self.weights
+
+    def test_change_data(self):
+        heatmap = WeightedHeatmap(
+            locations=self.locations, weights=self.weights)
+        heatmap.data = self.merged_location_weights * 2
+        assert heatmap.locations == self.locations * 2
+        assert heatmap.weights == self.weights * 2
