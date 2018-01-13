@@ -57,7 +57,7 @@ class _HeatmapOptionsMixin(HasTraits):
         trait=geotraitlets.ColorAlpha(), allow_none=True, minlen=1
     ).tag(sync=True)
 
-    @default("gradient")
+    @default('gradient')
     def _default_gradient(self):
         return None
 
@@ -108,23 +108,23 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
 
     """ + _heatmap_options_docstring
     has_bounds = True
-    _view_name = Unicode("SimpleHeatmapLayerView").tag(sync=True)
-    _model_name = Unicode("SimpleHeatmapLayerModel").tag(sync=True)
+    _view_name = Unicode('SimpleHeatmapLayerView').tag(sync=True)
+    _model_name = Unicode('SimpleHeatmapLayerModel').tag(sync=True)
 
     data = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
-    @validate("data")
+    @validate('data')
     def _validate_data(self, proposal):
-        for point in proposal["value"]:
+        for point in proposal['value']:
             if not geotraitlets.is_valid_point(point):
                 raise geotraitlets.InvalidPointException(
-                    "{} is not a valid latitude, longitude pair".format(point))
-        return proposal["value"]
+                    '{} is not a valid latitude, longitude pair'.format(point))
+        return proposal['value']
 
-    @observe("data")
+    @observe('data')
     def _calc_bounds(self, change):
-        data = change["new"]
+        data = change['new']
         self.set_bounds(data)
 
 
@@ -159,25 +159,25 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
 
     """ + _heatmap_options_docstring
     has_bounds = True
-    _view_name = Unicode("WeightedHeatmapLayerView").tag(sync=True)
-    _model_name = Unicode("WeightedHeatmapLayerModel").tag(sync=True)
+    _view_name = Unicode('WeightedHeatmapLayerView').tag(sync=True)
+    _model_name = Unicode('WeightedHeatmapLayerModel').tag(sync=True)
 
     data = List().tag(sync=True)
     weights = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
-    @validate("data")
+    @validate('data')
     def _validate_data(self, proposal):
-        for point in proposal["value"]:
+        for point in proposal['value']:
             if not geotraitlets.is_valid_point(point[:2]):
                 raise geotraitlets.InvalidPointException(
-                    "{} is not a valid latitude, longitude pair".format(point))
+                    '{} is not a valid latitude, longitude pair'.format(point))
             # check weight
-        return proposal["value"]
+        return proposal['value']
 
-    @observe("data")
+    @observe('data')
     def _calc_bounds(self, change):
-        data = change["new"]
+        data = change['new']
         self.set_bounds(data)
 
 
@@ -185,11 +185,11 @@ def _heatmap_options(
         locations, weights, max_intensity, dissipating, point_radius,
         opacity, gradient):
     options = {
-        "max_intensity": max_intensity,
-        "dissipating": dissipating,
-        "point_radius": point_radius,
-        "opacity": opacity,
-        "gradient": gradient
+        'max_intensity': max_intensity,
+        'dissipating': dissipating,
+        'point_radius': point_radius,
+        'opacity': opacity,
+        'gradient': gradient
     }
     locations_as_list = locations_to_list(locations)
     if weights is None:
@@ -198,9 +198,9 @@ def _heatmap_options(
     else:
         if len(weights) != len(locations):
             raise ValueError(
-                "weights must be of the same length as locations or None")
+                'weights must be of the same length as locations or None')
         is_weighted = True
-        widget_args = {"data": locations_as_list, "weights": list(weights)}
+        widget_args = {'data': locations_as_list, 'weights': list(weights)}
     widget_args.update(options)
     return widget_args, is_weighted
 
