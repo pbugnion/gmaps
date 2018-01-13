@@ -49,18 +49,22 @@ class HeatmapLayer(unittest.TestCase):
         assert state['_model_name'] == 'SimpleHeatmapLayerModel'
         assert state['data'] == self.locations
 
-#     def test_weighted_pandas_df(self):
-#         pd = pytest.importorskip("pandas")
-#         df = pd.DataFrame.from_items([
-#             ("latitude", [loc[0] for loc in self.locations]),
-#             ("longitude", [loc[1] for loc in self.locations]),
-#             ("weight", self.weights)
-#         ])
-#         options = self._options_from_default(weights=df["weight"])
-#         heatmap_args, is_weighted = _heatmap_options(
-#             df[["latitude", "longitude"]], **options)
-#         assert is_weighted
-#         assert heatmap_args["data"] == self.merged_weight_locations
+    def test_weighted_pandas_df(self):
+        pd = pytest.importorskip('pandas')
+        df = pd.DataFrame.from_items([
+            ('latitude', [loc[0] for loc in self.locations]),
+            ('longitude', [loc[1] for loc in self.locations]),
+            ('weight', self.weights)
+        ])
+        heatmap = heatmap_layer(
+            df[['latitude', 'longitude']],
+            weights=df['weight']
+        )
+        state = heatmap.get_state()
+        assert state['_view_name'] == 'WeightedHeatmapLayerView'
+        assert state['_model_name'] == 'WeightedHeatmapLayerModel'
+        assert state['weights'] == self.weights
+        assert state['data'] == self.locations
 
 #     def test_not_weighted_pandas_df(self):
 #         pd = pytest.importorskip("pandas")
