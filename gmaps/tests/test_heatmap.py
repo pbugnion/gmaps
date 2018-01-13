@@ -83,6 +83,26 @@ class HeatmapLayer(unittest.TestCase):
         state = heatmap.get_state()
         assert state['max_intensity'] == 0.2
 
+    def test_point_radius(self):
+        heatmap = heatmap_layer(self.locations, point_radius=2)
+        state = heatmap.get_state()
+        assert state['point_radius'] == 2
+
+    def test_dissipating(self):
+        heatmap = heatmap_layer(self.locations, dissipating=True)
+        state = heatmap.get_state()
+        assert state['dissipating']
+
+    def test_opacity(self):
+        heatmap = heatmap_layer(self.locations, opacity=0.4)
+        state = heatmap.get_state()
+        assert state['opacity'] == 0.4
+
+    def test_gradient(self):
+        heatmap = heatmap_layer(self.locations, gradient=['blue', 'red'])
+        state = heatmap.get_state()
+        assert state['gradient'] == ['blue', 'red']
+
 
 class TestHeatmapOptionsMixin(unittest.TestCase):
 
