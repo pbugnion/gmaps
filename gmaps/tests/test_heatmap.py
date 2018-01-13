@@ -2,7 +2,7 @@
 import unittest
 import pytest
 
-from ..heatmap import _heatmap_options, _HeatmapOptionsMixin, heatmap_layer
+from ..heatmap import _HeatmapOptionsMixin, heatmap_layer
 
 
 class HeatmapLayer(unittest.TestCase):
