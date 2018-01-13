@@ -2,7 +2,8 @@
 import unittest
 import pytest
 
-from ..heatmap import _HeatmapOptionsMixin, heatmap_layer
+from ..heatmap import (
+    _HeatmapOptionsMixin, heatmap_layer, Heatmap, WeightedHeatmap)
 from ..geotraitlets import InvalidPointException
 
 
@@ -120,3 +121,29 @@ class TestHeatmapOptionsMixin(unittest.TestCase):
         layer = _HeatmapOptionsMixin(gradient=['blue', 'red'])
         layer.gradient = None
         assert layer.gradient is None
+
+
+class TestHeatmap(unittest.TestCase):
+
+    def setUp(self):
+        self.locations = [(-5.0, 5.0), (10.0, 10.0)]
+
+    def test_set_data(self):
+        heatmap = Heatmap(data=self.locations)
+        assert heatmap.locations == self.locations
+
+
+class TestWeightedHeatmap(unittest.TestCase):
+
+    def setUp(self):
+        self.locations = [(-5.0, 5.0), (10.0, 10.0)]
+        self.weights = [0.2, 0.5]
+        self.merged_location_weights = [
+            (-5.0, 5.0, 0.2),
+            (10.0, 10.0, 0.5),
+        ]
+
+    def test_set_data(self):
+        heatmap = WeightedHeatmap(data=self.merged_location_weights)
+        assert heatmap.locations == self.locations
+        assert heatmap.weights == self.weights

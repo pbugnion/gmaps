@@ -1,4 +1,6 @@
 
+import warnings
+
 import ipywidgets as widgets
 from traitlets import (
     Float, Bool, Unicode, HasTraits, default, List, validate,
@@ -45,6 +47,13 @@ _heatmap_options_docstring = """
         (100, 0, 0, 0.5).
     :type gradient: list of colors, optional
 """
+
+
+def _warn_obsolete_data():
+    warnings.warn(
+        'The "data" traitlet is deprecated, and will be '
+        'removed in jupyter-gmaps 0.8.0. '
+        'Use "locations" instead.', DeprecationWarning)
 
 
 # Mixin for options common to both heatmap and weighted heatmaps.
@@ -115,8 +124,14 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     locations = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
+    @observe('data')
+    def _on_data_change(self, change):
+        data = change['new']
+        _warn_obsolete_data()
+        self.locations = data
+
     @validate('locations')
-    def _validate_data(self, proposal):
+    def _validate_locations(self, proposal):
         for point in proposal['value']:
             if not geotraitlets.is_valid_point(point):
                 raise geotraitlets.InvalidPointException(
@@ -167,6 +182,13 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     locations = List().tag(sync=True)
     weights = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
+
+    @observe('data')
+    def _on_data_change(self, change):
+        data = change['new']
+        _warn_obsolete_data()
+        self.locations = [point[:2] for point in data]
+        self.weights = [point[2] for point in data]
 
     @validate('locations')
     def _validate_data(self, proposal):
