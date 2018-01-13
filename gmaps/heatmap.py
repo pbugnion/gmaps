@@ -115,7 +115,7 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     locations = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
-    @validate('data')
+    @validate('locations')
     def _validate_data(self, proposal):
         for point in proposal['value']:
             if not geotraitlets.is_valid_point(point):
@@ -168,12 +168,13 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     weights = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
-    @validate('data')
+    @validate('locations')
     def _validate_data(self, proposal):
         for point in proposal['value']:
-            if not geotraitlets.is_valid_point(point[:2]):
+            if not geotraitlets.is_valid_point(point):
                 raise geotraitlets.InvalidPointException(
-                    '{} is not a valid latitude, longitude pair'.format(point))
+                    '{} is not a valid latitude, longitude pair'.format(
+                        point))
             # check weight
         return proposal['value']
 

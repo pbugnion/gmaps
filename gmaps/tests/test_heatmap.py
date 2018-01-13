@@ -3,6 +3,7 @@ import unittest
 import pytest
 
 from ..heatmap import _HeatmapOptionsMixin, heatmap_layer
+from ..geotraitlets import InvalidPointException
 
 
 class HeatmapLayer(unittest.TestCase):
@@ -99,6 +100,10 @@ class HeatmapLayer(unittest.TestCase):
         heatmap = heatmap_layer(self.locations, gradient=['blue', 'red'])
         state = heatmap.get_state()
         assert state['gradient'] == ['blue', 'red']
+
+    def test_invalid_location(self):
+        with self.assertRaises(InvalidPointException):
+            heatmap_layer([(1.0, -200.0)])
 
 
 class TestHeatmapOptionsMixin(unittest.TestCase):
