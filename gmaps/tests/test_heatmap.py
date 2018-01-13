@@ -78,11 +78,10 @@ class HeatmapLayer(unittest.TestCase):
         assert state['_model_name'] == 'SimpleHeatmapLayerModel'
         assert state['data'] == self.locations
 
-#     def test_max_intensity(self):
-#         options = self._options_from_default(max_intensity=0.2)
-#         heatmap_args, is_weigthed = _heatmap_options(
-#             self.locations, **options)
-#         assert heatmap_args["max_intensity"] == 0.2
+    def test_max_intensity(self):
+        heatmap = heatmap_layer(self.locations, max_intensity=0.2)
+        state = heatmap.get_state()
+        assert state['max_intensity'] == 0.2
 
 
 class TestHeatmapOptionsMixin(unittest.TestCase):
