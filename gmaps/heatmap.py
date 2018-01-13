@@ -112,6 +112,7 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode('SimpleHeatmapLayerModel').tag(sync=True)
 
     data = List().tag(sync=True)
+    locations = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @validate('data')
@@ -122,7 +123,7 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
                     '{} is not a valid latitude, longitude pair'.format(point))
         return proposal['value']
 
-    @observe('data')
+    @observe('locations')
     def _calc_bounds(self, change):
         data = change['new']
         self.set_bounds(data)
@@ -163,6 +164,7 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode('WeightedHeatmapLayerModel').tag(sync=True)
 
     data = List().tag(sync=True)
+    locations = List().tag(sync=True)
     weights = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
@@ -175,7 +177,7 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
             # check weight
         return proposal['value']
 
-    @observe('data')
+    @observe('locations')
     def _calc_bounds(self, change):
         data = change['new']
         self.set_bounds(data)
@@ -194,13 +196,13 @@ def _heatmap_options(
     locations_as_list = locations_to_list(locations)
     if weights is None:
         is_weighted = False
-        widget_args = {"data": locations_as_list}
+        widget_args = {'locations': locations_as_list}
     else:
         if len(weights) != len(locations):
             raise ValueError(
                 'weights must be of the same length as locations or None')
         is_weighted = True
-        widget_args = {'data': locations_as_list, 'weights': list(weights)}
+        widget_args = {'locations': locations_as_list, 'weights': list(weights)}
     widget_args.update(options)
     return widget_args, is_weighted
 

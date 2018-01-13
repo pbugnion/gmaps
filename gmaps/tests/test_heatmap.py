@@ -17,7 +17,7 @@ class HeatmapLayer(unittest.TestCase):
         assert state['_view_name'] == 'WeightedHeatmapLayerView'
         assert state['_model_name'] == 'WeightedHeatmapLayerModel'
         assert state['weights'] == self.weights
-        assert state['data'] == self.locations
+        assert state['locations'] == self.locations
 
     def test_weighted_numpy_array(self):
         import numpy as np
@@ -26,7 +26,7 @@ class HeatmapLayer(unittest.TestCase):
         heatmap = heatmap_layer(locations, weights=weights)
         state = heatmap.get_state()
         assert state['weights'] == self.weights
-        assert state['data'] == self.locations
+        assert state['locations'] == self.locations
 
     def test_not_weighted_numpy_array(self):
         import numpy as np
@@ -35,7 +35,7 @@ class HeatmapLayer(unittest.TestCase):
         state = heatmap.get_state()
         assert state['_view_name'] == 'SimpleHeatmapLayerView'
         assert state['_model_name'] == 'SimpleHeatmapLayerModel'
-        assert state['data'] == self.locations
+        assert state['locations'] == self.locations
 
     def test_weighted_pandas_df(self):
         pd = pytest.importorskip('pandas')
@@ -52,7 +52,7 @@ class HeatmapLayer(unittest.TestCase):
         assert state['_view_name'] == 'WeightedHeatmapLayerView'
         assert state['_model_name'] == 'WeightedHeatmapLayerModel'
         assert state['weights'] == self.weights
-        assert state['data'] == self.locations
+        assert state['locations'] == self.locations
 
     def test_not_weighted_pandas_df(self):
         pd = pytest.importorskip('pandas')
@@ -64,7 +64,7 @@ class HeatmapLayer(unittest.TestCase):
         state = heatmap.get_state()
         assert state['_view_name'] == 'SimpleHeatmapLayerView'
         assert state['_model_name'] == 'SimpleHeatmapLayerModel'
-        assert state['data'] == self.locations
+        assert state['locations'] == self.locations
 
     def test_defaults(self):
         heatmap = heatmap_layer(self.locations)
