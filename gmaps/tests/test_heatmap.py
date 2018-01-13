@@ -40,13 +40,14 @@ class HeatmapLayer(unittest.TestCase):
         assert state['weights'] == self.weights
         assert state['data'] == self.locations
 
-#     def test_not_weighted_numpy_array(self):
-#         import numpy as np
-#         locations = np.array(self.locations)
-#         options = self._options_from_default()
-#         heatmap_args, is_weighted = _heatmap_options(locations, **options)
-#         assert not is_weighted
-#         assert heatmap_args["data"] == self.locations
+    def test_not_weighted_numpy_array(self):
+        import numpy as np
+        locations = np.array(self.locations)
+        heatmap = heatmap_layer(locations)
+        state = heatmap.get_state()
+        assert state['_view_name'] == 'SimpleHeatmapLayerView'
+        assert state['_model_name'] == 'SimpleHeatmapLayerModel'
+        assert state['data'] == self.locations
 
 #     def test_weighted_pandas_df(self):
 #         pd = pytest.importorskip("pandas")
