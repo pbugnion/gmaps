@@ -13,12 +13,12 @@ class HeatmapLayer(unittest.TestCase):
 
     def _options_from_default(self, **options_override):
         default_options = {
-            "weights": None,
-            "max_intensity": None,
-            "dissipating": True,
-            "point_radius": None,
-            "opacity": 0.6,
-            "gradient": None
+            'weights': None,
+            'max_intensity': None,
+            'dissipating': True,
+            'point_radius': None,
+            'opacity': 0.6,
+            'gradient': None
         }
         default_options.update(options_override)
         return default_options
@@ -67,7 +67,7 @@ class HeatmapLayer(unittest.TestCase):
         assert state['data'] == self.locations
 
     def test_not_weighted_pandas_df(self):
-        pd = pytest.importorskip("pandas")
+        pd = pytest.importorskip('pandas')
         df = pd.DataFrame.from_items([
             ('latitude', [loc[0] for loc in self.locations]),
             ('longitude', [loc[1] for loc in self.locations]),
@@ -111,10 +111,10 @@ class TestHeatmapOptionsMixin(unittest.TestCase):
         assert layer.gradient is None
 
     def test_gradient_default_values(self):
-        layer = _HeatmapOptionsMixin(gradient=["blue", "red"])
-        assert layer.gradient == ["blue", "red"]
+        layer = _HeatmapOptionsMixin(gradient=['blue', 'red'])
+        assert layer.gradient == ['blue', 'red']
 
     def test_gradient_set_none(self):
-        layer = _HeatmapOptionsMixin(gradient=["blue", "red"])
+        layer = _HeatmapOptionsMixin(gradient=['blue', 'red'])
         layer.gradient = None
         assert layer.gradient is None
