@@ -85,17 +85,17 @@ class HeatmapLayer(unittest.TestCase):
 #         assert heatmap_args["max_intensity"] == 0.2
 
 
-# class TestHeatmapOptionsMixin(unittest.TestCase):
+class TestHeatmapOptionsMixin(unittest.TestCase):
 
-#     def test_gradient_default_none(self):
-#         layer = _HeatmapOptionsMixin()
-#         assert layer.gradient is None
+    def test_gradient_default_none(self):
+        layer = _HeatmapOptionsMixin()
+        assert layer.gradient is None
 
-#     def test_gradient_default_values(self):
-#         layer = _HeatmapOptionsMixin(gradient=["blue", "red"])
-#         assert layer.gradient == ["blue", "red"]
+    def test_gradient_default_values(self):
+        layer = _HeatmapOptionsMixin(gradient=["blue", "red"])
+        assert layer.gradient == ["blue", "red"]
 
-#     def test_gradient_set_none(self):
-#         layer = _HeatmapOptionsMixin(gradient=["blue", "red"])
-#         layer.gradient = None
-#         assert layer.gradient is None
+    def test_gradient_set_none(self):
+        layer = _HeatmapOptionsMixin(gradient=["blue", "red"])
+        layer.gradient = None
+        assert layer.gradient is None
