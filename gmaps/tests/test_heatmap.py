@@ -66,6 +66,15 @@ class HeatmapLayer(unittest.TestCase):
         assert state['_model_name'] == 'SimpleHeatmapLayerModel'
         assert state['data'] == self.locations
 
+    def test_defaults(self):
+        heatmap = heatmap_layer(self.locations)
+        state = heatmap.get_state()
+        assert state['max_intensity'] is None
+        assert state['opacity'] == 0.6
+        assert state['point_radius'] is None
+        assert state['dissipating']
+        assert state['gradient'] is None
+
     def test_max_intensity(self):
         heatmap = heatmap_layer(self.locations, max_intensity=0.2)
         state = heatmap.get_state()
@@ -77,9 +86,9 @@ class HeatmapLayer(unittest.TestCase):
         assert state['point_radius'] == 2
 
     def test_dissipating(self):
-        heatmap = heatmap_layer(self.locations, dissipating=True)
+        heatmap = heatmap_layer(self.locations, dissipating=False)
         state = heatmap.get_state()
-        assert state['dissipating']
+        assert not state['dissipating']
 
     def test_opacity(self):
         heatmap = heatmap_layer(self.locations, opacity=0.4)
