@@ -225,7 +225,10 @@ def _heatmap_options(
             raise ValueError(
                 'weights must be of the same length as locations or None')
         is_weighted = True
-        widget_args = {'locations': locations_as_list, 'weights': list(weights)}
+        widget_args = {
+            'locations': locations_as_list,
+            'weights': list(weights)
+        }
     widget_args.update(options)
     return widget_args, is_weighted
 
