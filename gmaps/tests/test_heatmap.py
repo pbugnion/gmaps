@@ -11,18 +11,6 @@ class HeatmapLayer(unittest.TestCase):
         self.locations = [(-5.0, 5.0), (10.0, 10.0)]
         self.weights = [0.2, 0.5]
 
-    def _options_from_default(self, **options_override):
-        default_options = {
-            'weights': None,
-            'max_intensity': None,
-            'dissipating': True,
-            'point_radius': None,
-            'opacity': 0.6,
-            'gradient': None
-        }
-        default_options.update(options_override)
-        return default_options
-
     def test_weighted(self):
         heatmap = heatmap_layer(self.locations, weights=self.weights)
         state = heatmap.get_state()
