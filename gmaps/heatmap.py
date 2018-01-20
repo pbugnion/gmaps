@@ -217,8 +217,26 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
                 raise geotraitlets.InvalidPointException(
                     '{} is not a valid latitude, longitude pair'.format(
                         point))
-            # check weight
         return proposal['value']
+
+    @validate('weights')
+    def _validate_weights(self, proposal):
+        weights = []
+        for weight in proposal['value']:
+            try:
+                weight = float(weight)
+            except (TypeError, ValueError):
+                raise geotraitlets.InvalidWeightException(
+                    '{} is not a valid weight. Weights must be floats.'.format(
+                        weight))
+            if weight < 0.0:
+                raise geotraitlets.InvalidWeightException(
+                    '{} is not a valid weight. Weights must be '
+                    'non-negative.'.format(weight)
+                )
+            weights.append(weight)
+        return weights
+
 
     @observe('locations')
     def _calc_bounds(self, change):

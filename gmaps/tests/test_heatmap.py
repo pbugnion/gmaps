@@ -4,7 +4,7 @@ import pytest
 
 from ..heatmap import (
     _HeatmapOptionsMixin, heatmap_layer, Heatmap, WeightedHeatmap)
-from ..geotraitlets import InvalidPointException
+from ..geotraitlets import InvalidPointException, InvalidWeightException
 
 
 class HeatmapLayer(unittest.TestCase):
@@ -159,3 +159,11 @@ class TestWeightedHeatmap(unittest.TestCase):
         heatmap.data = self.merged_location_weights * 2
         assert heatmap.locations == self.locations * 2
         assert heatmap.weights == self.weights * 2
+
+    def test_non_float_weights(self):
+        with self.assertRaises(InvalidWeightException):
+            WeightedHeatmap(locations=self.locations, weights=['not', 'float'])
+
+    def test_negative_weights(self):
+        with self.assertRaises(InvalidWeightException):
+            WeightedHeatmap(locations=self.locations, weights=[1.0, -2.0])
