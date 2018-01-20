@@ -237,7 +237,6 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
             weights.append(weight)
         return weights
 
-
     @observe('locations')
     def _calc_bounds(self, change):
         data = change['new']
