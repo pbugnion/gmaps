@@ -2,7 +2,9 @@
 import unittest
 import pytest
 
-from ..heatmap import _heatmap_options, _HeatmapOptionsMixin
+from ..heatmap import (
+    _HeatmapOptionsMixin, heatmap_layer, Heatmap, WeightedHeatmap)
+from ..geotraitlets import InvalidPointException, InvalidWeightException
 
 
 class HeatmapLayer(unittest.TestCase):
@@ -10,74 +12,99 @@ class HeatmapLayer(unittest.TestCase):
     def setUp(self):
         self.locations = [(-5.0, 5.0), (10.0, 10.0)]
         self.weights = [0.2, 0.5]
-        self.merged_weight_locations = [
-            (-5.0, 5.0, 0.2),
-            (10.0, 10.0, 0.5)
-        ]
-
-    def _options_from_default(self, **options_override):
-        default_options = {
-            "weights": None,
-            "max_intensity": None,
-            "dissipating": True,
-            "point_radius": None,
-            "opacity": 0.6,
-            "gradient": None
-        }
-        default_options.update(options_override)
-        return default_options
 
     def test_weighted(self):
-        options = self._options_from_default(weights=self.weights)
-        heatmap_args, is_weighted = _heatmap_options(
-            self.locations, **options)
-        assert is_weighted
-        assert heatmap_args["data"] == self.merged_weight_locations
+        heatmap = heatmap_layer(self.locations, weights=self.weights)
+        state = heatmap.get_state()
+        assert state['_view_name'] == 'WeightedHeatmapLayerView'
+        assert state['_model_name'] == 'WeightedHeatmapLayerModel'
+        assert state['weights'] == self.weights
+        assert state['locations'] == self.locations
 
     def test_weighted_numpy_array(self):
         import numpy as np
         locations = np.array(self.locations)
         weights = np.array(self.weights)
-        options = self._options_from_default(weights=weights)
-        heatmap_args, is_weighted = _heatmap_options(locations, **options)
-        assert is_weighted
-        assert heatmap_args["data"] == self.merged_weight_locations
+        heatmap = heatmap_layer(locations, weights=weights)
+        state = heatmap.get_state()
+        assert state['weights'] == self.weights
+        assert state['locations'] == self.locations
 
     def test_not_weighted_numpy_array(self):
         import numpy as np
         locations = np.array(self.locations)
-        options = self._options_from_default()
-        heatmap_args, is_weighted = _heatmap_options(locations, **options)
-        assert not is_weighted
-        assert heatmap_args["data"] == self.locations
+        heatmap = heatmap_layer(locations)
+        state = heatmap.get_state()
+        assert state['_view_name'] == 'SimpleHeatmapLayerView'
+        assert state['_model_name'] == 'SimpleHeatmapLayerModel'
+        assert state['locations'] == self.locations
 
     def test_weighted_pandas_df(self):
-        pd = pytest.importorskip("pandas")
+        pd = pytest.importorskip('pandas')
         df = pd.DataFrame.from_items([
-            ("latitude", [loc[0] for loc in self.locations]),
-            ("longitude", [loc[1] for loc in self.locations]),
-            ("weight", self.weights)
+            ('latitude', [loc[0] for loc in self.locations]),
+            ('longitude', [loc[1] for loc in self.locations]),
+            ('weight', self.weights)
         ])
-        options = self._options_from_default(weights=df["weight"])
-        heatmap_args, is_weighted = _heatmap_options(
-            df[["latitude", "longitude"]], **options)
-        assert is_weighted
-        assert heatmap_args["data"] == self.merged_weight_locations
+        heatmap = heatmap_layer(
+            df[['latitude', 'longitude']],
+            weights=df['weight']
+        )
+        state = heatmap.get_state()
+        assert state['_view_name'] == 'WeightedHeatmapLayerView'
+        assert state['_model_name'] == 'WeightedHeatmapLayerModel'
+        assert state['weights'] == self.weights
+        assert state['locations'] == self.locations
 
     def test_not_weighted_pandas_df(self):
-        pd = pytest.importorskip("pandas")
-        df = pd.DataFrame.from_records(
-            self.locations, columns=["latitude", "longitude"])
-        options = self._options_from_default()
-        heatmap_args, is_weighted = _heatmap_options(df, **options)
-        assert not is_weighted
-        assert heatmap_args["data"] == self.locations
+        pd = pytest.importorskip('pandas')
+        df = pd.DataFrame.from_items([
+            ('latitude', [loc[0] for loc in self.locations]),
+            ('longitude', [loc[1] for loc in self.locations]),
+        ])
+        heatmap = heatmap_layer(df[['latitude', 'longitude']])
+        state = heatmap.get_state()
+        assert state['_view_name'] == 'SimpleHeatmapLayerView'
+        assert state['_model_name'] == 'SimpleHeatmapLayerModel'
+        assert state['locations'] == self.locations
+
+    def test_defaults(self):
+        heatmap = heatmap_layer(self.locations)
+        state = heatmap.get_state()
+        assert state['max_intensity'] is None
+        assert state['opacity'] == 0.6
+        assert state['point_radius'] is None
+        assert state['dissipating']
+        assert state['gradient'] is None
 
     def test_max_intensity(self):
-        options = self._options_from_default(max_intensity=0.2)
-        heatmap_args, is_weigthed = _heatmap_options(
-            self.locations, **options)
-        assert heatmap_args["max_intensity"] == 0.2
+        heatmap = heatmap_layer(self.locations, max_intensity=0.2)
+        state = heatmap.get_state()
+        assert state['max_intensity'] == 0.2
+
+    def test_point_radius(self):
+        heatmap = heatmap_layer(self.locations, point_radius=2)
+        state = heatmap.get_state()
+        assert state['point_radius'] == 2
+
+    def test_dissipating(self):
+        heatmap = heatmap_layer(self.locations, dissipating=False)
+        state = heatmap.get_state()
+        assert not state['dissipating']
+
+    def test_opacity(self):
+        heatmap = heatmap_layer(self.locations, opacity=0.4)
+        state = heatmap.get_state()
+        assert state['opacity'] == 0.4
+
+    def test_gradient(self):
+        heatmap = heatmap_layer(self.locations, gradient=['blue', 'red'])
+        state = heatmap.get_state()
+        assert state['gradient'] == ['blue', 'red']
+
+    def test_invalid_location(self):
+        with self.assertRaises(InvalidPointException):
+            heatmap_layer([(1.0, -200.0)])
 
 
 class TestHeatmapOptionsMixin(unittest.TestCase):
@@ -87,10 +114,56 @@ class TestHeatmapOptionsMixin(unittest.TestCase):
         assert layer.gradient is None
 
     def test_gradient_default_values(self):
-        layer = _HeatmapOptionsMixin(gradient=["blue", "red"])
-        assert layer.gradient == ["blue", "red"]
+        layer = _HeatmapOptionsMixin(gradient=['blue', 'red'])
+        assert layer.gradient == ['blue', 'red']
 
     def test_gradient_set_none(self):
-        layer = _HeatmapOptionsMixin(gradient=["blue", "red"])
+        layer = _HeatmapOptionsMixin(gradient=['blue', 'red'])
         layer.gradient = None
         assert layer.gradient is None
+
+
+class TestHeatmap(unittest.TestCase):
+
+    def setUp(self):
+        self.locations = [(-5.0, 5.0), (10.0, 10.0)]
+
+    def test_set_data(self):
+        heatmap = Heatmap(data=self.locations)
+        assert heatmap.locations == self.locations
+
+    def test_change_data(self):
+        heatmap = Heatmap(locations=self.locations)
+        heatmap.data = self.locations * 2
+        assert heatmap.locations == self.locations * 2
+
+
+class TestWeightedHeatmap(unittest.TestCase):
+
+    def setUp(self):
+        self.locations = [(-5.0, 5.0), (10.0, 10.0)]
+        self.weights = [0.2, 0.5]
+        self.merged_location_weights = [
+            (-5.0, 5.0, 0.2),
+            (10.0, 10.0, 0.5),
+        ]
+
+    def test_set_data(self):
+        heatmap = WeightedHeatmap(data=self.merged_location_weights)
+        assert heatmap.locations == self.locations
+        assert heatmap.weights == self.weights
+
+    def test_change_data(self):
+        heatmap = WeightedHeatmap(
+            locations=self.locations, weights=self.weights)
+        heatmap.data = self.merged_location_weights * 2
+        assert heatmap.locations == self.locations * 2
+        assert heatmap.weights == self.weights * 2
+
+    def test_non_float_weights(self):
+        with self.assertRaises(InvalidWeightException):
+            WeightedHeatmap(locations=self.locations, weights=['not', 'float'])
+
+    def test_negative_weights(self):
+        with self.assertRaises(InvalidWeightException):
+            WeightedHeatmap(locations=self.locations, weights=[1.0, -2.0])

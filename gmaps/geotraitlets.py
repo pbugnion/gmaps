@@ -8,6 +8,10 @@ class InvalidPointException(Exception):
     pass
 
 
+class InvalidWeightException(Exception):
+    pass
+
+
 class Latitude(traitlets.Float):
     """
     Float representing a latitude

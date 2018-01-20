@@ -1,4 +1,6 @@
 
+import warnings
+
 import ipywidgets as widgets
 from traitlets import (
     Float, Bool, Unicode, HasTraits, default, List, validate,
@@ -8,9 +10,13 @@ from . import bounds
 from .locations import locations_to_list, locations_docstring
 from . import geotraitlets
 from .maps import GMapsWidgetMixin
+from ._docutils import doc_subst
 
 
-_heatmap_options_docstring = """
+_doc_snippets = {}
+_doc_snippets['locations'] = locations_docstring
+
+_doc_snippets['options'] = """
     :param max_intensity:
         Strictly positive floating point number indicating the numeric value
         that corresponds to the hottest colour in the heatmap gradient. Any
@@ -47,6 +53,13 @@ _heatmap_options_docstring = """
 """
 
 
+def _warn_obsolete_data():
+    warnings.warn(
+        'The "data" traitlet is deprecated, and will be '
+        'removed in jupyter-gmaps 0.8.0. '
+        'Use "locations" instead.', DeprecationWarning)
+
+
 # Mixin for options common to both heatmap and weighted heatmaps.
 class _HeatmapOptionsMixin(HasTraits):
     max_intensity = Float(default_value=None, allow_none=True).tag(sync=True)
@@ -57,7 +70,7 @@ class _HeatmapOptionsMixin(HasTraits):
         trait=geotraitlets.ColorAlpha(), allow_none=True, minlen=1
     ).tag(sync=True)
 
-    @default("gradient")
+    @default('gradient')
     def _default_gradient(self):
         return None
 
@@ -78,8 +91,9 @@ class _HeatmapOptionsMixin(HasTraits):
         return bounds.longitude_bounds(longitudes)
 
 
+@doc_subst(_doc_snippets)
 class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
-    __doc__ = """
+    """
     Heatmap layer.
 
     Add this to a ``Map`` instance to draw a heatmap. A heatmap shows
@@ -87,6 +101,19 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
 
     You should not instantiate this directly. Instead, use the
     :func:`gmaps.heatmap_layer` factory function.
+
+    {locations}
+
+    {options}
+
+    :param data: DEPRECATED. Use `locations` instead.
+        List of (latitude, longitude) pairs denoting a single
+        point. Latitudes are expressed as a float between -90
+        (corresponding to 90 degrees south) and +90 (corresponding to
+        90 degrees north). Longitudes are expressed as a float
+        between -180 (corresponding to 180 degrees west) and 180
+        (corresponding to 180 degrees east).
+    :type data: list of tuples
 
     :Examples:
 
@@ -97,39 +124,38 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     >>> heatmap.point_radius = 3
     >>> heatmap.gradient = ['white', 'gray']
     >>> fig.add_layer(heatmap_layer)
-
-    :param data: List of (latitude, longitude) pairs denoting a single
-        point. Latitudes are expressed as a float between -90
-        (corresponding to 90 degrees south) and +90 (corresponding to
-        90 degrees north). Longitudes are expressed as a float
-        between -180 (corresponding to 180 degrees west) and 180
-        (corresponding to 180 degrees east).
-    :type data: list of tuples
-
-    """ + _heatmap_options_docstring
+    """
     has_bounds = True
-    _view_name = Unicode("SimpleHeatmapLayerView").tag(sync=True)
-    _model_name = Unicode("SimpleHeatmapLayerModel").tag(sync=True)
+    _view_name = Unicode('SimpleHeatmapLayerView').tag(sync=True)
+    _model_name = Unicode('SimpleHeatmapLayerModel').tag(sync=True)
 
-    data = List().tag(sync=True)
+    data = List()
+    locations = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
-    @validate("data")
-    def _validate_data(self, proposal):
-        for point in proposal["value"]:
+    @observe('data')
+    def _on_data_change(self, change):
+        data = change['new']
+        _warn_obsolete_data()
+        self.locations = data
+
+    @validate('locations')
+    def _validate_locations(self, proposal):
+        for point in proposal['value']:
             if not geotraitlets.is_valid_point(point):
                 raise geotraitlets.InvalidPointException(
-                    "{} is not a valid latitude, longitude pair".format(point))
-        return proposal["value"]
+                    '{} is not a valid latitude, longitude pair'.format(point))
+        return proposal['value']
 
-    @observe("data")
+    @observe('locations')
     def _calc_bounds(self, change):
-        data = change["new"]
+        data = change['new']
         self.set_bounds(data)
 
 
+@doc_subst(_doc_snippets)
 class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
-    __doc__ = """
+    """
     Heatmap with weighted points.
 
     Add this layer to a ``Map`` instance to draw a heatmap. Unlike the plain
@@ -140,6 +166,25 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     :func:`gmaps.heatmap_layer` factory function, passing in a
     parameter for `weights`.
 
+    {locations}
+
+    :param weights:
+        List of non-negative floats corresponding to the importance of
+        each latitude-longitude pair. Must have the same length as
+        `locations`.
+    :type weights: list of floats
+
+    {options}
+
+    :param data: DEPRECATED. Use `locations` and `weights` instead.
+        List of (latitude, longitude, weight) triples for a single
+        point. Latitudes are expressed as a float between -90 (corresponding to
+        90 degrees south) and +90 (corresponding to 90 degrees north).
+        Longitudes are expressed as a float between -180
+        (corresponding to 180 degrees west) and +180 (corresponding to
+        180 degrees east). Weights must be non-negative.
+    :type data: list of tuples
+
     :Examples:
 
     >>> fig = gmaps.figure()
@@ -148,35 +193,53 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     >>> heatmap = gmaps.heatmap_layer(locations, weights=weights)
     >>> heatmap.max_intensity = 2
     >>> fig.add_layer(heatmap_layer)
-
-    :param data: List of (latitude, longitude, weight) triples for a single
-        point. Latitudes are expressed as a float between -90 (corresponding to
-        90 degrees south) and +90 (corresponding to 90 degrees north).
-        Longitudes are expressed as a float between -180
-        (corresponding to 180 degrees west) and +180 (corresponding to
-        180 degrees east). Weights must be non-negative.
-    :type data: list of tuples
-
-    """ + _heatmap_options_docstring
+    """
     has_bounds = True
-    _view_name = Unicode("WeightedHeatmapLayerView").tag(sync=True)
-    _model_name = Unicode("WeightedHeatmapLayerModel").tag(sync=True)
+    _view_name = Unicode('WeightedHeatmapLayerView').tag(sync=True)
+    _model_name = Unicode('WeightedHeatmapLayerModel').tag(sync=True)
 
-    data = List().tag(sync=True)
+    data = List()
+    locations = List().tag(sync=True)
+    weights = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
-    @validate("data")
-    def _validate_data(self, proposal):
-        for point in proposal["value"]:
-            if not geotraitlets.is_valid_point(point[:2]):
-                raise geotraitlets.InvalidPointException(
-                    "{} is not a valid latitude, longitude pair".format(point))
-            # check weight
-        return proposal["value"]
+    @observe('data')
+    def _on_data_change(self, change):
+        data = change['new']
+        _warn_obsolete_data()
+        self.locations = [point[:2] for point in data]
+        self.weights = [point[2] for point in data]
 
-    @observe("data")
+    @validate('locations')
+    def _validate_data(self, proposal):
+        for point in proposal['value']:
+            if not geotraitlets.is_valid_point(point):
+                raise geotraitlets.InvalidPointException(
+                    '{} is not a valid latitude, longitude pair'.format(
+                        point))
+        return proposal['value']
+
+    @validate('weights')
+    def _validate_weights(self, proposal):
+        weights = []
+        for weight in proposal['value']:
+            try:
+                weight = float(weight)
+            except (TypeError, ValueError):
+                raise geotraitlets.InvalidWeightException(
+                    '{} is not a valid weight. Weights must be floats.'.format(
+                        weight))
+            if weight < 0.0:
+                raise geotraitlets.InvalidWeightException(
+                    '{} is not a valid weight. Weights must be '
+                    'non-negative.'.format(weight)
+                )
+            weights.append(weight)
+        return weights
+
+    @observe('locations')
     def _calc_bounds(self, change):
-        data = change["new"]
+        data = change['new']
         self.set_bounds(data)
 
 
@@ -184,46 +247,34 @@ def _heatmap_options(
         locations, weights, max_intensity, dissipating, point_radius,
         opacity, gradient):
     options = {
-        "max_intensity": max_intensity,
-        "dissipating": dissipating,
-        "point_radius": point_radius,
-        "opacity": opacity,
-        "gradient": gradient
+        'max_intensity': max_intensity,
+        'dissipating': dissipating,
+        'point_radius': point_radius,
+        'opacity': opacity,
+        'gradient': gradient
     }
     locations_as_list = locations_to_list(locations)
     if weights is None:
         is_weighted = False
-        data = locations_as_list
+        widget_args = {'locations': locations_as_list}
     else:
         if len(weights) != len(locations):
             raise ValueError(
-                "weights must be of the same length as locations or None")
+                'weights must be of the same length as locations or None')
         is_weighted = True
-        data = [
-            (latitude, longitude, weight) for
-            ((latitude, longitude), weight) in
-            zip(locations_as_list, weights)
-        ]
-    widget_args = {"data": data}
+        widget_args = {
+            'locations': locations_as_list,
+            'weights': list(weights)
+        }
     widget_args.update(options)
     return widget_args, is_weighted
 
 
+@doc_subst(_doc_snippets)
 def heatmap_layer(
         locations, weights=None, max_intensity=None,
         dissipating=True, point_radius=None,
         opacity=0.6, gradient=None):
-    widget_args, is_weighted = _heatmap_options(
-        locations, weights, max_intensity, dissipating, point_radius,
-        opacity, gradient
-    )
-    if is_weighted:
-        return WeightedHeatmap(**widget_args)
-    else:
-        return Heatmap(**widget_args)
-
-
-heatmap_layer.__doc__ = \
     """
     Create a heatmap layer.
 
@@ -263,7 +314,12 @@ heatmap_layer.__doc__ = \
 
     :returns:
         A :class:`gmaps.Heatmap` or a :class:`gmaps.WeightedHeatmap` widget.
-    """.format(
-        locations=locations_docstring,
-        options=_heatmap_options_docstring
+    """
+    widget_args, is_weighted = _heatmap_options(
+        locations, weights, max_intensity, dissipating, point_radius,
+        opacity, gradient
     )
+    if is_weighted:
+        return WeightedHeatmap(**widget_args)
+    else:
+        return Heatmap(**widget_args)
