@@ -132,8 +132,6 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     >>> heatmap.point_radius = 3
     >>> heatmap.gradient = ['white', 'gray']
     >>> fig.add_layer(heatmap_layer)
-
-
     """
     has_bounds = True
     _view_name = Unicode('SimpleHeatmapLayerView').tag(sync=True)
