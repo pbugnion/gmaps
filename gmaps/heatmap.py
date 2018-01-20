@@ -10,9 +10,21 @@ from . import bounds
 from .locations import locations_to_list, locations_docstring
 from . import geotraitlets
 from .maps import GMapsWidgetMixin
+from ._docutils import doc_subst
 
 
-_heatmap_options_docstring = """
+_doc_snippets = {}
+_doc_snippets['locations'] = """
+    :param locations: List of (latitude, longitude) pairs denoting a single
+        point. Latitudes are expressed as a float between -90
+        (corresponding to 90 degrees south) and +90 (corresponding to
+        90 degrees north). Longitudes are expressed as a float
+        between -180 (corresponding to 180 degrees west) and 180
+        (corresponding to 180 degrees east).
+    :type locations: list of tuples
+"""
+
+_doc_snippets['options'] = """
     :param max_intensity:
         Strictly positive floating point number indicating the numeric value
         that corresponds to the hottest colour in the heatmap gradient. Any
@@ -87,8 +99,9 @@ class _HeatmapOptionsMixin(HasTraits):
         return bounds.longitude_bounds(longitudes)
 
 
+@doc_subst(_doc_snippets)
 class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
-    __doc__ = """
+    """
     Heatmap layer.
 
     Add this to a ``Map`` instance to draw a heatmap. A heatmap shows
@@ -96,6 +109,19 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
 
     You should not instantiate this directly. Instead, use the
     :func:`gmaps.heatmap_layer` factory function.
+
+    {locations}
+
+    {options}
+
+    :param data: DEPRECATED. Use `locations` instead.
+        List of (latitude, longitude) pairs denoting a single
+        point. Latitudes are expressed as a float between -90
+        (corresponding to 90 degrees south) and +90 (corresponding to
+        90 degrees north). Longitudes are expressed as a float
+        between -180 (corresponding to 180 degrees west) and 180
+        (corresponding to 180 degrees east).
+    :type data: list of tuples
 
     :Examples:
 
@@ -107,15 +133,8 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     >>> heatmap.gradient = ['white', 'gray']
     >>> fig.add_layer(heatmap_layer)
 
-    :param data: List of (latitude, longitude) pairs denoting a single
-        point. Latitudes are expressed as a float between -90
-        (corresponding to 90 degrees south) and +90 (corresponding to
-        90 degrees north). Longitudes are expressed as a float
-        between -180 (corresponding to 180 degrees west) and 180
-        (corresponding to 180 degrees east).
-    :type data: list of tuples
 
-    """ + _heatmap_options_docstring
+    """
     has_bounds = True
     _view_name = Unicode('SimpleHeatmapLayerView').tag(sync=True)
     _model_name = Unicode('SimpleHeatmapLayerModel').tag(sync=True)
@@ -145,7 +164,7 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
 
 
 class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
-    __doc__ = """
+    """
     Heatmap with weighted points.
 
     Add this layer to a ``Map`` instance to draw a heatmap. Unlike the plain
@@ -173,7 +192,7 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         180 degrees east). Weights must be non-negative.
     :type data: list of tuples
 
-    """ + _heatmap_options_docstring
+    """
     has_bounds = True
     _view_name = Unicode('WeightedHeatmapLayerView').tag(sync=True)
     _model_name = Unicode('WeightedHeatmapLayerModel').tag(sync=True)
@@ -233,21 +252,11 @@ def _heatmap_options(
     return widget_args, is_weighted
 
 
+@doc_subst(_doc_snippets)
 def heatmap_layer(
         locations, weights=None, max_intensity=None,
         dissipating=True, point_radius=None,
         opacity=0.6, gradient=None):
-    widget_args, is_weighted = _heatmap_options(
-        locations, weights, max_intensity, dissipating, point_radius,
-        opacity, gradient
-    )
-    if is_weighted:
-        return WeightedHeatmap(**widget_args)
-    else:
-        return Heatmap(**widget_args)
-
-
-heatmap_layer.__doc__ = \
     """
     Create a heatmap layer.
 
@@ -287,7 +296,14 @@ heatmap_layer.__doc__ = \
 
     :returns:
         A :class:`gmaps.Heatmap` or a :class:`gmaps.WeightedHeatmap` widget.
-    """.format(
-        locations=locations_docstring,
-        options=_heatmap_options_docstring
+    """
+    widget_args, is_weighted = _heatmap_options(
+        locations, weights, max_intensity, dissipating, point_radius,
+        opacity, gradient
     )
+    if is_weighted:
+        return WeightedHeatmap(**widget_args)
+    else:
+        return Heatmap(**widget_args)
+
+
