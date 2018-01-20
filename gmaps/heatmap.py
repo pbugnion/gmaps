@@ -14,15 +14,7 @@ from ._docutils import doc_subst
 
 
 _doc_snippets = {}
-_doc_snippets['locations'] = """
-    :param locations: List of (latitude, longitude) pairs denoting a single
-        point. Latitudes are expressed as a float between -90
-        (corresponding to 90 degrees south) and +90 (corresponding to
-        90 degrees north). Longitudes are expressed as a float
-        between -180 (corresponding to 180 degrees west) and 180
-        (corresponding to 180 degrees east).
-    :type locations: list of tuples
-"""
+_doc_snippets['locations'] = locations_docstring
 
 _doc_snippets['options'] = """
     :param max_intensity:
@@ -314,5 +306,3 @@ def heatmap_layer(
         return WeightedHeatmap(**widget_args)
     else:
         return Heatmap(**widget_args)
-
-
