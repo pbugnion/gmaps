@@ -163,6 +163,7 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         self.set_bounds(data)
 
 
+@doc_subst(_doc_snippets)
 class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     """
     Heatmap with weighted points.
@@ -175,6 +176,25 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     :func:`gmaps.heatmap_layer` factory function, passing in a
     parameter for `weights`.
 
+    {locations}
+
+    :param weights:
+        List of non-negative floats corresponding to the importance of
+        each latitude-longitude pair. Must have the same length as
+        `locations`.
+    :type weights: list of floats
+
+    {options}
+
+    :param data: DEPRECATED. Use `locations` and `weights` instead.
+        List of (latitude, longitude, weight) triples for a single
+        point. Latitudes are expressed as a float between -90 (corresponding to
+        90 degrees south) and +90 (corresponding to 90 degrees north).
+        Longitudes are expressed as a float between -180
+        (corresponding to 180 degrees west) and +180 (corresponding to
+        180 degrees east). Weights must be non-negative.
+    :type data: list of tuples
+
     :Examples:
 
     >>> fig = gmaps.figure()
@@ -183,15 +203,6 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     >>> heatmap = gmaps.heatmap_layer(locations, weights=weights)
     >>> heatmap.max_intensity = 2
     >>> fig.add_layer(heatmap_layer)
-
-    :param data: List of (latitude, longitude, weight) triples for a single
-        point. Latitudes are expressed as a float between -90 (corresponding to
-        90 degrees south) and +90 (corresponding to 90 degrees north).
-        Longitudes are expressed as a float between -180
-        (corresponding to 180 degrees west) and +180 (corresponding to
-        180 degrees east). Weights must be non-negative.
-    :type data: list of tuples
-
     """
     has_bounds = True
     _view_name = Unicode('WeightedHeatmapLayerView').tag(sync=True)
