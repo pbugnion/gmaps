@@ -1,9 +1,37 @@
 
 import unittest
+import pytest
 
 import traitlets
 
 from .. import geotraitlets
+
+
+class LocationArray(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.LocationArray()
+        self.A = A
+        self.locations = [(-5.0, 5.0), (10.0, 10.0)]
+
+    def test_accept_list(self):
+        a = self.A(x=self.locations)
+        assert a.x == self.locations
+
+    def test_accept_np_array(self):
+        import numpy as np
+        a = self.A(x=np.array(self.locations))
+        assert a.x == self.locations
+
+    def test_accept_dataframe(self):
+        pd = pytest.importorskip('pandas')
+        df = pd.DataFrame.from_items([
+            ('latitude', [loc[0] for loc in self.locations]),
+            ('longitude', [loc[1] for loc in self.locations]),
+        ])
+        a = self.A(x=df)
+        assert a.x == self.locations
 
 
 class ColorString(unittest.TestCase):
