@@ -19,6 +19,8 @@ class LocationArray(traitlets.List):
     default_value = traitlets.Undefined
 
     def validate(self, obj, value):
+        if value is None:
+            return super(LocationArray, self).validate(obj, value)
         locations_as_list = locations_to_list(value)
         for location in locations_as_list:
             latitude, longitude = location

@@ -52,6 +52,18 @@ class LocationArray(unittest.TestCase):
         with self.assertRaises(traitlets.TraitError):
             A(x=[])
 
+    def test_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.LocationArray(allow_none=True)
+        a = A(x=None)
+        assert a.x is None
+
+    def test_dont_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.LocationArray(allow_none=False)
+        with self.assertRaises(traitlets.TraitError):
+            A(x=None)
+
 
 class ColorString(unittest.TestCase):
     def setUp(self):
