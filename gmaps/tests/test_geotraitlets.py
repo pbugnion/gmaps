@@ -33,6 +33,14 @@ class LocationArray(unittest.TestCase):
         a = self.A(x=df)
         assert a.x == self.locations
 
+    def test_reject_invalid_latitude(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=[('not-a', 'latitude')])
+
+    def test_reject_outofbounds_latitude(self):
+        with self.assertRaises(geotraitlets.InvalidPointException):
+            self.A(x=[(-100.0, 0.0)])
+
 
 class ColorString(unittest.TestCase):
     def setUp(self):
