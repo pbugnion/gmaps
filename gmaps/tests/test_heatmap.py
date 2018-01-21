@@ -137,6 +137,22 @@ class TestHeatmap(unittest.TestCase):
         heatmap.data = self.locations * 2
         assert heatmap.locations == self.locations * 2
 
+    def test_set_locations_np_array(self):
+        import numpy as np
+        heatmap = Heatmap(locations=self.locations)
+        heatmap.locations = np.array(self.locations * 2)
+        assert heatmap.locations == self.locations * 2
+
+    def test_set_locations_dataframe(self):
+        pd = pytest.importorskip('pandas')
+        heatmap = Heatmap(locations=self.locations)
+        df = pd.DataFrame.from_items([
+            ('latitude', [loc[0] for loc in self.locations * 2]),
+            ('longitude', [loc[1] for loc in self.locations * 2]),
+        ])
+        heatmap.locations = df
+        assert heatmap.locations == self.locations * 2
+
 
 class TestWeightedHeatmap(unittest.TestCase):
 
