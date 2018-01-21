@@ -192,7 +192,7 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
 
     data = List()
     locations = geotraitlets.LocationArray().tag(sync=True)
-    weights = List().tag(sync=True)
+    weights = geotraitlets.WeightArray().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @observe('data')
@@ -201,24 +201,6 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         _warn_obsolete_data()
         self.locations = [point[:2] for point in data]
         self.weights = [point[2] for point in data]
-
-    @validate('weights')
-    def _validate_weights(self, proposal):
-        weights = []
-        for weight in proposal['value']:
-            try:
-                weight = float(weight)
-            except (TypeError, ValueError):
-                raise geotraitlets.InvalidWeightException(
-                    '{} is not a valid weight. Weights must be floats.'.format(
-                        weight))
-            if weight < 0.0:
-                raise geotraitlets.InvalidWeightException(
-                    '{} is not a valid weight. Weights must be '
-                    'non-negative.'.format(weight)
-                )
-            weights.append(weight)
-        return weights
 
     @observe('locations')
     def _calc_bounds(self, change):
