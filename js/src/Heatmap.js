@@ -47,6 +47,10 @@ class HeatmapLayerBaseView extends GMapsLayerView {
         });
     }
 
+    resetData() {
+        this.heatmap.setData(this.getData())
+    }
+
     addToMapView(mapView) {
         this.heatmap.setMap(mapView.map)
     }
@@ -74,11 +78,7 @@ class HeatmapLayerBaseView extends GMapsLayerView {
 export class SimpleHeatmapLayerView extends HeatmapLayerBaseView {
     modelEvents() {
         super.modelEvents()
-        this.model.on(
-            'change:locations',
-            () => { this.heatmap.setData(this.getData()) },
-            this
-        )
+        this.model.on('change:locations', this.resetData, this)
     }
 
     getData() {
@@ -92,6 +92,12 @@ export class SimpleHeatmapLayerView extends HeatmapLayerBaseView {
 
 
 export class WeightedHeatmapLayerView extends HeatmapLayerBaseView {
+    modelEvents() {
+        super.modelEvents()
+        this.model.on('change:locations', this.resetData, this)
+        this.model.on('change:weights', this.resetData, this)
+    }
+
     getData() {
         const data = this.model.get("locations")
         const weights = this.model.get("weights")
