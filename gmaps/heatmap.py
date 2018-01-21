@@ -3,11 +3,11 @@ import warnings
 
 import ipywidgets as widgets
 from traitlets import (
-    Float, Bool, Unicode, HasTraits, default, List, validate,
-    observe)
+    Float, Bool, Unicode, HasTraits, default, List, observe
+)
 
 from . import bounds
-from .locations import locations_to_list, locations_docstring
+from .locations import locations_docstring
 from . import geotraitlets
 from .maps import GMapsWidgetMixin
 from ._docutils import doc_subst
@@ -234,7 +234,7 @@ def _heatmap_options(
         is_weighted = True
         widget_args = {
             'locations': locations,
-            'weights': list(weights)
+            'weights': weights
         }
     widget_args.update(options)
     return widget_args, is_weighted
