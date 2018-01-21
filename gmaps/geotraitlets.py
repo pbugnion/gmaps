@@ -39,10 +39,8 @@ class Latitude(traitlets.Float):
     default_value = traitlets.Undefined
 
     def validate(self, obj, value):
-        if -90.0 <= value <= 90.0:
-            return value
-        else:
-            self.error(obj, value)
+        _validate_latitude(value)
+        return value
 
 
 class Longitude(traitlets.Float):
@@ -55,10 +53,8 @@ class Longitude(traitlets.Float):
     default_value = traitlets.Undefined
 
     def validate(self, obj, value):
-        if -180.0 <= value <= 180.0:
-            return value
-        else:
-            self.error(obj, value)
+        _validate_longitude(value)
+        return value
 
 
 class Point(traitlets.Tuple):
