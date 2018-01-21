@@ -139,14 +139,6 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         _warn_obsolete_data()
         self.locations = data
 
-    # @validate('locations')
-    # def _validate_locations(self, proposal):
-    #     for point in proposal['value']:
-    #         if not geotraitlets.is_valid_point(point):
-    #             raise geotraitlets.InvalidPointException(
-    #                 '{} is not a valid latitude, longitude pair'.format(point))
-    #     return proposal['value']
-
     @observe('locations')
     def _calc_bounds(self, change):
         data = change['new']
@@ -210,15 +202,6 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         self.locations = [point[:2] for point in data]
         self.weights = [point[2] for point in data]
 
-    # @validate('locations')
-    # def _validate_data(self, proposal):
-    #     for point in proposal['value']:
-    #         if not geotraitlets.is_valid_point(point):
-    #             raise geotraitlets.InvalidPointException(
-    #                 '{} is not a valid latitude, longitude pair'.format(
-    #                     point))
-    #     return proposal['value']
-
     @validate('weights')
     def _validate_weights(self, proposal):
         weights = []
@@ -253,17 +236,16 @@ def _heatmap_options(
         'opacity': opacity,
         'gradient': gradient
     }
-    locations_as_list = locations_to_list(locations)
     if weights is None:
         is_weighted = False
-        widget_args = {'locations': locations_as_list}
+        widget_args = {'locations': locations}
     else:
         if len(weights) != len(locations):
             raise ValueError(
                 'weights must be of the same length as locations or None')
         is_weighted = True
         widget_args = {
-            'locations': locations_as_list,
+            'locations': locations,
             'weights': list(weights)
         }
     widget_args.update(options)
