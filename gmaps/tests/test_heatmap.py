@@ -108,6 +108,14 @@ class HeatmapLayer(unittest.TestCase):
         with self.assertRaises(InvalidPointException):
             heatmap_layer([(1.0, -200.0)])
 
+    def test_no_locations(self):
+        with self.assertRaises(traitlets.TraitError):
+            heatmap_layer([])
+
+    def test_no_location_weighted(self):
+        with self.assertRaises(traitlets.TraitError):
+            heatmap_layer([], weights=[])
+
 
 class TestHeatmapOptionsMixin(unittest.TestCase):
 

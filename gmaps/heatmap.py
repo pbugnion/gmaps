@@ -130,7 +130,9 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode('SimpleHeatmapLayerModel').tag(sync=True)
 
     data = List()
-    locations = geotraitlets.LocationArray().tag(sync=True)
+    locations = geotraitlets.LocationArray(
+        allow_none=False, minlen=1
+    ).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @observe('data')
@@ -191,8 +193,12 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode('WeightedHeatmapLayerModel').tag(sync=True)
 
     data = List()
-    locations = geotraitlets.LocationArray().tag(sync=True)
-    weights = geotraitlets.WeightArray().tag(sync=True)
+    locations = geotraitlets.LocationArray(
+        allow_none=False, minlen=1
+    ).tag(sync=True)
+    weights = geotraitlets.WeightArray(
+        allow_none=False, minlen=1
+    ).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @observe('data')
