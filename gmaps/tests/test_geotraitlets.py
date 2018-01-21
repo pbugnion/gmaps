@@ -65,6 +65,55 @@ class LocationArray(unittest.TestCase):
             A(x=None)
 
 
+class WeightArray(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.WeightArray()
+        self.A = A
+        self.weights = [1.0, 3.5]
+
+    def test_accept_list(self):
+        a = self.A(x=self.weights)
+        assert a.x == self.weights
+
+    def test_accept_np_array(self):
+        import numpy as np
+        a = self.A(x=np.array(self.weights))
+        assert a.x == self.weights
+
+    def test_accept_series(self):
+        pd = pytest.importorskip('pandas')
+        a = self.A(x=pd.Series(self.weights))
+        assert a.x == self.weights
+
+    def test_reject_negative_weight(self):
+        with self.assertRaises(geotraitlets.InvalidWeightException):
+            self.A(x=[-2.0])
+
+    def test_minlen(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.WeightArray(minlen=2)
+        a = A(x=self.weights)
+        assert a.x == self.weights
+        with self.assertRaises(traitlets.TraitError):
+            A(x=[1.0])
+
+    def test_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.WeightArray(allow_none=True)
+        a = A(x=None)
+        assert a.x is None
+
+    def test_dont_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.WeightArray(allow_none=False)
+        a = A(x=self.weights)
+        assert a.x == self.weights
+        with self.assertRaises(traitlets.TraitError):
+            a.x = None
+
+
 class ColorString(unittest.TestCase):
     def setUp(self):
         class A(traitlets.HasTraits):

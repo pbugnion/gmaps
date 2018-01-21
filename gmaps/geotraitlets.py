@@ -29,6 +29,30 @@ class LocationArray(traitlets.List):
         return super(LocationArray, self).validate(obj, locations_as_list)
 
 
+class WeightArray(traitlets.List):
+    info_text = 'An iterable of non-negative weights'
+    default_value = traitlets.Undefined
+
+    def validate(self, obj, value):
+        if value is None:
+            return super(WeightArray, self).validate(obj, value)
+        weights = list(value)
+        for weight in weights:
+            try:
+                weight = float(weight)
+            except (TypeError, ValueError):
+                raise traitlets.TraitError(
+                    '{} is not a valid weight. '
+                    'Weights must be floats'.format(weight)
+                )
+            if weight < 0.0:
+                raise InvalidWeightException(
+                    '{} is not a valid weight. '
+                    'Weights must be non-negative.'.format(weight)
+                )
+        return super(WeightArray, self).validate(obj, weights)
+
+
 class Latitude(traitlets.Float):
     """
     Float representing a latitude
