@@ -24,31 +24,8 @@ class LocationArray(traitlets.List):
         locations_as_list = locations_to_list(value)
         for location in locations_as_list:
             latitude, longitude = location
-            try:
-                latitude = float(latitude)
-            except (TypeError, ValueError):
-                raise traitlets.TraitError(
-                    '{} is not a valid latitude. '
-                    'Latitudes must be floats'.format(latitude)
-                )
-            if not (-90.0 <= latitude <= 90.0):
-                raise InvalidPointException(
-                    '{} is not a valid latitude. '
-                    'Latitudes must lie between -90 and 90.'.format(latitude)
-                )
-            try:
-                longitude = float(longitude)
-            except (TypeError, ValueError):
-                raise traitlets.TraitError(
-                    '{} is not a valid longitude. '
-                    'Longitudes must be floats'.format(latitude)
-                )
-            if not (-180.0 <= longitude <= 180.0):
-                raise InvalidPointException(
-                    '{} is not a valid longitude. '
-                    'Longitudes must lie between '
-                    '-180 and 180.'.format(longitude)
-                )
+            _validate_latitude(latitude)
+            _validate_longitude(longitude)
         return super(LocationArray, self).validate(obj, locations_as_list)
 
 
@@ -216,3 +193,34 @@ class ColorAlpha(traitlets.Union):
 def is_valid_point(pt):
     latitude, longitude = pt
     return (-90.0 <= latitude <= 90.0) and (-180.0 <= longitude <= 180.0)
+
+
+def _validate_latitude(latitude):
+    try:
+        latitude = float(latitude)
+    except (TypeError, ValueError):
+        raise traitlets.TraitError(
+            '{} is not a valid latitude. '
+            'Latitudes must be floats'.format(latitude)
+        )
+    if not (-90.0 <= latitude <= 90.0):
+        raise InvalidPointException(
+            '{} is not a valid latitude. '
+            'Latitudes must lie between -90 and 90.'.format(latitude)
+        )
+
+
+def _validate_longitude(longitude):
+    try:
+        longitude = float(longitude)
+    except (TypeError, ValueError):
+        raise traitlets.TraitError(
+            '{} is not a valid longitude. '
+            'Longitudes must be floats'.format(longitude)
+        )
+    if not (-180.0 <= longitude <= 180.0):
+        raise InvalidPointException(
+            '{} is not a valid longitude. '
+            'Longitudes must lie between '
+            '-180 and 180.'.format(longitude)
+        )
