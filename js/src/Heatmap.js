@@ -72,8 +72,17 @@ class HeatmapLayerBaseView extends GMapsLayerView {
 
 
 export class SimpleHeatmapLayerView extends HeatmapLayerBaseView {
+    modelEvents() {
+        super.modelEvents()
+        this.model.on(
+            'change:locations',
+            () => { this.heatmap.setData(this.getData()) },
+            this
+        )
+    }
+
     getData() {
-        const data = this.model.get("locations")
+        const data = this.model.get('locations')
         const dataAsGoogle = new google.maps.MVCArray(
             data.map(([lat, lng]) => new google.maps.LatLng(lat, lng))
         )
