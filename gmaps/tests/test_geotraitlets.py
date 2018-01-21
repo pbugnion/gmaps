@@ -45,6 +45,13 @@ class LocationArray(unittest.TestCase):
         with self.assertRaises(geotraitlets.InvalidPointException):
             self.A(x=[(0.0, 200.0)])
 
+    def test_minlen(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.LocationArray(minlen=2)
+        A(x=self.locations)
+        with self.assertRaises(traitlets.TraitError):
+            A(x=[])
+
 
 class ColorString(unittest.TestCase):
     def setUp(self):
