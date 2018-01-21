@@ -41,6 +41,10 @@ class LocationArray(unittest.TestCase):
         with self.assertRaises(geotraitlets.InvalidPointException):
             self.A(x=[(-100.0, 0.0)])
 
+    def test_reject_outofbounds_longitude(self):
+        with self.assertRaises(geotraitlets.InvalidPointException):
+            self.A(x=[(0.0, 200.0)])
+
 
 class ColorString(unittest.TestCase):
     def setUp(self):
