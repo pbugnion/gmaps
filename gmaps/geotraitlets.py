@@ -3,6 +3,8 @@ import re
 
 import traitlets
 
+from .locations import locations_to_list
+
 
 class InvalidPointException(Exception):
     pass
@@ -10,6 +12,42 @@ class InvalidPointException(Exception):
 
 class InvalidWeightException(Exception):
     pass
+
+
+class LocationArray(traitlets.List):
+    info_text = 'An iterable of locations'
+    default_value = traitlets.Undefined
+
+    def validate(self, obj, value):
+        locations_as_list = locations_to_list(value)
+        for location in locations_as_list:
+            latitude, longitude = location
+            try:
+                latitude = float(latitude)
+            except (TypeError, ValueError):
+                raise traitlets.TraitError(
+                    '{} is not a valid latitude. '
+                    'Latitudes must be floats'.format(latitude)
+                )
+            if not (-90.0 <= latitude <= 90.0):
+                raise InvalidPointException(
+                    '{} is not a valid latitude. '
+                    'Latitudes must lie between -90 and 90.'.format(latitude)
+                )
+            try:
+                longitude = float(longitude)
+            except (TypeError, ValueError):
+                raise traitlets.TraitError(
+                    '{} is not a valid longitude. '
+                    'Longitudes must be floats'.format(latitude)
+                )
+            if not (-180.0 <= longitude <= 180.0):
+                raise InvalidPointException(
+                    '{} is not a valid longitude. '
+                    'Longitudes must lie between '
+                    '-180 and 180.'.format(longitude)
+                )
+        return super(LocationArray, self).validate(obj, locations_as_list)
 
 
 class Latitude(traitlets.Float):

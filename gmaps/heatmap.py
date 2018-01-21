@@ -130,7 +130,7 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode('SimpleHeatmapLayerModel').tag(sync=True)
 
     data = List()
-    locations = List().tag(sync=True)
+    locations = geotraitlets.LocationArray().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @observe('data')
@@ -139,13 +139,13 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         _warn_obsolete_data()
         self.locations = data
 
-    @validate('locations')
-    def _validate_locations(self, proposal):
-        for point in proposal['value']:
-            if not geotraitlets.is_valid_point(point):
-                raise geotraitlets.InvalidPointException(
-                    '{} is not a valid latitude, longitude pair'.format(point))
-        return proposal['value']
+    # @validate('locations')
+    # def _validate_locations(self, proposal):
+    #     for point in proposal['value']:
+    #         if not geotraitlets.is_valid_point(point):
+    #             raise geotraitlets.InvalidPointException(
+    #                 '{} is not a valid latitude, longitude pair'.format(point))
+    #     return proposal['value']
 
     @observe('locations')
     def _calc_bounds(self, change):
@@ -199,7 +199,7 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode('WeightedHeatmapLayerModel').tag(sync=True)
 
     data = List()
-    locations = List().tag(sync=True)
+    locations = geotraitlets.LocationArray().tag(sync=True)
     weights = List().tag(sync=True)
     data_bounds = List().tag(sync=True)
 
@@ -210,14 +210,14 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         self.locations = [point[:2] for point in data]
         self.weights = [point[2] for point in data]
 
-    @validate('locations')
-    def _validate_data(self, proposal):
-        for point in proposal['value']:
-            if not geotraitlets.is_valid_point(point):
-                raise geotraitlets.InvalidPointException(
-                    '{} is not a valid latitude, longitude pair'.format(
-                        point))
-        return proposal['value']
+    # @validate('locations')
+    # def _validate_data(self, proposal):
+    #     for point in proposal['value']:
+    #         if not geotraitlets.is_valid_point(point):
+    #             raise geotraitlets.InvalidPointException(
+    #                 '{} is not a valid latitude, longitude pair'.format(
+    #                     point))
+    #     return proposal['value']
 
     @validate('weights')
     def _validate_weights(self, proposal):
