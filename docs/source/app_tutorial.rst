@@ -116,3 +116,50 @@ There are several things to note on this:
   avoiding clutter on the map.
 - We then use `geopy <https://pypi.python.org/pypi/geopy>`_ to find the
   adddress. Assuming the address is valid, display it in the text widget.
+
+
+Updating data in response to other widgets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This is the entire code listing::
+
+  import ipywidgets as widgets
+  import gmaps
+  gmaps.configure(api_key='AIza...')
+
+  class AcledExplorer(object):
+
+      def __init__(self, df):
+          self._df = df
+          initial_year = min(self._df['year'])
+          self._slider = widgets.IntSlider(
+              value=initial_year,
+              min=min(self._df['year']),
+              max=max(self._df['year']),
+              description='Year'
+          )
+          self._slider.observe(self.render, names='value')
+          title_widget = widgets.HTML(
+              '<h3>Civilian casualties in Africa, by year</h3>'
+              '<h4>Data from <a href="https://www.acleddata.com/">ACLED project</a></h4>'
+          )
+          fig = gmaps.figure()
+          fig._map.layout = {'height': '500px', 'width': '100%'}
+          self._heatmap = gmaps.heatmap_layer(
+              self._locations_for_year(initial_year),
+              max_intensity=100,
+              point_radius=8
+          )
+          fig.add_layer(self._heatmap)
+          self._container = widgets.VBox([title_widget, self._slider, fig])
+
+      def render(self, change=None):
+          year = self._slider.value
+          self._heatmap.locations = self._locations_for_year(year)
+          return self._container
+
+      def _locations_for_year(self, year):
+          return self._df[self._df['year'] == year][['latitude', 'longitude']]
+
+
+  AcledExplorer(df).render()
