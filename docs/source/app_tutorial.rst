@@ -95,7 +95,7 @@ There are several things to note on this:
   data analysis workflows, encapsulation will improve your ability to reason
   about the code.
 - As part of the class constructor, we use :func:`gmaps.figure` to create a
-  figure. We add use :func:`gmaps.drawing_layer` to create a drawing layer,
+  figure. We then use :func:`gmaps.drawing_layer` to create a drawing layer,
   which we add to the figure. We also create a ``widgets.Text`` widget. This is
   a text box in which we will write the address. We then wrap our figure and the
   text box in a single ``widgets.VBox``, a widget container that stacks widgets
@@ -121,6 +121,18 @@ There are several things to note on this:
 Updating data in response to other widgets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Many layers support updating the data without re-rendering the entire map. This is useful
+for exploring multi-dimensional datasets, especially in conjunction with other widgets.
+
+As an example, we will use the `acled_africa_by_year` dataset, a dataset indexing violence
+against civilians in Africa. The dataset has four columns::
+
+  print('hello')
+
+We will build an application that lets the user explore different years via a slider. When
+the user changes the slider, we display the total number of fatalities for that year,
+and update a heatmap showing the distribution of conflicts.
+
 This is the entire code listing::
 
   import ipywidgets as widgets
@@ -131,18 +143,26 @@ This is the entire code listing::
 
       def __init__(self, df):
           self._df = df
+          self._heatmap = None
+          self._slider = None
           initial_year = min(self._df['year'])
-          self._slider = widgets.IntSlider(
-              value=initial_year,
-              min=min(self._df['year']),
-              max=max(self._df['year']),
-              description='Year'
-          )
-          self._slider.observe(self.render, names='value')
+
           title_widget = widgets.HTML(
               '<h3>Civilian casualties in Africa, by year</h3>'
               '<h4>Data from <a href="https://www.acleddata.com/">ACLED project</a></h4>'
           )
+
+          map_figure = self._render_map(initial_year)
+          controls = self._render_controls(initial_year)
+          self._container = widgets.VBox([title_widget, controls, map_figure])
+
+      def render(self, change=None):
+          year = self._slider.value
+          self._heatmap.locations = self._locations_for_year(year)
+          self._total_box.value = self._total_casualties_text_for_year(year)
+          return self._container
+
+      def _render_map(self, initial_year):
           fig = gmaps.figure()
           fig._map.layout = {'height': '500px', 'width': '100%'}
           self._heatmap = gmaps.heatmap_layer(
@@ -151,15 +171,42 @@ This is the entire code listing::
               point_radius=8
           )
           fig.add_layer(self._heatmap)
-          self._container = widgets.VBox([title_widget, self._slider, fig])
+          return fig
 
-      def render(self, change=None):
-          year = self._slider.value
-          self._heatmap.locations = self._locations_for_year(year)
-          return self._container
+      def _render_controls(self, initial_year):
+          self._slider = widgets.IntSlider(
+              value=initial_year,
+              min=min(self._df['year']),
+              max=max(self._df['year']),
+              description='Year',
+              continuous_update=False
+          )
+          self._total_box = widgets.Label(
+              value=self._total_casualties_text_for_year(initial_year)
+          )
+          self._slider.observe(self.render, names='value')
+          controls = widgets.HBox(
+              [self._slider, self._total_box], 
+              layout={'justify_content': 'space-between'}
+          )
+          return controls
 
       def _locations_for_year(self, year):
           return self._df[self._df['year'] == year][['latitude', 'longitude']]
 
+      def _total_casualties_for_year(self, year):
+          return int(self._df[self._df['year'] == year]['year'].count())
+
+      def _total_casualties_text_for_year(self, year):
+          return '{} civilian casualties'.format(self._total_casualties_for_year(year))
+
 
   AcledExplorer(df).render()
+
+There are several things to note on this:
+
+- We wrap the application in a class to help keep the mutable state encapsulated.
+- As part of the class constructor, we use :func:`gmaps.figure` to create a
+  figure. We add use :func:`gmaps.heatmap_layer` to create a heatmap,
+  which we add to the figure. The :class:`Heatmap` object returned has a ``locations``
+  attribute. Setting this to a new value will automatically update the heatmap.
