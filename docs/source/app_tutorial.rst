@@ -161,7 +161,7 @@ This is the entire code listing::
       def render(self):
           display(self._container)
 
-      def on_year_change(self, change=None):
+      def _on_year_change(self, change):
           year = self._slider.value
           self._heatmap.locations = self._locations_for_year(year)
           self._total_box.value = self._total_casualties_text_for_year(year)
@@ -189,7 +189,7 @@ This is the entire code listing::
           self._total_box = widgets.Label(
               value=self._total_casualties_text_for_year(initial_year)
           )
-          self._slider.observe(self.on_year_change, names='value')
+          self._slider.observe(self._on_year_change, names='value')
           controls = widgets.HBox(
               [self._slider, self._total_box], 
               layout={'justify_content': 'space-between'}
