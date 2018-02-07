@@ -39,6 +39,13 @@ METADATA = {
         "headers": ["latitude", "longitude"],
         "types": [float, float]
     },
+    "acled_africa_by_year": {
+        "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/acled_africa_by_year.csv",  # noqa
+        "description": "Recorded incidents of political violence in Africa, with year and number of fatalities",  # noqa
+        "source": "http://www.acleddata.com",
+        "headers": ["year", "latitude", "longitude", "fatalities"],
+        "types": [int, float, float, int]
+    },
     "london_congestion_zone": {
         "url": "https://s3-eu-west-1.amazonaws.com/jupyter-gmaps-examples/london_congestion_zone.csv",  # noqa
         "description": "Central part of the London congestion zone",
