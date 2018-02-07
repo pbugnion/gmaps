@@ -142,6 +142,12 @@ This is the entire code listing::
   gmaps.configure(api_key='AIza...')
 
   class AcledExplorer(object):
+      """
+      Jupyter widget for exploring the ACLED dataset.
+
+      The user uses the slider to choose a year. This renders
+      a heatmap of civilian victims in that year.
+      """
 
       def __init__(self, df):
           self._df = df
