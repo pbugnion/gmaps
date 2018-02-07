@@ -124,7 +124,7 @@ Updating data in response to other widgets
 Many layers support updating the data without re-rendering the entire map. This is useful
 for exploring multi-dimensional datasets, especially in conjunction with other widgets.
 
-As an example, we will use the `acled_africa_by_year` dataset, a dataset indexing violence
+As an example, we will use the ``acled_africa_by_year`` dataset, a dataset indexing violence
 against civilians in Africa. The dataset has four columns::
 
   print('hello')
@@ -135,7 +135,9 @@ and update a heatmap showing the distribution of conflicts.
 
 This is the entire code listing::
 
+  from IPython.display import display
   import ipywidgets as widgets
+
   import gmaps
   gmaps.configure(api_key='AIza...')
 
@@ -156,7 +158,10 @@ This is the entire code listing::
           controls = self._render_controls(initial_year)
           self._container = widgets.VBox([title_widget, controls, map_figure])
 
-      def render(self, change=None):
+      def render(self):
+          display(self._container)
+
+      def on_year_change(self, change=None):
           year = self._slider.value
           self._heatmap.locations = self._locations_for_year(year)
           self._total_box.value = self._total_casualties_text_for_year(year)
@@ -184,7 +189,7 @@ This is the entire code listing::
           self._total_box = widgets.Label(
               value=self._total_casualties_text_for_year(initial_year)
           )
-          self._slider.observe(self.render, names='value')
+          self._slider.observe(self.on_year_change, names='value')
           controls = widgets.HBox(
               [self._slider, self._total_box], 
               layout={'justify_content': 'space-between'}
@@ -205,8 +210,26 @@ This is the entire code listing::
 
 There are several things to note on this:
 
-- We wrap the application in a class to help keep the mutable state encapsulated.
+- We wrap the application in a class to help keep the mutable state
+  encapsulated.
 - As part of the class constructor, we use :func:`gmaps.figure` to create a
-  figure. We add use :func:`gmaps.heatmap_layer` to create a heatmap,
-  which we add to the figure. The :class:`Heatmap` object returned has a ``locations``
+  figure. We add use :func:`gmaps.heatmap_layer` to create a heatmap, which we
+  add to the figure. The :class:`Heatmap` object returned has a ``locations``
   attribute. Setting this to a new value will automatically update the heatmap.
+- We create a slider with ``widgets.IntSlider``. In general, `jupyter-gmaps`
+  objects are designed to interact with widgets from ipywidgets. For a full list
+  of available widgets, see the `ipywidgets documentation
+  <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20List.html>`_.
+- We want to react to changes in the slider: every time the slider moves, we
+  recompute the total number of fatalities and update the data in the heatmap.
+  To react to changes in a widget, we use the ``.observe`` method on the widget.
+  This lets us specify a callback that gets called whenever a given attribute of
+  the widget changes. We pass the ``names="value"`` argument to
+  ``slider.observe`` to only react to changes in the slider's ``value``
+  attribute. Note that the callback (``self.render`` in our case) needs to take
+  a single argument. It gets passed a dictionary describing the change.
+- To build the layout for our application, we use combinations of `HBox
+  <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20List.html#HBox>`_
+  and `VBox
+  <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20List.html#VBox>`_
+  widgets.
