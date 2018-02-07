@@ -127,7 +127,10 @@ for exploring multi-dimensional datasets, especially in conjunction with other w
 As an example, we will use the ``acled_africa_by_year`` dataset, a dataset indexing violence
 against civilians in Africa. The dataset has four columns::
 
-  print('hello')
+  import gmaps.datasets
+
+  df = gmaps.datasets.load_dataset_as_df('acled_africa_by_year')
+  df.head()
 
 We will build an application that lets the user explore different years via a slider. When
 the user changes the slider, we display the total number of fatalities for that year,
