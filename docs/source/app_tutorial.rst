@@ -86,7 +86,9 @@ This is the entire code listing::
 
   ReverseGeocoder().render()
 
-There are several things to note on this:
+.. image:: _images/reverse-geocoder.png
+
+There are several things to note:
 
 - We wrap the application in a ``ReverseGeocoder`` class. Wrapping your
   application in a class (rather than using the notebook's global namespace)
@@ -131,6 +133,8 @@ against civilians in Africa. The dataset has four columns::
 
   df = gmaps.datasets.load_dataset_as_df('acled_africa_by_year')
   df.head()
+
+.. image:: _images/acled-africa-head.png
 
 We will build an application that lets the user explore different years via a slider. When
 the user changes the slider, we display the total number of fatalities for that year,
@@ -217,6 +221,8 @@ This is the entire code listing::
 
   AcledExplorer(df).render()
 
+.. image:: _images/update-heatmap-with-slider.png
+  
 There are several things to note on this:
 
 - We wrap the application in a class to help keep the mutable state
