@@ -2,6 +2,8 @@
 import unittest
 import pytest
 
+import traitlets
+
 from ..heatmap import (
     _HeatmapOptionsMixin, heatmap_layer, Heatmap, WeightedHeatmap)
 from ..geotraitlets import InvalidPointException, InvalidWeightException
@@ -106,6 +108,14 @@ class HeatmapLayer(unittest.TestCase):
         with self.assertRaises(InvalidPointException):
             heatmap_layer([(1.0, -200.0)])
 
+    def test_no_locations(self):
+        with self.assertRaises(traitlets.TraitError):
+            heatmap_layer([])
+
+    def test_no_location_weighted(self):
+        with self.assertRaises(traitlets.TraitError):
+            heatmap_layer([], weights=[])
+
 
 class TestHeatmapOptionsMixin(unittest.TestCase):
 
@@ -137,6 +147,22 @@ class TestHeatmap(unittest.TestCase):
         heatmap.data = self.locations * 2
         assert heatmap.locations == self.locations * 2
 
+    def test_set_locations_np_array(self):
+        import numpy as np
+        heatmap = Heatmap(locations=self.locations)
+        heatmap.locations = np.array(self.locations * 2)
+        assert heatmap.locations == self.locations * 2
+
+    def test_set_locations_dataframe(self):
+        pd = pytest.importorskip('pandas')
+        heatmap = Heatmap(locations=self.locations)
+        df = pd.DataFrame.from_items([
+            ('latitude', [loc[0] for loc in self.locations * 2]),
+            ('longitude', [loc[1] for loc in self.locations * 2]),
+        ])
+        heatmap.locations = df
+        assert heatmap.locations == self.locations * 2
+
 
 class TestWeightedHeatmap(unittest.TestCase):
 
@@ -161,7 +187,7 @@ class TestWeightedHeatmap(unittest.TestCase):
         assert heatmap.weights == self.weights * 2
 
     def test_non_float_weights(self):
-        with self.assertRaises(InvalidWeightException):
+        with self.assertRaises(traitlets.TraitError):
             WeightedHeatmap(locations=self.locations, weights=['not', 'float'])
 
     def test_negative_weights(self):

@@ -3,11 +3,11 @@ import warnings
 
 import ipywidgets as widgets
 from traitlets import (
-    Float, Bool, Unicode, HasTraits, default, List, validate,
-    observe)
+    Float, Bool, Unicode, HasTraits, default, List, observe
+)
 
 from . import bounds
-from .locations import locations_to_list, locations_docstring
+from .locations import locations_docstring
 from . import geotraitlets
 from .maps import GMapsWidgetMixin
 from ._docutils import doc_subst
@@ -130,7 +130,9 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode('SimpleHeatmapLayerModel').tag(sync=True)
 
     data = List()
-    locations = List().tag(sync=True)
+    locations = geotraitlets.LocationArray(
+        allow_none=False, minlen=1
+    ).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @observe('data')
@@ -138,14 +140,6 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         data = change['new']
         _warn_obsolete_data()
         self.locations = data
-
-    @validate('locations')
-    def _validate_locations(self, proposal):
-        for point in proposal['value']:
-            if not geotraitlets.is_valid_point(point):
-                raise geotraitlets.InvalidPointException(
-                    '{} is not a valid latitude, longitude pair'.format(point))
-        return proposal['value']
 
     @observe('locations')
     def _calc_bounds(self, change):
@@ -199,8 +193,12 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _model_name = Unicode('WeightedHeatmapLayerModel').tag(sync=True)
 
     data = List()
-    locations = List().tag(sync=True)
-    weights = List().tag(sync=True)
+    locations = geotraitlets.LocationArray(
+        allow_none=False, minlen=1
+    ).tag(sync=True)
+    weights = geotraitlets.WeightArray(
+        allow_none=False, minlen=1
+    ).tag(sync=True)
     data_bounds = List().tag(sync=True)
 
     @observe('data')
@@ -209,33 +207,6 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         _warn_obsolete_data()
         self.locations = [point[:2] for point in data]
         self.weights = [point[2] for point in data]
-
-    @validate('locations')
-    def _validate_data(self, proposal):
-        for point in proposal['value']:
-            if not geotraitlets.is_valid_point(point):
-                raise geotraitlets.InvalidPointException(
-                    '{} is not a valid latitude, longitude pair'.format(
-                        point))
-        return proposal['value']
-
-    @validate('weights')
-    def _validate_weights(self, proposal):
-        weights = []
-        for weight in proposal['value']:
-            try:
-                weight = float(weight)
-            except (TypeError, ValueError):
-                raise geotraitlets.InvalidWeightException(
-                    '{} is not a valid weight. Weights must be floats.'.format(
-                        weight))
-            if weight < 0.0:
-                raise geotraitlets.InvalidWeightException(
-                    '{} is not a valid weight. Weights must be '
-                    'non-negative.'.format(weight)
-                )
-            weights.append(weight)
-        return weights
 
     @observe('locations')
     def _calc_bounds(self, change):
@@ -253,18 +224,17 @@ def _heatmap_options(
         'opacity': opacity,
         'gradient': gradient
     }
-    locations_as_list = locations_to_list(locations)
     if weights is None:
         is_weighted = False
-        widget_args = {'locations': locations_as_list}
+        widget_args = {'locations': locations}
     else:
         if len(weights) != len(locations):
             raise ValueError(
                 'weights must be of the same length as locations or None')
         is_weighted = True
         widget_args = {
-            'locations': locations_as_list,
-            'weights': list(weights)
+            'locations': locations,
+            'weights': weights
         }
     widget_args.update(options)
     return widget_args, is_weighted

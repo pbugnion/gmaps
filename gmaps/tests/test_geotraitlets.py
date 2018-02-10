@@ -1,9 +1,117 @@
 
 import unittest
+import pytest
 
 import traitlets
 
 from .. import geotraitlets
+
+
+class LocationArray(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.LocationArray()
+        self.A = A
+        self.locations = [(-5.0, 5.0), (10.0, 10.0)]
+
+    def test_accept_list(self):
+        a = self.A(x=self.locations)
+        assert a.x == self.locations
+
+    def test_accept_np_array(self):
+        import numpy as np
+        a = self.A(x=np.array(self.locations))
+        assert a.x == self.locations
+
+    def test_accept_dataframe(self):
+        pd = pytest.importorskip('pandas')
+        df = pd.DataFrame.from_items([
+            ('latitude', [loc[0] for loc in self.locations]),
+            ('longitude', [loc[1] for loc in self.locations]),
+        ])
+        a = self.A(x=df)
+        assert a.x == self.locations
+
+    def test_reject_invalid_latitude(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=[('not-a', 'latitude')])
+
+    def test_reject_outofbounds_latitude(self):
+        with self.assertRaises(geotraitlets.InvalidPointException):
+            self.A(x=[(-100.0, 0.0)])
+
+    def test_reject_outofbounds_longitude(self):
+        with self.assertRaises(geotraitlets.InvalidPointException):
+            self.A(x=[(0.0, 200.0)])
+
+    def test_minlen(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.LocationArray(minlen=2)
+        A(x=self.locations)
+        with self.assertRaises(traitlets.TraitError):
+            A(x=[])
+
+    def test_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.LocationArray(allow_none=True)
+        a = A(x=None)
+        assert a.x is None
+
+    def test_dont_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.LocationArray(allow_none=False)
+        with self.assertRaises(traitlets.TraitError):
+            A(x=None)
+
+
+class WeightArray(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.WeightArray()
+        self.A = A
+        self.weights = [1.0, 3.5]
+
+    def test_accept_list(self):
+        a = self.A(x=self.weights)
+        assert a.x == self.weights
+
+    def test_accept_np_array(self):
+        import numpy as np
+        a = self.A(x=np.array(self.weights))
+        assert a.x == self.weights
+
+    def test_accept_series(self):
+        pd = pytest.importorskip('pandas')
+        a = self.A(x=pd.Series(self.weights))
+        assert a.x == self.weights
+
+    def test_reject_negative_weight(self):
+        with self.assertRaises(geotraitlets.InvalidWeightException):
+            self.A(x=[-2.0])
+
+    def test_minlen(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.WeightArray(minlen=2)
+        a = A(x=self.weights)
+        assert a.x == self.weights
+        with self.assertRaises(traitlets.TraitError):
+            A(x=[1.0])
+
+    def test_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.WeightArray(allow_none=True)
+        a = A(x=None)
+        assert a.x is None
+
+    def test_dont_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.WeightArray(allow_none=False)
+        a = A(x=self.weights)
+        assert a.x == self.weights
+        with self.assertRaises(traitlets.TraitError):
+            a.x = None
 
 
 class ColorString(unittest.TestCase):

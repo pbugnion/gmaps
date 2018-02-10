@@ -8,8 +8,8 @@ export class SimpleHeatmapLayerModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
-            _view_name: "SimpleHeatmapLayerView",
-            _model_name: "SimpleHeatmapLayerModel"
+            _view_name: 'SimpleHeatmapLayerView',
+            _model_name: 'SimpleHeatmapLayerModel'
         }
     }
 };
@@ -19,8 +19,8 @@ export class WeightedHeatmapLayerModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
-            _view_name: "WeightedHeatmapLayerView",
-            _model_name: "WeightedHeatmapLayerModel"
+            _view_name: 'WeightedHeatmapLayerView',
+            _model_name: 'WeightedHeatmapLayerModel'
         }
     }
 };
@@ -38,13 +38,17 @@ class HeatmapLayerBaseView extends GMapsLayerView {
         GoogleMapsLoader.load((google) => {
             this.heatmap = new google.maps.visualization.HeatmapLayer({
                 data: this.getData(),
-                radius: this.model.get("point_radius"),
-                maxIntensity: this.model.get("max_intensity"),
-                dissipating: this.model.get("dissipating"),
-                opacity: this.model.get("opacity"),
-                gradient: this.model.get("gradient")
+                radius: this.model.get('point_radius'),
+                maxIntensity: this.model.get('max_intensity'),
+                dissipating: this.model.get('dissipating'),
+                opacity: this.model.get('opacity'),
+                gradient: this.model.get('gradient')
             }) ;
         });
+    }
+
+    resetData() {
+        this.heatmap.setData(this.getData())
     }
 
     addToMapView(mapView) {
@@ -72,8 +76,13 @@ class HeatmapLayerBaseView extends GMapsLayerView {
 
 
 export class SimpleHeatmapLayerView extends HeatmapLayerBaseView {
+    modelEvents() {
+        super.modelEvents()
+        this.model.on('change:locations', this.resetData, this)
+    }
+
     getData() {
-        const data = this.model.get("locations")
+        const data = this.model.get('locations')
         const dataAsGoogle = new google.maps.MVCArray(
             data.map(([lat, lng]) => new google.maps.LatLng(lat, lng))
         )
@@ -83,9 +92,15 @@ export class SimpleHeatmapLayerView extends HeatmapLayerBaseView {
 
 
 export class WeightedHeatmapLayerView extends HeatmapLayerBaseView {
+    modelEvents() {
+        super.modelEvents()
+        this.model.on('change:locations', this.resetData, this)
+        this.model.on('change:weights', this.resetData, this)
+    }
+
     getData() {
-        const data = this.model.get("locations")
-        const weights = this.model.get("weights")
+        const data = this.model.get('locations')
+        const weights = this.model.get('weights')
         const dataAsGoogle = new google.maps.MVCArray(
             data.map(([lat, lng], i) => {
                 const weight = weights[i];
