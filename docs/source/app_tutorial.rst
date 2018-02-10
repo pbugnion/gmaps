@@ -126,8 +126,10 @@ Updating data in response to other widgets
 Many layers support updating the data without re-rendering the entire map. This is useful
 for exploring multi-dimensional datasets, especially in conjunction with other widgets.
 
-As an example, we will use the ``acled_africa_by_year`` dataset, a dataset indexing violence
-against civilians in Africa. The dataset has four columns::
+As an example, we will use the ``acled_africa_by_year`` dataset, a dataset
+indexing violence against civilians in Africa. The original dataset is from the
+`ACLED project <https://www.acleddata.com/data/>`_. The dataset has four
+columns::
 
   import gmaps.datasets
 
