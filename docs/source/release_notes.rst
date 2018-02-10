@@ -2,6 +2,18 @@
 Release notes
 -------------
 
+Version 0.7.1
+=============
+
+This minor release:
+
+ - Deprecates the `.data` traitlet in heatmaps and weighted heatmaps in favour
+   of `.locations` (for heatmap) and `.locations` and `.weights`. These now have
+   validation, so a user can pass in a dataframe or numpy array (PR 211).
+ - React to changes in the new `.locations` and `.weights` traitlets to actually
+   update heatmaps dynamically. (PR 212).
+ - Reduces page load size in documentation by compressing the images (PR 217).
+
 Version 0.7.0
 =============
 
