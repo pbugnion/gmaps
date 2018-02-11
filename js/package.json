@@ -10,9 +10,12 @@
   },
   "keywords": [
     "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
     "widgets",
     "ipython",
-    "ipywidgets"
+    "ipywidgets",
+    "gmaps"
   ],
   "scripts": {
     "prepublish": "npm run build",
