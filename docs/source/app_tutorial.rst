@@ -22,7 +22,6 @@ several geocoding APIs, to calculate the address from the marker's coordinates.
 
 This is the entire code listing::
 
-  from tabulate import tabulate
   import ipywidgets as widgets
   import geopy
   import gmaps
