@@ -22,6 +22,9 @@
     "build:watch": "webpack --watch",
     "build:nbextension": "webpack",
     "build:labextension": "cd ../gmaps && rimraf labextension && mkdirp labextension && cd labextension && npm pack ../../js",
+    "clean:all": "npm run clean:nbextension && npm run clean:labextension",
+    "clean:nbextension": "rimraf ../gmaps/static && rimraf dist/",
+    "clean:labextension": "rimraf ../gmaps/labextension",
     "update": "rimraf dist/ && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
