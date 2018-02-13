@@ -18,7 +18,6 @@
     "gmaps"
   ],
   "scripts": {
-    "build": "npm run build:nbextension",
     "build:all": "npm run build:nbextension && npm run build:labextension",
     "build:watch": "webpack --watch",
     "build:nbextension": "webpack",
