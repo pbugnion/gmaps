@@ -56,6 +56,6 @@
     "backbone": "1.2.3"
   },
   "jupyterlab": {
-    "extension": "src/labplugin"
+    "extension": "jupyterlab-dist/labplugin"
   }
 }

@@ -1,4 +1,4 @@
-import gmaps as * from '../dist/index';
+import * as gmaps from '../dist/index';
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
 export default {

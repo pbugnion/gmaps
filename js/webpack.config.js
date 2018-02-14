@@ -31,6 +31,20 @@ module.exports = [
             libraryTarget: 'amd'
         }
     },
+    {
+        // Lab plugin
+        // This bundle only contains the normalized labplugin.js.
+        entry: './src/labplugin.js',
+        output: {
+            filename: 'labplugin.js',
+            path: __dirname + '/jupyterlab-dist',
+            libraryTarget: 'amd'
+        },
+        module: {
+            loaders: loaders
+        },
+        externals: ['@jupyter-widgets/base', '../dist/index']
+    },
     {// Bundle for the notebook containing the custom widget views and models
      //
      // This bundle contains the implementation for the custom widget views and
