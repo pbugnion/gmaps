@@ -1,9 +1,9 @@
-const gmaps = require('../dist/index');
-const base = require('@jupyter-widgets/base');
+import gmaps as * from '../dist/index';
+import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 
 export default {
     id: 'jupyter-gmaps',
-    requires: [base.IJupyterWidgetRegistry],
+    requires: [IJupyterWidgetRegistry],
     activate: (app, widgets) => {
         widgets.registerWidget({
             name: 'jupyter-gmaps',
