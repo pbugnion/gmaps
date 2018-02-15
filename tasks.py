@@ -105,6 +105,7 @@ def postrelease(ctx, version):
     set_pyversion(new_version)
     set_jsversion(new_version)
     run('git add gmaps/_version.py')
+    run('git add js/package.json')
     run('git commit -m "Back to dev"')
     run('git push origin master')
 

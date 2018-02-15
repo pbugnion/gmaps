@@ -35,6 +35,10 @@ Useful links:
  - `Issue tracker <https://github.com/pbugnion/gmaps/issues>`_
 """
 
+version_ns = {}
+with open(os.path.join(here, 'gmaps', '_version.py')) as f:
+    exec(f.read(), {}, version_ns)
+
 def js_prerelease(command, strict=False):
     """decorator for building minified js/css prior to another command"""
     class DecoratedCommand(command):
@@ -78,7 +82,11 @@ class NPM(Command):
 
     targets = [
         os.path.join(here, 'gmaps', 'static', 'extension.js'),
-        os.path.join(here, 'gmaps', 'static', 'index.js')
+        os.path.join(here, 'gmaps', 'static', 'index.js'),
+        os.path.join(
+            here, 'gmaps', 'labextension',
+            'jupyter-gmaps-{}.tgz'.format(version_ns['CLIENT_VERSION'])
+        )
     ]
 
     def initialize_options(self):
@@ -113,7 +121,7 @@ class NPM(Command):
 
         if self.should_run_npm_install():
             log.info("Installing build dependencies with npm.  This may take a while...")
-            check_call(['npm', 'install'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
+            check_call(['npm', 'run', 'build:all'], cwd=node_root, stdout=sys.stdout, stderr=sys.stderr)
             os.utime(self.node_modules, None)
 
         for t in self.targets:
@@ -126,17 +134,18 @@ class NPM(Command):
         # update package data in case this created new files
         update_package_data(self.distribution)
 
-version_ns = {}
-with open(os.path.join(here, 'gmaps', '_version.py')) as f:
-    exec(f.read(), {}, version_ns)
-
 if in_read_the_docs():
     static_js_files = []
+    static_jslab_files = []
 else:
     static_js_files = [
         'gmaps/static/extension.js',
         'gmaps/static/index.js',
         'gmaps/static/index.js.map'
+    ]
+    static_jslab_files = [
+        'gmaps/labextension/jupyter-gmaps-{}.tgz'.format(
+            version_ns['CLIENT_VERSION'])
     ]
 
 setup_args = {
@@ -147,6 +156,7 @@ setup_args = {
     'include_package_data': True,
     'data_files': [
         ('share/jupyter/nbextensions/jupyter-gmaps', static_js_files),
+        ('share/jupyter/lab/extensions', static_jslab_files)
     ],
     'install_requires': [
         'ipython>=5.3.0',

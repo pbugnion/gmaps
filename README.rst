@@ -106,23 +106,17 @@ Or, for coffee fans, a map of all Starbucks in the UK:
 Installation
 ------------
 
-Installing `gmaps` with `conda`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Installing `jupyter-gmaps` with `conda`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The easiest way to install `gmaps` is with `conda`::
 
     $ conda install -c conda-forge gmaps
 
-Installing `gmaps` with `pip`
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Installing `jupyter-gmaps` with `pip`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you do not use conda, you can install `gmaps` with pip. The current version
-of `gmaps` is only tested with *IPython 4.3* or later and *ipywidgets 7.0.0* or
-later. To upgrade to the latest versions, use::
-
-    $ pip install -U jupyter
-
-Make sure that you have enabled widgets extensions to Jupyter::
+Make sure that you have enabled `ipywidgets` widgets extensions::
 
     $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
@@ -133,6 +127,25 @@ You can then install gmaps with::
 Then tell Jupyter to load the extension with::
 
     $ jupyter nbextension enable --py --sys-prefix gmaps
+
+
+Installing `jupyter-gmaps` for JupyterLab
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To use `jupyter-gmaps` with JupyterLab, you will need to install the jupyter
+widgets extension for JupyterLab::
+
+    $ jupyter labextension install @jupyter-widgets/jupyterlab-manager
+
+You can then install `jupyter-gmaps` via pip (or conda)::
+
+    $ pip install gmaps
+
+Next time you open JupyterLab, you will be prompted to rebuild JupyterLab: this
+is necessary to include the `jupyter-gmaps` frontend code into your JupyterLab
+installation. You can also trigger this directly on the command line with::
+
+    $ jupyter lab build
 
 
 Google API keys
@@ -161,8 +174,8 @@ Jupyter-gmaps is built for data scientists. Data scientists should be able to vi
 
 We see the priorities of gmaps as:
 
-- being able to export maps (both as HTML and as rendered widgets).
 - responding to events, like user clicks, so that maps can be used interactively.
+- adding greater flexibility and customisability (e.g. choosing map styles)
 
 
 Issue reporting and contributing

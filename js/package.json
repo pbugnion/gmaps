@@ -1,6 +1,6 @@
 {
   "name": "jupyter-gmaps",
-  "version": "0.7.1",
+  "version": "0.7.2-alpha2",
   "description": "Google maps plugin for Jupyter notebooks",
   "author": "Pascal Bugnion",
   "main": "src/index.js",
@@ -10,14 +10,21 @@
   },
   "keywords": [
     "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
     "widgets",
     "ipython",
-    "ipywidgets"
+    "ipywidgets",
+    "gmaps"
   ],
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "webpack",
+    "build:all": "npm run build:nbextension && npm run build:labextension",
     "build:watch": "webpack --watch",
+    "build:nbextension": "webpack",
+    "build:labextension": "cd ../gmaps && rimraf labextension && mkdirp labextension && cd labextension && npm pack ../../js",
+    "clean:all": "npm run clean:nbextension && npm run clean:labextension",
+    "clean:nbextension": "rimraf ../gmaps/static && rimraf dist/",
+    "clean:labextension": "rimraf ../gmaps/labextension",
     "update": "rimraf dist/ && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -33,6 +40,7 @@
     "json-loader": "^0.5.4",
     "less": "^2.7.2",
     "less-loader": "^4.0.3",
+    "mkdirp": "^0.5.1",
     "rimraf": "^2.6.1",
     "style-loader": "^0.17.0",
     "url-loader": "^0.5.9",
@@ -46,5 +54,8 @@
     "jquery": "^3.2.1",
     "underscore": "^1.8.3",
     "backbone": "1.2.3"
+  },
+  "jupyterlab": {
+    "extension": "jupyterlab-dist/labplugin"
   }
 }
