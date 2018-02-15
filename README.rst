@@ -116,13 +116,7 @@ The easiest way to install `gmaps` is with `conda`::
 Installing `jupyter-gmaps` with `pip`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you do not use conda, you can install `jupyter-gmaps` with pip. The current
-version of `jupyter-gmaps` is only tested with *ipywidgets 7.0.0* or later. To
-upgrade to the latest versions, use::
-
-    $ pip install -U jupyter ipywidgets
-
-Make sure that you have enabled widgets extensions::
+Make sure that you have enabled `ipywidgets` widgets extensions::
 
     $ jupyter nbextension enable --py --sys-prefix widgetsnbextension
 
@@ -138,11 +132,8 @@ Then tell Jupyter to load the extension with::
 Installing `jupyter-gmaps` for JupyterLab
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To use `jupyter-gmaps` with JupyterLab, make sure you have an up-to-date version of `ipywidgets`::
-
-    $ pip install -U ipywidgets
-
-You will need to install the jupyter widgets extension for JupyterLab::
+To use `jupyter-gmaps` with JupyterLab, you will need to install the jupyter
+widgets extension for JupyterLab::
 
     $ jupyter labextension install @jupyter-widgets/jupyterlab-manager
 
@@ -150,7 +141,9 @@ You can then install `jupyter-gmaps` via pip (or conda)::
 
     $ pip install gmaps
 
-Next time you open JupyterLab, you will be prompted to rebuild JupyterLab: this is necessary to include the `jupyter-gmaps` frontend code into your JupyterLab installation. You can also trigger this directly on the command line with::
+Next time you open JupyterLab, you will be prompted to rebuild JupyterLab: this
+is necessary to include the `jupyter-gmaps` frontend code into your JupyterLab
+installation. You can also trigger this directly on the command line with::
 
     $ jupyter lab build
 
