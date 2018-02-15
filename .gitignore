@@ -9,6 +9,7 @@ gmaps/labextension/*
 *.ipynb_checkpoints*
 js/node_modules/*
 js/dist/*
+js/jupyterlab-dist/*
 .tox/*
 docs/build/*
 .cache/*
