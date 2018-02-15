@@ -64,8 +64,7 @@ This installs ``gmaps`` in editable mode and installs the Javascript components 
 If you then make changes to the code, you can make those changes available to a running notebook server by:
 
  - restarting the kernel if you have made changes to the Python source code
- - running ``npm run update`` in the ``js/`` directory and `refreshing` the browser page containing the notebook if you have made changes to the JavaScript source. You do not need to restart the kernel.
- - running ``npm run update``, refreshing the browser and restarting the kernel if you have made changes to both the Python and JavaScript source.
+ - running ``npm run build:nbextension`` in the ``js/`` directory and `refreshing` the browser page containing the notebook if you have made changes to the JavaScript source. You do not need to restart the kernel. If you are making many changes to the JavaScript directory, you can run ``npm run build:watch`` to rebuild on every change.
 
 You should not need to restart the notebook server.
 
