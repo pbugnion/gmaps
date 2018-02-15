@@ -181,8 +181,8 @@ Jupyter-gmaps is built for data scientists. Data scientists should be able to vi
 
 We see the priorities of gmaps as:
 
-- being able to export maps (both as HTML and as rendered widgets).
 - responding to events, like user clicks, so that maps can be used interactively.
+- adding greater flexibility and customisability (e.g. choosing map styles)
 
 
 Issue reporting and contributing
