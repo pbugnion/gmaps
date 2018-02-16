@@ -2,6 +2,11 @@
 Release notes
 -------------
 
+Version 0.7.2
+=============
+
+This release adds support for JupyterLab (PR 218).
+
 Version 0.7.1
 =============
 
