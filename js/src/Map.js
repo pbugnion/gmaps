@@ -46,8 +46,6 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
 
     render() {
         this.loadConfiguration();
-        this.el.style['width'] = this.model.get('width');
-        this.el.style['height'] = this.model.get('height');
 
         this.layerViews = new widgets.ViewList(this.addLayerModel, null, this);
         this.modelEvents() ;
@@ -149,8 +147,6 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
             ...defaultAttributes,
             _view_name: 'PlainmapView',
             _model_name: 'PlainmapModel',
-            width: '600px',
-            height: '400px',
             data_bounds: null,
             initial_viewport: { type: DATA_BOUNDS }
         };
