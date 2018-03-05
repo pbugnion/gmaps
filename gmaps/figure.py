@@ -115,6 +115,14 @@ def figure(
         map. If specified, you must also specify the zoom level.
     :type center: tuple, optional
 
+    :param layout:
+        Control the layout of the figure, e.g. its width, height, border etc.
+        For instance, passing ``layout={'width': '400px', 'height': '300px'}``
+        will build a figure of fixed width and height.
+        For more in formation on available properties, see the
+        ipywidgets documentation on `widget layout <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html#The-layout-attribute.>`_
+    :type layout: dict, optional
+
     :returns:
         A :class:`gmaps.Figure` widget.
 
@@ -129,6 +137,15 @@ def figure(
     You can also explicitly specify the intiial map center and zoom:
 
     >>> fig = gmaps.figure(center=(46.0, -5.0), zoom_level=8)
+
+    To customise the layout:
+
+    >>> fig = gmaps.figure(layout={
+            'width': '400px',
+            'height': '600px',
+            'padding': '3px',
+            'border': '1px solid black'
+    })
     """
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
