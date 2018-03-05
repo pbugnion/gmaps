@@ -27,3 +27,9 @@ class TestFigureFactory(unittest.TestCase):
     def test_center_no_zoom(self):
         with self.assertRaises(ValueError):
             figure(center=(10.0, 20.0))
+
+    def test_set_map_layout(self):
+        fig = figure()
+        map_ = fig._map
+        assert map_.layout.width == '100%'
+        assert map_.layout.height == '100%'
