@@ -26,6 +26,11 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
 
+    def __init__(self, *args, **kwargs):
+        if kwargs['layout'] is None:
+            kwargs['layout'] = self._default_layout()
+        super(Figure, self).__init__(*args, **kwargs)
+
     @default('layout')
     def _default_layout(self):
         return widgets.Layout(height='420px', align_self='stretch')
