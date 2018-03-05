@@ -1,7 +1,7 @@
 
 import ipywidgets as widgets
 
-from traitlets import Unicode, Instance
+from traitlets import Unicode, Instance, default
 
 from .maps import Map, InitialViewport, GMapsWidgetMixin
 from .toolbar import Toolbar
@@ -25,6 +25,10 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     _errors_box = Instance(ErrorsBox, allow_none=True, default=None).tag(
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
+
+    @default('layout')
+    def _default_layout(self):
+        return widgets.Layout(height='420px', align_self='stretch')
 
     def add_layer(self, layer):
         """
@@ -132,7 +136,10 @@ def figure(
                     zoom_level, center)
     else:
         initial_viewport = InitialViewport.from_data_bounds()
-    _map = Map(initial_viewport=initial_viewport)
+    _map = Map(
+        initial_viewport=initial_viewport,
+        layout=widgets.Layout(width='100%', height='100%')
+    )
     _toolbar = Toolbar() if display_toolbar else None
     _errors_box = ErrorsBox() if display_errors else None
     return Figure(_map=_map, _toolbar=_toolbar, _errors_box=_errors_box)
