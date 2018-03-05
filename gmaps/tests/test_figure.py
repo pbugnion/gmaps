@@ -1,5 +1,7 @@
 import unittest
 
+import ipywidgets as widgets
+
 from ..figure import figure
 
 
@@ -33,3 +35,15 @@ class TestFigureFactory(unittest.TestCase):
         map_ = fig._map
         assert map_.layout.width == '100%'
         assert map_.layout.height == '100%'
+
+    def test_default_layout(self):
+        fig = figure()
+        assert fig.layout.height == '420px'
+
+    def test_custom_layout(self):
+        layout = widgets.Layout(
+            height='350px', width='712px', border='1px solid blue')
+        fig = figure(layout=layout)
+        assert fig.layout.height == layout.height
+        assert fig.layout.width == layout.width
+        assert fig.layout.border == layout.border
