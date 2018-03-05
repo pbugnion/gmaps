@@ -155,7 +155,7 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
             initial_viewport: { type: DATA_BOUNDS }
         };
     }
-        
+
     static serializers = {
         ...widgets.DOMWidgetModel.serializers,
         layers: {deserialize: widgets.unpack_models},
