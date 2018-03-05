@@ -8,33 +8,33 @@ import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 
 function needReloadGoogleMaps(configuration) {
-    return GoogleMapsLoader.KEY !== configuration["api_key"];
+    return GoogleMapsLoader.KEY !== configuration['api_key'];
 }
 
 function reloadGoogleMaps(configuration) {
     if (needReloadGoogleMaps(configuration)) {
-        console.log("Releasing Google Maps");
+        console.log('Releasing Google Maps');
         GoogleMapsLoader.release();
     }
 
-    GoogleMapsLoader.LIBRARIES = ["visualization"] ;
-    if (configuration["api_key"] !== null &&
-        configuration["api_key"] !== undefined) {
-            GoogleMapsLoader.KEY = configuration["api_key"];
+    GoogleMapsLoader.LIBRARIES = ['visualization'] ;
+    if (configuration['api_key'] !== null &&
+        configuration['api_key'] !== undefined) {
+            GoogleMapsLoader.KEY = configuration['api_key'];
     };
 }
 
 // Constants
 
-const DATA_BOUNDS = "DATA_BOUNDS";
-const ZOOM_CENTER = "ZOOM_CENTER";
+const DATA_BOUNDS = 'DATA_BOUNDS';
+const ZOOM_CENTER = 'ZOOM_CENTER';
 
 
 // Mixins
 
 const ConfigurationMixin = (superclass) => class extends superclass {
     loadConfiguration() {
-        const modelConfiguration = this.model.get("configuration")
+        const modelConfiguration = this.model.get('configuration')
         reloadGoogleMaps(modelConfiguration)
     }
 }
@@ -46,17 +46,17 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
 
     render() {
         this.loadConfiguration();
-        this.el.style["width"] = this.model.get("width");
-        this.el.style["height"] = this.model.get("height");
+        this.el.style['width'] = this.model.get('width');
+        this.el.style['height'] = this.model.get('height');
 
         this.layerViews = new widgets.ViewList(this.addLayerModel, null, this);
         this.modelEvents() ;
 
-        this.on("displayed", () => {
+        this.on('displayed', () => {
             GoogleMapsLoader.load((google) => {
                 this.map = new google.maps.Map(this.el) ;
 
-                this.layerViews.update(this.model.get("layers"));
+                this.layerViews.update(this.model.get('layers'));
 
                 // hack to force the map to redraw
                 setTimeout(() => {
@@ -68,13 +68,13 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
     }
 
     modelEvents() {
-        this.model.on("change:data_bounds", this.updateBounds, this);
+        this.model.on('change:data_bounds', this.updateBounds, this);
     }
 
     setViewport(viewport) {
         const { type } = viewport;
         if (type === DATA_BOUNDS) {
-            const bounds = this.model.get("data_bounds");
+            const bounds = this.model.get('data_bounds');
             this.setViewportFromBounds(bounds)
         }
         else if (type === ZOOM_CENTER) {
@@ -147,10 +147,10 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
         return {
             ...super.defaults(),
             ...defaultAttributes,
-            _view_name: "PlainmapView",
-            _model_name: "PlainmapModel",
-            width: "600px",
-            height: "400px",
+            _view_name: 'PlainmapView',
+            _model_name: 'PlainmapModel',
+            width: '600px',
+            height: '400px',
             data_bounds: null,
             initial_viewport: { type: DATA_BOUNDS }
         };
