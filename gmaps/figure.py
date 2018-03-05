@@ -82,7 +82,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
 
 def figure(
         display_toolbar=True, display_errors=True, zoom_level=None,
-        center=None):
+        center=None, layout=None):
     """
     Create a gmaps figure
 
@@ -142,4 +142,7 @@ def figure(
     )
     _toolbar = Toolbar() if display_toolbar else None
     _errors_box = ErrorsBox() if display_errors else None
-    return Figure(_map=_map, _toolbar=_toolbar, _errors_box=_errors_box)
+    fig = Figure(
+        _map=_map, _toolbar=_toolbar, _errors_box=_errors_box,
+        layout=layout)
+    return fig
