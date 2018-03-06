@@ -119,8 +119,9 @@ def figure(
         Control the layout of the figure, e.g. its width, height, border etc.
         For instance, passing ``layout={'width': '400px', 'height': '300px'}``
         will build a figure of fixed width and height.
-        For more in formation on available properties, see the
-        ipywidgets documentation on `widget layout <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html#The-layout-attribute.>`_  # noqa
+        For more in formation on available properties, see the ipywidgets
+        documentation on
+        `widget layout <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html#The-layout-attribute>`_.
     :type layout: dict, optional
 
     :returns:
@@ -146,7 +147,7 @@ def figure(
             'padding': '3px',
             'border': '1px solid black'
     })
-    """
+    """  # noqa: E501
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
             raise ValueError(
@@ -158,10 +159,13 @@ def figure(
                     zoom_level, center)
     else:
         initial_viewport = InitialViewport.from_data_bounds()
+
+    # set map to occupy entire space allowed by figure
     _map = Map(
         initial_viewport=initial_viewport,
         layout=widgets.Layout(width='100%', height='100%')
     )
+
     _toolbar = Toolbar() if display_toolbar else None
     _errors_box = ErrorsBox() if display_errors else None
     fig = Figure(
