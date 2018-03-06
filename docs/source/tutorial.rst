@@ -90,6 +90,29 @@ explicitly::
 If you do not set the map zoom and center, the viewport will automatically
 focus on the data as you add it to the map.
 
+Customising map width, height and layout
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The layout of a map figure is controlled by passing a `layout <>`_ argument.
+This is a dictionary of properties controlling how the widget is displayed::
+
+  import gmaps
+  gmaps.configure(api_key="AI...")
+
+  figure_layout = {
+      'width': '400px',
+      'height': '400px',
+      'border': '1px solid black',
+      'padding': '1px'
+  }
+  gmaps.figure(layout=figure_layout)
+
+The parameters that you are likely to want to tweak are:
+
+ - `width`: controls the figure width. This should be a `CSS dimension <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. For instance, `400px` will create a figure that is 400 pixels wide, while `100%` will create a figure that takes up its the output cell's width. The default width for figures is `100%`.
+ - `height`: controls the figure height. This should be a `CSS dimension <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. The default height for a figure is `420px`.
+
+
 Heatmaps
 ^^^^^^^^
 
