@@ -120,7 +120,7 @@ def figure(
         For instance, passing ``layout={'width': '400px', 'height': '300px'}``
         will build a figure of fixed width and height.
         For more in formation on available properties, see the
-        ipywidgets documentation on `widget layout <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html#The-layout-attribute.>`_
+        ipywidgets documentation on `widget layout <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html#The-layout-attribute.>`_  # noqa
     :type layout: dict, optional
 
     :returns:
