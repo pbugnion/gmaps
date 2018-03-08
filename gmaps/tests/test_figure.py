@@ -2,7 +2,7 @@ import unittest
 
 import ipywidgets as widgets
 
-from ..figure import figure
+from ..figure import figure, FigureLayout
 
 
 class TestFigureFactory(unittest.TestCase):
@@ -41,9 +41,23 @@ class TestFigureFactory(unittest.TestCase):
         assert fig.layout.height == '420px'
 
     def test_custom_layout(self):
-        layout = widgets.Layout(
+        layout = FigureLayout(
             height='350px', width='712px', border='1px solid blue')
         fig = figure(layout=layout)
         assert fig.layout.height == layout.height
         assert fig.layout.width == layout.width
         assert fig.layout.border == layout.border
+
+    def test_custom_layout_default_height(self):
+        layout = FigureLayout(
+            width='712px', border='1px solid blue')
+        fig = figure(layout=layout)
+        assert fig.layout.height == '420px'
+
+    def test_custom_layout_as_dict(self):
+        layout = dict(
+            height='350px', width='712px', border='1px solid blue')
+        fig = figure(layout=layout)
+        assert fig.layout.height == layout['height']
+        assert fig.layout.width == layout['width']
+        assert fig.layout.border == layout['border']
