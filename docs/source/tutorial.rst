@@ -109,6 +109,8 @@ displayed::
   }
   gmaps.figure(layout=figure_layout)
 
+.. image:: _images/figure_layout1.png
+
 The parameters that you are likely to want to tweak are:
 
  - `width`: controls the figure width. This should be a `CSS dimension
@@ -133,6 +135,8 @@ To center a map in an output cell, use a fixed width and set the left and right 
 
   figure_layout = {'width': '500px', 'margin': '0 auto 0 auto'}
   gmaps.figure(layout=figure_layout)
+
+.. image:: _images/figure_layout2.png
 
 Heatmaps
 ^^^^^^^^
