@@ -1,7 +1,5 @@
 import unittest
 
-import ipywidgets as widgets
-
 from ..figure import figure, FigureLayout
 
 
