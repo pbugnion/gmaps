@@ -93,8 +93,10 @@ focus on the data as you add it to the map.
 Customising map width, height and layout
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The layout of a map figure is controlled by passing a `layout <>`_ argument.
-This is a dictionary of properties controlling how the widget is displayed::
+The layout of a map figure is controlled by passing a `layout
+<http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html>`_
+argument. This is a dictionary of properties controlling how the widget is
+displayed::
 
   import gmaps
   gmaps.configure(api_key="AI...")
@@ -109,9 +111,28 @@ This is a dictionary of properties controlling how the widget is displayed::
 
 The parameters that you are likely to want to tweak are:
 
- - `width`: controls the figure width. This should be a `CSS dimension <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. For instance, `400px` will create a figure that is 400 pixels wide, while `100%` will create a figure that takes up its the output cell's width. The default width for figures is `100%`.
- - `height`: controls the figure height. This should be a `CSS dimension <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. The default height for a figure is `420px`.
+ - `width`: controls the figure width. This should be a `CSS dimension
+   <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. For instance,
+   `400px` will create a figure that is 400 pixels wide, while `100%` will
+   create a figure that takes up its the output cell's width. The default width
+   for figures is `100%`.
+ - `height`: controls the figure height. This should be a `CSS dimension
+   <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. The default
+   height for a figure is `420px`.
+ - `border`: Place a border around the figure. This should be a valid CSS
+   `border <https://developer.mozilla.org/en-US/docs/Web/CSS/border>`_.
+ - `padding`: Gap between the figure and the border. This should be a valid
+    `CSS padding <https://developer.mozilla.org/en-US/docs/Web/CSS/padding>`_:
+   you can either have a single dimension (e.g. ``2px``), or a quadruple
+   indicating the padding width for each side (e.g. ``1px 2px 1px 2px``).
+ - `margin`: Gap between the border and the figure container. This should be a
+   valid `CSS margin <https://developer.mozilla.org/en-US/docs/Web/CSS/margin>`_.
 
+
+To center a map in an output cell, use a fixed width and set the left and right margins to ``auto``::
+
+  figure_layout = {'width': '500px', 'margin': '0 auto 0 auto'}
+  gmaps.figure(layout=figure_layout)
 
 Heatmaps
 ^^^^^^^^
