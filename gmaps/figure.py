@@ -10,6 +10,16 @@ from .errors_box import ErrorsBox
 __all__ = ["Figure", "figure"]
 
 
+class FigureLayout(widgets.Layout):
+    """
+    Customised layout that returns a default height
+    """
+
+    @default('height')
+    def _default_height(self):
+        return '420px'
+
+
 class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     """
     Figure widget
@@ -25,6 +35,8 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     _errors_box = Instance(ErrorsBox, allow_none=True, default=None).tag(
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
+    layout = widgets.trait_types.InstanceDict(FigureLayout).tag(
+        sync=True, **widgets.widget_serialization)
 
     def __init__(self, *args, **kwargs):
         if kwargs['layout'] is None:
@@ -33,7 +45,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
 
     @default('layout')
     def _default_layout(self):
-        return widgets.Layout(height='420px', align_self='stretch')
+        return FigureLayout()
 
     def add_layer(self, layer):
         """
