@@ -115,20 +115,22 @@ The parameters that you are likely to want to tweak are:
 
  - `width`: controls the figure width. This should be a `CSS dimension
    <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. For instance,
-   `400px` will create a figure that is 400 pixels wide, while `100%` will
-   create a figure that takes up its the output cell's width. The default width
-   for figures is `100%`.
+   ``400px`` will create a figure that is 400 pixels wide, while ``100%`` will
+   create a figure that takes up the output cell's entire width. The default
+   width is ``100%``.
  - `height`: controls the figure height. This should be a `CSS dimension
    <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. The default
-   height for a figure is `420px`.
- - `border`: Place a border around the figure. This should be a valid CSS
-   `border <https://developer.mozilla.org/en-US/docs/Web/CSS/border>`_.
- - `padding`: Gap between the figure and the border. This should be a valid
-    `CSS padding <https://developer.mozilla.org/en-US/docs/Web/CSS/padding>`_:
-   you can either have a single dimension (e.g. ``2px``), or a quadruple
-   indicating the padding width for each side (e.g. ``1px 2px 1px 2px``).
+   height is ``420px``.
+ - `border`: Place a border around the figure. This should be a valid
+   `CSS border <https://developer.mozilla.org/en-US/docs/Web/CSS/border>`_.
+ - `padding`: Gap between the figure and the border. This should be a valid `CSS
+   padding <https://developer.mozilla.org/en-US/docs/Web/CSS/padding>`_. You can
+   either have a single dimension (e.g. ``2px``), or a quadruple indicating the
+   padding width for each side (e.g. ``1px 2px 1px 2px``). This is ``0`` by
+   default.
  - `margin`: Gap between the border and the figure container. This should be a
    valid `CSS margin <https://developer.mozilla.org/en-US/docs/Web/CSS/margin>`_.
+   This is ``0`` by default.
 
 
 To center a map in an output cell, use a fixed width and set the left and right margins to ``auto``::
