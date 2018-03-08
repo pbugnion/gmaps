@@ -1,13 +1,23 @@
 
 import ipywidgets as widgets
 
-from traitlets import Unicode, Instance
+from traitlets import Unicode, Instance, default
 
 from .maps import Map, InitialViewport, GMapsWidgetMixin
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
 
 __all__ = ["Figure", "figure"]
+
+
+class FigureLayout(widgets.Layout):
+    """
+    Customised layout that returns a default height
+    """
+
+    @default('height')
+    def _default_height(self):
+        return '420px'
 
 
 class Figure(GMapsWidgetMixin, widgets.DOMWidget):
@@ -25,6 +35,17 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     _errors_box = Instance(ErrorsBox, allow_none=True, default=None).tag(
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
+    layout = widgets.trait_types.InstanceDict(FigureLayout).tag(
+        sync=True, **widgets.widget_serialization)
+
+    def __init__(self, *args, **kwargs):
+        if kwargs['layout'] is None:
+            kwargs['layout'] = self._default_layout()
+        super(Figure, self).__init__(*args, **kwargs)
+
+    @default('layout')
+    def _default_layout(self):
+        return FigureLayout()
 
     def add_layer(self, layer):
         """
@@ -78,7 +99,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
 
 def figure(
         display_toolbar=True, display_errors=True, zoom_level=None,
-        center=None):
+        center=None, layout=None):
     """
     Create a gmaps figure
 
@@ -106,6 +127,15 @@ def figure(
         map. If specified, you must also specify the zoom level.
     :type center: tuple, optional
 
+    :param layout:
+        Control the layout of the figure, e.g. its width, height, border etc.
+        For instance, passing ``layout={'width': '400px', 'height': '300px'}``
+        will build a figure of fixed width and height.
+        For more in formation on available properties, see the ipywidgets
+        documentation on
+        `widget layout <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html#The-layout-attribute>`_.
+    :type layout: dict, optional
+
     :returns:
         A :class:`gmaps.Figure` widget.
 
@@ -120,7 +150,16 @@ def figure(
     You can also explicitly specify the intiial map center and zoom:
 
     >>> fig = gmaps.figure(center=(46.0, -5.0), zoom_level=8)
-    """
+
+    To customise the layout:
+
+    >>> fig = gmaps.figure(layout={
+            'width': '400px',
+            'height': '600px',
+            'padding': '3px',
+            'border': '1px solid black'
+    })
+    """  # noqa: E501
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
             raise ValueError(
@@ -132,7 +171,16 @@ def figure(
                     zoom_level, center)
     else:
         initial_viewport = InitialViewport.from_data_bounds()
-    _map = Map(initial_viewport=initial_viewport)
+
+    # set map to occupy entire space allowed by figure
+    _map = Map(
+        initial_viewport=initial_viewport,
+        layout=widgets.Layout(width='100%', height='100%')
+    )
+
     _toolbar = Toolbar() if display_toolbar else None
     _errors_box = ErrorsBox() if display_errors else None
-    return Figure(_map=_map, _toolbar=_toolbar, _errors_box=_errors_box)
+    fig = Figure(
+        _map=_map, _toolbar=_toolbar, _errors_box=_errors_box,
+        layout=layout)
+    return fig

@@ -1,6 +1,6 @@
 import unittest
 
-from ..figure import figure
+from ..figure import figure, FigureLayout
 
 
 class TestFigureFactory(unittest.TestCase):
@@ -11,7 +11,7 @@ class TestFigureFactory(unittest.TestCase):
         assert fig._errors_box is not None
         map_ = fig._map
         assert map_ is not None
-        assert map_.initial_viewport == "DATA_BOUNDS"
+        assert map_.initial_viewport == 'DATA_BOUNDS'
 
     def test_zoom_center(self):
         center = (10.0, 20.0)
@@ -27,3 +27,35 @@ class TestFigureFactory(unittest.TestCase):
     def test_center_no_zoom(self):
         with self.assertRaises(ValueError):
             figure(center=(10.0, 20.0))
+
+    def test_set_map_layout(self):
+        fig = figure()
+        map_ = fig._map
+        assert map_.layout.width == '100%'
+        assert map_.layout.height == '100%'
+
+    def test_default_layout(self):
+        fig = figure()
+        assert fig.layout.height == '420px'
+
+    def test_custom_layout(self):
+        layout = FigureLayout(
+            height='350px', width='712px', border='1px solid blue')
+        fig = figure(layout=layout)
+        assert fig.layout.height == layout.height
+        assert fig.layout.width == layout.width
+        assert fig.layout.border == layout.border
+
+    def test_custom_layout_default_height(self):
+        layout = FigureLayout(
+            width='712px', border='1px solid blue')
+        fig = figure(layout=layout)
+        assert fig.layout.height == '420px'
+
+    def test_custom_layout_as_dict(self):
+        layout = dict(
+            height='350px', width='712px', border='1px solid blue')
+        fig = figure(layout=layout)
+        assert fig.layout.height == layout['height']
+        assert fig.layout.width == layout['width']
+        assert fig.layout.border == layout['border']

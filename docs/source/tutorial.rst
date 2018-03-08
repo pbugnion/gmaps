@@ -90,6 +90,56 @@ explicitly::
 If you do not set the map zoom and center, the viewport will automatically
 focus on the data as you add it to the map.
 
+Customising map width, height and layout
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The layout of a map figure is controlled by passing a `layout
+<https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html>`_
+argument. This is a dictionary of properties controlling how the widget is
+displayed::
+
+  import gmaps
+  gmaps.configure(api_key="AI...")
+
+  figure_layout = {
+      'width': '400px',
+      'height': '400px',
+      'border': '1px solid black',
+      'padding': '1px'
+  }
+  gmaps.figure(layout=figure_layout)
+
+.. image:: _images/figure_layout1.png
+
+The parameters that you are likely to want to tweak are:
+
+ - `width`: controls the figure width. This should be a `CSS dimension
+   <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. For instance,
+   ``400px`` will create a figure that is 400 pixels wide, while ``100%`` will
+   create a figure that takes up the output cell's entire width. The default
+   width is ``100%``.
+ - `height`: controls the figure height. This should be a `CSS dimension
+   <https://developer.mozilla.org/en-US/docs/Web/CSS/width>`_. The default
+   height is ``420px``.
+ - `border`: Place a border around the figure. This should be a valid
+   `CSS border <https://developer.mozilla.org/en-US/docs/Web/CSS/border>`_.
+ - `padding`: Gap between the figure and the border. This should be a valid `CSS
+   padding <https://developer.mozilla.org/en-US/docs/Web/CSS/padding>`_. You can
+   either have a single dimension (e.g. ``2px``), or a quadruple indicating the
+   padding width for each side (e.g. ``1px 2px 1px 2px``). This is ``0`` by
+   default.
+ - `margin`: Gap between the border and the figure container. This should be a
+   valid `CSS margin <https://developer.mozilla.org/en-US/docs/Web/CSS/margin>`_.
+   This is ``0`` by default.
+
+
+To center a map in an output cell, use a fixed width and set the left and right margins to ``auto``::
+
+  figure_layout = {'width': '500px', 'margin': '0 auto 0 auto'}
+  gmaps.figure(layout=figure_layout)
+
+.. image:: _images/figure_layout2.png
+
 Heatmaps
 ^^^^^^^^
 

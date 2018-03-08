@@ -10,7 +10,7 @@ from ._version import CLIENT_VERSION
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
 
-_default_configuration = {"api_key": None}
+_default_configuration = {'api_key': None}
 
 
 def configure(api_key=None):
@@ -20,16 +20,16 @@ def configure(api_key=None):
     :param api_key: String denoting the key to use when accessing Google maps,
         or None to not pass an API key.
     """
-    configuration = {"api_key": api_key}
+    configuration = {'api_key': api_key}
     global _default_configuration
     _default_configuration = configuration
 
 
 class ConfigurationMixin(HasTraits):
     configuration = Dict(
-        traits={"api_key": Unicode(allow_none=True)}).tag(sync=True)
+        traits={'api_key': Unicode(allow_none=True)}).tag(sync=True)
 
-    @default("configuration")
+    @default('configuration')
     def _configuration_default(self):
         return _default_configuration
 
@@ -38,8 +38,8 @@ class GMapsWidgetMixin(HasTraits):
     """
     Traitlets that are constant across all of gmaps
     """
-    _model_module = Unicode("jupyter-gmaps").tag(sync=True)
-    _view_module = Unicode("jupyter-gmaps").tag(sync=True)
+    _model_module = Unicode('jupyter-gmaps').tag(sync=True)
+    _view_module = Unicode('jupyter-gmaps').tag(sync=True)
     _model_module_version = Unicode(CLIENT_VERSION).tag(sync=True)
     _view_module_version = Unicode(CLIENT_VERSION).tag(sync=True)
 
@@ -50,7 +50,7 @@ class InitialViewport(Union):
     """
     def __init__(self, **metadata):
         trait_types = [
-                Enum(["DATA_BOUNDS"]),
+                Enum(['DATA_BOUNDS']),
                 Instance(_ZoomCenter)
         ]
         super(InitialViewport, self).__init__(trait_types, **metadata)
@@ -68,7 +68,7 @@ class InitialViewport(Union):
 
         >>> m = gmaps.Map(initial_viewport=InitialViewport.from_data_bounds())
         """
-        return "DATA_BOUNDS"
+        return 'DATA_BOUNDS'
 
     @staticmethod
     def from_zoom_center(zoom_level, center):
@@ -105,7 +105,7 @@ class _ZoomCenter(HasTraits):
 
 
 def _serialize_viewport(viewport, manager):
-    if viewport == "DATA_BOUNDS":
+    if viewport == 'DATA_BOUNDS':
         payload = {'type': 'DATA_BOUNDS'}
     else:
         try:
@@ -148,8 +148,8 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     >>> viewport = InitialViewport.from_zoom_center(zoom_level, center)
     >>> m = gmaps.figure(initial_viewport=viewport)
     """
-    _view_name = Unicode("PlainmapView").tag(sync=True)
-    _model_name = Unicode("PlainmapModel").tag(sync=True)
+    _view_name = Unicode('PlainmapView').tag(sync=True)
+    _model_name = Unicode('PlainmapModel').tag(sync=True)
     layers = Tuple(trait=Instance(widgets.Widget)).tag(
         sync=True, **widgets.widget_serialization)
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
@@ -159,13 +159,13 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     def add_layer(self, layer):
         self.layers = tuple([l for l in self.layers] + [layer])
 
-    @default("layout")
+    @default('layout')
     def _default_layout(self):
         return widgets.Layout(height='400px', align_self='stretch')
 
-    @observe("layers")
+    @observe('layers')
     def _calc_bounds(self, change):
-        layers = change["new"]
+        layers = change['new']
         bounds_list = [
             layer.data_bounds for layer in layers if layer.has_bounds
         ]
