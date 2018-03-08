@@ -94,7 +94,7 @@ Customising map width, height and layout
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The layout of a map figure is controlled by passing a `layout
-<http://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html>`_
+<https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20Styling.html>`_
 argument. This is a dictionary of properties controlling how the widget is
 displayed::
 
