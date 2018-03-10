@@ -20,6 +20,8 @@ ALLOWED_DRAWING_MODES = {
 }
 DEFAULT_DRAWING_MODE = 'MARKER'
 
+DEFAULT_STROKE_COLOR = '#696969'
+
 
 _doc_snippets = {}
 _doc_snippets['params'] = """
@@ -159,11 +161,18 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     _model_name = Unicode('LineModel').tag(sync=True)
     start = geotraitlets.Point().tag(sync=True)
     end = geotraitlets.Point().tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
 
-    def __init__(self, start, end):
+    def __init__(
+            self, start, end,
+            stroke_color=DEFAULT_STROKE_COLOR
+    ):
         kwargs = dict(
             start=start,
-            end=end
+            end=end,
+            stroke_color=stroke_color
         )
         super(Line, self).__init__(**kwargs)
 

@@ -9,7 +9,8 @@ export class LineModel extends GMapsLayerModel {
         return {
             ...super.defaults(),
             _view_name: 'LineView',
-            _model_name: 'LineModel'
+            _model_name: 'LineModel',
+            strokeColor: '#696969'
         }
     }
 }
@@ -19,9 +20,10 @@ export class LineView extends widgets.WidgetView {
     render() {
         const start = arrayToLatLng(this.model.get('start'));
         const end = arrayToLatLng(this.model.get('end'));
+        const strokeColor = this.model.get('stroke_color');
         const path = new google.maps.MVCArray([start, end])
         const lineOptions = {
-            strokeColor: '#696969',
+            strokeColor,
             strokeWeight: 2,
             strokeOpacity: 0.6,
             clickable: false
