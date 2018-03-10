@@ -34,6 +34,26 @@ export class LineView extends widgets.WidgetView {
         }
         this.line = new google.maps.Polyline({ path, ...lineOptions });
         this.line.addListener('click', event => this.trigger('click'))
+        this.modelEvents()
+    }
+
+    modelEvents() {
+        const properties = [
+            ['strokeColor', 'stroke_color'],
+            ['strokeWeight', 'stroke_weight'],
+            ['strokeOpacity', 'stroke_opacity']
+        ]
+
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = (
+                () => {
+                    this.line.setOptions(
+                        {[nameInView]: this.model.get(nameInModel)}
+                    )
+                }
+            )
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
     }
 
     addToMapView(mapView) {
