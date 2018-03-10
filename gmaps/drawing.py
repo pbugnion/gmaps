@@ -6,7 +6,7 @@ import ipywidgets as widgets
 
 from traitlets import (
     Unicode, List, Enum, Instance,
-    Bool, default, observe
+    Bool, default, observe, Float
 )
 
 from . import geotraitlets
@@ -164,15 +164,26 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_STROKE_COLOR
     ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.6
+    ).tag(sync=True)
+
 
     def __init__(
             self, start, end,
-            stroke_color=DEFAULT_STROKE_COLOR
+            stroke_color=DEFAULT_STROKE_COLOR,
+            stroke_weight=2.0,
+            stroke_opacity=0.6
     ):
         kwargs = dict(
             start=start,
             end=end,
-            stroke_color=stroke_color
+            stroke_color=stroke_color,
+            stroke_weight=stroke_weight,
+            stroke_opacity=stroke_opacity
         )
         super(Line, self).__init__(**kwargs)
 

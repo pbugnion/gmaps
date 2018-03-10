@@ -10,7 +10,9 @@ export class LineModel extends GMapsLayerModel {
             ...super.defaults(),
             _view_name: 'LineView',
             _model_name: 'LineModel',
-            strokeColor: '#696969'
+            stroke_color: '#696969',
+            stroke_weight: 2,
+            stroke_opacity: 0.6
         }
     }
 }
@@ -21,11 +23,13 @@ export class LineView extends widgets.WidgetView {
         const start = arrayToLatLng(this.model.get('start'));
         const end = arrayToLatLng(this.model.get('end'));
         const strokeColor = this.model.get('stroke_color');
+        const strokeWeight = this.model.get('stroke_weight');
+        const strokeOpacity = this.model.get('stroke_opacity');
         const path = new google.maps.MVCArray([start, end])
         const lineOptions = {
             strokeColor,
-            strokeWeight: 2,
-            strokeOpacity: 0.6,
+            strokeWeight,
+            strokeOpacity,
             clickable: false
         }
         this.line = new google.maps.Polyline({ path, ...lineOptions });
