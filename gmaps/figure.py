@@ -39,7 +39,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
         sync=True, **widgets.widget_serialization)
 
     def __init__(self, *args, **kwargs):
-        if kwargs['layout'] is None:
+        if kwargs.get('layout') is None:
             kwargs['layout'] = self._default_layout()
         super(Figure, self).__init__(*args, **kwargs)
 
