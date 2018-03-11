@@ -99,6 +99,25 @@ _doc_snippets['examples'] = """
 """
 
 
+_doc_snippets['line_options_params'] = """
+    :param stroke_color:
+        The stroke color of the line. Colors can be specified as a simple
+        string, e.g. 'blue', as an RGB tuple, e.g. (100, 0, 0),
+        or as an RGBA tuple, e.g. (100, 0, 0, 0.5). Defaults to a grey
+        color: (69, 69, 69)
+    :type stroke_color: str or tuple, optional.
+
+    :param stroke_weight:
+        How wide the line is. This is a positive float. Defaults to 2.
+    :type stroke_color: float, optional
+
+    :param stroke_opacity:
+        The opacity of the stroke color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque). 0.6 by default.
+    :type stroke_opacity: float, optional.
+"""
+
+
 class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
     """
     Widget for the toolbar snippet representing the drawing controls
@@ -113,7 +132,25 @@ class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
         sync=True)
 
 
+@doc_subst(_doc_snippets)
 class LineOptions(HasTraits):
+    """
+    Style options for a line
+
+    Pass an instance of this class to :func:`gmaps.drawing_layer` to
+    control the style of user-drawn lines on the map.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(
+            marker_options=gmaps.MarkerOptions(hover_text='some text'),
+            line_options=gmaps.LineOptions(stroke_color='red')
+        )
+    >>> fig # display the figure
+
+    {line_options_params}
+    """
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_STROKE_COLOR
     ).tag(sync=True)
@@ -135,6 +172,7 @@ class LineOptions(HasTraits):
         return new_line
 
 
+@doc_subst(_doc_snippets)
 class Line(GMapsWidgetMixin, widgets.Widget):
     """
     Widget representing a single line on a map
@@ -147,8 +185,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86)),
-         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91))
+         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86), stroke_color='green'),
+         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91), stroke_weight=5.0)
     ])
     >>> fig.add_layer(drawing)
 
@@ -162,8 +200,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     You can now add lines directly on the map:
 
     >>> drawing.features = [
-         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86)),
-         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91))
+         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86), stroke_color='green'),
+         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91), stroke_weight=5.0)
     ]
 
     :param start:
@@ -181,6 +219,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
         expressed as a float between -180 (corresponding to 180 degrees west)
         and +180 (corresponding to 180 degrees east).
     :type start: tuple of floats
+
+    {line_options_params}
     """
     _view_name = Unicode('LineView').tag(sync=True)
     _model_name = Unicode('LineModel').tag(sync=True)
