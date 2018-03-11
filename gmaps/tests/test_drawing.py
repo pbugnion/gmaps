@@ -68,6 +68,32 @@ class Drawing(unittest.TestCase):
         expected = 'IPY_MODEL_{}'.format(marker_widget.model_id)
         assert serialized_marker == expected
 
+    def test_marker_options_instance(self):
+        options = marker.MarkerOptions(label='C')
+        layer = drawing.Drawing(marker_options=options)
+        assert layer.marker_options.label == 'C'
+
+    def test_marker_options_dict(self):
+        options = {'label': 'C'}
+        layer = drawing.Drawing(marker_options=options)
+        assert layer.marker_options.label == 'C'
+
+    def test_accept_marker_options_info_box(self):
+        layer = drawing.Drawing(
+            marker_options={'info_box_content': 'hello world'})
+        assert layer.marker_options.info_box_content == 'hello world'
+        assert layer.marker_options.display_info_box
+
+    def test_line_options_instance(self):
+        options = drawing.LineOptions(stroke_weight=12.0)
+        layer = drawing.Drawing(line_options=options)
+        assert layer.line_options.stroke_weight == 12.0
+
+    def test_line_options_dict(self):
+        options = {'stroke_weight': 12.0}
+        layer = drawing.Drawing(line_options=options)
+        assert layer.line_options.stroke_weight == 12.0
+
     def test_adding_marker(self):
         layer = drawing.Drawing()
         message = new_marker_message(latitude=25.0, longitude=-5.0)
@@ -85,6 +111,14 @@ class Drawing(unittest.TestCase):
         assert len(observer.calls) == 1
         [call] = observer.calls
         assert call.location == (25.0, -5.0)
+
+    def test_adding_marker_with_marker_options(self):
+        layer = drawing.Drawing(marker_options=marker.MarkerOptions(label='C'))
+        message = new_marker_message(latitude=25.0, longitude=-5.0)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_marker] = layer.features
+        assert new_marker.label == 'C'
 
     def test_adding_new_markers_via_overlays_callback(self):
         observer = UnaryFunctionMock()
@@ -118,6 +152,17 @@ class Drawing(unittest.TestCase):
         [call] = observer.calls
         assert call.start == (5.0, 10.0)
         assert call.end == (-5.0, -2.0)
+
+    def test_adding_line_with_line_options(self):
+        layer = drawing.Drawing(
+            line_options=drawing.LineOptions(stroke_weight=19.0))
+        message = new_line_message(start=(5.0, 10.0), end=(-5.0, -2.0))
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_line] = layer.features
+        assert new_line.start == (5.0, 10.0)
+        assert new_line.end == (-5.0, -2.0)
+        assert new_line.stroke_weight == 19.0
 
     def test_adding_line_features(self):
         observer = UnaryFunctionMock()
@@ -164,28 +209,6 @@ class Drawing(unittest.TestCase):
         layer._handle_custom_msg(message, None)
         assert layer.mode == 'LINE'
 
-    def test_marker_options_change(self):
-        observer = UnaryFunctionMock()
-        layer = drawing.Drawing()
-        layer.observe(observer)
-        new_options = marker.MarkerOptions(label='X')
-        layer.marker_options = new_options
-        assert layer.marker_options.label == 'X'
-        assert len(observer.calls) == 1
-        [call] = observer.calls
-        assert call['new'] == new_options
-
-    def test_single_marker_options_change(self):
-        observer = UnaryFunctionMock()
-        layer = drawing.Drawing()
-        layer.observe(observer)
-        layer.marker_options.label = 'X'
-        assert layer.marker_options.label == 'X'
-        assert len(observer.calls) == 1
-        [call] = observer.calls
-        assert call['new'].label == 'X'
-        assert call['name'] == 'marker_options'
-
 
 class DrawingFactory(unittest.TestCase):
 
@@ -203,26 +226,10 @@ class DrawingFactory(unittest.TestCase):
         layer = drawing.drawing_layer(mode='DISABLED')
         assert layer.mode == 'DISABLED'
 
-    def test_with_overlays(self):
+    def test_with_features(self):
         new_marker = marker.Marker(location=(-25.0, 5.0))
         layer = drawing.drawing_layer(features=[new_marker])
         assert layer.features == [new_marker]
-
-    def test_accept_marker_options(self):
-        layer = drawing.drawing_layer(
-            marker_options=marker.MarkerOptions(label='B'))
-        assert layer.marker_options.label == 'B'
-
-    def test_accept_marker_options_dict(self):
-        layer = drawing.drawing_layer(
-            marker_options={'label': 'B'})
-        assert layer.marker_options.label == 'B'
-
-    def test_accept_marker_options_info_box(self):
-        layer = drawing.drawing_layer(
-            marker_options={'info_box_content': 'hello world'})
-        assert layer.marker_options.info_box_content == 'hello world'
-        assert layer.marker_options.display_info_box
 
 
 class Line(unittest.TestCase):

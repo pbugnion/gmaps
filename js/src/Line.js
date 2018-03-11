@@ -9,7 +9,10 @@ export class LineModel extends GMapsLayerModel {
         return {
             ...super.defaults(),
             _view_name: 'LineView',
-            _model_name: 'LineModel'
+            _model_name: 'LineModel',
+            stroke_color: '#696969',
+            stroke_weight: 2,
+            stroke_opacity: 0.6
         }
     }
 }
@@ -19,15 +22,38 @@ export class LineView extends widgets.WidgetView {
     render() {
         const start = arrayToLatLng(this.model.get('start'));
         const end = arrayToLatLng(this.model.get('end'));
+        const strokeColor = this.model.get('stroke_color');
+        const strokeWeight = this.model.get('stroke_weight');
+        const strokeOpacity = this.model.get('stroke_opacity');
         const path = new google.maps.MVCArray([start, end])
         const lineOptions = {
-            strokeColor: '#696969',
-            strokeWeight: 2,
-            strokeOpacity: 0.6,
+            strokeColor,
+            strokeWeight,
+            strokeOpacity,
             clickable: false
         }
         this.line = new google.maps.Polyline({ path, ...lineOptions });
         this.line.addListener('click', event => this.trigger('click'))
+        this.modelEvents()
+    }
+
+    modelEvents() {
+        const properties = [
+            ['strokeColor', 'stroke_color'],
+            ['strokeWeight', 'stroke_weight'],
+            ['strokeOpacity', 'stroke_opacity']
+        ]
+
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = (
+                () => {
+                    this.line.setOptions(
+                        {[nameInView]: this.model.get(nameInModel)}
+                    )
+                }
+            )
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
     }
 
     addToMapView(mapView) {

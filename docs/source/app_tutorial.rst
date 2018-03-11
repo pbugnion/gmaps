@@ -183,7 +183,6 @@ This is the entire code listing::
 
       def _render_map(self, initial_year):
           fig = gmaps.figure()
-          fig._map.layout = {'height': '500px', 'width': '100%'}
           self._heatmap = gmaps.heatmap_layer(
               self._locations_for_year(initial_year),
               max_intensity=100,

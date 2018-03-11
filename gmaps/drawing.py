@@ -1,12 +1,9 @@
 
-import copy
-import collections
-
 import ipywidgets as widgets
 
 from traitlets import (
-    Unicode, List, Enum, Instance,
-    Bool, default, observe
+    Unicode, List, Enum, Instance, HasTraits,
+    Bool, default, observe, Float
 )
 
 from . import geotraitlets
@@ -19,6 +16,8 @@ ALLOWED_DRAWING_MODES = {
     'DISABLED', 'MARKER', 'LINE', 'POLYGON', 'DELETE'
 }
 DEFAULT_DRAWING_MODE = 'MARKER'
+
+DEFAULT_STROKE_COLOR = '#696969'
 
 
 _doc_snippets = {}
@@ -34,9 +33,25 @@ _doc_snippets['params'] = """
         or a dictionary with keys `hover_text`, `display_info_box`,
         `info_box_content`, `label` (or a subset of these). See
         :class:`gmaps.MarkerOptions` for documentation on possible
-        values.
+        values. Note that this only affects the initial options
+        of markers added to the map by a user. To customise markers
+        added programatically, pass in the options to the
+        :class:`gmaps.Marker` constructor.
     :type marker_options:
         :class:`gmaps.MarkerOptions`, `dict` or `None`, optional
+
+    :param line_options:
+        Options controlling how lines are drawn on the map.
+        Either pass in an instance of :class:`gmaps.LineOptions`,
+        or a dictionary with keys `stroke_weight`, `stroke_color`,
+        `stroke_opacity` (or a subset of these). See
+        :class:`gmaps.LineOptions` for documentation on possible
+        values. Note that this only affects the initial options
+        of lines added to the map by a user. To customise lines
+        added programatically, pass in the options to the
+        :class:`gmaps.LineOptions` constructor.
+    :type line_options:
+        :class:`gmaps.LineOptions`, `dict` or `None`, optional
 """
 
 _doc_snippets['examples'] = """
@@ -45,8 +60,8 @@ _doc_snippets['examples'] = """
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Line(end=(46.23, 5.86), start=(46.44, 5.24)),
-         gmaps.Marker(location=(46.88, 5.45)),
+         gmaps.Line((46.23, 5.86), (46.44, 5.24), stroke_weight=3.0),
+         gmaps.Marker((46.88, 5.45), label='D'),
          gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
     ])
     >>> fig.add_layer(drawing)
@@ -94,6 +109,25 @@ _doc_snippets['examples'] = """
 """
 
 
+_doc_snippets['line_options_params'] = """
+    :param stroke_color:
+        The stroke color of the line. Colors can be specified as a simple
+        string, e.g. 'blue', as an RGB tuple, e.g. (100, 0, 0),
+        or as an RGBA tuple, e.g. (100, 0, 0, 0.5). Defaults to a grey
+        color: (69, 69, 69)
+    :type stroke_color: str or tuple, optional.
+
+    :param stroke_weight:
+        How wide the line is. This is a positive float. Defaults to 2.
+    :type stroke_color: float, optional
+
+    :param stroke_opacity:
+        The opacity of the stroke color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque). 0.6 by default.
+    :type stroke_opacity: float, optional.
+"""
+
+
 class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
     """
     Widget for the toolbar snippet representing the drawing controls
@@ -108,6 +142,47 @@ class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
         sync=True)
 
 
+@doc_subst(_doc_snippets)
+class LineOptions(HasTraits):
+    """
+    Style options for a line
+
+    Pass an instance of this class to :func:`gmaps.drawing_layer` to
+    control the style of user-drawn lines on the map.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(
+            marker_options=gmaps.MarkerOptions(hover_text='some text'),
+            line_options=gmaps.LineOptions(stroke_color='red')
+        )
+    >>> fig # display the figure
+
+    {line_options_params}
+    """
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.6
+    ).tag(sync=True)
+
+    def to_line(self, start, end):
+        new_line = Line(
+            start=start,
+            end=end,
+            stroke_color=self.stroke_color,
+            stroke_weight=self.stroke_weight,
+            stroke_opacity=self.stroke_opacity
+        )
+        return new_line
+
+
+@doc_subst(_doc_snippets)
 class Line(GMapsWidgetMixin, widgets.Widget):
     """
     Widget representing a single line on a map
@@ -120,8 +195,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86)),
-         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91))
+         gmaps.Line((46.44, 5.24), (46.23, 5.86), stroke_color='green'),
+         gmaps.Line((48.44, 1.32), (47.13, 3.91), stroke_weight=5.0)
     ])
     >>> fig.add_layer(drawing)
 
@@ -135,8 +210,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     You can now add lines directly on the map:
 
     >>> drawing.features = [
-         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86)),
-         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91))
+         gmaps.Line((46.44, 5.24), (46.23, 5.86), stroke_color='green'),
+         gmaps.Line((48.44, 1.32), (47.13, 3.91), stroke_weight=5.0)
     ]
 
     :param start:
@@ -154,16 +229,35 @@ class Line(GMapsWidgetMixin, widgets.Widget):
         expressed as a float between -180 (corresponding to 180 degrees west)
         and +180 (corresponding to 180 degrees east).
     :type start: tuple of floats
+
+    {line_options_params}
     """
     _view_name = Unicode('LineView').tag(sync=True)
     _model_name = Unicode('LineModel').tag(sync=True)
     start = geotraitlets.Point().tag(sync=True)
     end = geotraitlets.Point().tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.6
+    ).tag(sync=True)
 
-    def __init__(self, start, end):
+    def __init__(
+            self, start, end,
+            stroke_color=DEFAULT_STROKE_COLOR,
+            stroke_weight=2.0,
+            stroke_opacity=0.6
+    ):
         kwargs = dict(
             start=start,
-            end=end
+            end=end,
+            stroke_color=stroke_color,
+            stroke_weight=stroke_weight,
+            stroke_opacity=stroke_opacity
         )
         super(Line, self).__init__(**kwargs)
 
@@ -247,21 +341,25 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     _model_name = Unicode('DrawingLayerModel').tag(sync=True)
     features = List().tag(sync=True, **widgets.widget_serialization)
     mode = Enum(ALLOWED_DRAWING_MODES).tag(sync=True)
-    marker_options = Instance(MarkerOptions, allow_none=False)
+    marker_options = widgets.trait_types.InstanceDict(
+        MarkerOptions, allow_none=False)
+    line_options = widgets.trait_types.InstanceDict(
+        LineOptions, allow_none=False)
     toolbar_controls = Instance(DrawingControls, allow_none=False).tag(
         sync=True, **widgets.widget_serialization)
 
     def __init__(self, **kwargs):
         kwargs['mode'] = self._get_initial_mode(kwargs)
+        if kwargs.get('features') is None:
+            kwargs['features'] = []
+        if kwargs.get('marker_options') is None:
+            kwargs['marker_options'] = self._default_marker_options()
+        if kwargs.get('line_options') is None:
+            kwargs['line_options'] = self._default_line_options()
         self._new_feature_callbacks = []
 
         super(Drawing, self).__init__(**kwargs)
         self.on_msg(self._handle_message)
-
-        # Observe all changes to the marker_options
-        # to let users change these directly
-        # and still trigger appropriate changes
-        self.marker_options.observe(self._on_marker_options_change)
 
     def on_new_feature(self, callback):
         """
@@ -292,12 +390,13 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
                 mode = DEFAULT_DRAWING_MODE
         return mode
 
-    def _on_marker_options_change(self, change):
-        self.marker_options = copy.deepcopy(self.marker_options)
-
     @default('marker_options')
     def _default_marker_options(self):
         return MarkerOptions()
+
+    @default('line_options')
+    def _default_line_options(self):
+        return LineOptions()
 
     @default('toolbar_controls')
     def _default_toolbar_controls(self):
@@ -332,7 +431,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             elif payload['featureType'] == 'LINE':
                 start = payload['start']
                 end = payload['end']
-                feature = Line(start=start, end=end)
+                feature = self.line_options.to_line(start, end)
             elif payload['featureType'] == 'POLYGON':
                 path = payload['path']
                 feature = Polygon(path)
@@ -347,14 +446,10 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             self._delete_feature(model_id)
 
 
-def _marker_options_from_dict(options_dict):
-    return MarkerOptions(**options_dict)
-
-
 @doc_subst(_doc_snippets)
 def drawing_layer(
         features=None, mode=DEFAULT_DRAWING_MODE,
-        show_controls=True, marker_options=None):
+        show_controls=True, marker_options=None, line_options=None):
     """
     Create an interactive drawing layer
 
@@ -381,17 +476,12 @@ def drawing_layer(
     :returns:
         A :class:`gmaps.Drawing` widget.
     """
-    if features is None:
-        features = []
     controls = DrawingControls(show_controls=show_controls)
-    if marker_options is None:
-        marker_options = MarkerOptions()
-    elif isinstance(marker_options, collections.Mapping):
-        marker_options = _marker_options_from_dict(marker_options)
     kwargs = {
         'features': features,
         'mode': mode,
         'toolbar_controls': controls,
-        'marker_options': marker_options
+        'marker_options': marker_options,
+        'line_options': line_options
     }
     return Drawing(**kwargs)

@@ -12,8 +12,8 @@ from .locations import locations_to_list
 from .options import merge_option_dicts, is_atomic, is_color_atomic
 
 __all__ = [
-    "Symbol", "Marker", "Markers", "MarkerOptions",
-    "marker_layer", "symbol_layer"
+    'Symbol', 'Marker', 'Markers', 'MarkerOptions',
+    'marker_layer', 'symbol_layer'
 ]
 
 _marker_options_docstring = """
@@ -57,10 +57,10 @@ class MarkerOptions(HasTraits):
     __doc__ = """
     Style options for a marker
     """ + _marker_options_docstring
-    hover_text = Unicode("").tag(sync=True)
+    hover_text = Unicode('').tag(sync=True)
     display_info_box = Bool(False).tag(sync=True)
-    info_box_content = Unicode("").tag(sync=True)
-    label = Unicode("").tag(sync=True)
+    info_box_content = Unicode('').tag(sync=True)
+    label = Unicode('').tag(sync=True)
 
     def __init__(self, **kwargs):
         kwargs = _resolve_info_box_kwargs(**kwargs)
@@ -95,9 +95,9 @@ class MarkerOptions(HasTraits):
 
 class _BaseMarkerMixin(HasTraits):
     location = geotraitlets.Point(DEFAULT_CENTER).tag(sync=True)
-    hover_text = Unicode("").tag(sync=True)
+    hover_text = Unicode('').tag(sync=True)
     display_info_box = Bool(False).tag(sync=True)
-    info_box_content = Unicode("").tag(sync=True)
+    info_box_content = Unicode('').tag(sync=True)
 
 
 class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
@@ -109,8 +109,8 @@ class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     Symbols should be added to the map via the 'Symbols'
     widget.
     """
-    _view_name = Unicode("SymbolView").tag(sync=True)
-    _model_name = Unicode("SymbolModel").tag(sync=True)
+    _view_name = Unicode('SymbolView').tag(sync=True)
+    _model_name = Unicode('SymbolModel').tag(sync=True)
 
     fill_color = geotraitlets.ColorAlpha(
         allow_none=True, default_value=None
@@ -145,9 +145,9 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         west) and +180 (corresponding to 180 degrees east).
     :type location: tuple of floats
     """ + _marker_options_docstring
-    _view_name = Unicode("MarkerView").tag(sync=True)
-    _model_name = Unicode("MarkerModel").tag(sync=True)
-    label = Unicode("").tag(sync=True)
+    _view_name = Unicode('MarkerView').tag(sync=True)
+    _model_name = Unicode('MarkerModel').tag(sync=True)
+    label = Unicode('').tag(sync=True)
 
     def __init__(self, location, **kwargs):
         kwargs = _resolve_info_box_kwargs(**kwargs)
@@ -160,15 +160,15 @@ class Markers(GMapsWidgetMixin, widgets.Widget):
     A collection of markers or symbols.
     """
     has_bounds = True
-    _view_name = Unicode("MarkerLayerView").tag(sync=True)
-    _model_name = Unicode("MarkerLayerModel").tag(sync=True)
+    _view_name = Unicode('MarkerLayerView').tag(sync=True)
+    _model_name = Unicode('MarkerLayerModel').tag(sync=True)
 
     markers = List(minlen=1).tag(sync=True,  **widgets.widget_serialization)
     data_bounds = List().tag(sync=True)
 
-    @observe("markers")
+    @observe('markers')
     def _calc_bounds(self, change):
-        markers = change["new"]
+        markers = change['new']
         locations = [marker.location for marker in markers]
         latitudes = [location[0] for location in locations]
         longitudes = [location[1] for location in locations]
@@ -192,13 +192,13 @@ def _info_box_option_lists(number_markers, info_box_content, display_info_box):
             is_content_empty = (info_box_content[imarker] is None)
             if is_content_empty:
                 display_info_box[imarker] = False
-                info_box_content[imarker] = ""
+                info_box_content[imarker] = ''
             else:
                 display_info_box[imarker] = True
 
     options = {
-        "info_box_content": info_box_content,
-        "display_info_box": display_info_box
+        'info_box_content': info_box_content,
+        'display_info_box': display_info_box
     }
     return options
 
@@ -222,11 +222,11 @@ def _symbol_layer_options(
         fill_opacity = [fill_opacity] * number_markers
 
     symbol_options = {
-        "location": locations_to_list(locations),
-        "hover_text": hover_text,
-        "fill_color": fill_color,
-        "stroke_color": stroke_color,
-        "scale": scale
+        'location': locations_to_list(locations),
+        'hover_text': hover_text,
+        'fill_color': fill_color,
+        'stroke_color': stroke_color,
+        'scale': scale
     }
 
     info_box_options = _info_box_option_lists(
@@ -248,9 +248,9 @@ def _marker_layer_options(
         info_box_content = [info_box_content] * number_markers
 
     marker_options = {
-        "location": locations_to_list(locations),
-        "hover_text": hover_text,
-        "label": label
+        'location': locations_to_list(locations),
+        'hover_text': hover_text,
+        'label': label
     }
 
     info_box_options = _info_box_option_lists(
@@ -262,7 +262,7 @@ def _marker_layer_options(
 
 
 def symbol_layer(
-        locations, hover_text="", fill_color=None,
+        locations, hover_text='', fill_color=None,
         fill_opacity=1.0, stroke_color=None, stroke_opacity=1.0,
         scale=3, info_box_content=None, display_info_box=None):
     """
@@ -283,15 +283,15 @@ def symbol_layer(
             (51.333328, 4.25)
         ]
     >>> symbols = gmaps.symbol_layer(
-            locations, fill_color="red", stroke_color="red")
+            locations, fill_color='red', stroke_color='red')
     >>> fig.add_layer(symbols)
 
     You can set a list of information boxes, which will be displayed when the
     user clicks on a marker.
 
     >>> list_of_infoboxes = [
-            "Simple string info box",
-            "<a href='http://example.com'>HTML content</a>"
+            'Simple string info box',
+            '<a href='http://example.com'>HTML content</a>'
         ]
     >>> symbol_layer = gmaps.symbol_layer(
                 locations, info_box_content=list_of_infoboxes)
@@ -299,7 +299,7 @@ def symbol_layer(
     You can also set text that appears when someone's mouse hovers
     over a point:
 
-    >>> names = ["Atucha", "Embalse", "Armenia", "BR", "Doel"]
+    >>> names = ['Atucha', 'Embalse', 'Armenia', 'BR', 'Doel']
     >>> symbol_layer = gmaps.symbol_layer(locations, hover_text=names)
 
     Apart from ``locations``, which must be an iterable of
@@ -309,14 +309,14 @@ def symbol_layer(
     be broadcast to every marker. Thus, these two calls are equivalent:
 
     >>> symbols = gmaps.symbol_layer(
-            locations, fill_color=["red"]*len(locations))
+            locations, fill_color=['red']*len(locations))
     >>> symbols = gmaps.symbol_layer(
-            locations, fill_color="red")
+            locations, fill_color='red')
 
     The former is useful for passing different colours to
     different symbols.
 
-    >>> colors = ["red", "green", "blue", "black", "white"]
+    >>> colors = ['red', 'green', 'blue', 'black', 'white']
     >>> symbols = gmaps.symbol_layer(
             locations, fill_color=colors, stroke_color=colors)
 
@@ -402,7 +402,7 @@ def symbol_layer(
 
 
 def marker_layer(
-        locations, hover_text="", label="",
+        locations, hover_text='', label='',
         info_box_content=None, display_info_box=None):
     """
     Marker layer
