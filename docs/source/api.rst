@@ -75,6 +75,8 @@ Low level widgets
 
 .. autoclass:: gmaps.Line
 
+.. autoclass:: gmaps.LineOptions
+
 .. autoclass:: gmaps.Polygon
 
 Datasets
