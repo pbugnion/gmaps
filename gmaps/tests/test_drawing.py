@@ -68,6 +68,16 @@ class Drawing(unittest.TestCase):
         expected = 'IPY_MODEL_{}'.format(marker_widget.model_id)
         assert serialized_marker == expected
 
+    def test_marker_options_instance(self):
+        options = marker.MarkerOptions(label='C')
+        layer = drawing.Drawing(marker_options=options)
+        assert layer.marker_options.label == 'C'
+
+    def test_marker_options_dict(self):
+        options = {'label': 'C'}
+        layer = drawing.Drawing(marker_options=options)
+        assert layer.marker_options.label == 'C'
+
     def test_adding_marker(self):
         layer = drawing.Drawing()
         message = new_marker_message(latitude=25.0, longitude=-5.0)
