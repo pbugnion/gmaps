@@ -337,6 +337,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
 
     def __init__(self, **kwargs):
         kwargs['mode'] = self._get_initial_mode(kwargs)
+        if kwargs.get('features') is None:
+            kwargs['features'] = []
         if kwargs.get('marker_options') is None:
             kwargs['marker_options'] = self._default_marker_options()
         if kwargs.get('line_options') is None:
@@ -461,8 +463,6 @@ def drawing_layer(
     :returns:
         A :class:`gmaps.Drawing` widget.
     """
-    if features is None:
-        features = []
     controls = DrawingControls(show_controls=show_controls)
     kwargs = {
         'features': features,
