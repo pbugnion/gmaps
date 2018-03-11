@@ -174,7 +174,6 @@ class Line(GMapsWidgetMixin, widgets.Widget):
         min=0.0, max=1.0, allow_none=False, default_value=0.6
     ).tag(sync=True)
 
-
     def __init__(
             self, start, end,
             stroke_color=DEFAULT_STROKE_COLOR,
