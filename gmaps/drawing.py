@@ -47,8 +47,8 @@ _doc_snippets['examples'] = """
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Line(end=(46.23, 5.86), start=(46.44, 5.24)),
-         gmaps.Marker(location=(46.88, 5.45)),
+         gmaps.Line((46.23, 5.86), (46.44, 5.24), stroke_weight=3.0),
+         gmaps.Marker((46.88, 5.45), label='D'),
          gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
     ])
     >>> fig.add_layer(drawing)
