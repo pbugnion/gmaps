@@ -1,6 +1,5 @@
 
 import copy
-import collections
 
 import ipywidgets as widgets
 
