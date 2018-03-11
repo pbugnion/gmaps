@@ -102,6 +102,14 @@ class Drawing(unittest.TestCase):
         [call] = observer.calls
         assert call.location == (25.0, -5.0)
 
+    def test_adding_marker_with_marker_options(self):
+        layer = drawing.Drawing(marker_options=marker.MarkerOptions(label='C'))
+        message = new_marker_message(latitude=25.0, longitude=-5.0)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_marker] = layer.features
+        assert new_marker.label == 'C'
+
     def test_adding_new_markers_via_overlays_callback(self):
         observer = UnaryFunctionMock()
         layer = drawing.Drawing()
