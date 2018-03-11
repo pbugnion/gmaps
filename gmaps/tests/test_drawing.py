@@ -153,6 +153,17 @@ class Drawing(unittest.TestCase):
         assert call.start == (5.0, 10.0)
         assert call.end == (-5.0, -2.0)
 
+    def test_adding_line_with_line_options(self):
+        layer = drawing.Drawing(
+            line_options=drawing.LineOptions(stroke_weight=19.0))
+        message = new_line_message(start=(5.0, 10.0), end=(-5.0, -2.0))
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_line] = layer.features
+        assert new_line.start == (5.0, 10.0)
+        assert new_line.end == (-5.0, -2.0)
+        assert new_line.stroke_weight == 19.0
+
     def test_adding_line_features(self):
         observer = UnaryFunctionMock()
         layer = drawing.Drawing()
