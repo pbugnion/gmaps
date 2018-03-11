@@ -515,7 +515,11 @@ a marker on Greenwich itself::
   fig = gmaps.figure(center=(51.5, 0.1), zoom_level=9)
 
   # Features to draw on the map
-  gmt_meridian = gmaps.Line(start=(52.0, 0.0), end=(50.0, 0.0))
+  gmt_meridian = gmaps.Line(
+      start=(52.0, 0.0),
+      end=(50.0, 0.0),
+      stroke_weight=3.0
+  )
   greenwich = gmaps.Marker((51.3, 0.0), info_box_content="Greenwich")
 
   drawing = gmaps.drawing_layer(features=[greenwich, gmt_meridian])
