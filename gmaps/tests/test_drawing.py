@@ -84,6 +84,16 @@ class Drawing(unittest.TestCase):
         assert layer.marker_options.info_box_content == 'hello world'
         assert layer.marker_options.display_info_box
 
+    def test_line_options_instance(self):
+        options = drawing.LineOptions(stroke_weight=12.0)
+        layer = drawing.Drawing(line_options=options)
+        assert layer.line_options.stroke_weight == 12.0
+
+    def test_line_options_dict(self):
+        options = {'stroke_weight': 12.0}
+        layer = drawing.Drawing(line_options=options)
+        assert layer.line_options.stroke_weight == 12.0
+
     def test_adding_marker(self):
         layer = drawing.Drawing()
         message = new_marker_message(latitude=25.0, longitude=-5.0)
