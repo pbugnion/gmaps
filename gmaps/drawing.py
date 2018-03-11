@@ -5,7 +5,7 @@ import collections
 import ipywidgets as widgets
 
 from traitlets import (
-    Unicode, List, Enum, Instance,
+    Unicode, List, Enum, Instance, HasTraits,
     Bool, default, observe, Float
 )
 
@@ -111,6 +111,28 @@ class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
     _view_name = Unicode('DrawingControlsView').tag(sync=True)
     show_controls = Bool(default_value=True, allow_none=False).tag(
         sync=True)
+
+
+class LineOptions(HasTraits):
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.6
+    ).tag(sync=True)
+
+    def to_line(self, start, end):
+        new_line = Line(
+            start=start,
+            end=end,
+            stroke_color=self.stroke_color,
+            stroke_weight=self.stroke_weight,
+            stroke_opacity=self.stroke_opacity
+        )
+        return new_line
 
 
 class Line(GMapsWidgetMixin, widgets.Widget):
@@ -270,6 +292,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     features = List().tag(sync=True, **widgets.widget_serialization)
     mode = Enum(ALLOWED_DRAWING_MODES).tag(sync=True)
     marker_options = Instance(MarkerOptions, allow_none=False)
+    line_options = Instance(LineOptions, allow_none=False)
     toolbar_controls = Instance(DrawingControls, allow_none=False).tag(
         sync=True, **widgets.widget_serialization)
 
@@ -321,6 +344,10 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     def _default_marker_options(self):
         return MarkerOptions()
 
+    @default('line_options')
+    def _default_marker_options(self):
+        return LineOptions()
+
     @default('toolbar_controls')
     def _default_toolbar_controls(self):
         return DrawingControls()
@@ -354,7 +381,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             elif payload['featureType'] == 'LINE':
                 start = payload['start']
                 end = payload['end']
-                feature = Line(start=start, end=end)
+                feature = self.line_options.to_line(start, end)
             elif payload['featureType'] == 'POLYGON':
                 path = payload['path']
                 feature = Polygon(path)
@@ -376,7 +403,7 @@ def _marker_options_from_dict(options_dict):
 @doc_subst(_doc_snippets)
 def drawing_layer(
         features=None, mode=DEFAULT_DRAWING_MODE,
-        show_controls=True, marker_options=None):
+        show_controls=True, marker_options=None, line_options=None):
     """
     Create an interactive drawing layer
 
@@ -414,6 +441,7 @@ def drawing_layer(
         'features': features,
         'mode': mode,
         'toolbar_controls': controls,
-        'marker_options': marker_options
+        'marker_options': marker_options,
+        'line_options': line_options
     }
     return Drawing(**kwargs)
