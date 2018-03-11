@@ -188,28 +188,6 @@ class Drawing(unittest.TestCase):
         layer._handle_custom_msg(message, None)
         assert layer.mode == 'LINE'
 
-    def test_marker_options_change(self):
-        observer = UnaryFunctionMock()
-        layer = drawing.Drawing()
-        layer.observe(observer)
-        new_options = marker.MarkerOptions(label='X')
-        layer.marker_options = new_options
-        assert layer.marker_options.label == 'X'
-        assert len(observer.calls) == 1
-        [call] = observer.calls
-        assert call['new'] == new_options
-
-    def test_single_marker_options_change(self):
-        observer = UnaryFunctionMock()
-        layer = drawing.Drawing()
-        layer.observe(observer)
-        layer.marker_options.label = 'X'
-        assert layer.marker_options.label == 'X'
-        assert len(observer.calls) == 1
-        [call] = observer.calls
-        assert call['new'].label == 'X'
-        assert call['name'] == 'marker_options'
-
 
 class DrawingFactory(unittest.TestCase):
 

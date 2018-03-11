@@ -1,6 +1,4 @@
 
-import copy
-
 import ipywidgets as widgets
 
 from traitlets import (
@@ -348,11 +346,6 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         super(Drawing, self).__init__(**kwargs)
         self.on_msg(self._handle_message)
 
-        # Observe all changes to the marker_options
-        # to let users change these directly
-        # and still trigger appropriate changes
-        self.marker_options.observe(self._on_marker_options_change)
-
     def on_new_feature(self, callback):
         """
         Register a callback called when new features are added
@@ -381,9 +374,6 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             else:
                 mode = DEFAULT_DRAWING_MODE
         return mode
-
-    def _on_marker_options_change(self, change):
-        self.marker_options = copy.deepcopy(self.marker_options)
 
     @default('marker_options')
     def _default_marker_options(self):
