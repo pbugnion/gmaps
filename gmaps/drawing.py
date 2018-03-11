@@ -477,6 +477,10 @@ def drawing_layer(
         marker_options = MarkerOptions()
     elif isinstance(marker_options, collections.Mapping):
         marker_options = _marker_options_from_dict(marker_options)
+    if line_options is None:
+        line_options = LineOptions()
+    elif isinstance(line_options, collections.Mapping):
+        line_options = LineOptions(**line_options)
     kwargs = {
         'features': features,
         'mode': mode,
