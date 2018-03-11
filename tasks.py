@@ -232,13 +232,13 @@ def open_editor(initial_message):
     tmp = tempfile.NamedTemporaryFile(suffix='.tmp')
     fname = tmp.name
 
-    with open(fname, 'wb') as f:
+    with open(fname, 'w') as f:
         f.write(initial_message)
         f.flush()
 
     call([editor, fname], close_fds=True)
 
-    with open(fname, 'rb') as f:
+    with open(fname, 'r') as f:
         lines = f.readlines()
 
     return lines
