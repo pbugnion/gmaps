@@ -226,7 +226,7 @@ class DrawingFactory(unittest.TestCase):
         layer = drawing.drawing_layer(mode='DISABLED')
         assert layer.mode == 'DISABLED'
 
-    def test_with_overlays(self):
+    def test_with_features(self):
         new_marker = marker.Marker(location=(-25.0, 5.0))
         layer = drawing.drawing_layer(features=[new_marker])
         assert layer.features == [new_marker]
