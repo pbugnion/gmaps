@@ -2,6 +2,16 @@
 Release notes
 -------------
 
+Version 0.7.3
+=============
+
+This release:
+- simplifies setting the width and height for a figure. We now do
+  not need to explicitly set the width and height of the embedded
+  map (PR 221).
+- allows customising the style of lines added to the map in the
+  drawing layer (PR 225).
+
 Version 0.7.2
 =============
 
