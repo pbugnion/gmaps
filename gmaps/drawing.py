@@ -185,8 +185,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86), stroke_color='green'),
-         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91), stroke_weight=5.0)
+         gmaps.Line((46.44, 5.24), (46.23, 5.86), stroke_color='green'),
+         gmaps.Line((48.44, 1.32), (47.13, 3.91), stroke_weight=5.0)
     ])
     >>> fig.add_layer(drawing)
 
@@ -200,8 +200,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     You can now add lines directly on the map:
 
     >>> drawing.features = [
-         gmaps.Line(start=(46.44, 5.24), end=(46.23, 5.86), stroke_color='green'),
-         gmaps.Line(start=(48.44, 1.32), end=(47.13, 3.91), stroke_weight=5.0)
+         gmaps.Line((46.44, 5.24), (46.23, 5.86), stroke_color='green'),
+         gmaps.Line((48.44, 1.32), (47.13, 3.91), stroke_weight=5.0)
     ]
 
     :param start:
