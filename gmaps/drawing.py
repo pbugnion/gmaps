@@ -436,10 +436,6 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             self._delete_feature(model_id)
 
 
-def _marker_options_from_dict(options_dict):
-    return MarkerOptions(**options_dict)
-
-
 @doc_subst(_doc_snippets)
 def drawing_layer(
         features=None, mode=DEFAULT_DRAWING_MODE,
@@ -476,7 +472,7 @@ def drawing_layer(
     if marker_options is None:
         marker_options = MarkerOptions()
     elif isinstance(marker_options, collections.Mapping):
-        marker_options = _marker_options_from_dict(marker_options)
+        marker_options = MarkerOptions(**marker_options)
     if line_options is None:
         line_options = LineOptions()
     elif isinstance(line_options, collections.Mapping):
