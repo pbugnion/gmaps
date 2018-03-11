@@ -35,10 +35,23 @@ _doc_snippets['params'] = """
         :class:`gmaps.MarkerOptions` for documentation on possible
         values. Note that this only affects the initial options
         of markers added to the map by a user. To customise markers
-        added programatically, just pass in the options to the
-        :class:`gmaps.Marker`.
+        added programatically, pass in the options to the
+        :class:`gmaps.Marker` constructor.
     :type marker_options:
         :class:`gmaps.MarkerOptions`, `dict` or `None`, optional
+
+    :param line_options:
+        Options controlling how lines are drawn on the map.
+        Either pass in an instance of :class:`gmaps.LineOptions`,
+        or a dictionary with keys `stroke_weight`, `stroke_color`,
+        `stroke_opacity` (or a subset of these). See
+        :class:`gmaps.LineOptions` for documentation on possible
+        values. Note that this only affects the initial options
+        of lines added to the map by a user. To customise lines
+        added programatically, pass in the options to the
+        :class:`gmaps.LineOptions` constructor.
+    :type line_options:
+        :class:`gmaps.LineOptions`, `dict` or `None`, optional
 """
 
 _doc_snippets['examples'] = """
