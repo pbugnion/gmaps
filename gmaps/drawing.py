@@ -385,7 +385,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         return MarkerOptions()
 
     @default('line_options')
-    def _default_marker_options(self):
+    def _default_line_options(self):
         return LineOptions()
 
     @default('toolbar_controls')
