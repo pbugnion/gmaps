@@ -331,13 +331,19 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     _model_name = Unicode('DrawingLayerModel').tag(sync=True)
     features = List().tag(sync=True, **widgets.widget_serialization)
     mode = Enum(ALLOWED_DRAWING_MODES).tag(sync=True)
-    marker_options = Instance(MarkerOptions, allow_none=False)
-    line_options = Instance(LineOptions, allow_none=False)
+    marker_options = widgets.trait_types.InstanceDict(
+        MarkerOptions, allow_none=False)
+    line_options = widgets.trait_types.InstanceDict(
+        LineOptions, allow_none=False)
     toolbar_controls = Instance(DrawingControls, allow_none=False).tag(
         sync=True, **widgets.widget_serialization)
 
     def __init__(self, **kwargs):
         kwargs['mode'] = self._get_initial_mode(kwargs)
+        if kwargs.get('marker_options') is None:
+            kwargs['marker_options'] = self._default_marker_options()
+        if kwargs.get('line_options') is None:
+            kwargs['line_options'] = self._default_line_options()
         self._new_feature_callbacks = []
 
         super(Drawing, self).__init__(**kwargs)
@@ -469,14 +475,6 @@ def drawing_layer(
     if features is None:
         features = []
     controls = DrawingControls(show_controls=show_controls)
-    if marker_options is None:
-        marker_options = MarkerOptions()
-    elif isinstance(marker_options, collections.Mapping):
-        marker_options = MarkerOptions(**marker_options)
-    if line_options is None:
-        line_options = LineOptions()
-    elif isinstance(line_options, collections.Mapping):
-        line_options = LineOptions(**line_options)
     kwargs = {
         'features': features,
         'mode': mode,
