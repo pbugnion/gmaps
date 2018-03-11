@@ -36,7 +36,10 @@ _doc_snippets['params'] = """
         or a dictionary with keys `hover_text`, `display_info_box`,
         `info_box_content`, `label` (or a subset of these). See
         :class:`gmaps.MarkerOptions` for documentation on possible
-        values.
+        values. Note that this only affects the initial options
+        of markers added to the map by a user. To customise markers
+        added programatically, just pass in the options to the
+        :class:`gmaps.Marker`.
     :type marker_options:
         :class:`gmaps.MarkerOptions`, `dict` or `None`, optional
 """
