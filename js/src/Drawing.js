@@ -211,7 +211,7 @@ export class DrawingControlsModel extends widgets.DOMWidgetModel {
 export class DrawingLayerView extends GMapsLayerView {
     constructor(options) {
         super(options);
-        this.canDownloadAsPng = false;
+        this.canDownloadAsPng = true;
         this._clickHandler = null;
     }
 
