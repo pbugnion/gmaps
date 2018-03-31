@@ -18,6 +18,7 @@ ALLOWED_DRAWING_MODES = {
 DEFAULT_DRAWING_MODE = 'MARKER'
 
 DEFAULT_STROKE_COLOR = '#696969'
+DEFAULT_FILL_COLOR = '#696969'
 
 
 _doc_snippets = {}
@@ -302,6 +303,21 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     _view_name = Unicode('PolygonView').tag(sync=True)
     _model_name = Unicode('PolygonModel').tag(sync=True)
     path = List(geotraitlets.Point(), minlen=3).tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.6
+    ).tag(sync=True)
+    fill_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_FILL_COLOR
+    ).tag(sync=True)
+    fill_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.2
+    ).tag(sync=True)
 
     def __init__(self, path):
         kwargs = dict(path=path)

@@ -276,3 +276,13 @@ class Polygon(unittest.TestCase):
         with self.assertRaises(traitlets.TraitError):
             path = [(5.0, 30.0), (-5.0, 10.0)]
             drawing.Polygon(path)
+
+    def test_defaults(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        polygon = drawing.Polygon(path)
+        state = polygon.get_state()
+        assert state['stroke_color'] == drawing.DEFAULT_STROKE_COLOR
+        assert state['stroke_weight'] == 2.0
+        assert state['stroke_opacity'] == 0.6
+        assert state['fill_color'] == drawing.DEFAULT_FILL_COLOR
+        assert state['fill_opacity'] == 0.2
