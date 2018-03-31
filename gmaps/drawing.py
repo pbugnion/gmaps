@@ -263,6 +263,35 @@ class Line(GMapsWidgetMixin, widgets.Widget):
         super(Line, self).__init__(**kwargs)
 
 
+class PolygonOptions(HasTraits):
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.6
+    ).tag(sync=True)
+    fill_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_FILL_COLOR
+    ).tag(sync=True)
+    fill_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.2
+    ).tag(sync=True)
+
+    def to_polygon(self, path):
+        new_polygon = Polygon(
+            path=path,
+            stroke_color=self.stroke_color,
+            stroke_weight=self.stroke_weight,
+            stroke_opacity=self.stroke_opacity,
+            fill_color=self.fill_color,
+            fill_opacity=self.fill_opacity
+        )
+        return new_polygon
+
+
 class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
     Widget representing a closed polygon on a map

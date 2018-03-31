@@ -303,3 +303,17 @@ class Polygon(unittest.TestCase):
         assert state['stroke_opacity'] == 0.87
         assert state['fill_color'] == 'rgb(7,9,11)'
         assert state['fill_opacity'] == 0.76
+
+
+class PolygonOptions(unittest.TestCase):
+
+    def test_to_polygon_defaults(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        expected_polygon = drawing.Polygon(path)
+        actual_polygon = drawing.PolygonOptions().to_polygon(path)
+        assert actual_polygon.path == expected_polygon.path
+        assert actual_polygon.stroke_color == expected_polygon.stroke_color
+        assert actual_polygon.stroke_weight == expected_polygon.stroke_weight
+        assert actual_polygon.stroke_opacity == expected_polygon.stroke_opacity
+        assert actual_polygon.fill_color == expected_polygon.fill_color
+        assert actual_polygon.fill_opacity == expected_polygon.fill_opacity
