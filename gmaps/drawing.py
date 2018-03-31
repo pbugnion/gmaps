@@ -319,8 +319,22 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
         min=0.0, max=1.0, allow_none=False, default_value=0.2
     ).tag(sync=True)
 
-    def __init__(self, path):
-        kwargs = dict(path=path)
+    def __init__(
+            self, path,
+            stroke_color=DEFAULT_STROKE_COLOR,
+            stroke_weight=2.0,
+            stroke_opacity=0.6,
+            fill_color=DEFAULT_FILL_COLOR,
+            fill_opacity=0.2
+    ):
+        kwargs = dict(
+            path=path,
+            stroke_color=stroke_color,
+            stroke_weight=stroke_weight,
+            stroke_opacity=stroke_opacity,
+            fill_color=fill_color,
+            fill_opacity=fill_opacity
+        )
         super(Polygon, self).__init__(**kwargs)
 
 

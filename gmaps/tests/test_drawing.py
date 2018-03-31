@@ -286,3 +286,20 @@ class Polygon(unittest.TestCase):
         assert state['stroke_opacity'] == 0.6
         assert state['fill_color'] == drawing.DEFAULT_FILL_COLOR
         assert state['fill_opacity'] == 0.2
+
+    def test_custom_arguments(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        polygon = drawing.Polygon(
+            path,
+            stroke_color=(1, 3, 5),
+            stroke_weight=10.0,
+            stroke_opacity=0.87,
+            fill_color=(7, 9, 11),
+            fill_opacity=0.76
+        )
+        state = polygon.get_state()
+        assert state['stroke_color'] == 'rgb(1,3,5)'
+        assert state['stroke_weight'] == 10.0
+        assert state['stroke_opacity'] == 0.87
+        assert state['fill_color'] == 'rgb(7,9,11)'
+        assert state['fill_opacity'] == 0.76
