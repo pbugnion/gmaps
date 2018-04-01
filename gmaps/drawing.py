@@ -223,6 +223,7 @@ class Line(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer()
+    >>> fig.add_layer(drawing)
     >>> fig # display the figure
 
     You can now add lines directly on the map:
