@@ -42,7 +42,7 @@ _doc_snippets['params'] = """
         :class:`gmaps.MarkerOptions`, `dict` or `None`, optional
 
     :param line_options:
-        Options controlling how lines are drawn on the map.
+        Options controlling how new lines are drawn on the map.
         Either pass in an instance of :class:`gmaps.LineOptions`,
         or a dictionary with keys `stroke_weight`, `stroke_color`,
         `stroke_opacity` (or a subset of these). See
@@ -50,9 +50,21 @@ _doc_snippets['params'] = """
         values. Note that this only affects the initial options
         of lines added to the map by a user. To customise lines
         added programatically, pass in the options to the
-        :class:`gmaps.LineOptions` constructor.
+        :class:`gmaps.Line` constructor.
     :type line_options:
         :class:`gmaps.LineOptions`, `dict` or `None`, optional
+
+    :param polygon_options:
+        Options controlling how new polygons are drawn on the map. Either pass
+        in an instance of :class:`gmaps.PolygonOptions`, or a dictionary with
+        keys `stroke_weight`, `stroke_color`, `stroke_opacity`, `fill_color`,
+        `fill_opacity` (or a subset of these). See
+        :class:`gmaps.PolygonOptions` for documentation on possible values.
+        Note that this only affects the initial options of polygons added to
+        the map by a user. To customise polygons added programatically, pass in
+        the options to the :class:`gmaps.Polygon` constructor.
+    :type polygon_options:
+        :class:`gmaps.PolygonOptions`, `dict` or `None`, optional
 """
 
 _doc_snippets['examples'] = """
@@ -63,7 +75,10 @@ _doc_snippets['examples'] = """
     >>> drawing = gmaps.drawing_layer(features=[
          gmaps.Line((46.23, 5.86), (46.44, 5.24), stroke_weight=3.0),
          gmaps.Marker((46.88, 5.45), label='D'),
-         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon(
+             [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)],
+             fill_color='red'
+         )
     ])
     >>> fig.add_layer(drawing)
     >>> fig
