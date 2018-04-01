@@ -42,6 +42,28 @@ export class PolygonView extends GMapsLayerView {
         };
         this.polygon = new google.maps.Polygon({ paths: [path], ...polygonOptions })
         this.polygon.addListener('click', event => this.trigger('click'));
+        this.modelEvents()
+    }
+
+    modelEvents() {
+        const properties = [
+            ['strokeColor', 'stroke_color'],
+            ['strokeWeight', 'stroke_weight'],
+            ['strokeOpacity', 'stroke_opacity'],
+            ['fillColor', 'fill_color'],
+            ['fillOpacity', 'fill_opacity']
+        ]
+
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = (
+                () => {
+                    this.polygon.setOptions(
+                        {[nameInView]: this.model.get(nameInModel)}
+                    )
+                }
+            )
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
     }
 
     addToMapView(mapView) {
