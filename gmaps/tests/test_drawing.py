@@ -241,6 +241,10 @@ class DrawingFactory(unittest.TestCase):
         layer = drawing.drawing_layer(features=[new_marker])
         assert layer.features == [new_marker]
 
+    def test_with_polygon_options(self):
+        layer = drawing.drawing_layer(polygon_options={'stroke_weight': 12.0})
+        assert layer.polygon_options.stroke_weight == 12.0
+
 
 class Line(unittest.TestCase):
 
