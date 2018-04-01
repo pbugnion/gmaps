@@ -343,6 +343,7 @@ class PolygonOptions(HasTraits):
         )
         return new_polygon
 
+
 @doc_subst(_doc_snippets)
 class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
