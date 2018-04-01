@@ -18,6 +18,7 @@ ALLOWED_DRAWING_MODES = {
 DEFAULT_DRAWING_MODE = 'MARKER'
 
 DEFAULT_STROKE_COLOR = '#696969'
+DEFAULT_FILL_COLOR = '#696969'
 
 
 _doc_snippets = {}
@@ -41,7 +42,7 @@ _doc_snippets['params'] = """
         :class:`gmaps.MarkerOptions`, `dict` or `None`, optional
 
     :param line_options:
-        Options controlling how lines are drawn on the map.
+        Options controlling how new lines are drawn on the map.
         Either pass in an instance of :class:`gmaps.LineOptions`,
         or a dictionary with keys `stroke_weight`, `stroke_color`,
         `stroke_opacity` (or a subset of these). See
@@ -49,9 +50,21 @@ _doc_snippets['params'] = """
         values. Note that this only affects the initial options
         of lines added to the map by a user. To customise lines
         added programatically, pass in the options to the
-        :class:`gmaps.LineOptions` constructor.
+        :class:`gmaps.Line` constructor.
     :type line_options:
         :class:`gmaps.LineOptions`, `dict` or `None`, optional
+
+    :param polygon_options:
+        Options controlling how new polygons are drawn on the map. Either pass
+        in an instance of :class:`gmaps.PolygonOptions`, or a dictionary with
+        keys `stroke_weight`, `stroke_color`, `stroke_opacity`, `fill_color`,
+        `fill_opacity` (or a subset of these). See
+        :class:`gmaps.PolygonOptions` for documentation on possible values.
+        Note that this only affects the initial options of polygons added to
+        the map by a user. To customise polygons added programatically, pass in
+        the options to the :class:`gmaps.Polygon` constructor.
+    :type polygon_options:
+        :class:`gmaps.PolygonOptions`, `dict` or `None`, optional
 """
 
 _doc_snippets['examples'] = """
@@ -62,7 +75,10 @@ _doc_snippets['examples'] = """
     >>> drawing = gmaps.drawing_layer(features=[
          gmaps.Line((46.23, 5.86), (46.44, 5.24), stroke_weight=3.0),
          gmaps.Marker((46.88, 5.45), label='D'),
-         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon(
+             [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)],
+             fill_color='red'
+         )
     ])
     >>> fig.add_layer(drawing)
     >>> fig
@@ -127,6 +143,22 @@ _doc_snippets['line_options_params'] = """
     :type stroke_opacity: float, optional.
 """
 
+_doc_snippets['polygon_options_params'] = """
+    {line_options_params}
+
+    :param fill_color:
+        The internal color of the polygon. Colors can be specified as a simple
+        string, e.g. 'blue', as an RGB tuple, e.g. (100, 0, 0),
+        or as an RGBA tuple, e.g. (100, 0, 0, 0.5). Defaults to a grey
+        color: (69, 69, 69)
+    :type fill_color: str or tuple, optional.
+
+    :param fill_opacity:
+        The opacity of the fill color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque). 0.2 by default.
+    :type fill_opacity: float, optional.
+""".format(line_options_params=_doc_snippets['line_options_params'].strip())
+
 
 class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
     """
@@ -148,7 +180,7 @@ class LineOptions(HasTraits):
     Style options for a line
 
     Pass an instance of this class to :func:`gmaps.drawing_layer` to
-    control the style of user-drawn lines on the map.
+    control the style of new user-drawn lines on the map.
 
     :Examples:
 
@@ -157,6 +189,7 @@ class LineOptions(HasTraits):
             marker_options=gmaps.MarkerOptions(hover_text='some text'),
             line_options=gmaps.LineOptions(stroke_color='red')
         )
+    >>> fig.add_layer(drawing)
     >>> fig # display the figure
 
     {line_options_params}
@@ -205,6 +238,7 @@ class Line(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer()
+    >>> fig.add_layer(drawing)
     >>> fig # display the figure
 
     You can now add lines directly on the map:
@@ -262,6 +296,55 @@ class Line(GMapsWidgetMixin, widgets.Widget):
         super(Line, self).__init__(**kwargs)
 
 
+@doc_subst(_doc_snippets)
+class PolygonOptions(HasTraits):
+    """
+    Style options for a polygon.
+
+    Pass an instance of this class to :func:`gmaps.drawing_layer` to
+    control the style of new user-drawn polygons on the map.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(
+            polygon_options=gmaps.PolygonOptions(
+                stroke_color='red', fill_color=(255, 0, 132))
+        )
+    >>> fig.add_layer(drawing)
+    >>> fig # display the figure
+
+    {polygon_options_params}
+    """
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.6
+    ).tag(sync=True)
+    fill_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_FILL_COLOR
+    ).tag(sync=True)
+    fill_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.2
+    ).tag(sync=True)
+
+    def to_polygon(self, path):
+        new_polygon = Polygon(
+            path=path,
+            stroke_color=self.stroke_color,
+            stroke_weight=self.stroke_weight,
+            stroke_opacity=self.stroke_opacity,
+            fill_color=self.fill_color,
+            fill_opacity=self.fill_opacity
+        )
+        return new_polygon
+
+
+@doc_subst(_doc_snippets)
 class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
     Widget representing a closed polygon on a map
@@ -274,7 +357,10 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon(
+            [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)],
+            stroke_color='red', fill_color=(255, 0, 132)
+        )
     ])
     >>> fig.add_layer(drawing)
 
@@ -283,12 +369,16 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer()
+    >>> fig.add_layer(drawing)
     >>> fig # display the figure
 
     You can now add polygons directly on the map:
 
     >>> drawing.features = [
-         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon(
+             [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)]
+             stroke_color='red', fill_color=(255, 0, 132)
+         )
     ]
 
     :param path:
@@ -298,13 +388,44 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
         are expressed as a float between -180 (corresponding to 180 degrees
         west) and +180 (corresponding to 180 degrees east).
     :type path: list of tuples of floats
+
+    {polygon_options_params}
     """
     _view_name = Unicode('PolygonView').tag(sync=True)
     _model_name = Unicode('PolygonModel').tag(sync=True)
     path = List(geotraitlets.Point(), minlen=3).tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.6
+    ).tag(sync=True)
+    fill_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_FILL_COLOR
+    ).tag(sync=True)
+    fill_opacity = Float(
+        min=0.0, max=1.0, allow_none=False, default_value=0.2
+    ).tag(sync=True)
 
-    def __init__(self, path):
-        kwargs = dict(path=path)
+    def __init__(
+            self, path,
+            stroke_color=DEFAULT_STROKE_COLOR,
+            stroke_weight=2.0,
+            stroke_opacity=0.6,
+            fill_color=DEFAULT_FILL_COLOR,
+            fill_opacity=0.2
+    ):
+        kwargs = dict(
+            path=path,
+            stroke_color=stroke_color,
+            stroke_weight=stroke_weight,
+            stroke_opacity=stroke_opacity,
+            fill_color=fill_color,
+            fill_opacity=fill_opacity
+        )
         super(Polygon, self).__init__(**kwargs)
 
 
@@ -345,6 +466,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         MarkerOptions, allow_none=False)
     line_options = widgets.trait_types.InstanceDict(
         LineOptions, allow_none=False)
+    polygon_options = widgets.trait_types.InstanceDict(
+        PolygonOptions, allow_none=False)
     toolbar_controls = Instance(DrawingControls, allow_none=False).tag(
         sync=True, **widgets.widget_serialization)
 
@@ -356,6 +479,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             kwargs['marker_options'] = self._default_marker_options()
         if kwargs.get('line_options') is None:
             kwargs['line_options'] = self._default_line_options()
+        if kwargs.get('polygon_options') is None:
+            kwargs['polygon_options'] = self._default_polygon_options()
         self._new_feature_callbacks = []
 
         super(Drawing, self).__init__(**kwargs)
@@ -398,6 +523,10 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     def _default_line_options(self):
         return LineOptions()
 
+    @default('polygon_options')
+    def _default_polygon_options(self):
+        return PolygonOptions()
+
     @default('toolbar_controls')
     def _default_toolbar_controls(self):
         return DrawingControls()
@@ -434,7 +563,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
                 feature = self.line_options.to_line(start, end)
             elif payload['featureType'] == 'POLYGON':
                 path = payload['path']
-                feature = Polygon(path)
+                feature = self.polygon_options.to_polygon(path)
             self.features = self.features + [feature]
         elif content.get('event') == 'MODE_CHANGED':
             payload = content['payload']
@@ -449,7 +578,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
 @doc_subst(_doc_snippets)
 def drawing_layer(
         features=None, mode=DEFAULT_DRAWING_MODE,
-        show_controls=True, marker_options=None, line_options=None):
+        show_controls=True, marker_options=None, line_options=None,
+        polygon_options=None):
     """
     Create an interactive drawing layer
 
@@ -482,6 +612,7 @@ def drawing_layer(
         'mode': mode,
         'toolbar_controls': controls,
         'marker_options': marker_options,
-        'line_options': line_options
+        'line_options': line_options,
+        'polygon_options': polygon_options
     }
     return Drawing(**kwargs)

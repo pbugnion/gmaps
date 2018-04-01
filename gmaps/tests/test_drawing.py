@@ -94,6 +94,16 @@ class Drawing(unittest.TestCase):
         layer = drawing.Drawing(line_options=options)
         assert layer.line_options.stroke_weight == 12.0
 
+    def test_polygon_options_instance(self):
+        options = drawing.PolygonOptions(stroke_weight=12.0)
+        layer = drawing.Drawing(polygon_options=options)
+        assert layer.polygon_options.stroke_weight == 12.0
+
+    def test_polygon_options_dict(self):
+        options = {'stroke_weight': 12.0}
+        layer = drawing.Drawing(polygon_options=options)
+        assert layer.polygon_options.stroke_weight == 12.0
+
     def test_adding_marker(self):
         layer = drawing.Drawing()
         message = new_marker_message(latitude=25.0, longitude=-5.0)
@@ -185,6 +195,17 @@ class Drawing(unittest.TestCase):
         [new_polygon] = layer.features
         assert new_polygon.path == path
 
+    def test_adding_polygon_with_options(self):
+        layer = drawing.Drawing(
+            polygon_options=drawing.PolygonOptions(stroke_weight=19.0))
+        path = [(5.0, 10.0), (15.0, 20.0), (25.0, 50.0)]
+        message = new_polygon_message(path)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_polygon] = layer.features
+        assert new_polygon.path == path
+        assert new_polygon.stroke_weight == 19.0
+
     def test_default_mode(self):
         layer = drawing.Drawing()
         assert layer.get_state()['mode'] == drawing.DEFAULT_DRAWING_MODE
@@ -231,6 +252,10 @@ class DrawingFactory(unittest.TestCase):
         layer = drawing.drawing_layer(features=[new_marker])
         assert layer.features == [new_marker]
 
+    def test_with_polygon_options(self):
+        layer = drawing.drawing_layer(polygon_options={'stroke_weight': 12.0})
+        assert layer.polygon_options.stroke_weight == 12.0
+
 
 class Line(unittest.TestCase):
 
@@ -276,3 +301,44 @@ class Polygon(unittest.TestCase):
         with self.assertRaises(traitlets.TraitError):
             path = [(5.0, 30.0), (-5.0, 10.0)]
             drawing.Polygon(path)
+
+    def test_defaults(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        polygon = drawing.Polygon(path)
+        state = polygon.get_state()
+        assert state['stroke_color'] == drawing.DEFAULT_STROKE_COLOR
+        assert state['stroke_weight'] == 2.0
+        assert state['stroke_opacity'] == 0.6
+        assert state['fill_color'] == drawing.DEFAULT_FILL_COLOR
+        assert state['fill_opacity'] == 0.2
+
+    def test_custom_arguments(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        polygon = drawing.Polygon(
+            path,
+            stroke_color=(1, 3, 5),
+            stroke_weight=10.0,
+            stroke_opacity=0.87,
+            fill_color=(7, 9, 11),
+            fill_opacity=0.76
+        )
+        state = polygon.get_state()
+        assert state['stroke_color'] == 'rgb(1,3,5)'
+        assert state['stroke_weight'] == 10.0
+        assert state['stroke_opacity'] == 0.87
+        assert state['fill_color'] == 'rgb(7,9,11)'
+        assert state['fill_opacity'] == 0.76
+
+
+class PolygonOptions(unittest.TestCase):
+
+    def test_to_polygon_defaults(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        expected_polygon = drawing.Polygon(path)
+        actual_polygon = drawing.PolygonOptions().to_polygon(path)
+        assert actual_polygon.path == expected_polygon.path
+        assert actual_polygon.stroke_color == expected_polygon.stroke_color
+        assert actual_polygon.stroke_weight == expected_polygon.stroke_weight
+        assert actual_polygon.stroke_opacity == expected_polygon.stroke_opacity
+        assert actual_polygon.fill_color == expected_polygon.fill_color
+        assert actual_polygon.fill_opacity == expected_polygon.fill_opacity

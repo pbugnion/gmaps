@@ -557,8 +557,13 @@ charge zone <https://en.wikipedia.org/wiki/London_congestion_charge>`_.
 We can draw this on the map with a :class:`gmaps.Polygon`::
 
   fig = gmaps.figure(center=(51.5, -0.1), zoom_level=12)
+  london_congestion_zone_polygon = gmaps.Polygon(
+      london_congestion_zone_path,
+      stroke_color='blue',
+      fill_color='blue'
+  )
   drawing = gmaps.drawing_layer(
-      features=[gmaps.Polygon(london_congestion_zone_path)],
+      features=[london_congestion_zone_polygon],
       show_controls=False
   )
   fig.add_layer(drawing)
@@ -567,7 +572,8 @@ We can draw this on the map with a :class:`gmaps.Polygon`::
 .. image:: _images/drawing_example2.png
 
 We can pass an arbitrary list of `(latitude, longitude)` pairs to
-`gmaps.Polygon` to specify complex shapes.
+`gmaps.Polygon` to specify complex shapes. For details on how to style polygons,
+see the :class:`gmaps.Polygon` API documentation.
 
 See the API documentation for :func:`gmaps.drawing_layer` for an exhaustive list
 of options for the drawing layer.
