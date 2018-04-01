@@ -10,7 +10,12 @@ export class PolygonModel extends GMapsLayerModel {
         return {
             ...super.defaults(),
             _view_name: 'PolygonView',
-            _model_name: 'PolygonModel'
+            _model_name: 'PolygonModel',
+            stroke_color: '#696969',
+            stroke_weight: 2,
+            stroke_opacity: 0.6,
+            fill_color: '#696969',
+            fill_opacity: 0.2
         }
     }
 }
