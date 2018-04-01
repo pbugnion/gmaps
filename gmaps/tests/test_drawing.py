@@ -195,6 +195,17 @@ class Drawing(unittest.TestCase):
         [new_polygon] = layer.features
         assert new_polygon.path == path
 
+    def test_adding_polygon_with_options(self):
+        layer = drawing.Drawing(
+            polygon_options=drawing.PolygonOptions(stroke_weight=19.0))
+        path = [(5.0, 10.0), (15.0, 20.0), (25.0, 50.0)]
+        message = new_polygon_message(path)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_polygon] = layer.features
+        assert new_polygon.path == path
+        assert new_polygon.stroke_weight == 19.0
+
     def test_default_mode(self):
         layer = drawing.Drawing()
         assert layer.get_state()['mode'] == drawing.DEFAULT_DRAWING_MODE
