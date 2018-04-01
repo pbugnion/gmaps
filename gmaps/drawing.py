@@ -128,6 +128,22 @@ _doc_snippets['line_options_params'] = """
     :type stroke_opacity: float, optional.
 """
 
+_doc_snippets['polygon_options_params'] = """
+    {line_options_params}
+
+    :param fill_color:
+        The internal color of the polygon. Colors can be specified as a simple
+        string, e.g. 'blue', as an RGB tuple, e.g. (100, 0, 0),
+        or as an RGBA tuple, e.g. (100, 0, 0, 0.5). Defaults to a grey
+        color: (69, 69, 69)
+    :type fill_color: str or tuple, optional.
+
+    :param fill_opacity:
+        The opacity of the fill color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque). 0.2 by default.
+    :type fill_opacity: float, optional.
+""".format(line_options_params=_doc_snippets['line_options_params'].strip())
+
 
 class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
     """
@@ -264,7 +280,26 @@ class Line(GMapsWidgetMixin, widgets.Widget):
         super(Line, self).__init__(**kwargs)
 
 
+@doc_subst(_doc_snippets)
 class PolygonOptions(HasTraits):
+    """
+    Style options for a polygon.
+
+    Pass an instance of this class to :func:`gmaps.drawing_layer` to
+    control the style of new user-drawn polygons on the map.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(
+            polygon_options=gmaps.PolygonOptions(
+                stroke_color='red', fill_color=(255, 0, 132))
+        )
+    >>> fig.add_layer(drawing)
+    >>> fig # display the figure
+
+    {polygon_options_params}
+    """
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_STROKE_COLOR
     ).tag(sync=True)
