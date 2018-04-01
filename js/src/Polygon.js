@@ -22,12 +22,17 @@ export class PolygonView extends GMapsLayerView {
         )
         const pathElems = [...points, points[0]] // make sure we close the polygon
         const path = new google.maps.MVCArray(pathElems);
+        const strokeColor = this.model.get('stroke_color');
+        const strokeWeight = this.model.get('stroke_weight');
+        const strokeOpacity = this.model.get('stroke_opacity');
+        const fillColor = this.model.get('fill_color');
+        const fillOpacity = this.model.get('fill_opacity');
         const polygonOptions = {
-            strokeColor: '#696969',
-            fillColor: '#696969',
-            strokeWeight: 1,
-            strokeOpacity: 0.6,
-            fillOpacity: 0.2,
+            strokeColor,
+            fillColor,
+            strokeWeight,
+            strokeOpacity,
+            fillOpacity,
             clickable: false
         };
         this.polygon = new google.maps.Polygon({ paths: [path], ...polygonOptions })
