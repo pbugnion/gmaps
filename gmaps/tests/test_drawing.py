@@ -94,6 +94,16 @@ class Drawing(unittest.TestCase):
         layer = drawing.Drawing(line_options=options)
         assert layer.line_options.stroke_weight == 12.0
 
+    def test_polygon_options_instance(self):
+        options = drawing.PolygonOptions(stroke_weight=12.0)
+        layer = drawing.Drawing(polygon_options=options)
+        assert layer.polygon_options.stroke_weight == 12.0
+
+    def test_polygon_options_dict(self):
+        options = {'stroke_weight': 12.0}
+        layer = drawing.Drawing(polygon_options=options)
+        assert layer.polygon_options.stroke_weight == 12.0
+
     def test_adding_marker(self):
         layer = drawing.Drawing()
         message = new_marker_message(latitude=25.0, longitude=-5.0)

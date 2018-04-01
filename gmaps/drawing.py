@@ -404,6 +404,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         MarkerOptions, allow_none=False)
     line_options = widgets.trait_types.InstanceDict(
         LineOptions, allow_none=False)
+    polygon_options = widgets.trait_types.InstanceDict(
+        PolygonOptions, allow_none=False)
     toolbar_controls = Instance(DrawingControls, allow_none=False).tag(
         sync=True, **widgets.widget_serialization)
 
@@ -415,6 +417,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             kwargs['marker_options'] = self._default_marker_options()
         if kwargs.get('line_options') is None:
             kwargs['line_options'] = self._default_line_options()
+        if kwargs.get('polygon_options') is None:
+            kwargs['polygon_options'] = self._default_polygon_options()
         self._new_feature_callbacks = []
 
         super(Drawing, self).__init__(**kwargs)
@@ -456,6 +460,10 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     @default('line_options')
     def _default_line_options(self):
         return LineOptions()
+
+    @default('polygon_options')
+    def _default_polygon_options(self):
+        return PolygonOptions()
 
     @default('toolbar_controls')
     def _default_toolbar_controls(self):
