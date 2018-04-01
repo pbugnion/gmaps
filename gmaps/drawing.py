@@ -149,7 +149,7 @@ class LineOptions(HasTraits):
     Style options for a line
 
     Pass an instance of this class to :func:`gmaps.drawing_layer` to
-    control the style of user-drawn lines on the map.
+    control the style of new user-drawn lines on the map.
 
     :Examples:
 
@@ -158,6 +158,7 @@ class LineOptions(HasTraits):
             marker_options=gmaps.MarkerOptions(hover_text='some text'),
             line_options=gmaps.LineOptions(stroke_color='red')
         )
+    >>> fig.add_layer(drawing)
     >>> fig # display the figure
 
     {line_options_params}
