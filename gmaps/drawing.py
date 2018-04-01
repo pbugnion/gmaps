@@ -327,7 +327,7 @@ class PolygonOptions(HasTraits):
         )
         return new_polygon
 
-
+@doc_subst(_doc_snippets)
 class Polygon(GMapsWidgetMixin, widgets.Widget):
     """
     Widget representing a closed polygon on a map
@@ -340,7 +340,10 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
-         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon(
+            [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)],
+            stroke_color='red', fill_color=(255, 0, 132)
+        )
     ])
     >>> fig.add_layer(drawing)
 
@@ -349,12 +352,16 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer()
+    >>> fig.add_layer(drawing)
     >>> fig # display the figure
 
     You can now add polygons directly on the map:
 
     >>> drawing.features = [
-         gmaps.Polygon([(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)])
+         gmaps.Polygon(
+             [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)]
+             stroke_color='red', fill_color=(255, 0, 132)
+         )
     ]
 
     :param path:
@@ -364,6 +371,8 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
         are expressed as a float between -180 (corresponding to 180 degrees
         west) and +180 (corresponding to 180 degrees east).
     :type path: list of tuples of floats
+
+    {polygon_options_params}
     """
     _view_name = Unicode('PolygonView').tag(sync=True)
     _model_name = Unicode('PolygonModel').tag(sync=True)
