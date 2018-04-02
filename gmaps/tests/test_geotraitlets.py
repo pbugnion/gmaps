@@ -282,8 +282,12 @@ class TestMapType(unittest.TestCase):
 
     def setUp(self):
         class A(traitlets.HasTraits):
-            x = geotraitlets.MapType()
+            x = geotraitlets.MapType('ROADMAP')
         self.A = A
+
+    def test_default_value(self):
+        a = self.A()
+        assert a.x == 'ROADMAP'
 
     def test_accept_valid_values(self):
         for map_type in ['ROADMAP', 'HYBRID', 'SATELLITE', 'TERRAIN']:
@@ -293,6 +297,10 @@ class TestMapType(unittest.TestCase):
     def test_reject_invalid(self):
         with self.assertRaises(traitlets.TraitError):
             self.A(x='not-a-map-type')
+
+    def test_reject_none(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=None)
 
 
 class TestMouseHandling(unittest.TestCase):

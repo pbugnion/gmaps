@@ -210,20 +210,19 @@ class ColorAlpha(traitlets.Union):
             return value
 
 
-class MapType(traitlets.Unicode):
+class MapType(traitlets.Enum):
     """
     String representing a map type
     """
     allowed_map_types = ['ROADMAP', 'HYBRID', 'TERRAIN', 'SATELLITE']
-    info_text = 'a string representing a map type: [{}]'.format(
-        ', '.join(['"{}"'.format(map_type) for map_type in allowed_map_types]))
-    default_value = traitlets.Undefined
 
-    def validate(self, obj, value):
-        if value in self.allowed_map_types:
-            return value
-        else:
-            self.error(obj, value)
+    def __init__(self, default_value, **kwargs):
+        super(MapType, self).__init__(
+            self.allowed_map_types,
+            default_value=default_value,
+            allow_none=False,
+            **kwargs
+        )
 
 
 class MouseHandling(traitlets.Enum):
