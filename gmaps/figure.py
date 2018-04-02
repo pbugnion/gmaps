@@ -1,7 +1,7 @@
 
 import ipywidgets as widgets
 
-from traitlets import Unicode, Instance, default, observe, link
+from traitlets import Unicode, Instance, default, link
 
 from .maps import Map, InitialViewport, GMapsWidgetMixin
 from .geotraitlets import MapType, MouseHandling
