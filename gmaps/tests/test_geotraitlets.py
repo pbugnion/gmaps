@@ -276,3 +276,20 @@ class TestZoomLevel(unittest.TestCase):
     def test_reject_negative_value(self):
         with self.assertRaises(traitlets.TraitError):
             self.A(x=-1)
+
+
+class TestMapType(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.MapType()
+        self.A = A
+
+    def test_accept_valid_values(self):
+        for map_type in ['ROADMAP', 'HYBRID', 'SATELLITE', 'TERRAIN']:
+            a = self.A(x=map_type)
+            assert a.x == map_type
+
+    def test_reject_bad_map_type(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x='not-a-map-type')

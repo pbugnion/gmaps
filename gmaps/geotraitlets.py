@@ -210,6 +210,22 @@ class ColorAlpha(traitlets.Union):
             return value
 
 
+class MapType(traitlets.Unicode):
+    """
+    String representing a map type
+    """
+    allowed_map_types = ['ROADMAP', 'HYBRID', 'TERRAIN', 'SATELLITE']
+    info_text = 'a string representing a map type: [{}]'.format(
+        ', '.join(['"{}"'.format(map_type) for map_type in allowed_map_types]))
+    default_value = traitlets.Undefined
+
+    def validate(self, obj, value):
+        if value in self.allowed_map_types:
+            return value
+        else:
+            self.error(obj, value)
+
+
 def is_valid_point(pt):
     latitude, longitude = pt
     return (-90.0 <= latitude <= 90.0) and (-180.0 <= longitude <= 180.0)
