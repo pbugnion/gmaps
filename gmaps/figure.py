@@ -4,7 +4,7 @@ import ipywidgets as widgets
 from traitlets import Unicode, Instance, default, observe, link
 
 from .maps import Map, InitialViewport, GMapsWidgetMixin
-from .geotraitlets import MapType
+from .geotraitlets import MapType, MouseHandling
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
 
@@ -37,6 +37,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
     map_type = MapType('ROADMAP')
+    mouse_handling = MouseHandling('COOPERATIVE')
     layout = widgets.trait_types.InstanceDict(FigureLayout).tag(
         sync=True, **widgets.widget_serialization)
 
@@ -44,7 +45,10 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
         if kwargs.get('layout') is None:
             kwargs['layout'] = self._default_layout()
         super(Figure, self).__init__(*args, **kwargs)
+        self._map.map_type = self.map_type
         link((self._map, 'map_type'), (self, 'map_type'))
+        self._map.mouse_handling = self.mouse_handling
+        link((self._map, 'mouse_handling'), (self, 'mouse_handling'))
 
     @default('layout')
     def _default_layout(self):

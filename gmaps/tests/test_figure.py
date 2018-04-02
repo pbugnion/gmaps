@@ -21,6 +21,21 @@ class TestFigure(unittest.TestCase):
         fig._map.map_type = 'TERRAIN'
         assert fig.map_type == 'TERRAIN'
 
+    def test_proxy_mouse_handling(self):
+        fig = Figure(_map=Map(), mouse_handling='GREEDY')
+        assert fig.mouse_handling == 'GREEDY'
+        assert fig._map.mouse_handling == 'GREEDY'
+
+    def test_proxy_mouse_handling_change(self):
+        fig = Figure(_map=Map(), mouse_handling='GREEDY')
+        fig.mouse_handling = 'NONE'
+        assert fig._map.mouse_handling == 'NONE'
+
+    def test_catch_mouse_handling_change_in_map(self):
+        fig = Figure(_map=Map(), mouse_handling='GREEDY')
+        fig._map.mouse_handling = 'NONE'
+        assert fig.mouse_handling == 'NONE'
+
 
 class TestFigureFactory(unittest.TestCase):
 
