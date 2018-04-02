@@ -156,6 +156,7 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     initial_viewport = InitialViewport(default_value='DATA_BOUNDS').tag(
             sync=True, to_json=_serialize_viewport)
     map_type = Unicode('ROADMAP').tag(sync=True)
+    mouse_handling = Unicode('COOPERATIVE').tag(sync=True)
 
     def add_layer(self, layer):
         self.layers = tuple([l for l in self.layers] + [layer])

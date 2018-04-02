@@ -69,7 +69,8 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
 
     readOptions(google) {
         const options = {
-            mapTypeId: stringToMapType(google, this.model.get('map_type'))
+            mapTypeId: stringToMapType(google, this.model.get('map_type')),
+            gestureHandling: this.model.get('mouse_handling').toLowerCase()
         }
         return options
     }
