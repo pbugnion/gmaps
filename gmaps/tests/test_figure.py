@@ -43,6 +43,8 @@ class TestFigureFactory(unittest.TestCase):
         fig = figure()
         assert fig._toolbar is not None
         assert fig._errors_box is not None
+        assert fig.map_type == 'ROADMAP'
+        assert fig.mouse_handling == 'COOPERATIVE'
         map_ = fig._map
         assert map_ is not None
         assert map_.initial_viewport == 'DATA_BOUNDS'
@@ -93,3 +95,11 @@ class TestFigureFactory(unittest.TestCase):
         assert fig.layout.height == layout['height']
         assert fig.layout.width == layout['width']
         assert fig.layout.border == layout['border']
+
+    def test_custom_map_type(self):
+        fig = figure(map_type='SATELLITE')
+        assert fig.map_type == 'SATELLITE'
+
+    def test_custom_mouse_handling(self):
+        fig = figure(mouse_handling='NONE')
+        assert fig.mouse_handling == 'NONE'
