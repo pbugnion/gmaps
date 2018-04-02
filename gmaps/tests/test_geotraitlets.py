@@ -299,8 +299,12 @@ class TestMouseHandling(unittest.TestCase):
 
     def setUp(self):
         class A(traitlets.HasTraits):
-            x = geotraitlets.MouseHandling()
+            x = geotraitlets.MouseHandling('COOPERATIVE')
         self.A = A
+
+    def test_default_value(self):
+        a = self.A()
+        assert a.x == 'COOPERATIVE'
 
     def test_accept_valid_values(self):
         for behaviour in ['COOPERATIVE', 'GREEDY', 'NONE', 'AUTO']:
@@ -310,3 +314,7 @@ class TestMouseHandling(unittest.TestCase):
     def test_reject_invalid(self):
         with self.assertRaises(traitlets.TraitError):
             self.A(x='not-a-mouse-handling-behaviour')
+
+    def test_reject_none(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=None)

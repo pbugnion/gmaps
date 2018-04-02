@@ -226,23 +226,19 @@ class MapType(traitlets.Unicode):
             self.error(obj, value)
 
 
-class MouseHandling(traitlets.Unicode):
+class MouseHandling(traitlets.Enum):
     """
     String representing valid values for mouse handling
     """
     allowed_behaviours = ['COOPERATIVE', 'GREEDY', 'NONE', 'AUTO']
-    printable_allowed_behaviours = [
-        '"{}"'.format(behaviour) for behaviour in allowed_behaviours]
-    info_text = \
-        'a string representing a mouse handling behaviour: [{}]'.format(
-            ', '.join(printable_allowed_behaviours))
-    default_value = traitlets.Undefined
 
-    def validate(self, obj, value):
-        if value in self.allowed_behaviours:
-            return value
-        else:
-            self.error(obj, value)
+    def __init__(self, default_value, **kwargs):
+        super(MouseHandling, self).__init__(
+            self.allowed_behaviours,
+            default_value=default_value,
+            allow_none=False,
+            **kwargs
+        )
 
 
 def is_valid_point(pt):
