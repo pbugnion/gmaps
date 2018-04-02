@@ -20,3 +20,12 @@ export function stringToMapType(google, mapTypeString) {
         'TERRAIN': google.maps.MapTypeId.TERRAIN
     }[mapTypeString]
 }
+
+export function mapTypeToString(google, mapType) {
+    return {
+        [google.maps.MapTypeId.ROADMAP]: 'ROADMAP',
+        [google.maps.MapTypeId.HYBRID]: 'HYBRID',
+        [google.maps.MapTypeId.SATELLITE]: 'SATELLITE',
+        [google.maps.MapTypeId.TERRAIN]: 'TERRAIN'
+    }[mapType]
+}

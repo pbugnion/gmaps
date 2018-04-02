@@ -4,7 +4,7 @@ import _ from 'underscore'
 import GoogleMapsLoader from 'google-maps'
 
 import { downloadElementAsPng } from './services/downloadElement'
-import { stringToMapType } from './services/googleConverters.js'
+import { stringToMapType, mapTypeToString } from './services/googleConverters.js'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 
@@ -55,6 +55,7 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                 const options = this.readOptions(google)
                 this.map = new google.maps.Map(this.el, options) ;
                 this._modelEvents(google);
+                this._viewEvents(google);
 
                 this.layerViews.update(this.model.get('layers'));
 
@@ -91,6 +92,18 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                 const gestureHandling =
                     this.model.get('mouse_handling').toLowerCase()
                 this.setMapOptions({ gestureHandling })
+            }
+        )
+    }
+
+    _viewEvents(google) {
+        this.map.addListener(
+            'maptypeid_changed',
+            () => {
+                const newMapType =
+                    mapTypeToString(google, this.map.getMapTypeId())
+                this.model.set('map_type', newMapType)
+                this.touch()
             }
         )
     }
