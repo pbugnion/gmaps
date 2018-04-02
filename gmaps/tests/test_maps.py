@@ -12,6 +12,7 @@ class Map(unittest.TestCase):
         m = maps.Map()
         state = m.get_state()
         assert state['map_type'] == 'ROADMAP'
+        assert state['mouse_handling'] == 'COOPERATIVE'
         assert state['initial_viewport'] == {'type': 'DATA_BOUNDS'}
         assert state['layers'] == []
 
@@ -19,6 +20,7 @@ class Map(unittest.TestCase):
         test_layer = heatmap_layer([(1.0, 2.0), (3.0, 4.0)])
         m = maps.Map(
             map_type='HYBRID',
+            mouse_handling='NONE',
             initial_viewport=maps.InitialViewport.from_zoom_center(
                 10, (5.0, 10.0)),
             layers=[test_layer]
@@ -31,6 +33,7 @@ class Map(unittest.TestCase):
             'zoom_level': 10
         }
         assert state['layers'] == ['IPY_MODEL_' + test_layer.model_id]
+        assert state['mouse_handling'] == 'NONE'
 
 
 class InitialViewport(unittest.TestCase):

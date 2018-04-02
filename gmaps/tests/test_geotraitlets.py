@@ -290,6 +290,23 @@ class TestMapType(unittest.TestCase):
             a = self.A(x=map_type)
             assert a.x == map_type
 
-    def test_reject_bad_map_type(self):
+    def test_reject_invalid(self):
         with self.assertRaises(traitlets.TraitError):
             self.A(x='not-a-map-type')
+
+
+class TestMouseHandling(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.MouseHandling()
+        self.A = A
+
+    def test_accept_valid_values(self):
+        for behaviour in ['COOPERATIVE', 'GREEDY', 'NONE', 'AUTO']:
+            a = self.A(x=behaviour)
+            assert a.x == behaviour
+
+    def test_reject_invalid(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x='not-a-mouse-handling-behaviour')
