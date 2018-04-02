@@ -181,7 +181,8 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
             _model_name: 'PlainmapModel',
             data_bounds: null,
             initial_viewport: { type: DATA_BOUNDS },
-            map_type: 'ROADMAP'
+            map_type: 'ROADMAP',
+            mouse_handling: 'COOPERATIVE'
         };
     }
 
