@@ -6,6 +6,16 @@ import traitlets
 from .. import maps
 
 
+class Map(unittest.TestCase):
+
+    def test_defaults(self):
+        m = maps.Map()
+        state = m.get_state()
+        assert state['map_type'] == 'ROADMAP'
+        assert state['initial_viewport'] == {'type': 'DATA_BOUNDS'}
+        assert state['layers'] == []
+
+
 class InitialViewport(unittest.TestCase):
 
     def setUp(self):
