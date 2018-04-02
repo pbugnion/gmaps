@@ -1,6 +1,25 @@
 import unittest
 
-from ..figure import figure, FigureLayout
+from ..figure import figure, Figure, FigureLayout
+from ..maps import Map
+
+
+class TestFigure(unittest.TestCase):
+
+    def test_proxy_map_type(self):
+        fig = Figure(_map=Map(), map_type='HYBRID')
+        assert fig.map_type == 'HYBRID'
+        assert fig._map.map_type == 'HYBRID'
+
+    def test_proxy_map_type_change(self):
+        fig = Figure(_map=Map(), map_type='HYBRID')
+        fig.map_type = 'TERRAIN'
+        assert fig._map.map_type == 'TERRAIN'
+
+    def test_catch_map_type_change_in_map(self):
+        fig = Figure(_map=Map(), map_type='HYBRID')
+        fig._map.map_type = 'TERRAIN'
+        assert fig.map_type == 'TERRAIN'
 
 
 class TestFigureFactory(unittest.TestCase):

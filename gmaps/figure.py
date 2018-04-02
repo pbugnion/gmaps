@@ -1,9 +1,10 @@
 
 import ipywidgets as widgets
 
-from traitlets import Unicode, Instance, default
+from traitlets import Unicode, Instance, default, observe, link
 
 from .maps import Map, InitialViewport, GMapsWidgetMixin
+from .geotraitlets import MapType
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
 
@@ -35,6 +36,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     _errors_box = Instance(ErrorsBox, allow_none=True, default=None).tag(
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
+    map_type = MapType('ROADMAP')
     layout = widgets.trait_types.InstanceDict(FigureLayout).tag(
         sync=True, **widgets.widget_serialization)
 
@@ -42,6 +44,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
         if kwargs.get('layout') is None:
             kwargs['layout'] = self._default_layout()
         super(Figure, self).__init__(*args, **kwargs)
+        link((self._map, 'map_type'), (self, 'map_type'))
 
     @default('layout')
     def _default_layout(self):
