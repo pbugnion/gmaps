@@ -4,6 +4,7 @@ import _ from 'underscore'
 import GoogleMapsLoader from 'google-maps'
 
 import { downloadElementAsPng } from './services/downloadElement'
+import { stringToMapType } from './services/googleConverters.js'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 
@@ -51,8 +52,9 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
         this.modelEvents() ;
 
         this.on('displayed', () => {
-            GoogleMapsLoader.load((google) => {
-                this.map = new google.maps.Map(this.el) ;
+            GoogleMapsLoader.load(google => {
+                const options = this.readOptions(google)
+                this.map = new google.maps.Map(this.el, options) ;
 
                 this.layerViews.update(this.model.get('layers'));
 
@@ -63,6 +65,13 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                 }, 500);
             })
         })
+    }
+
+    readOptions(google) {
+        const options = {
+            mapTypeId: stringToMapType(google, this.model.get('map_type'))
+        }
+        return options
     }
 
     modelEvents() {
@@ -148,7 +157,8 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
             _view_name: 'PlainmapView',
             _model_name: 'PlainmapModel',
             data_bounds: null,
-            initial_viewport: { type: DATA_BOUNDS }
+            initial_viewport: { type: DATA_BOUNDS },
+            map_type: 'ROADMAP'
         };
     }
 
