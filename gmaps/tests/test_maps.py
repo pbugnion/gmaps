@@ -15,6 +15,20 @@ class Map(unittest.TestCase):
         assert state['initial_viewport'] == {'type': 'DATA_BOUNDS'}
         assert state['layers'] == []
 
+    def test_custom_traits(self):
+        m = maps.Map(
+            map_type='HYBRID',
+            initial_viewport=maps.InitialViewport.from_zoom_center(
+                10, (5.0, 10.0))
+        )
+        state = m.get_state()
+        assert state['map_type'] == 'HYBRID'
+        assert state['initial_viewport'] == {
+            'type': 'ZOOM_CENTER',
+            'center': (5.0, 10.0),
+            'zoom_level': 10
+        }
+
 
 class InitialViewport(unittest.TestCase):
 
