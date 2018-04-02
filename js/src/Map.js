@@ -49,12 +49,12 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
         this.loadConfiguration();
 
         this.layerViews = new widgets.ViewList(this.addLayerModel, null, this);
-        this.modelEvents() ;
 
         this.on('displayed', () => {
             GoogleMapsLoader.load(google => {
                 const options = this.readOptions(google)
                 this.map = new google.maps.Map(this.el, options) ;
+                this._modelEvents(google);
 
                 this.layerViews.update(this.model.get('layers'));
 
@@ -75,8 +75,30 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
         return options
     }
 
-    modelEvents() {
-        this.model.on('change:data_bounds', this.updateBounds, this);
+    _modelEvents(google) {
+        this.model.on(
+            'change:map_type',
+            () => {
+                const mapTypeId = stringToMapType(
+                    google, this.model.get('map_type'))
+                this.setMapOptions({ mapTypeId })
+            }
+        )
+
+        this.model.on(
+            'change:mouse_handling',
+            () => {
+                const gestureHandling =
+                    this.model.get('mouse_handling').toLowerCase()
+                this.setMapOptions({ gestureHandling })
+            }
+        )
+    }
+
+    setMapOptions(options) {
+        if (this.map) {
+            this.map.setOptions(options)
+        }
     }
 
     setViewport(viewport) {
