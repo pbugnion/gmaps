@@ -3,7 +3,7 @@ import unittest
 
 import traitlets
 
-from .. import maps
+from .. import maps, heatmap_layer
 
 
 class Map(unittest.TestCase):
@@ -16,10 +16,12 @@ class Map(unittest.TestCase):
         assert state['layers'] == []
 
     def test_custom_traits(self):
+        test_layer = heatmap_layer([(1.0, 2.0), (3.0, 4.0)])
         m = maps.Map(
             map_type='HYBRID',
             initial_viewport=maps.InitialViewport.from_zoom_center(
-                10, (5.0, 10.0))
+                10, (5.0, 10.0)),
+            layers=[test_layer]
         )
         state = m.get_state()
         assert state['map_type'] == 'HYBRID'
@@ -28,6 +30,7 @@ class Map(unittest.TestCase):
             'center': (5.0, 10.0),
             'zoom_level': 10
         }
+        assert state['layers'] == ['IPY_MODEL_' + test_layer.model_id]
 
 
 class InitialViewport(unittest.TestCase):
