@@ -3,7 +3,9 @@ import ipywidgets as widgets
 
 from traitlets import Unicode, Instance, default, link
 
-from .maps import Map, InitialViewport, GMapsWidgetMixin, map_params_doc_snippets
+from .maps import (
+    Map, InitialViewport, GMapsWidgetMixin, map_params_doc_snippets
+)
 from .geotraitlets import MapType, MouseHandling
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
