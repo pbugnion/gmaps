@@ -5,12 +5,37 @@ from traitlets import (Unicode, default, List, Tuple, Instance,
 
 from .bounds import merge_longitude_bounds
 from .geotraitlets import Point, ZoomLevel, MapType, MouseHandling
+from ._docutils import doc_subst
 from ._version import CLIENT_VERSION
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
 
 _default_configuration = {'api_key': None}
+
+
+map_params_doc_snippets = {}
+
+map_params_doc_snippets['map_type'] = """
+    :param map_type:
+        String representing the type of map to show. One of 'ROADMAP' (the
+        classic Google Maps style) 'SATELLITE' (just satellite tiles with no
+        overlay), 'HYBRID' (satellite base tiles but with features such as
+        roads and cities overlaid) and 'TERRAIN' (map showing terrain
+        features). Defaults to 'ROADMAP'.
+    :type map_type: str, optional
+"""
+
+map_params_doc_snippets['mouse_handling'] = """
+    :param mouse_handling:
+        String representing how the map captures the page's mouse event. One of
+        'COOPERATIVE' (scroll events scroll the page without zooming the map,
+        double clicks or CTRL/CMD+scroll zoom the map), 'GREEDY' (the map
+        captures all scroll events), 'NONE' (the map cannot be zoomed or panned
+        by user gestures) or 'AUTO' (cooperative if the notebook is displayed
+        in an iframe, greedy otherwise). Defaults to 'COOPERATIVE'.
+    :type mouse_handling: str, optional
+"""
 
 
 def configure(api_key=None):
@@ -119,6 +144,7 @@ def _serialize_viewport(viewport, manager):
     return payload
 
 
+@doc_subst(map_params_doc_snippets)
 class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     """
     Base map class
@@ -135,6 +161,10 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
         construct this using one of the static methods on
         :class:`gmaps.InitialViewport`. By default, the
         map is centered on the data.
+
+    {map_type}
+
+    {mouse_handling}
 
     :Examples:
 
