@@ -45,7 +45,7 @@ You then add layers on top of the base map. For instance, to add a heatmap layer
   import gmaps
   gmaps.configure(api_key="AI...")
 
-  fig = gmaps.figure()
+  fig = gmaps.figure(map_type='SATELLITE')
 
   # generate some (latitude, longitude) pairs
   locations = [(51.5, 0.1), (51.7, 0.2), (51.4, -0.2), (51.49, 0.1)]
@@ -89,6 +89,26 @@ explicitly::
 
 If you do not set the map zoom and center, the viewport will automatically
 focus on the data as you add it to the map.
+
+Google maps offers three different base map types. Choose the base map type
+by setting the ``map_type`` parameter::
+
+    gmaps.figure(map_type='HYBRID')
+
+.. image:: _images/map_type1.png
+
+::
+
+    gmaps.figure(map_type='TERRAIN')
+
+.. image:: _images/map_type2.png
+
+Choose one of four map types:
+
+ - ``'ROADMAP'`` is the default Google Maps style,
+ - ``'SATELLITE'`` is a simple satellite view,
+ - ``'HYBRID'`` is a satellite view with common features, such as roads and cities, overlaid,
+ - ``'TERRAIN'`` is a map that emphasizes terrain features.
 
 Customising map width, height and layout
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
