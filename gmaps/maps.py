@@ -168,7 +168,7 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
 
     :Examples:
 
-    >>> m = gmaps.figure()
+    >>> m = gmaps.Map()
     >>> m.add_layer(gmaps.heatmap_layer(locations))
 
     To explicitly set the initial map zoom and center:
@@ -176,7 +176,15 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     >>> zoom_level = 8
     >>> center = (20.0, -10.0)
     >>> viewport = InitialViewport.from_zoom_center(zoom_level, center)
-    >>> m = gmaps.figure(initial_viewport=viewport)
+    >>> m = gmaps.Map(initial_viewport=viewport)
+
+    To have a satellite map:
+
+    >>> m = gmaps.Map(map_type='HYBRID')
+
+    You can also change this dynamically:
+
+    >>> m.map_type = 'TERRAIN'
     """
     _view_name = Unicode('PlainmapView').tag(sync=True)
     _model_name = Unicode('PlainmapModel').tag(sync=True)

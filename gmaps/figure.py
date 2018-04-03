@@ -173,6 +173,10 @@ def figure(
             'padding': '3px',
             'border': '1px solid black'
     }})
+
+    To have a satellite map:
+
+    >>> fig = gmaps.figure(map_type='HYBRID')
     """  # noqa: E501
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
