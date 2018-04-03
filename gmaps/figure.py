@@ -3,10 +3,11 @@ import ipywidgets as widgets
 
 from traitlets import Unicode, Instance, default, link
 
-from .maps import Map, InitialViewport, GMapsWidgetMixin
+from .maps import Map, InitialViewport, GMapsWidgetMixin, map_params_doc_snippets
 from .geotraitlets import MapType, MouseHandling
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
+from ._docutils import doc_subst
 
 __all__ = ["Figure", "figure"]
 
@@ -104,6 +105,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
         self._map.add_layer(layer)
 
 
+@doc_subst(map_params_doc_snippets)
 def figure(
         display_toolbar=True, display_errors=True, zoom_level=None,
         center=None, layout=None, map_type='ROADMAP',
@@ -135,9 +137,13 @@ def figure(
         map. If specified, you must also specify the zoom level.
     :type center: tuple, optional
 
+    {map_type}
+
+    {mouse_handling}
+
     :param layout:
         Control the layout of the figure, e.g. its width, height, border etc.
-        For instance, passing ``layout={'width': '400px', 'height': '300px'}``
+        For instance, passing ``layout={{'width': '400px', 'height': '300px'}}``
         will build a figure of fixed width and height.
         For more in formation on available properties, see the ipywidgets
         documentation on
@@ -161,12 +167,12 @@ def figure(
 
     To customise the layout:
 
-    >>> fig = gmaps.figure(layout={
+    >>> fig = gmaps.figure(layout={{
             'width': '400px',
             'height': '600px',
             'padding': '3px',
             'border': '1px solid black'
-    })
+    }})
     """  # noqa: E501
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
