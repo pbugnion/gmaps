@@ -103,7 +103,7 @@ by setting the ``map_type`` parameter::
 
 .. image:: _images/map_type2.png
 
-Choose one of four map types:
+There are four map types available:
 
  - ``'ROADMAP'`` is the default Google Maps style,
  - ``'SATELLITE'`` is a simple satellite view,
@@ -182,7 +182,7 @@ We already know how to build a heatmap layer::
   gmaps.configure(api_key="AI...")
 
   locations = gmaps.datasets.load_dataset_as_df("acled_africa")
-  fig = gmaps.figure()
+  fig = gmaps.figure(map_type='HYBRID')
   heatmap_layer = gmaps.heatmap_layer(locations)
   fig.add_layer(heatmap_layer)
   fig
