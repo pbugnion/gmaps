@@ -182,7 +182,7 @@ This is the entire code listing::
           return self._container
 
       def _render_map(self, initial_year):
-          fig = gmaps.figure()
+          fig = gmaps.figure(map_type='HYBRID')
           self._heatmap = gmaps.heatmap_layer(
               self._locations_for_year(initial_year),
               max_intensity=100,

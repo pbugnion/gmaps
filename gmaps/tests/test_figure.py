@@ -1,6 +1,40 @@
 import unittest
 
-from ..figure import figure, FigureLayout
+from ..figure import figure, Figure, FigureLayout
+from ..maps import Map
+
+
+class TestFigure(unittest.TestCase):
+
+    def test_proxy_map_type(self):
+        fig = Figure(_map=Map(), map_type='HYBRID')
+        assert fig.map_type == 'HYBRID'
+        assert fig._map.map_type == 'HYBRID'
+
+    def test_proxy_map_type_change(self):
+        fig = Figure(_map=Map(), map_type='HYBRID')
+        fig.map_type = 'TERRAIN'
+        assert fig._map.map_type == 'TERRAIN'
+
+    def test_catch_map_type_change_in_map(self):
+        fig = Figure(_map=Map(), map_type='HYBRID')
+        fig._map.map_type = 'TERRAIN'
+        assert fig.map_type == 'TERRAIN'
+
+    def test_proxy_mouse_handling(self):
+        fig = Figure(_map=Map(), mouse_handling='GREEDY')
+        assert fig.mouse_handling == 'GREEDY'
+        assert fig._map.mouse_handling == 'GREEDY'
+
+    def test_proxy_mouse_handling_change(self):
+        fig = Figure(_map=Map(), mouse_handling='GREEDY')
+        fig.mouse_handling = 'NONE'
+        assert fig._map.mouse_handling == 'NONE'
+
+    def test_catch_mouse_handling_change_in_map(self):
+        fig = Figure(_map=Map(), mouse_handling='GREEDY')
+        fig._map.mouse_handling = 'NONE'
+        assert fig.mouse_handling == 'NONE'
 
 
 class TestFigureFactory(unittest.TestCase):
@@ -9,6 +43,8 @@ class TestFigureFactory(unittest.TestCase):
         fig = figure()
         assert fig._toolbar is not None
         assert fig._errors_box is not None
+        assert fig.map_type == 'ROADMAP'
+        assert fig.mouse_handling == 'COOPERATIVE'
         map_ = fig._map
         assert map_ is not None
         assert map_.initial_viewport == 'DATA_BOUNDS'
@@ -59,3 +95,11 @@ class TestFigureFactory(unittest.TestCase):
         assert fig.layout.height == layout['height']
         assert fig.layout.width == layout['width']
         assert fig.layout.border == layout['border']
+
+    def test_custom_map_type(self):
+        fig = figure(map_type='SATELLITE')
+        assert fig.map_type == 'SATELLITE'
+
+    def test_custom_mouse_handling(self):
+        fig = figure(mouse_handling='NONE')
+        assert fig.mouse_handling == 'NONE'

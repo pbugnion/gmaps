@@ -4,13 +4,38 @@ from traitlets import (Unicode, default, List, Tuple, Instance,
                        observe, Dict, HasTraits, Enum, Union)
 
 from .bounds import merge_longitude_bounds
-from .geotraitlets import Point, ZoomLevel
+from .geotraitlets import Point, ZoomLevel, MapType, MouseHandling
+from ._docutils import doc_subst
 from ._version import CLIENT_VERSION
 
 DEFAULT_CENTER = (46.2, 6.1)
 DEFAULT_BOUNDS = [(46.2, 6.1), (47.2, 7.1)]
 
 _default_configuration = {'api_key': None}
+
+
+map_params_doc_snippets = {}
+
+map_params_doc_snippets['map_type'] = """
+    :param map_type:
+        String representing the type of map to show. One of 'ROADMAP' (the
+        classic Google Maps style) 'SATELLITE' (just satellite tiles with no
+        overlay), 'HYBRID' (satellite base tiles but with features such as
+        roads and cities overlaid) and 'TERRAIN' (map showing terrain
+        features). Defaults to 'ROADMAP'.
+    :type map_type: str, optional
+"""
+
+map_params_doc_snippets['mouse_handling'] = """
+    :param mouse_handling:
+        String representing how the map captures the page's mouse event. One of
+        'COOPERATIVE' (scroll events scroll the page without zooming the map,
+        double clicks or CTRL/CMD+scroll zoom the map), 'GREEDY' (the map
+        captures all scroll events), 'NONE' (the map cannot be zoomed or panned
+        by user gestures) or 'AUTO' (cooperative if the notebook is displayed
+        in an iframe, greedy otherwise). Defaults to 'COOPERATIVE'.
+    :type mouse_handling: str, optional
+"""
 
 
 def configure(api_key=None):
@@ -119,6 +144,7 @@ def _serialize_viewport(viewport, manager):
     return payload
 
 
+@doc_subst(map_params_doc_snippets)
 class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     """
     Base map class
@@ -136,9 +162,13 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
         :class:`gmaps.InitialViewport`. By default, the
         map is centered on the data.
 
+    {map_type}
+
+    {mouse_handling}
+
     :Examples:
 
-    >>> m = gmaps.figure()
+    >>> m = gmaps.Map()
     >>> m.add_layer(gmaps.heatmap_layer(locations))
 
     To explicitly set the initial map zoom and center:
@@ -146,7 +176,15 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     >>> zoom_level = 8
     >>> center = (20.0, -10.0)
     >>> viewport = InitialViewport.from_zoom_center(zoom_level, center)
-    >>> m = gmaps.figure(initial_viewport=viewport)
+    >>> m = gmaps.Map(initial_viewport=viewport)
+
+    To have a satellite map:
+
+    >>> m = gmaps.Map(map_type='HYBRID')
+
+    You can also change this dynamically:
+
+    >>> m.map_type = 'TERRAIN'
     """
     _view_name = Unicode('PlainmapView').tag(sync=True)
     _model_name = Unicode('PlainmapModel').tag(sync=True)
@@ -155,6 +193,8 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
     initial_viewport = InitialViewport(default_value='DATA_BOUNDS').tag(
             sync=True, to_json=_serialize_viewport)
+    map_type = MapType('ROADMAP').tag(sync=True)
+    mouse_handling = MouseHandling('COOPERATIVE').tag(sync=True)
 
     def add_layer(self, layer):
         self.layers = tuple([l for l in self.layers] + [layer])

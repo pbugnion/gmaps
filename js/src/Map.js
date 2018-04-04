@@ -4,6 +4,7 @@ import _ from 'underscore'
 import GoogleMapsLoader from 'google-maps'
 
 import { downloadElementAsPng } from './services/downloadElement'
+import { stringToMapType, mapTypeToString } from './services/googleConverters.js'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 
@@ -48,11 +49,13 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
         this.loadConfiguration();
 
         this.layerViews = new widgets.ViewList(this.addLayerModel, null, this);
-        this.modelEvents() ;
 
         this.on('displayed', () => {
-            GoogleMapsLoader.load((google) => {
-                this.map = new google.maps.Map(this.el) ;
+            GoogleMapsLoader.load(google => {
+                const options = this.readOptions(google)
+                this.map = new google.maps.Map(this.el, options) ;
+                this._modelEvents(google);
+                this._viewEvents(google);
 
                 this.layerViews.update(this.model.get('layers'));
 
@@ -65,8 +68,50 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
         })
     }
 
-    modelEvents() {
-        this.model.on('change:data_bounds', this.updateBounds, this);
+    readOptions(google) {
+        const options = {
+            mapTypeId: stringToMapType(google, this.model.get('map_type')),
+            gestureHandling: this.model.get('mouse_handling').toLowerCase()
+        }
+        return options
+    }
+
+    _modelEvents(google) {
+        this.model.on(
+            'change:map_type',
+            () => {
+                const mapTypeId = stringToMapType(
+                    google, this.model.get('map_type'))
+                this.setMapOptions({ mapTypeId })
+            }
+        )
+
+        this.model.on(
+            'change:mouse_handling',
+            () => {
+                const gestureHandling =
+                    this.model.get('mouse_handling').toLowerCase()
+                this.setMapOptions({ gestureHandling })
+            }
+        )
+    }
+
+    _viewEvents(google) {
+        this.map.addListener(
+            'maptypeid_changed',
+            () => {
+                const newMapType =
+                    mapTypeToString(google, this.map.getMapTypeId())
+                this.model.set('map_type', newMapType)
+                this.touch()
+            }
+        )
+    }
+
+    setMapOptions(options) {
+        if (this.map) {
+            this.map.setOptions(options)
+        }
     }
 
     setViewport(viewport) {
@@ -148,7 +193,9 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
             _view_name: 'PlainmapView',
             _model_name: 'PlainmapModel',
             data_bounds: null,
-            initial_viewport: { type: DATA_BOUNDS }
+            initial_viewport: { type: DATA_BOUNDS },
+            map_type: 'ROADMAP',
+            mouse_handling: 'COOPERATIVE'
         };
     }
 

@@ -210,6 +210,36 @@ class ColorAlpha(traitlets.Union):
             return value
 
 
+class MapType(traitlets.Enum):
+    """
+    String representing a map type
+    """
+    allowed_map_types = ['ROADMAP', 'HYBRID', 'TERRAIN', 'SATELLITE']
+
+    def __init__(self, default_value, **kwargs):
+        super(MapType, self).__init__(
+            self.allowed_map_types,
+            default_value=default_value,
+            allow_none=False,
+            **kwargs
+        )
+
+
+class MouseHandling(traitlets.Enum):
+    """
+    String representing valid values for mouse handling
+    """
+    allowed_behaviours = ['COOPERATIVE', 'GREEDY', 'NONE', 'AUTO']
+
+    def __init__(self, default_value, **kwargs):
+        super(MouseHandling, self).__init__(
+            self.allowed_behaviours,
+            default_value=default_value,
+            allow_none=False,
+            **kwargs
+        )
+
+
 def is_valid_point(pt):
     latitude, longitude = pt
     return (-90.0 <= latitude <= 90.0) and (-180.0 <= longitude <= 180.0)

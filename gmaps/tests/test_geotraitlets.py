@@ -276,3 +276,53 @@ class TestZoomLevel(unittest.TestCase):
     def test_reject_negative_value(self):
         with self.assertRaises(traitlets.TraitError):
             self.A(x=-1)
+
+
+class TestMapType(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.MapType('ROADMAP')
+        self.A = A
+
+    def test_default_value(self):
+        a = self.A()
+        assert a.x == 'ROADMAP'
+
+    def test_accept_valid_values(self):
+        for map_type in ['ROADMAP', 'HYBRID', 'SATELLITE', 'TERRAIN']:
+            a = self.A(x=map_type)
+            assert a.x == map_type
+
+    def test_reject_invalid(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x='not-a-map-type')
+
+    def test_reject_none(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=None)
+
+
+class TestMouseHandling(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.MouseHandling('COOPERATIVE')
+        self.A = A
+
+    def test_default_value(self):
+        a = self.A()
+        assert a.x == 'COOPERATIVE'
+
+    def test_accept_valid_values(self):
+        for behaviour in ['COOPERATIVE', 'GREEDY', 'NONE', 'AUTO']:
+            a = self.A(x=behaviour)
+            assert a.x == behaviour
+
+    def test_reject_invalid(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x='not-a-mouse-handling-behaviour')
+
+    def test_reject_none(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=None)
