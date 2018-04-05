@@ -9,15 +9,15 @@ To demonstrate `gmaps`, let's plot the earthquake dataset, included in the packa
   import gmaps
   import gmaps.datasets
 
-  gmaps.configure(api_key="AI...") # Fill in with your API key
+  gmaps.configure(api_key='AI...') # Fill in with your API key
 
-  earthquake_df = gmaps.datasets.load_dataset_as_df("earthquakes")
+  earthquake_df = gmaps.datasets.load_dataset_as_df('earthquakes')
   earthquake_df.head()
 
 The earthquake data has three columns: a latitude and longitude indicating the earthquake's epicentre and a weight denoting the magnitude of the earthquake at that point. Let's plot the earthquakes on a Google map::
 
-  locations = earthquake_df[["latitude", "longitude"]]
-  weights = earthquake_df["magnitude"]
+  locations = earthquake_df[['latitude', 'longitude']]
+  weights = earthquake_df['magnitude']
   fig = gmaps.figure()
   fig.add_layer(gmaps.heatmap_layer(locations, weights=weights))
   fig
@@ -33,7 +33,7 @@ Basic concepts
 `gmaps` is built around the idea of adding layers to a base map. After you've `authenticated <authentication.html>`_ with Google maps, you start by creating a figure, which contains a base map::
 
   import gmaps
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
   fig = gmaps.figure()
   fig
@@ -43,7 +43,7 @@ Basic concepts
 You then add layers on top of the base map. For instance, to add a heatmap layer::
 
   import gmaps
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
   fig = gmaps.figure(map_type='SATELLITE')
 
@@ -75,7 +75,7 @@ Base maps
 Your first action with `gmaps` will usually be to build a base map::
 
   import gmaps
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
   gmaps.figure()
 
@@ -119,7 +119,7 @@ argument. This is a dictionary of properties controlling how the widget is
 displayed::
 
   import gmaps
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
   figure_layout = {
       'width': '400px',
@@ -169,7 +169,7 @@ Heatmaps are a good way of getting a sense of the density and clusters of geogra
 
   import gmaps.datasets
 
-  locations = gmaps.datasets.load_dataset_as_df("acled_africa")
+  locations = gmaps.datasets.load_dataset_as_df('acled_africa')
 
   locations.head()
   # => dataframe with 'longitude' and 'latitude' columns
@@ -179,9 +179,9 @@ We already know how to build a heatmap layer::
 
   import gmaps
   import gmaps.datasets
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
-  locations = gmaps.datasets.load_dataset_as_df("acled_africa")
+  locations = gmaps.datasets.load_dataset_as_df('acled_africa')
   fig = gmaps.figure(map_type='HYBRID')
   heatmap_layer = gmaps.heatmap_layer(locations)
   fig.add_layer(heatmap_layer)
@@ -239,14 +239,14 @@ By default, heatmaps assume that every row is of equal importance. You can overr
 
   import gmaps
   import gmaps.datasets
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
-  df = gmaps.datasets.load_dataset_as_df("earthquakes")
+  df = gmaps.datasets.load_dataset_as_df('earthquakes')
   # dataframe with columns ('latitude', 'longitude', 'magnitude')
 
   fig = gmaps.figure()
   heatmap_layer = gmaps.heatmap_layer(
-      df[["latitude", "longitude"]], weights=df["magnitude"],
+      df[['latitude', 'longitude']], weights=df['magnitude'],
       max_intensity=30, point_radius=3.0 
   )
   fig.add_layer(heatmap_layer)
@@ -262,7 +262,7 @@ Markers and symbols
 We can add a layer of markers to a Google map. Each marker represents an individual data point::
 
   import gmaps
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
   marker_locations = [
       (-34.0, -59.166672),
@@ -282,18 +282,18 @@ We can add a layer of markers to a Google map. Each marker represents an individ
 We can also attach a pop-up box to each marker. Clicking on the marker will bring up the info box. The content of the box can be either plain text or html::
 
   import gmaps
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
   nuclear_power_plants = [
-      {"name": "Atucha", "location": (-34.0, -59.167), "active_reactors": 1},
-      {"name": "Embalse", "location": (-32.2333, -64.4333), "active_reactors": 1},
-      {"name": "Armenia", "location": (40.167, 44.133), "active_reactors": 1},
-      {"name": "Br", "location": (51.217, 5.083), "active_reactors": 1},
-      {"name": "Doel", "location": (51.333, 4.25), "active_reactors": 4},
-      {"name": "Tihange", "location": (50.517, 5.283), "active_reactors": 3}
+      {'name': 'Atucha', 'location': (-34.0, -59.167), 'active_reactors': 1},
+      {'name': 'Embalse', 'location': (-32.2333, -64.4333), 'active_reactors': 1},
+      {'name': 'Armenia', 'location': (40.167, 44.133), 'active_reactors': 1},
+      {'name': 'Br', 'location': (51.217, 5.083), 'active_reactors': 1},
+      {'name': 'Doel', 'location': (51.333, 4.25), 'active_reactors': 4},
+      {'name': 'Tihange', 'location': (50.517, 5.283), 'active_reactors': 3}
   ]
 
-  plant_locations = [plant["location"] for plant in nuclear_power_plants]
+  plant_locations = [plant['location'] for plant in nuclear_power_plants]
   info_box_template = """
   <dl>
   <dt>Name</dt><dd>{name}</dd>
@@ -314,15 +314,15 @@ Markers are currently limited to the Google maps style drop icon. If you need to
     import gmaps
     import gmaps.datasets
 
-    gmaps.configure(api_key="AI...")
+    gmaps.configure(api_key='AI...')
 
-    df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
+    df = gmaps.datasets.load_dataset_as_df('starbucks_kfc_uk')
 
-    starbucks_df = df[df["chain_name"] == "starbucks"]
+    starbucks_df = df[df['chain_name'] == 'starbucks']
     starbucks_df = starbucks_df[['latitude', 'longitude']]                
 
     starbucks_layer = gmaps.symbol_layer(
-        starbucks_df, fill_color="green", stroke_color="green", scale=2
+        starbucks_df, fill_color='green', stroke_color='green', scale=2
     )
     fig = gmaps.figure()
     fig.add_layer(starbucks_layer)
@@ -335,25 +335,25 @@ You can have several layers of markers. For instance, we can compare the locatio
     import gmaps
     import gmaps.datasets
 
-    gmaps.configure(api_key="AI...")
+    gmaps.configure(api_key='AI...')
 
-    df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
+    df = gmaps.datasets.load_dataset_as_df('starbucks_kfc_uk')
 
-    starbucks_df = df[df["chain_name"] == "starbucks"]
+    starbucks_df = df[df['chain_name'] == 'starbucks']
     starbucks_df = starbucks_df[['latitude', 'longitude']]                
 
-    kfc_df = df[df["chain_name"] == "kfc"]
+    kfc_df = df[df['chain_name'] == 'kfc']
     kfc_df = kfc_df[['latitude', 'longitude']]
 
 
     starbucks_layer = gmaps.symbol_layer(
-        starbucks_df, fill_color="rgba(0, 150, 0, 0.4)", 
-        stroke_color="rgba(0, 150, 0, 0.4)", scale=2
+        starbucks_df, fill_color='rgba(0, 150, 0, 0.4)', 
+        stroke_color='rgba(0, 150, 0, 0.4)', scale=2
     )
 
     kfc_layer = gmaps.symbol_layer(
-        kfc_df, fill_color="rgba(200, 0, 0, 0.4)", 
-        stroke_color="rgba(200, 0, 0, 0.4)", scale=2
+        kfc_df, fill_color='rgba(200, 0, 0, 0.4)', 
+        stroke_color='rgba(200, 0, 0, 0.4)', scale=2
     )
 
     fig = gmaps.figure()
@@ -380,7 +380,7 @@ Let's start by just plotting the raw GeoJSON::
 
   import gmaps
   import gmaps.geojson_geometries
-  gmaps.configure(api_key="AIza...")
+  gmaps.configure(api_key='AIza...')
 
   countries_geojson = gmaps.geojson_geometries.load_geometry('countries')
 
@@ -491,7 +491,7 @@ Use the `load_geometry` function to get the GeoJSON object::
 
   import gmaps
   import gmaps.geojson_geometries
-  gmaps.configure(api_key="AIza...")
+  gmaps.configure(api_key='AIza...')
 
   countries_geojson = gmaps.geojson_geometries.load_geometry('brazil-states')
 
@@ -511,9 +511,9 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
 
   import json
   import gmaps
-  gmaps.configure(api_key="AIza...")
+  gmaps.configure(api_key='AIza...')
 
-  with open("my_geojson_geometry.json") as f:
+  with open('my_geojson_geometry.json') as f:
       geometry = json.load(f)
 
   fig = gmaps.figure()
@@ -530,7 +530,7 @@ meridian <https://en.wikipedia.org/wiki/Greenwich_Mean_Time>`_ and add
 a marker on Greenwich itself::
 
   import gmaps
-  gmaps.configure(api_key="AIza...")
+  gmaps.configure(api_key='AIza...')
 
   fig = gmaps.figure(center=(51.5, 0.1), zoom_level=9)
 
@@ -540,7 +540,7 @@ a marker on Greenwich itself::
       end=(50.0, 0.0),
       stroke_weight=3.0
   )
-  greenwich = gmaps.Marker((51.3, 0.0), info_box_content="Greenwich")
+  greenwich = gmaps.Marker((51.3, 0.0), info_box_content='Greenwich')
 
   drawing = gmaps.drawing_layer(features=[greenwich, gmt_meridian])
   fig.add_layer(drawing)
@@ -605,7 +605,7 @@ Directions layer
 
   import gmaps
   import gmaps.datasets
-  gmaps.configure(api_key="AIza...")
+  gmaps.configure(api_key='AIza...')
 
   # Latitude-longitude pairs
   geneva = (46.2, 6.1)
@@ -645,7 +645,7 @@ cycle-friendly.
 ::
 
   import gmaps
-  gmaps.configure(api_key="AI...")
+  gmaps.configure(api_key='AI...')
 
   # Map centered on London
   fig = gmaps.figure(center=(51.5, -0.2), zoom_level=11)
