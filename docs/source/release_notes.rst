@@ -2,6 +2,15 @@
 Release notes
 -------------
 
+Version 0.7.4
+=============
+
+This minor release:
+ - allows setting which map type we use (PR 232)
+ - allows setting how the map interacts with the webpage, in terms of capturing scroll events (PR 232)
+ - allows setting the style of polygons on the drawing layer (PR 229)
+ - fixes a bug that stopped the drawing layer from being downloadable as a PNG (PR 227)
+
 Version 0.7.3
 =============
 
