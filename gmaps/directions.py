@@ -102,6 +102,7 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
 
     def __init__(self, start=None, end=None, **kwargs):
         if kwargs.get('data') is not None:
+            _warn_obsolete_data()
             # Keep for backwards compatibility with data argument
             data = kwargs['data']
             waypoints = kwargs.get('waypoints')
