@@ -7,7 +7,7 @@ import traitlets
 from ..directions import directions_layer
 
 
-class DirectionsLayer(unittest.TestCase):
+class DirectionsFactory(unittest.TestCase):
 
     def setUp(self):
         self.start = (51.0, 1.0)
