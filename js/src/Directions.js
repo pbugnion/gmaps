@@ -22,13 +22,13 @@ export class DirectionsLayerView extends GMapsLayerView {
         super(options);
         this.canDownloadAsPng = false;
     }
-    
+
     render() {
         const rendererOptions = { map: this.mapView.map }
 
         const modelData = this.model.get("data");
 
-        GoogleMapsLoader.load((google) => {
+        GoogleMapsLoader.load(google => {
             this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
 
             const request = {
