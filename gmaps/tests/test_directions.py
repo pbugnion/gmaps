@@ -22,6 +22,13 @@ class DirectionsLayer(unittest.TestCase):
         assert state['end'] == self.end
         assert state['waypoints'] == []
 
+    def test_pass_args(self):
+        layer = Directions(self.start, self.end)
+        state = layer.get_state()
+        assert state['start'] == self.start
+        assert state['end'] == self.end
+        assert state['waypoints'] == []
+
     def test_set_data(self):
         layer = Directions(data=self.data_array)
         assert layer.start == self.start

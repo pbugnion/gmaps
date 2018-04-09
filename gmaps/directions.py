@@ -87,7 +87,7 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
     start = geotraitlets.Point().tag(sync=True)
     end = geotraitlets.Point().tag(sync=True)
     waypoints = geotraitlets.LocationArray().tag(sync=True)
-    data = List(minlen=2)
+    data = List(minlen=2, allow_none=True, default_value=None)
     data_bounds = List().tag(sync=True)
     avoid_ferries = Bool(default_value=False).tag(sync=True)
     avoid_highways = Bool(default_value=False).tag(sync=True)
@@ -100,14 +100,38 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
 
     layer_status = CUnicode().tag(sync=True)
 
+    def __init__(self, start=None, end=None, **kwargs):
+        if kwargs.get('data') is not None:
+            # Keep for backwards compatibility with data argument
+            data = kwargs['data']
+            waypoints = kwargs.get('waypoints')
+            if start is None and end is None and waypoints is None:
+                start, end, waypoints = Directions._destructure_data(data)
+                kwargs.update(
+                    dict(start=start, end=end, waypoints=waypoints, data=None))
+            else:
+                raise ValueError(
+                    'Cannot set both data and one of "start", "end"'
+                    'or "waypoints".')
+        else:
+            kwargs.update(dict(start=start, end=end))
+        super(Directions, self).__init__(**kwargs)
+
+    @staticmethod
+    def _destructure_data(data):
+        start = data[0]
+        end = data[-1]
+        waypoints = data[1:-1]
+        return start, end, waypoints
+
     @observe('data')
     def _on_data_change(self, change):
         data = change['new']
-        _warn_obsolete_data()
-        with self.hold_trait_notifications():
-            self.start = data[0]
-            self.end = data[-1]
-            self.waypoints = data[1:-1]
+        if data is not None:
+            _warn_obsolete_data()
+            with self.hold_trait_notifications():
+                self.start, self.end, self.waypoints = \
+                        self._destructure_data(data)
 
     @observe('start', 'end', 'waypoints')
     def _calc_bounds(self, change):
@@ -133,15 +157,11 @@ def _directions_options(
         start, end, waypoints, travel_mode,
         avoid_ferries, avoid_highways, avoid_tolls,
         optimize_waypoints):
-    start = tuple(start)
-    end = tuple(end)
-    if waypoints is None:
-        data = [start, end]
-    else:
-        data = [start] + locations_to_list(waypoints) + [end]
 
     model = {
-        "data": data,
+        "start": tuple(start),
+        "end": tuple(end),
+        "waypoints": waypoints,
         "travel_mode": travel_mode,
         "avoid_ferries": avoid_ferries,
         "avoid_highways": avoid_highways,
