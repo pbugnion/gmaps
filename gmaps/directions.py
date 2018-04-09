@@ -104,9 +104,10 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
     def _on_data_change(self, change):
         data = change['new']
         _warn_obsolete_data()
-        self.start = data[0]
-        self.end = data[-1]
-        self.waypoints = data[1:-1]
+        with self.hold_trait_notifications():
+            self.start = data[0]
+            self.end = data[-1]
+            self.waypoints = data[1:-1]
 
     @observe('start', 'end', 'waypoints')
     def _calc_bounds(self, change):

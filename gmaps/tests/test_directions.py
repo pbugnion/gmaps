@@ -17,12 +17,20 @@ class DirectionsLayer(unittest.TestCase):
 
     def test_defaults(self):
         layer = Directions(start=self.start, end=self.end)
-        assert layer.start == self.start
-        assert layer.end == self.end
-        assert layer.waypoints == []
+        state = layer.get_state()
+        assert state['start'] == self.start
+        assert state['end'] == self.end
+        assert state['waypoints'] == []
 
     def test_set_data(self):
         layer = Directions(data=self.data_array)
+        assert layer.start == self.start
+        assert layer.end == self.end
+        assert layer.waypoints == self.waypoints
+
+    def test_change_data(self):
+        layer = Directions(start=(0.0, 0.0), end=(2.0, 2.0))
+        layer.data = self.data_array
         assert layer.start == self.start
         assert layer.end == self.end
         assert layer.waypoints == self.waypoints
