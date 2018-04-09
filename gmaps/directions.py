@@ -80,7 +80,7 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
         waypoints to minimize overall cost of the route.
     :type optimize_waypoints: bool, optional
     """
-    has_bounds = True
+    has_bounds = False
     _view_name = Unicode("DirectionsLayerView").tag(sync=True)
     _model_name = Unicode("DirectionsLayerModel").tag(sync=True)
 
