@@ -1,5 +1,6 @@
 
 import ipywidgets as widgets
+import warnings
 
 from traitlets import Bool, Unicode, CUnicode, List, Enum, observe, validate
 
@@ -10,6 +11,13 @@ from .maps import GMapsWidgetMixin
 
 ALLOWED_TRAVEL_MODES = {'BICYCLING', 'DRIVING', 'TRANSIT', 'WALKING'}
 DEFAULT_TRAVEL_MODE = 'DRIVING'
+
+
+def _warn_obsolete_data():
+    warnings.warn(
+        'The "data" traitlet is deprecated, and will be '
+        'removed in jupyter-gmaps 0.9.0. '
+        'Use "locations" instead.', DeprecationWarning)
 
 
 class DirectionsServiceException(RuntimeError):
@@ -76,7 +84,10 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
     _view_name = Unicode("DirectionsLayerView").tag(sync=True)
     _model_name = Unicode("DirectionsLayerModel").tag(sync=True)
 
-    data = List(minlen=2).tag(sync=True)
+    start = geotraitlets.Point().tag(sync=True)
+    end = geotraitlets.Point().tag(sync=True)
+    waypoints = geotraitlets.LocationArray().tag(sync=True)
+    data = List(minlen=2)
     data_bounds = List().tag(sync=True)
     avoid_ferries = Bool(default_value=False).tag(sync=True)
     avoid_highways = Bool(default_value=False).tag(sync=True)
@@ -89,25 +100,25 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
 
     layer_status = CUnicode().tag(sync=True)
 
-    @validate("data")
-    def _validate_data(self, proposal):
-        for point in proposal["value"]:
-            if not geotraitlets.is_valid_point(point):
-                raise geotraitlets.InvalidPointException(
-                    "{} is not a valid latitude, longitude pair".format(point))
-        return proposal["value"]
+    @observe('data')
+    def _on_data_change(self, change):
+        data = change['new']
+        _warn_obsolete_data()
+        self.start = data[0]
+        self.end = data[-1]
+        self.waypoints = data[1:-1]
 
-    @observe("data")
-    def _calc_bounds(self, change):
-        data = change["new"]
-        min_latitude = min(row[0] for row in data)
-        min_longitude = min(row[1] for row in data)
-        max_latitude = max(row[0] for row in data)
-        max_longitude = max(row[1] for row in data)
-        self.data_bounds = [
-            (min_latitude, min_longitude),
-            (max_latitude, max_longitude)
-        ]
+    # @observe("data")
+    # def _calc_bounds(self, change):
+    #     data = change["new"]
+    #     min_latitude = min(row[0] for row in data)
+    #     min_longitude = min(row[1] for row in data)
+    #     max_latitude = max(row[0] for row in data)
+    #     max_longitude = max(row[1] for row in data)
+    #     self.data_bounds = [
+    #         (min_latitude, min_longitude),
+    #         (max_latitude, max_longitude)
+    #     ]
 
     @observe("layer_status")
     def _handle_layer_status(self, change):

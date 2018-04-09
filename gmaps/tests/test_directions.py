@@ -4,7 +4,28 @@ import pytest
 
 import traitlets
 
-from ..directions import directions_layer
+from ..directions import directions_layer, Directions
+
+
+class DirectionsLayer(unittest.TestCase):
+
+    def setUp(self):
+        self.start = (51.0, 1.0)
+        self.end = (50.0, 2.0)
+        self.waypoints = [(52.0, 1.0), (52.0, 0.0)]
+        self.data_array = [self.start] + self.waypoints + [self.end]
+
+    def test_defaults(self):
+        layer = Directions(start=self.start, end=self.end)
+        assert layer.start == self.start
+        assert layer.end == self.end
+        assert layer.waypoints == []
+
+    def test_set_data(self):
+        layer = Directions(data=self.data_array)
+        assert layer.start == self.start
+        assert layer.end == self.end
+        assert layer.waypoints == self.waypoints
 
 
 class DirectionsFactory(unittest.TestCase):
