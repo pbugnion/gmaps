@@ -80,7 +80,7 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
         waypoints to minimize overall cost of the route.
     :type optimize_waypoints: bool, optional
     """
-    has_bounds = False
+    has_bounds = True
     _view_name = Unicode("DirectionsLayerView").tag(sync=True)
     _model_name = Unicode("DirectionsLayerModel").tag(sync=True)
 
@@ -108,17 +108,18 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
         self.end = data[-1]
         self.waypoints = data[1:-1]
 
-    # @observe("data")
-    # def _calc_bounds(self, change):
-    #     data = change["new"]
-    #     min_latitude = min(row[0] for row in data)
-    #     min_longitude = min(row[1] for row in data)
-    #     max_latitude = max(row[0] for row in data)
-    #     max_longitude = max(row[1] for row in data)
-    #     self.data_bounds = [
-    #         (min_latitude, min_longitude),
-    #         (max_latitude, max_longitude)
-    #     ]
+    @observe('start', 'end', 'waypoints')
+    def _calc_bounds(self, change):
+        all_data = [self.start] + self.waypoints + [self.end]
+        min_latitude = min(row[0] for row in all_data)
+        min_longitude = min(row[1] for row in all_data)
+        max_latitude = max(row[0] for row in all_data)
+        max_longitude = max(row[1] for row in all_data)
+        self.data_bounds = [
+            (min_latitude, min_longitude),
+            (max_latitude, max_longitude)
+        ]
+
 
     @observe("layer_status")
     def _handle_layer_status(self, change):
