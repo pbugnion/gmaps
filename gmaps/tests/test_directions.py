@@ -22,11 +22,6 @@ class DirectionsLayer(unittest.TestCase):
             "optimize_waypoints": False
         }
 
-    def _add_default_options(self, **options):
-        new_options = self.kwargs.copy()
-        new_options.update(options)
-        return new_options
-
     def test_no_waypoints(self):
         layer = directions_layer(self.start, self.end)
         assert layer.data == self.data_array_no_waypoints
