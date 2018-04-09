@@ -4,6 +4,7 @@ import _ from 'underscore';
 import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
+import { arrayToLatLng } from './services/googleConverters'
 
 
 export class DirectionsLayerModel extends GMapsLayerModel {
@@ -26,15 +27,13 @@ export class DirectionsLayerView extends GMapsLayerView {
     render() {
         const rendererOptions = { map: this.mapView.map }
 
-        const modelData = this.model.get("data");
-
         GoogleMapsLoader.load(google => {
             this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
 
             const request = {
-                origin: this.getOrigin(modelData),
-                destination: this.getDestination(modelData),
-                waypoints: this.getWaypoints(modelData),
+                origin: arrayToLatLng(this.model.get("start")),
+                destination: arrayToLatLng(this.model.get("end")),
+                waypoints: this.getWaypoints(),
                 travelMode: this.model.get("travel_mode"),
                 avoidFerries: this.model.get("avoid_ferries"),
                 avoidHighways: this.model.get("avoid_highways"),
@@ -60,21 +59,9 @@ export class DirectionsLayerView extends GMapsLayerView {
 
     addToMapView(mapView) { }
 
-    getOrigin(modelData) {
-        const [lat, lng] = _.first(modelData)
-        return new google.maps.LatLng(lat, lng)
-    }
-
-    getDestination(modelData) {
-        const [lat, lng] = _.last(modelData)
-        return new google.maps.LatLng(lat, lng)
-    }
-
-    getWaypoints(modelData) {
-        const withoutFirst = _.tail(modelData)
-        const withoutLast = _.initial(withoutFirst)
-        const dataAsGoogle = withoutLast.map(([lat, lng]) => {
-            return {location: new google.maps.LatLng(lat, lng)}
+    getWaypoints() {
+        const dataAsGoogle = this.model.get("waypoints").map(waypoint => {
+            return {location: arrayToLatLng(waypoint)}
         })
         return dataAsGoogle
     }
