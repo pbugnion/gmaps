@@ -5,7 +5,6 @@ import warnings
 from traitlets import Bool, Unicode, CUnicode, List, Enum, observe, validate
 
 from . import geotraitlets
-from .locations import locations_to_list
 from .maps import GMapsWidgetMixin
 
 

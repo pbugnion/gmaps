@@ -4,7 +4,7 @@ import pytest
 
 import traitlets
 
-from ..directions import directions_layer, Directions
+from ..directions import Directions
 
 
 class DirectionsLayer(unittest.TestCase):
