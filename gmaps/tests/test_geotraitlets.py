@@ -326,3 +326,30 @@ class TestMouseHandling(unittest.TestCase):
     def test_reject_none(self):
         with self.assertRaises(traitlets.TraitError):
             self.A(x=None)
+
+
+class Point(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.Point()
+        self.A = A
+
+    def test_default_value(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.Point((1.0, 2.0))
+        a = A()
+        assert a.x == (1.0, 2.0)
+
+    def test_tuple(self):
+        a = self.A(x=(5.0, 10.0))
+        assert a.x == (5.0, 10.0)
+
+    def test_list(self):
+        a = self.A(x=[5.0, 10.0])
+        assert a.x == (5.0, 10.0)
+
+    def test_nparray(self):
+        import numpy as np
+        a = self.A(x=np.array([5.0, 10.0]))
+        assert a.x == (5.0, 10.0)
