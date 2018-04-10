@@ -146,7 +146,6 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
             (max_latitude, max_longitude)
         ]
 
-
     @observe("layer_status")
     def _handle_layer_status(self, change):
         if change["new"] != "OK":
