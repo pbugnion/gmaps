@@ -171,24 +171,6 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
                 "No directions returned: " + change["new"])
 
 
-def _directions_options(
-        start, end, waypoints, travel_mode,
-        avoid_ferries, avoid_highways, avoid_tolls,
-        optimize_waypoints):
-
-    model = {
-        "start": tuple(start),
-        "end": tuple(end),
-        "waypoints": waypoints,
-        "travel_mode": travel_mode,
-        "avoid_ferries": avoid_ferries,
-        "avoid_highways": avoid_highways,
-        "avoid_tolls": avoid_tolls,
-        "optimize_waypoints": optimize_waypoints
-    }
-    return model
-
-
 def directions_layer(
         start, end, waypoints=None, avoid_ferries=False,
         travel_mode=DEFAULT_TRAVEL_MODE,
@@ -255,7 +237,14 @@ def directions_layer(
         waypoints to minimize overall cost of the route.
     :type optimize_waypoints: bool, optional
     """
-    widget_args = _directions_options(
-            start, end, waypoints, travel_mode, avoid_ferries,
-            avoid_highways, avoid_tolls, optimize_waypoints)
-    return Directions(**widget_args)
+    kwargs = {
+        "start": start,
+        "end": end,
+        "waypoints": waypoints,
+        "travel_mode": travel_mode,
+        "avoid_ferries": avoid_ferries,
+        "avoid_highways": avoid_highways,
+        "avoid_tolls": avoid_tolls,
+        "optimize_waypoints": optimize_waypoints
+    }
+    return Directions(**kwargs)
