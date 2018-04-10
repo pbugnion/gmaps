@@ -21,6 +21,10 @@ class DirectionsLayer(unittest.TestCase):
         assert state['start'] == self.start
         assert state['end'] == self.end
         assert state['waypoints'] == []
+        assert not state['avoid_ferries']
+        assert not state['avoid_highways']
+        assert not state['avoid_tolls']
+        assert not state['optimize_waypoints']
 
     def test_pass_args(self):
         layer = Directions(self.start, self.end)
@@ -42,10 +46,31 @@ class DirectionsLayer(unittest.TestCase):
         assert layer.end == self.end
         assert layer.waypoints == self.waypoints
 
+    def test_waypoints_pandas_df(self):
+        pd = pytest.importorskip("pandas")
+        waypoints = pd.DataFrame.from_records(
+            self.waypoints, columns=["latitude", "longitude"])
+        layer = Directions(self.start, self.end, waypoints=waypoints)
+        assert layer.waypoints == self.waypoints
 
     def test_allow_waypoints_none(self):
         layer = Directions(self.start, self.end, waypoints=None)
         assert layer.get_state()['waypoints'] == []
+
+    def test_boolean_options(self):
+        layer = Directions(
+            self.start, self.end,
+            avoid_ferries=True,
+            avoid_highways=True,
+            avoid_tolls=True,
+            optimize_waypoints=True
+        )
+        state = layer.get_state()
+        assert state['avoid_ferries']
+        assert state['avoid_highways']
+        assert state['avoid_tolls']
+        assert state['optimize_waypoints']
+
 
 class DirectionsFactory(unittest.TestCase):
 
