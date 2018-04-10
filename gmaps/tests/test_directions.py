@@ -43,6 +43,10 @@ class DirectionsLayer(unittest.TestCase):
         assert layer.waypoints == self.waypoints
 
 
+    def test_allow_waypoints_none(self):
+        layer = Directions(self.start, self.end, waypoints=None)
+        assert layer.get_state()['waypoints'] == []
+
 class DirectionsFactory(unittest.TestCase):
 
     def setUp(self):

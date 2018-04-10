@@ -20,6 +20,13 @@ def _warn_obsolete_data():
         'Use "locations" instead.', DeprecationWarning)
 
 
+def _warn_obsolete_waypoints():
+    warnings.warn(
+        'Passing "None" to waypoints is deprecated, and will be '
+        'removed in jupyter-gmaps 0.9.0. '
+        'Pass an empty list.', DeprecationWarning)
+
+
 class DirectionsServiceException(RuntimeError):
     pass
 
@@ -100,7 +107,7 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
 
     layer_status = CUnicode().tag(sync=True)
 
-    def __init__(self, start=None, end=None, **kwargs):
+    def __init__(self, start=None, end=None, waypoints=None, **kwargs):
         if kwargs.get('data') is not None:
             _warn_obsolete_data()
             # Keep for backwards compatibility with data argument
@@ -115,7 +122,10 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
                     'Cannot set both data and one of "start", "end"'
                     'or "waypoints".')
         else:
-            kwargs.update(dict(start=start, end=end))
+            if waypoints is None:
+                _warn_obsolete_waypoints()
+                waypoints = []
+            kwargs.update(dict(start=start, end=end, waypoints=waypoints))
         super(Directions, self).__init__(**kwargs)
 
     @staticmethod
@@ -124,6 +134,14 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
         end = data[-1]
         waypoints = data[1:-1]
         return start, end, waypoints
+
+    @validate('waypoints')
+    def _valid_waypoints(self, proposal):
+        print('validating')
+        if proposal['value'] is None:
+            _warn_obsolete_waypoints()
+            proposal['value'] = []
+        return proposal['value']
 
     @observe('data')
     def _on_data_change(self, change):
