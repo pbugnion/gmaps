@@ -71,6 +71,14 @@ class DirectionsLayer(unittest.TestCase):
         assert state['avoid_tolls']
         assert state['optimize_waypoints']
 
+    def test_travel_mode(self):
+        layer = Directions(self.start, self.end, travel_mode='BICYCLING')
+        assert layer.travel_mode == 'BICYCLING'
+
+    def test_invalid_travel_mode(self):
+        with self.assertRaises(traitlets.TraitError):
+            Directions(self.start, self.end, travel_mode='wrong')
+
 
 class DirectionsFactory(unittest.TestCase):
 
