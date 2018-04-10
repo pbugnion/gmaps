@@ -46,6 +46,25 @@ class DirectionsLayer(unittest.TestCase):
         assert layer.end == self.end
         assert layer.waypoints == self.waypoints
 
+    def test_no_waypoints_numpy_array(self):
+        import numpy as np
+        layer = Directions(np.array(self.start), np.array(self.end))
+        state = layer.get_state()
+        assert state['start'] == self.start
+        assert state['end'] == self.end
+
+    def test_waypoints_numpy_array(self):
+        import numpy as np
+        layer = Directions(
+                np.array(self.start),
+                self.end,
+                np.array(self.waypoints)
+        )
+        state = layer.get_state()
+        assert state['start'] == self.start
+        assert state['end'] == self.end
+        assert state['waypoints'] == self.waypoints
+
     def test_waypoints_pandas_df(self):
         pd = pytest.importorskip("pandas")
         waypoints = pd.DataFrame.from_records(
