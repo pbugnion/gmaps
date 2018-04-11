@@ -91,6 +91,16 @@ class Point(traitlets.Tuple):
         super(Point, self).__init__(
             Latitude(), Longitude(), default_value=default_value)
 
+    def validate(self, obj, value):
+        if value is not None:
+            if len(value) != 2:
+                raise traitlets.TraitError(
+                    '{} is not a valid location. '
+                    'Locations must have length 2.'.format(value)
+                )
+            latitude, longitude = value
+            return super(Point, self).validate(obj, (latitude, longitude))
+
 
 _color_names = {
     "black", "silver", "gray", "white", "maroon", "red",
