@@ -6,6 +6,7 @@ from traitlets import Bool, Unicode, CUnicode, List, Enum, observe, validate
 
 from . import geotraitlets
 from .maps import GMapsWidgetMixin
+from ._docutils import doc_subst
 
 
 ALLOWED_TRAVEL_MODES = {'BICYCLING', 'DRIVING', 'TRANSIT', 'WALKING'}
@@ -26,10 +27,72 @@ def _warn_obsolete_waypoints():
         'Pass an empty list.', DeprecationWarning)
 
 
+_doc_snippets = {}
+
+_doc_snippets['params'] = """
+    :param start:
+        (Latitude, longitude) pair denoting the start of the journey.
+    :type start: 2-element tuple
+
+    :param end:
+        (Latitude, longitude) pair denoting the end of the journey.
+    :type end: 2-element tuple
+
+    :param waypoints:
+        Iterable of (latitude, longitude) pair denoting waypoints.
+        Google maps imposes a limitation on the total number of waypoints.
+        This limit is currently 23. You cannot use waypoints when the
+        travel_mode is ``'TRANSIT'``.
+    :type waypoints: List of 2-element tuples, optional
+
+    :param travel_mode:
+        Choose the mode of transport. One of ``'BICYCLING'``, ``'DRIVING'``,
+        ``'WALKING'`` or ``'TRANSIT'``. A travel mode of ``'TRANSIT'``
+        indicates public transportation. Defaults to ``'DRIVING'``.
+    :type travel_mode: str, optional
+
+    :param avoid_ferries:
+        Avoid ferries where possible.
+    :type avoid_ferries: bool, optional
+
+    :param avoid_highways:
+        Avoid highways where possible.
+    :type avoid_highways: bool, optional
+
+    :param avoid_tolls:
+        Avoid toll roads where possible.
+    :type avoid_tolls: bool, optional
+
+    :param optimize_waypoints:
+        If set to true, will attempt to re-order the supplied intermediate
+        waypoints to minimize overall cost of the route.
+    :type optimize_waypoints: bool, optional
+"""
+
+_doc_snippets['examples'] = """
+    >>> fig = gmaps.figure()
+    >>> start = (46.2, 6.1)
+    >>> end = (47.4, 8.5)
+    >>> directions = gmaps.directions_layer(start, end)
+    >>> fig.add_layer(directions)
+    >>> fig
+
+    You can also add waypoints on the route:
+
+    >>> waypoints = [(46.4, 6.9), (46.9, 8.0)]
+    >>> directions = gmaps.directions_layer(start, end, waypoints=waypoints)
+
+    You can choose the travel mode:
+
+    >>> directions = gmaps.directions_layer(start, end, travel_mode='WALKING')
+"""
+
+
 class DirectionsServiceException(RuntimeError):
     pass
 
 
+@doc_subst(_doc_snippets)
 class Directions(GMapsWidgetMixin, widgets.Widget):
     """
     Directions layer.
@@ -41,50 +104,9 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
 
     :Examples:
 
-    >>> fig = gmaps.figure()
-    >>> start = (46.2, 6.1)
-    >>> end = (47.4, 8.5)
-    >>> waypoints = [(52.37403, 4.88969)]
-    >>> directions_layer = gmaps.directions_layer(start, end, waypoints)
-    >>> fig.add_layer(directions_layer)
+    {examples}
 
-    There is a limitation in the number of waypoints allowed by Google
-    (currently 23). If it
-    fails to return directions, a ``DirectionsServiceException`` is raised.
-
-    >>> directions_layer = gmaps.Directions(data=data*10)
-    Traceback (most recent call last):
-        ...
-    DirectionsServiceException: No directions returned: MAX WAYPOINTS EXCEEDED
-
-    :param data: List of (latitude, longitude) pairs denoting a single
-        point. The first pair denotes the starting point and the last pair
-        denote the end of the route.
-        Latitudes are expressed as a float between -90
-        (corresponding to 90 degrees south) and +90 (corresponding to
-        90 degrees north). Longitudes are expressed as a float
-        between -180 (corresponding to 180 degrees west) and 180
-        (corresponding to 180 degrees east).
-    :type data: list of tuples of length >= 2
-
-    :param travel_mode:
-        Choose the mode of transport. One of ``'BICYCLING'``, ``'DRIVING'``,
-        ``'WALKING'`` or ``'TRANSIT'``. A travel mode of ``'TRANSIT'``
-        indicates public transportation. Defaults to ``'DRIVING'``.
-    :type travel_mode: str, optional
-
-    :param avoid_ferries: Avoids ferries where possible.
-    :type avoid_ferries: bool, optional
-
-    :param avoid_highways: Avoids highways where possible.
-    :type avoid_highways: bool, optional
-
-    :param avoid_tolls: Avoids toll roads where possible.
-    :type avoid_tolls: bool, optional
-
-    :param optimize_waypoints: Attempt to re-order the supplied intermediate
-        waypoints to minimize overall cost of the route.
-    :type optimize_waypoints: bool, optional
+    {params}
     """
     has_bounds = True
     _view_name = Unicode("DirectionsLayerView").tag(sync=True)
@@ -169,6 +191,7 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
                 "No directions returned: " + change["new"])
 
 
+@doc_subst(_doc_snippets)
 def directions_layer(
         start, end, waypoints=None, avoid_ferries=False,
         travel_mode=DEFAULT_TRAVEL_MODE,
@@ -181,59 +204,9 @@ def directions_layer(
 
     :Examples:
 
-    >>> fig = gmaps.figure()
-    >>> start = (46.2, 6.1)
-    >>> end = (47.4, 8.5)
-    >>> directions = gmaps.directions_layer(start, end)
-    >>> fig.add_layer(directions)
-    >>> fig
+    {examples}
 
-    You can also add waypoints on the route:
-
-    >>> waypoints = [(46.4, 6.9), (46.9, 8.0)]
-    >>> directions = gmaps.directions_layer(start, end, waypoints=waypoints)
-
-    You can choose the travel mode:
-
-    >>> directions = gmaps.directions_layer(start, end, travel_mode='WALKING')
-
-    :param start:
-        (Latitude, longitude) pair denoting the start of the journey.
-    :type start: 2-element tuple
-
-    :param end:
-        (Latitude, longitude) pair denoting the end of the journey.
-    :type end: 2-element tuple
-
-    :param waypoints:
-        Iterable of (latitude, longitude) pair denoting waypoints.
-        Google maps imposes a limitation on the total number of waypoints.
-        This limit is currently 23. You cannot use waypoints when the
-        travel_mode is ``'TRANSIT'``.
-    :type waypoints: List of 2-element tuples, optional
-
-    :param travel_mode:
-        Choose the mode of transport. One of ``'BICYCLING'``, ``'DRIVING'``,
-        ``'WALKING'`` or ``'TRANSIT'``. A travel mode of ``'TRANSIT'``
-        indicates public transportation. Defaults to ``'DRIVING'``.
-    :type travel_mode: str, optional
-
-    :param avoid_ferries:
-        Avoid ferries where possible.
-    :type avoid_ferries: bool, optional
-
-    :param avoid_highways:
-        Avoid highways where possible.
-    :type avoid_highways: bool, optional
-
-    :param avoid_tolls:
-        Avoid toll roads where possible.
-    :type avoid_tolls: bool, optional
-
-    :param optimize_waypoints:
-        If set to true, will attempt to re-order the supplied intermediate
-        waypoints to minimize overall cost of the route.
-    :type optimize_waypoints: bool, optional
+    {params}
     """
     kwargs = {
         "start": start,
