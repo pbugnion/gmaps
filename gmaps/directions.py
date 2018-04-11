@@ -207,6 +207,9 @@ def directions_layer(
     {examples}
 
     {params}
+
+    :returns:
+        A :class:`gmaps.Directions` widget.
     """
     kwargs = {
         "start": start,
