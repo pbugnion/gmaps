@@ -144,7 +144,6 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
                     'or "waypoints".')
         else:
             if waypoints is None:
-                _warn_obsolete_waypoints()
                 waypoints = []
             kwargs.update(dict(start=start, end=end, waypoints=waypoints))
         super(Directions, self).__init__(**kwargs)
