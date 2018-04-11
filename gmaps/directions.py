@@ -136,7 +136,6 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
 
     @validate('waypoints')
     def _valid_waypoints(self, proposal):
-        print('validating')
         if proposal['value'] is None:
             _warn_obsolete_waypoints()
             proposal['value'] = []
