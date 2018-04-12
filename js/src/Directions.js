@@ -29,31 +29,11 @@ export class DirectionsLayerView extends GMapsLayerView {
 
         GoogleMapsLoader.load(google => {
             this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
-
-            const request = {
-                origin: arrayToLatLng(this.model.get("start")),
-                destination: arrayToLatLng(this.model.get("end")),
-                waypoints: this.getWaypoints(),
-                travelMode: this.model.get("travel_mode"),
-                avoidFerries: this.model.get("avoid_ferries"),
-                avoidHighways: this.model.get("avoid_highways"),
-                avoidTolls: this.model.get("avoid_tolls"),
-                optimizeWaypoints: this.model.get("optimize_waypoints")
-            };
-
             const directionsService = new google.maps.DirectionsService();
 
-            directionsService.route(request, (response, status) => {
-                // print to the browser console (mostly for debugging)
-                console.log(`Direction service returned: ${status}`) ;
-                // set a flag in the model
-                this.model.set("layer_status", status) ;
-                this.touch() ; // push `layer_status` changes to the model
-                if (status == google.maps.DirectionsStatus.OK) {
-                    this.response = this.directionsDisplay ;
-                    this.directionsDisplay.setDirections(response);
-                }
-            });
+            this.computeDirections(directionsService)
+                .then(response => this.directionsDisplay.setDirections(response))
+                .catch(e => console.error(e))
         });
     }
 
@@ -64,5 +44,33 @@ export class DirectionsLayerView extends GMapsLayerView {
             return {location: arrayToLatLng(waypoint)}
         })
         return dataAsGoogle
+    }
+
+    computeDirections(directionsService) {
+        const request = {
+            origin: arrayToLatLng(this.model.get("start")),
+            destination: arrayToLatLng(this.model.get("end")),
+            waypoints: this.getWaypoints(),
+            travelMode: this.model.get("travel_mode"),
+            avoidFerries: this.model.get("avoid_ferries"),
+            avoidHighways: this.model.get("avoid_highways"),
+            avoidTolls: this.model.get("avoid_tolls"),
+            optimizeWaypoints: this.model.get("optimize_waypoints")
+        };
+
+        return new Promise((resolve, reject) => {
+            directionsService.route(request, (response, status) => {
+                // print to the browser console (mostly for debugging)
+                console.log(`Direction service returned: ${status}`) ;
+                // set a flag in the model
+                this.model.set("layer_status", status) ;
+                this.touch()
+                if (status == google.maps.DirectionsStatus.OK) {
+                    resolve(response)
+                } else {
+                    reject(`Error returned by direction service: ${status}`)
+                }
+            })
+        })
     }
 }
