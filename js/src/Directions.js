@@ -11,8 +11,8 @@ export class DirectionsLayerModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
-            _view_name: "DirectionsLayerView",
-            _model_name: "DirectionsLayerModel"
+            _view_name: 'DirectionsLayerView',
+            _model_name: 'DirectionsLayerModel'
         }
     }
 }
@@ -33,7 +33,6 @@ export class DirectionsLayerView extends GMapsLayerView {
 
             this.updateDirections()
             this.modelEvents()
-
         });
     }
 
@@ -58,7 +57,7 @@ export class DirectionsLayerView extends GMapsLayerView {
     addToMapView(mapView) { }
 
     getWaypoints() {
-        const dataAsGoogle = this.model.get("waypoints").map(waypoint => {
+        const dataAsGoogle = this.model.get('waypoints').map(waypoint => {
             return {location: arrayToLatLng(waypoint)}
         })
         return dataAsGoogle
@@ -66,14 +65,14 @@ export class DirectionsLayerView extends GMapsLayerView {
 
     computeDirections() {
         const request = {
-            origin: arrayToLatLng(this.model.get("start")),
-            destination: arrayToLatLng(this.model.get("end")),
+            origin: arrayToLatLng(this.model.get('start')),
+            destination: arrayToLatLng(this.model.get('end')),
             waypoints: this.getWaypoints(),
-            travelMode: this.model.get("travel_mode"),
-            avoidFerries: this.model.get("avoid_ferries"),
-            avoidHighways: this.model.get("avoid_highways"),
-            avoidTolls: this.model.get("avoid_tolls"),
-            optimizeWaypoints: this.model.get("optimize_waypoints")
+            travelMode: this.model.get('travel_mode'),
+            avoidFerries: this.model.get('avoid_ferries'),
+            avoidHighways: this.model.get('avoid_highways'),
+            avoidTolls: this.model.get('avoid_tolls'),
+            optimizeWaypoints: this.model.get('optimize_waypoints')
         };
 
         return new Promise((resolve, reject) => {
@@ -81,7 +80,7 @@ export class DirectionsLayerView extends GMapsLayerView {
                 // print to the browser console (mostly for debugging)
                 console.log(`Direction service returned: ${status}`) ;
                 // set a flag in the model
-                this.model.set("layer_status", status) ;
+                this.model.set('layer_status', status) ;
                 this.touch()
                 if (status == google.maps.DirectionsStatus.OK) {
                     resolve(response)
