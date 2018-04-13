@@ -29,28 +29,28 @@ export class DirectionsLayerView extends GMapsLayerView {
 
         GoogleMapsLoader.load(google => {
             this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
-            const directionsService = new google.maps.DirectionsService();
+            this.directionsService = new google.maps.DirectionsService();
 
-            this.updateDirections(directionsService)
-            this.modelEvents(directionsService)
+            this.updateDirections()
+            this.modelEvents()
 
         });
     }
 
-    modelEvents(directionsService) {
+    modelEvents() {
         const properties = [
             'start', 'end', 'waypoints', 'travel_mode', 'avoid_ferries',
             'avoid_highways', 'avoid_tolls', 'optimize_waypoints'
         ]
 
         properties.forEach(nameInModel => {
-            const callback = () => this.updateDirections(directionsService)
+            const callback = () => this.updateDirections()
             this.model.on(`change:${nameInModel}`, callback, this)
         })
     }
 
-    updateDirections(directionsService) {
-        this.computeDirections(directionsService)
+    updateDirections() {
+        this.computeDirections()
             .then(response => this.directionsDisplay.setDirections(response))
             .catch(e => console.error(e))
     }
@@ -64,7 +64,7 @@ export class DirectionsLayerView extends GMapsLayerView {
         return dataAsGoogle
     }
 
-    computeDirections(directionsService) {
+    computeDirections() {
         const request = {
             origin: arrayToLatLng(this.model.get("start")),
             destination: arrayToLatLng(this.model.get("end")),
@@ -77,7 +77,7 @@ export class DirectionsLayerView extends GMapsLayerView {
         };
 
         return new Promise((resolve, reject) => {
-            directionsService.route(request, (response, status) => {
+            this.directionsService.route(request, (response, status) => {
                 // print to the browser console (mostly for debugging)
                 console.log(`Direction service returned: ${status}`) ;
                 // set a flag in the model
