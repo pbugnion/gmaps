@@ -85,6 +85,12 @@ _doc_snippets['examples'] = """
     You can choose the travel mode:
 
     >>> directions = gmaps.directions_layer(start, end, travel_mode='WALKING')
+
+    You can update parameters on an existing layer. This will automatically
+    update the map:
+
+    >>> directions.travel_mode = 'DRIVING'
+    >>> directions.start = (46.4, 6.1)
 """
 
 

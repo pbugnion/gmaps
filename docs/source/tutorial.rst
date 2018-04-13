@@ -633,6 +633,10 @@ You can also pass waypoints and customise the directions request. You can pass u
 The full list of options is given as part of the documentation for the
 :func:`gmaps.directions_layer`.
 
+Updating options on the layer object will update the map. This lets you use the
+directions layer as part of a larger widget application. See the `app tutorial
+<app_tutorial.html>`_ for details.
+
 
 Bicycling, transit and traffic layers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -647,7 +651,7 @@ cycle-friendly.
   import gmaps
   gmaps.configure(api_key='AI...')
 
-  # Map centered on London
+  # Map centered on London
   fig = gmaps.figure(center=(51.5, -0.2), zoom_level=11)
   fig.add_layer(gmaps.bicycling_layer())
   fig
