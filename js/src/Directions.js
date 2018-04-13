@@ -31,10 +31,28 @@ export class DirectionsLayerView extends GMapsLayerView {
             this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
             const directionsService = new google.maps.DirectionsService();
 
-            this.computeDirections(directionsService)
-                .then(response => this.directionsDisplay.setDirections(response))
-                .catch(e => console.error(e))
+            this.updateDirections(directionsService)
+            this.modelEvents(directionsService)
+
         });
+    }
+
+    modelEvents(directionsService) {
+        const properties = [
+            'start', 'end', 'waypoints', 'travel_mode', 'avoid_ferries',
+            'avoid_highways', 'avoid_tolls', 'optimize_waypoints'
+        ]
+
+        properties.forEach(nameInModel => {
+            const callback = () => this.updateDirections(directionsService)
+            this.model.on(`change:${nameInModel}`, callback, this)
+        })
+    }
+
+    updateDirections(directionsService) {
+        this.computeDirections(directionsService)
+            .then(response => this.directionsDisplay.setDirections(response))
+            .catch(e => console.error(e))
     }
 
     addToMapView(mapView) { }
