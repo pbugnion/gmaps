@@ -7,6 +7,17 @@ import { downloadElementAsPng } from './services/downloadElement'
 import { stringToMapType, mapTypeToString } from './services/googleConverters.js'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
+import { globalEvents, globalEventBus } from './GlobalEventBus'
+
+if (typeof window.gm_authFailure === 'undefined') {
+    window.gm_authFailure = function() {
+        // GoogleMaps Javascript API provides there no information
+        // that can be accessed programatically. The best we can do
+        // is point the user to the JavaScript console.
+        globalEventBus.trigger(globalEvents.AUTHENTICATION_ERROR)
+        GoogleMapsLoader.release()
+    }
+}
 
 function needReloadGoogleMaps(configuration) {
     return GoogleMapsLoader.KEY !== configuration['api_key'];
@@ -29,13 +40,31 @@ function reloadGoogleMaps(configuration) {
 
 const DATA_BOUNDS = 'DATA_BOUNDS';
 const ZOOM_CENTER = 'ZOOM_CENTER';
+const AUTHENTICATION_ERROR_MESSAGE = `
+<p>
+Something went wrong authenticating with Google Maps. This may be because you did not pass in an API key, or the key you passed in was incorrect.
+</p>
 
+<p>
+Check the <a
+href="https://documentation.concrete5.org/tutorials/how-open-browser-console-view-errors"
+target="_blank">browser console</a>, look for errors that start with
+<code>Google Maps API error</code> and compare the message against <a
+href="https://developers.google.com/maps/documentation/javascript/error-messages"
+target="_blank">the Google Maps documentation</a>.
+</p>
+
+<p>
+If you see <code>InvalidKeyMapError</code>, the key you passed in is invalid. If you see <code>MissingKeyMapError</code>, you have not passed your API key to jupyter-gmaps. Pass an API key by writing <code>gmaps.configure(api_key="AI...")</code>.
+</p>
+`
 
 // Mixins
 
 const ConfigurationMixin = (superclass) => class extends superclass {
     loadConfiguration() {
         const modelConfiguration = this.model.get('configuration')
+        console.log(modelConfiguration)
         reloadGoogleMaps(modelConfiguration)
     }
 }
@@ -48,12 +77,15 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
     render() {
         this.loadConfiguration();
 
+        this.$mapDiv = $('<div>').css({'height': '100%', 'width': '100%'})
+        this.$el.append(this.$mapDiv)
+
         this.layerViews = new widgets.ViewList(this.addLayerModel, null, this);
 
         this.on('displayed', () => {
             GoogleMapsLoader.load(google => {
                 const options = this.readOptions(google)
-                this.map = new google.maps.Map(this.el, options) ;
+                this.map = new google.maps.Map(this.$mapDiv[0], options) ;
                 this._modelEvents(google);
                 this._viewEvents(google);
 
@@ -66,6 +98,14 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                 }, 500);
             })
         })
+
+        globalEventBus.on(
+            globalEvents.AUTHENTICATION_ERROR,
+            () => {
+                this.$mapDiv.hide();
+                this.$el.append(AUTHENTICATION_ERROR_MESSAGE)
+            }
+        )
     }
 
     readOptions(google) {
