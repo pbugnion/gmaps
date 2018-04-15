@@ -45,12 +45,14 @@ const AUTHENTICATION_ERROR_MESSAGE = `
 Something went wrong authenticating with Google Maps. This may be because you did not pass in an API key, or the key you passed in was incorrect.
 </p>
 
-<p>Check the <a
+<p>
+Check the <a
 href="https://documentation.concrete5.org/tutorials/how-open-browser-console-view-errors"
 target="_blank">browser console</a>, look for errors that start with
 <code>Google Maps API error</code> and compare the message against <a
 href="https://developers.google.com/maps/documentation/javascript/error-messages"
-target="_blank">the Google Maps documentation</a>. </p>
+target="_blank">the Google Maps documentation</a>.
+</p>
 
 <p>
 If you see <code>InvalidKeyMapError</code>, the key you passed in is invalid. If you see <code>MissingKeyMapError</code>, you have not passed your API key to jupyter-gmaps. Pass an API key by writing <code>gmaps.configure(api_key="AI...")</code>.
