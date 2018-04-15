@@ -64,7 +64,6 @@ If you see <code>InvalidKeyMapError</code>, the key you passed in is invalid. If
 const ConfigurationMixin = (superclass) => class extends superclass {
     loadConfiguration() {
         const modelConfiguration = this.model.get('configuration')
-        console.log(modelConfiguration)
         reloadGoogleMaps(modelConfiguration)
     }
 }
