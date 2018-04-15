@@ -42,8 +42,7 @@ const DATA_BOUNDS = 'DATA_BOUNDS';
 const ZOOM_CENTER = 'ZOOM_CENTER';
 const AUTHENTICATION_ERROR_MESSAGE = `
 <p>
-Something went wrong authenticating with Google Maps. This may be because the
-API key you passed in was incorrect.
+Something went wrong authenticating with Google Maps. This may be because you did not pass in an API key, or the key you passed in was incorrect.
 </p>
 
 <p>Check the <a
