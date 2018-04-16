@@ -1,5 +1,6 @@
 import * as widgets from '@jupyter-widgets/base';
 import { defaultAttributes } from './defaults'
+import { mapEventTypes } from './MapEvents'
 
 import $ from 'jquery';
 
@@ -12,6 +13,13 @@ export class ErrorsBoxModel extends widgets.DOMWidgetModel {
             _view_name: 'ErrorsBoxView',
             errors: []
         };
+    }
+
+    subscribeToMap(mapEvents) {
+        mapEvents.on(
+            mapEventTypes.MAP_DOWNLOAD_ERROR,
+            ({ errorMessage }) => this.addError(errorMessage)
+        )
     }
 
     addError(errorMessage) {

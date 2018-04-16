@@ -46,26 +46,20 @@ export class FigureView extends VBoxView {
         else {
             this.toolbarView = null;
         }
+        const mapModel = this.model.get('_map')
+
         const errorsBoxModel = this.model.get('_errors_box');
         if (errorsBoxModel) {
+            errorsBoxModel.subscribeToMap(mapModel.events)
             this.errorsBoxView =
                 this.add_child_model(this.model.get("_errors_box"));
         }
-        this.mapView = this.add_child_model(this.model.get("_map"));
+
+        this.mapView = this.add_child_model(mapModel);
         this.pWidget.addClass("gmaps-figure")
     }
 
     savePng() {
-        return this.mapView.then(view =>
-            view.savePng().catch(e => this.addError(e))
-        );
-    }
-
-    addError(errorMessage) {
-        console.log(`[Error]: ${errorMessage}`)
-        const errorsBoxModel = this.model.get("_errors_box")
-        if (errorsBoxModel) {
-            errorsBoxModel.addError(errorMessage);
-        }
+        return this.mapView.then(view => view.savePng());
     }
 }
