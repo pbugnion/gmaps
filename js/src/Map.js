@@ -7,7 +7,7 @@ import { downloadElementAsPng } from './services/downloadElement'
 import { stringToMapType, mapTypeToString } from './services/googleConverters.js'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
-import { globalEvents, globalEventBus } from './GlobalEventBus'
+import { globalEvents, globalEventBus } from './GlobalEvents'
 import { mapEventTypes, MapEvents } from './MapEvents'
 import { newEventBus } from './services/eventBus'
 
