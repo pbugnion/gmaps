@@ -48,7 +48,7 @@ export class ErrorsBoxView extends widgets.DOMWidgetView {
     }
 
     _renderErrors() {
-        const errorContainer = $('<ul />').addClass("gmaps-error-box")
+        const errorContainer = $('<ul />').addClass('gmaps-error-box')
         this.model.get('errors').map(
             (message, ierror) =>
                 $(`<li><pre>${message}</pre></li>`)
