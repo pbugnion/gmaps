@@ -12,6 +12,7 @@ import GoogleMapsLoader from 'google-maps';
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 import { latLngToArray } from './services/googleConverters'
+import { newEventBus } from './services/eventBus'
 
 
 class DrawingStore extends Store {
@@ -435,7 +436,7 @@ class PolygonClickHandler {
 
 class DeleteClickHandler {
     constructor(features, onDeleteFeature) {
-        this.eventBus = { ...Backbone.Events };
+        this.eventBus = newEventBus()
         this.onDeleteFeature = onDeleteFeature
         this.currentFeatures = features;
         this._registerFeatureListeners(features)

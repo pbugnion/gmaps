@@ -9,6 +9,7 @@ import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
 import { globalEvents, globalEventBus } from './GlobalEventBus'
 import { mapEventTypes, MapEvents } from './MapEvents'
+import { newEventBus } from './services/eventBus'
 
 if (typeof window.gm_authFailure === 'undefined') {
     window.gm_authFailure = function() {
@@ -230,10 +231,9 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
 // Models
 
 export class PlainmapModel extends widgets.DOMWidgetModel {
-
     initialize(attributes, options) {
         super.initialize(attributes, options)
-        this.events = { ...Backbone.Events }
+        this.events = newEventBus()
     }
 
     defaults() {
@@ -253,5 +253,4 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
         ...widgets.DOMWidgetModel.serializers,
         layers: {deserialize: widgets.unpack_models},
     }
-
 }
