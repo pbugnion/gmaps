@@ -20,6 +20,11 @@ export class ErrorsBoxModel extends widgets.DOMWidgetModel {
             mapEventTypes.MAP_DOWNLOAD_ERROR,
             ({ errorMessage }) => this.addError(errorMessage)
         )
+        mapEvents.on(
+            mapEventTypes.LAYER_ERROR,
+            ({layerName, errorMessage}) =>
+                this.addError(`[${layerName} layer] ${errorMessage}`)
+        )
     }
 
     addError(errorMessage) {

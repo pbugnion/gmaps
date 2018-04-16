@@ -4,6 +4,7 @@ import _ from 'underscore';
 import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
+import { mapEventTypes, MapEvents } from './MapEvents'
 import { arrayToLatLng } from './services/googleConverters'
 
 
@@ -85,9 +86,28 @@ export class DirectionsLayerView extends GMapsLayerView {
                 if (status == google.maps.DirectionsStatus.OK) {
                     resolve(response)
                 } else {
+                    const errorMessage =
+                        statusErrorMessages[status] ||
+                        `Invalid status code: ${status}.`
+                    this.mapView.model.events.trigger(
+                        mapEventTypes.LAYER_ERROR,
+                        MapEvents.layerError('directions', errorMessage)
+                    )
                     reject(`Error returned by direction service: ${status}`)
                 }
             })
         })
     }
+}
+
+
+// From https://developers.google.com/maps/documentation/directions/intro#StatusCodes
+const statusErrorMessages = {
+    'NOT_FOUND': 'At least one of the locations specified in the request\'s origin, destination, or waypoints could not be geocoded.',
+    'ZERO_RESULTS': 'No route could be found between the origin and destination.',
+    'INVALID_REQUEST': 'The directions request provided was invalid. This may be an error in `jupyter-gmaps`.',
+    'MAX_WAYPOINTS_EXCEEDED': 'Too many waypoints were provided in the directions request',
+    'OVER_QUERY_LIMIT': 'You have sent too many directions request. Wait until your quota replenishes.',
+    'REQUEST_DENIED': 'You are not allowed to use Google\'s directions service',
+    'UNKNOWN_ERROR': 'A directions request could not be processed due to a server error. The request may succeed if you try again.'
 }
