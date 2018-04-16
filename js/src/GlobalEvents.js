@@ -1,4 +1,4 @@
-import * as Backbone from 'backbone'
+import { newEventBus } from './services/eventBus'
 
 export const globalEvents = {
     AUTHENTICATION_ERROR: 'AUTHENTICATION_ERROR'

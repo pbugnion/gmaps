@@ -7,7 +7,9 @@ import { downloadElementAsPng } from './services/downloadElement'
 import { stringToMapType, mapTypeToString } from './services/googleConverters.js'
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
 import { defaultAttributes } from './defaults'
-import { globalEvents, globalEventBus } from './GlobalEventBus'
+import { globalEvents, globalEventBus } from './GlobalEvents'
+import { mapEventTypes, MapEvents } from './MapEvents'
+import { newEventBus } from './services/eventBus'
 
 if (typeof window.gm_authFailure === 'undefined') {
     window.gm_authFailure = function() {
@@ -67,7 +69,6 @@ const ConfigurationMixin = (superclass) => class extends superclass {
         reloadGoogleMaps(modelConfiguration)
     }
 }
-
 
 // Views
 
@@ -213,7 +214,12 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                         const errorMessage =
                             `Cannot download ${layersWord}: ${layersText}. ` +
                             `Remove these layers to export the map.`
-                        return Promise.reject(errorMessage)
+                        console.error(errorMessage)
+                        this.model.events.trigger(
+                            mapEventTypes.MAP_DOWNLOAD_ERROR,
+                            MapEvents.downloadError(errorMessage)
+                        )
+                        return Promise.resolve(errorMessage)
                     })
                 return error
             }
@@ -225,6 +231,11 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
 // Models
 
 export class PlainmapModel extends widgets.DOMWidgetModel {
+    initialize(attributes, options) {
+        super.initialize(attributes, options)
+        this.events = newEventBus()
+    }
+
     defaults() {
         return {
             ...super.defaults(),

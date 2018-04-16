@@ -1,5 +1,6 @@
 import * as widgets from '@jupyter-widgets/base';
 import { defaultAttributes } from './defaults'
+import { mapEventTypes } from './MapEvents'
 
 import $ from 'jquery';
 
@@ -12,6 +13,18 @@ export class ErrorsBoxModel extends widgets.DOMWidgetModel {
             _view_name: 'ErrorsBoxView',
             errors: []
         };
+    }
+
+    subscribeToMap(mapEvents) {
+        mapEvents.on(
+            mapEventTypes.MAP_DOWNLOAD_ERROR,
+            ({ errorMessage }) => this.addError(errorMessage)
+        )
+        mapEvents.on(
+            mapEventTypes.LAYER_ERROR,
+            ({layerName, errorMessage}) =>
+                this.addError(`[${layerName} layer] ${errorMessage}`)
+        )
     }
 
     addError(errorMessage) {
@@ -35,7 +48,7 @@ export class ErrorsBoxView extends widgets.DOMWidgetView {
     }
 
     _renderErrors() {
-        const errorContainer = $('<ul />').addClass("gmaps-error-box")
+        const errorContainer = $('<ul />').addClass('gmaps-error-box')
         this.model.get('errors').map(
             (message, ierror) =>
                 $(`<li><pre>${message}</pre></li>`)
