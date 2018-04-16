@@ -78,9 +78,6 @@ export class DirectionsLayerView extends GMapsLayerView {
 
         return new Promise((resolve, reject) => {
             this.directionsService.route(request, (response, status) => {
-                // print to the browser console (mostly for debugging)
-                console.log(`Direction service returned: ${status}`) ;
-                // set a flag in the model
                 this.model.set('layer_status', status) ;
                 this.touch()
                 if (status == google.maps.DirectionsStatus.OK) {
