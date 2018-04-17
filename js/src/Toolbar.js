@@ -23,6 +23,8 @@ export class ToolbarModel extends widgets.DOMWidgetModel {
 export class ToolbarView extends widgets.DOMWidgetView {
 
     render() {
+        this.$el.addClass('gmaps-toolbar-container')
+
         const $toolbar = $("<div />");
         $toolbar
             .addClass("gmaps-toolbar toolbar-inner navbar-inner");
