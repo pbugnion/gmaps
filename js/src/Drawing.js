@@ -2,7 +2,6 @@
 import * as widgets from '@jupyter-widgets/base';
 import $ from 'jquery'
 import _ from 'underscore'
-import * as Backbone from 'backbone'
 
 import { Store } from './Store';
 import { Dispatcher } from 'flux'
