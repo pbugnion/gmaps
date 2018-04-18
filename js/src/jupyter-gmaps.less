@@ -1,11 +1,17 @@
 
+.gmaps-toolbar-container {
+    overflow: visible;
+}
+
 .gmaps-toolbar {
+
+  margin-top: 2px;
+  margin-bottom: 5px;
+
   .toolbar {
+    width: 100%;
     margin-left: 0px;
     margin-right: 0px;
-    margin-top: 2px;
-    margin-bottom: 5px;
-    width: 100%;
   }
 
   .btn {
@@ -43,18 +49,27 @@
 
 }
 
+.gmaps-errors-box-container {
+    overflow: visible;
+}
+
 .gmaps-error-box {
   padding-left: 0px;
+  margin-top: 2px;
   margin-bottom: 0px;
 
   pre {
     padding-top: 5px;
     padding-bottom: 5px;
-    margin-bottom: 5px;
   }
 
-  li {
+  .well {
     cursor: pointer;
+    margin-bottom: 10px;
+  }
+
+  .well.well-sm {
+      padding: 6px;
   }
 }
 

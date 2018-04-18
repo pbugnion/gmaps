@@ -43,6 +43,7 @@ export class ErrorsBoxModel extends widgets.DOMWidgetModel {
 
 export class ErrorsBoxView extends widgets.DOMWidgetView {
     render() {
+        this.$el.addClass('gmaps-errors-box-container')
         this._renderErrors()
         this.model.on('change:errors', () => this._renderErrors())
     }
@@ -51,7 +52,7 @@ export class ErrorsBoxView extends widgets.DOMWidgetView {
         const errorContainer = $('<ul />').addClass('gmaps-error-box')
         this.model.get('errors').map(
             (message, ierror) =>
-                $(`<li><pre>${message}</pre></li>`)
+                $(`<li class="well well-sm"><pre>${message}</pre></li>`)
                     .click(() => this.model.removeError(ierror))
         ).forEach(element => errorContainer.append(element))
         this.$el.empty(); // Clear the current state
