@@ -1,5 +1,6 @@
 import * as widgets from '@jupyter-widgets/base'
 import _ from 'underscore'
+import $ from 'jquery'
 
 import GoogleMapsLoader from 'google-maps'
 
