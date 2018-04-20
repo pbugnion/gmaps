@@ -131,6 +131,8 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
             ALLOWED_TRAVEL_MODES,
             default_value=DEFAULT_TRAVEL_MODE
     ).tag(sync=True)
+    show_markers = Bool(default_value=True).tag(sync=True)
+    show_route = Bool(default_value=True).tag(sync=True)
 
     layer_status = CUnicode().tag(sync=True)
 
