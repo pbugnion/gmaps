@@ -1,6 +1,4 @@
 
-import _ from 'underscore';
-
 import GoogleMapsLoader from 'google-maps';
 
 import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
@@ -26,10 +24,15 @@ export class DirectionsLayerView extends GMapsLayerView {
     }
 
     render() {
-        const rendererOptions = { map: this.mapView.map }
+        this.rendererOptions = {
+	    map: this.mapView.map,
+	    suppressMarkers: !this.model.get('show_markers'),
+	    suppressPolylines: !this.model.get('show_route'),
+	    polylineOptions: this.getPolylineOptions()
+	}
 
         GoogleMapsLoader.load(google => {
-            this.directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions)
+            this.directionsDisplay = new google.maps.DirectionsRenderer(this.rendererOptions)
             this.directionsService = new google.maps.DirectionsService();
 
             this.updateDirections()
@@ -47,6 +50,31 @@ export class DirectionsLayerView extends GMapsLayerView {
             const callback = () => this.updateDirections()
             this.model.on(`change:${nameInModel}`, callback, this)
         })
+
+	// Callbacks that change the renderer
+	// [nameInView, nameInModel]
+	const invertedProperties = [
+	    ['suppressMarkers', 'show_markers'],
+	    ['suppressPolylines', 'show_route']
+	]
+
+	invertedProperties.forEach(([nameInView, nameInModel]) => {
+	    this.model.on(
+		`change:${nameInModel}`,
+		() => this.patchOptions({ [nameInView]: !this.model.get(nameInModel) })
+	    )
+	})
+
+	const polylineProperties = [
+	    'stroke_color', 'stroke_opacity', 'stroke_weight'
+	]
+
+	polylineProperties.forEach(nameInModel => {
+	    this.model.on(
+		`change:${nameInModel}`,
+		() => this.patchOptions({ 'polylineOptions': this.getPolylineOptions() })
+	    )
+	})
     }
 
     updateDirections() {
@@ -55,7 +83,23 @@ export class DirectionsLayerView extends GMapsLayerView {
             .catch(e => console.error(e))
     }
 
+    patchOptions(optionsPatch) {
+	this.rendererOptions = {
+	    ...this.rendererOptions,
+	    ...optionsPatch
+	}
+	this.directionsDisplay.setOptions(this.rendererOptions)
+    }
+
     addToMapView(mapView) { }
+
+    getPolylineOptions() {
+	return {
+	    strokeColor: this.model.get('stroke_color'),
+	    strokeOpacity: this.model.get('stroke_opacity'),
+	    strokeWeight: this.model.get('stroke_weight')
+	}
+    }
 
     getWaypoints() {
         const dataAsGoogle = this.model.get('waypoints').map(waypoint => {

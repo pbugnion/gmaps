@@ -131,16 +131,16 @@ _doc_snippets['line_options_params'] = """
         string, e.g. 'blue', as an RGB tuple, e.g. (100, 0, 0),
         or as an RGBA tuple, e.g. (100, 0, 0, 0.5). Defaults to a grey
         color: (69, 69, 69)
-    :type stroke_color: str or tuple, optional.
+    :type stroke_color: str or tuple, optional
 
     :param stroke_weight:
         How wide the line is. This is a positive float. Defaults to 2.
-    :type stroke_color: float, optional
+    :type stroke_weight: float, optional
 
     :param stroke_opacity:
         The opacity of the stroke color. The opacity should be a float
         between 0.0 (transparent) and 1.0 (opaque). 0.6 by default.
-    :type stroke_opacity: float, optional.
+    :type stroke_opacity: float, optional
 """
 
 _doc_snippets['polygon_options_params'] = """
@@ -151,12 +151,12 @@ _doc_snippets['polygon_options_params'] = """
         string, e.g. 'blue', as an RGB tuple, e.g. (100, 0, 0),
         or as an RGBA tuple, e.g. (100, 0, 0, 0.5). Defaults to a grey
         color: (69, 69, 69)
-    :type fill_color: str or tuple, optional.
+    :type fill_color: str or tuple, optional
 
     :param fill_opacity:
         The opacity of the fill color. The opacity should be a float
         between 0.0 (transparent) and 1.0 (opaque). 0.2 by default.
-    :type fill_opacity: float, optional.
+    :type fill_opacity: float, optional
 """.format(line_options_params=_doc_snippets['line_options_params'].strip())
 
 
