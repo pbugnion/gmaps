@@ -68,9 +68,36 @@ _doc_snippets['params'] = """
     :type avoid_tolls: bool, optional
 
     :param optimize_waypoints:
-        If set to true, will attempt to re-order the supplied intermediate
+        If set to True, will attempt to re-order the supplied intermediate
         waypoints to minimize overall cost of the route.
     :type optimize_waypoints: bool, optional
+
+    :param show_markers:
+        If set to False, the markers showing the start, destination and
+        waypoints are explicitly hidden. Defaults to True.
+    :type show_markers: bool, optional
+
+    :param show_route:
+        If set to False, the line indicating the route is explicitly
+        hidden. Defaults to True.
+    :type show_route: bool, optional
+
+    :param stroke_color:
+        The stroke color of the line indicating the route. Colors can
+        be specified as a simple string, e.g. 'blue', as an RGB tuple,
+        e.g. (100, 0, 0), or as an RGBA tuple, e.g. (100, 0, 0, 0.5).
+        Defaults to a blue color: (0, 88, 255)
+    :type stroke_color: str or tuple, optional.
+
+    :param stroke_weight:
+        The width of the line indicating the route. This is a positive float.
+        Defaults to 6.
+    :type stroke_color: float, optional
+
+    :param stroke_opacity:
+        The opacity of the stroke color. The opacity should be a float
+        between 0.0 (transparent) and 1.0 (opaque). 0.6 by default.
+    :type stroke_opacity: float, optional.
 """
 
 _doc_snippets['examples'] = """
