@@ -140,3 +140,7 @@ class DirectionsLayer(unittest.TestCase):
         assert layer.get_state()['stroke_opacity'] == 0.2
         layer.stroke_weight = 20
         assert layer.get_state()['stroke_weight'] == 20
+
+    def test_invalid_opacity(self):
+        with self.assertRaises(traitlets.TraitError):
+            Directions(self.start, self.end, stroke_opacity=20.0)
