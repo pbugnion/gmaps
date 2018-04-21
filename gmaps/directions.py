@@ -87,17 +87,17 @@ _doc_snippets['params'] = """
         be specified as a simple string, e.g. 'blue', as an RGB tuple,
         e.g. (100, 0, 0), or as an RGBA tuple, e.g. (100, 0, 0, 0.5).
         Defaults to a blue color: (0, 88, 255)
-    :type stroke_color: str or tuple, optional.
+    :type stroke_color: str or tuple, optional
 
     :param stroke_weight:
         The width of the line indicating the route. This is a positive float.
         Defaults to 6.
-    :type stroke_color: float, optional
+    :type stroke_weight: float, optional
 
     :param stroke_opacity:
         The opacity of the stroke color. The opacity should be a float
         between 0.0 (transparent) and 1.0 (opaque). 0.6 by default.
-    :type stroke_opacity: float, optional.
+    :type stroke_opacity: float, optional
 """
 
 _doc_snippets['examples'] = """
@@ -117,11 +117,25 @@ _doc_snippets['examples'] = """
 
     >>> directions = gmaps.directions_layer(start, end, travel_mode='WALKING')
 
+    You can choose to hide the markers, the route or both:
+
+    >>> directions = gmaps.directions_layer(
+            start, end, show_markers=False, show_route=False)
+
+    Control how the route is displayed by changing the `stroke_color`,
+    `stroke_weight` and `stroke_opacity` attributes.
+
+    >>> directions = gmaps.directions_layer(
+            start, end, stroke_color='red',
+            stroke_opacity=1.0, stroke_weight=2.0)
+
     You can update parameters on an existing layer. This will automatically
     update the map:
 
     >>> directions.travel_mode = 'DRIVING'
     >>> directions.start = (46.4, 6.1)
+    >>> directions.stroke_color = 'green'
+    >>> directions.show_markers = False
 """
 
 
@@ -233,7 +247,9 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
 def directions_layer(
         start, end, waypoints=None, avoid_ferries=False,
         travel_mode=DEFAULT_TRAVEL_MODE,
-        avoid_highways=False, avoid_tolls=False, optimize_waypoints=False):
+        avoid_highways=False, avoid_tolls=False, optimize_waypoints=False,
+        show_markers=True, show_route=True, stroke_color=DEFAULT_STROKE_COLOR,
+        stroke_weight=6.0, stroke_opacity=0.6):
     """
     Create a directions layer.
 
@@ -250,13 +266,18 @@ def directions_layer(
         A :class:`gmaps.Directions` widget.
     """
     kwargs = {
-        "start": start,
-        "end": end,
-        "waypoints": waypoints,
-        "travel_mode": travel_mode,
-        "avoid_ferries": avoid_ferries,
-        "avoid_highways": avoid_highways,
-        "avoid_tolls": avoid_tolls,
-        "optimize_waypoints": optimize_waypoints
+        'start': start,
+        'end': end,
+        'waypoints': waypoints,
+        'travel_mode': travel_mode,
+        'avoid_ferries': avoid_ferries,
+        'avoid_highways': avoid_highways,
+        'avoid_tolls': avoid_tolls,
+        'optimize_waypoints': optimize_waypoints,
+        'show_markers': show_markers,
+        'show_route': show_route,
+        'stroke_color': stroke_color,
+        'stroke_weight': stroke_weight,
+        'stroke_opacity': stroke_opacity
     }
     return Directions(**kwargs)
