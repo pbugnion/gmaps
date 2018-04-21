@@ -29,7 +29,8 @@ export class DirectionsLayerView extends GMapsLayerView {
         this.rendererOptions = {
 	    map: this.mapView.map,
 	    suppressMarkers: !this.model.get('show_markers'),
-	    suppressPolylines: !this.model.get('show_route')
+	    suppressPolylines: !this.model.get('show_route'),
+	    polylineOptions: this.getPolylineOptions()
 	}
 
         GoogleMapsLoader.load(google => {
@@ -78,6 +79,14 @@ export class DirectionsLayerView extends GMapsLayerView {
     }
 
     addToMapView(mapView) { }
+
+    getPolylineOptions() {
+	return {
+	    strokeColor: this.model.get('stroke_color'),
+	    strokeOpacity: this.model.get('stroke_opacity'),
+	    strokeWeight: this.model.get('stroke_weight')
+	}
+    }
 
     getWaypoints() {
         const dataAsGoogle = this.model.get('waypoints').map(waypoint => {

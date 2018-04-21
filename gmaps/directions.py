@@ -2,7 +2,9 @@
 import ipywidgets as widgets
 import warnings
 
-from traitlets import Bool, Unicode, CUnicode, List, Enum, observe, validate
+from traitlets import (
+    Bool, Unicode, CUnicode, List, Enum, observe, validate, Float
+)
 
 from . import geotraitlets
 from .maps import GMapsWidgetMixin
@@ -11,6 +13,8 @@ from ._docutils import doc_subst
 
 ALLOWED_TRAVEL_MODES = {'BICYCLING', 'DRIVING', 'TRANSIT', 'WALKING'}
 DEFAULT_TRAVEL_MODE = 'DRIVING'
+
+DEFAULT_STROKE_COLOR = '#0088FF'
 
 
 def _warn_obsolete_data():
@@ -133,6 +137,12 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
     ).tag(sync=True)
     show_markers = Bool(default_value=True).tag(sync=True)
     show_route = Bool(default_value=True).tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        default_value=DEFAULT_STROKE_COLOR, allow_none=False).tag(sync=True)
+    stroke_opacity = Float(
+        default_value=0.6, allow_none=False).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=6.0).tag(sync=True)
 
     layer_status = CUnicode().tag(sync=True)
 
