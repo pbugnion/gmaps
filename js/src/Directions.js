@@ -61,14 +61,21 @@ export class DirectionsLayerView extends GMapsLayerView {
 	]
 
 	invertedProperties.forEach(([nameInView, nameInModel]) => {
-	    const callback = () => {
-		const updatedOptions = {
-		    ...this.rendererOptions,
-		    [nameInView]: !this.model.get(nameInModel)
-		}
-		this.directionsDisplay.setOptions(updatedOptions)
-	    }
-	    this.model.on(`change:${nameInModel}`, callback)
+	    this.model.on(
+		`change:${nameInModel}`,
+		() => this.patchOptions({ [nameInView]: !this.model.get(nameInModel) })
+	    )
+	})
+
+	const polylineProperties = [
+	    'stroke_color', 'stroke_opacity', 'stroke_weight'
+	]
+
+	polylineProperties.forEach(nameInModel => {
+	    this.model.on(
+		`change:${nameInModel}`,
+		() => this.patchOptions({ 'polylineOptions': this.getPolylineOptions() })
+	    )
 	})
     }
 
@@ -76,6 +83,14 @@ export class DirectionsLayerView extends GMapsLayerView {
         this.computeDirections()
             .then(response => this.directionsDisplay.setDirections(response))
             .catch(e => console.error(e))
+    }
+
+    patchOptions(optionsPatch) {
+	this.rendererOptions = {
+	    ...this.rendererOptions,
+	    ...optionsPatch
+	}
+	this.directionsDisplay.setOptions(this.rendererOptions)
     }
 
     addToMapView(mapView) { }
