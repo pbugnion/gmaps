@@ -601,7 +601,11 @@ of options for the drawing layer.
 Directions layer
 ^^^^^^^^^^^^^^^^
 
-`gmaps` supports drawing routes based on the Google maps `directions service <https://developers.google.com/maps/documentation/javascript/examples/directions-simple>`_. At the moment, this only supports directions between points denoted by latitude and longitude::
+`gmaps` supports drawing routes based on the Google maps `directions
+service
+<https://developers.google.com/maps/documentation/javascript/examples/directions-simple>`_. At
+the moment, this only supports directions between points denoted by
+latitude and longitude::
 
   import gmaps
   import gmaps.datasets
@@ -619,7 +623,10 @@ Directions layer
 
 .. image:: _images/directions_layer_simple.png
 
-You can also pass waypoints and customise the directions request. You can pass up to 23 waypoints, and waypoints are not supported when the travel mode is ``'TRANSIT'`` (this is a limitation of the Google Maps directions service)::
+You can also pass waypoints and customise the directions request. You
+can pass up to 23 waypoints. Waypoints are not supported when the
+travel mode is ``'TRANSIT'`` (this is a limitation of the Google Maps
+directions service)::
 
   fig = gmaps.figure()
   geneva2zurich_via_montreux = gmaps.directions_layer(
@@ -629,6 +636,17 @@ You can also pass waypoints and customise the directions request. You can pass u
   fig
 
 .. image:: _images/directions_layer_waypoints.png
+
+You can customise how directions are rendered on the map::
+
+  fig = gmaps.figure()
+  geneva2zurich = gmaps.directions_layer(
+      geneva, zurich, show_markers=False,
+      stroke_color='red', stroke_weight=3.0, stroke_opacity=1.0)
+  fig.add_layer(geneva2zurich)
+  fig
+
+.. image:: _images/directions_layer_customised.png
 
 The full list of options is given as part of the documentation for the
 :func:`gmaps.directions_layer`.
