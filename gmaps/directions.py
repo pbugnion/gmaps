@@ -115,8 +115,8 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
     {params}
     """
     has_bounds = True
-    _view_name = Unicode("DirectionsLayerView").tag(sync=True)
-    _model_name = Unicode("DirectionsLayerModel").tag(sync=True)
+    _view_name = Unicode('DirectionsLayerView').tag(sync=True)
+    _model_name = Unicode('DirectionsLayerModel').tag(sync=True)
 
     start = geotraitlets.Point().tag(sync=True)
     end = geotraitlets.Point().tag(sync=True)
