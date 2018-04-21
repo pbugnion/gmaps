@@ -4,7 +4,7 @@ import pytest
 
 import traitlets
 
-from ..directions import Directions
+from ..directions import Directions, DEFAULT_STROKE_COLOR
 
 
 class DirectionsLayer(unittest.TestCase):
@@ -25,6 +25,11 @@ class DirectionsLayer(unittest.TestCase):
         assert not state['avoid_highways']
         assert not state['avoid_tolls']
         assert not state['optimize_waypoints']
+        assert state['show_markers']
+        assert state['show_route']
+        assert state['stroke_color'].lower() == DEFAULT_STROKE_COLOR.lower()
+        assert state['stroke_opacity'] == 0.6
+        assert state['stroke_weight'] == 6.0
 
     def test_pass_args(self):
         layer = Directions(self.start, self.end)
@@ -89,6 +94,23 @@ class DirectionsLayer(unittest.TestCase):
         assert state['avoid_highways']
         assert state['avoid_tolls']
         assert state['optimize_waypoints']
+
+    def test_show_markers_routes(self):
+        layer = Directions(
+            self.start, self.end,
+            show_markers=False,
+            show_route=False
+        )
+        state = layer.get_state()
+        assert not state['show_markers']
+        assert not state['show_route']
+
+    def test_change_markers_routes(self):
+        layer = Directions(self.start, self.end)
+        layer.show_markers = False
+        assert not layer.get_state()['show_markers']
+        layer.show_route = False
+        assert not layer.get_state()['show_route']
 
     def test_travel_mode(self):
         layer = Directions(self.start, self.end, travel_mode='BICYCLING')
