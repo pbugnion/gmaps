@@ -377,3 +377,15 @@ class TestOpacity(unittest.TestCase):
             x = geotraitlets.Opacity(allow_none=True, default_value=None)
         assert A().x is None
         assert A(x=0.1).x == 0.1
+
+    def test_under_min(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=-1.0)
+
+    def test_over_max(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=2.0)
+
+    def test_wrong_type(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x='not-a-float')
