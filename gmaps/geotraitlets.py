@@ -59,7 +59,7 @@ class Latitude(traitlets.Float):
 
     Latitude values must be between -90 and 90.
     """
-    info_text = "a valid latitude (-90 <= latitude <= 90)"
+    info_text = 'a valid latitude (-90 <= latitude <= 90)'
     default_value = traitlets.Undefined
 
     def validate(self, obj, value):
@@ -73,7 +73,7 @@ class Longitude(traitlets.Float):
 
     Longitude values must be between -180 and 180.
     """
-    info_text = "a valid longitude (-180 <= longitude <= 180)"
+    info_text = 'a valid longitude (-180 <= longitude <= 180)'
     default_value = traitlets.Undefined
 
     def validate(self, obj, value):
@@ -85,7 +85,7 @@ class Point(traitlets.Tuple):
     """
     Tuple representing a (latitude, longitude) pair.
     """
-    info_text = "a valid (latitude, longitude) pair"
+    info_text = 'a valid (latitude, longitude) pair'
 
     def __init__(self, default_value=traitlets.Undefined):
         super(Point, self).__init__(
@@ -103,9 +103,9 @@ class Point(traitlets.Tuple):
 
 
 _color_names = {
-    "black", "silver", "gray", "white", "maroon", "red",
-    "purple", "fuschia", "green", "lime", "olive",
-    "yellow", "navy", "blue", "teal", "aqua"
+    'black', 'silver', 'gray', 'white', 'maroon', 'red',
+    'purple', 'fuschia', 'green', 'lime', 'olive',
+    'yellow', 'navy', 'blue', 'teal', 'aqua'
 }
 
 _color_re = re.compile(r'#[a-fA-F0-9]{3}(?:[a-fA-F0-9]{3})?$')
@@ -132,7 +132,7 @@ class ColorString(traitlets.Unicode):
     def validate(self, obj, value):
         try:
             value_as_string = super(ColorString, self).validate(obj, value)
-            normalised_string = value_as_string.replace(" ", "").lower()
+            normalised_string = value_as_string.replace(' ', '').lower()
             if (
                 normalised_string.lower() in _color_names or
                 _color_re.match(normalised_string) or
@@ -147,7 +147,7 @@ class ColorString(traitlets.Unicode):
 
 
 class RgbTuple(traitlets.Tuple):
-    info_text = "a triple of integers between 0 and 255 like (100, 0, 250)"
+    info_text = 'a triple of integers between 0 and 255 like (100, 0, 250)'
 
     def __init__(self, **metadata):
         traits = [
@@ -159,7 +159,7 @@ class RgbTuple(traitlets.Tuple):
 
 
 class RgbaTuple(traitlets.Tuple):
-    info_text = "an RGBA tuple like (100, 0, 250, 0.5)"
+    info_text = 'an RGBA tuple like (100, 0, 250, 0.5)'
 
     def __init__(self, **metadata):
         traits = [
@@ -175,7 +175,7 @@ class ZoomLevel(traitlets.Integer):
     """
     Integer representing a zoom value allowed by Google Maps
     """
-    info_text = "a valid Google Maps zoom (0 <= zoom <= 21)"
+    info_text = 'a valid Google Maps zoom (0 <= zoom <= 21)'
     default_value = traitlets.Undefined
 
     def validate(self, obj, value):
@@ -211,10 +211,10 @@ class ColorAlpha(traitlets.Union):
         if isinstance(value, tuple):
             if len(value) == 3:
                 # convert to an rgb string
-                return "rgb({},{},{})".format(*value)
+                return 'rgb({},{},{})'.format(*value)
             else:
                 # convert to an rgba string
-                return "rgba({},{},{},{})".format(*value)
+                return 'rgba({},{},{},{})'.format(*value)
         else:
             # already a string
             return value
@@ -248,6 +248,21 @@ class MouseHandling(traitlets.Enum):
             allow_none=False,
             **kwargs
         )
+
+
+class Opacity(traitlets.Float):
+    info_text = 'a valid opacity value (0.0 <= opacity <= 1.0)'
+
+    def __init__(
+            self, default_value=traitlets.Undefined,
+            allow_none=False, **kwargs
+    ):
+        super(Opacity, self).__init__(
+            default_value=default_value,
+            allow_none=allow_none,
+            min=0.0,
+            max=1.0,
+            **kwargs)
 
 
 def is_valid_point(pt):

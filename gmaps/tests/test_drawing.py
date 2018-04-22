@@ -259,13 +259,17 @@ class DrawingFactory(unittest.TestCase):
 
 class Line(unittest.TestCase):
 
+    def setUp(self):
+        self.start = (5.0, 10.0)
+        self.end = (20.0, 30.0)
+
     def test_start_end_kwargs(self):
         line = drawing.Line(
-            start=(5.0, 10.0),
-            end=(20.0, 30.0)
+            start=self.start,
+            end=self.end
         )
-        assert line.get_state()['start'] == (5.0, 10.0)
-        assert line.get_state()['end'] == (20.0, 30.0)
+        assert line.get_state()['start'] == self.start
+        assert line.get_state()['end'] == self.end
 
     def test_missing_start(self):
         with self.assertRaises(TypeError):
@@ -276,22 +280,39 @@ class Line(unittest.TestCase):
             drawing.Line(start=(20.0, 30.0))
 
     def test_normal_arguments(self):
-        line = drawing.Line((5.0, 10.0), (20.0, 30.0))
-        assert line.get_state()['start'] == (5.0, 10.0)
-        assert line.get_state()['end'] == (20.0, 30.0)
+        line = drawing.Line(self.start, self.end)
+        assert line.get_state()['start'] == self.start
+        assert line.get_state()['end'] == self.end
+
+    def test_defaults(self):
+        line = drawing.Line(self.start, self.end)
+        assert line.get_state()['stroke_opacity'] == 0.6
+
+    def test_set_opacity(self):
+        line = drawing.Line(self.start, self.end, stroke_opacity=0.2)
+        assert line.get_state()['stroke_opacity'] == 0.2
+
+    def test_invalid_opacity(self):
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Line(self.start, self.end, stroke_opacity=-0.2)
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Line(self.start, self.end, stroke_opacity=1.2)
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Line(self.start, self.end, stroke_opacity='not-a-float')
 
 
 class Polygon(unittest.TestCase):
 
+    def setUp(self):
+        self.path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+
     def test_path_kwarg(self):
-        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
-        polygon = drawing.Polygon(path=path)
-        assert polygon.get_state()['path'] == path
+        polygon = drawing.Polygon(path=self.path)
+        assert polygon.get_state()['path'] == self.path
 
     def test_normal_path_arg(self):
-        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
-        polygon = drawing.Polygon(path)
-        assert polygon.get_state()['path'] == path
+        polygon = drawing.Polygon(self.path)
+        assert polygon.get_state()['path'] == self.path
 
     def test_missing_path(self):
         with self.assertRaises(TypeError):
@@ -303,8 +324,7 @@ class Polygon(unittest.TestCase):
             drawing.Polygon(path)
 
     def test_defaults(self):
-        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
-        polygon = drawing.Polygon(path)
+        polygon = drawing.Polygon(self.path)
         state = polygon.get_state()
         assert state['stroke_color'] == drawing.DEFAULT_STROKE_COLOR
         assert state['stroke_weight'] == 2.0
@@ -313,9 +333,8 @@ class Polygon(unittest.TestCase):
         assert state['fill_opacity'] == 0.2
 
     def test_custom_arguments(self):
-        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
         polygon = drawing.Polygon(
-            path,
+            self.path,
             stroke_color=(1, 3, 5),
             stroke_weight=10.0,
             stroke_opacity=0.87,
@@ -328,6 +347,22 @@ class Polygon(unittest.TestCase):
         assert state['stroke_opacity'] == 0.87
         assert state['fill_color'] == 'rgb(7,9,11)'
         assert state['fill_opacity'] == 0.76
+
+    def test_invalid_stroke_opacity(self):
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polygon(self.path, stroke_opacity=-0.2)
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polygon(self.path, stroke_opacity=1.2)
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polygon(self.path, stroke_opacity='not-a-float')
+
+    def test_invalid_fill_opacity(self):
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polygon(self.path, fill_opacity=-0.2)
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polygon(self.path, fill_opacity=1.2)
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polygon(self.path, fill_opacity='not-a-float')
 
 
 class PolygonOptions(unittest.TestCase):

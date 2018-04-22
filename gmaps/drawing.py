@@ -200,9 +200,8 @@ class LineOptions(HasTraits):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = Float(
-        min=0.0, max=1.0, allow_none=False, default_value=0.6
-    ).tag(sync=True)
+    stroke_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.6).tag(sync=True)
 
     def to_line(self, start, end):
         new_line = Line(
@@ -276,9 +275,8 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = Float(
-        min=0.0, max=1.0, allow_none=False, default_value=0.6
-    ).tag(sync=True)
+    stroke_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.6).tag(sync=True)
 
     def __init__(
             self, start, end,
@@ -322,15 +320,13 @@ class PolygonOptions(HasTraits):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = Float(
-        min=0.0, max=1.0, allow_none=False, default_value=0.6
-    ).tag(sync=True)
+    stroke_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.6).tag(sync=True)
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
-    fill_opacity = Float(
-        min=0.0, max=1.0, allow_none=False, default_value=0.2
-    ).tag(sync=True)
+    fill_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.2).tag(sync=True)
 
     def to_polygon(self, path):
         new_polygon = Polygon(
@@ -400,15 +396,13 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = Float(
-        min=0.0, max=1.0, allow_none=False, default_value=0.6
-    ).tag(sync=True)
+    stroke_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.6).tag(sync=True)
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
-    fill_opacity = Float(
-        min=0.0, max=1.0, allow_none=False, default_value=0.2
-    ).tag(sync=True)
+    fill_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.2).tag(sync=True)
 
     def __init__(
             self, path,

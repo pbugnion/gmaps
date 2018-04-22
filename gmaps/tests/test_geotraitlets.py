@@ -353,3 +353,39 @@ class Point(unittest.TestCase):
         import numpy as np
         a = self.A(x=np.array([5.0, 10.0]))
         assert a.x == (5.0, 10.0)
+
+
+class TestOpacity(unittest.TestCase):
+
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.Opacity()
+        self.A = A
+
+    def test_default_value(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.Opacity(default_value=0.5)
+        a = A()
+        assert a.x == 0.5
+
+    def test_set_value(self):
+        a = self.A(x=0.3)
+        assert a.x == 0.3
+
+    def test_allow_none(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.Opacity(allow_none=True, default_value=None)
+        assert A().x is None
+        assert A(x=0.1).x == 0.1
+
+    def test_under_min(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=-1.0)
+
+    def test_over_max(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x=2.0)
+
+    def test_wrong_type(self):
+        with self.assertRaises(traitlets.TraitError):
+            self.A(x='not-a-float')

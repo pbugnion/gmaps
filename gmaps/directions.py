@@ -180,8 +180,8 @@ class Directions(GMapsWidgetMixin, widgets.Widget):
     show_route = Bool(default_value=True).tag(sync=True)
     stroke_color = geotraitlets.ColorAlpha(
         default_value=DEFAULT_STROKE_COLOR, allow_none=False).tag(sync=True)
-    stroke_opacity = Float(
-        min=0.0, max=1.0, default_value=0.6, allow_none=False).tag(sync=True)
+    stroke_opacity = geotraitlets.Opacity(
+        default_value=0.6, allow_none=False).tag(sync=True)
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=6.0).tag(sync=True)
 
