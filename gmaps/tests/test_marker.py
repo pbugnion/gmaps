@@ -4,9 +4,12 @@ import pytest
 
 import numpy as np
 
+import traitlets
+
 from ..marker import (
     MarkerOptions,
     Marker,
+    Symbol,
     _marker_layer_options,
     _symbol_layer_options
 )
@@ -247,3 +250,46 @@ class MarkerTest(unittest.TestCase):
         )
         assert not marker.display_info_box
         assert marker.info_box_content == 'test-content'
+
+
+class SymbolTest(unittest.TestCase):
+
+    def setUp(self):
+        self.location = (10.0, 5.0)
+
+    def test_defaults(self):
+        symbol = Symbol(self.location)
+        state = symbol.get_state()
+        assert state['fill_color'] is None
+        assert state['fill_opacity'] == 1.0
+        assert state['stroke_color'] is None
+        assert state['stroke_opacity'] == 1.0
+        assert state['scale'] == 4
+
+    def test_set_fill_opacity(self):
+        symbol = Symbol(self.location, fill_opacity=0.2)
+        assert symbol.get_state()['fill_opacity'] == 0.2
+        symbol.fill_opacity = 0.8
+        assert symbol.get_state()['fill_opacity'] == 0.8
+
+    def test_invalid_fill_opacity(self):
+        with self.assertRaises(traitlets.TraitError):
+            Symbol(self.location, fill_opacity=-0.2)
+        with self.assertRaises(traitlets.TraitError):
+            Symbol(self.location, fill_opacity=1.2)
+        with self.assertRaises(traitlets.TraitError):
+            Symbol(self.location, fill_opacity='not-a-float')
+
+    def test_set_stroke_opacity(self):
+        symbol = Symbol(self.location, stroke_opacity=0.2)
+        assert symbol.get_state()['stroke_opacity'] == 0.2
+        symbol.stroke_opacity = 0.8
+        assert symbol.get_state()['stroke_opacity'] == 0.8
+
+    def test_invalid_stroke_opacity(self):
+        with self.assertRaises(traitlets.TraitError):
+            Symbol(self.location, stroke_opacity=-0.2)
+        with self.assertRaises(traitlets.TraitError):
+            Symbol(self.location, stroke_opacity=1.2)
+        with self.assertRaises(traitlets.TraitError):
+            Symbol(self.location, stroke_opacity='not-a-float')

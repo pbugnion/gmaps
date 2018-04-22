@@ -115,11 +115,11 @@ class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
     fill_color = geotraitlets.ColorAlpha(
         allow_none=True, default_value=None
     ).tag(sync=True)
-    fill_opacity = Float(min=0.0, max=1.0, default_value=1.0).tag(sync=True)
+    fill_opacity = geotraitlets.Opacity(default_value=1.0).tag(sync=True)
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=True, default_value=None
     ).tag(sync=True)
-    stroke_opacity = Float(min=0.0, max=1.0, default_value=1.0).tag(sync=True)
+    stroke_opacity = geotraitlets.Opacity(default_value=1.0).tag(sync=True)
     scale = Int(
         default_value=4, allow_none=True, min=1
     ).tag(sync=True)
