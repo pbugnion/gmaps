@@ -2,6 +2,27 @@
 Release notes
 -------------
 
+Version 0.8.0
+=============
+
+This minor release:
+
+- Changes the directions layer widget to add the `start`, `end` and `waypoints`
+  traitlets. This deprecates the `data` traitlet, scheduled for removal in 0.9.0.
+  (PR 236).
+- The directions layer now reacts to changes in start, end and waypoints by 
+  re-calculating the route (PR 239)
+- The directions layer now supports styling the route (PR 247)
+- Errors in the direction layer are now shown in the error box, rather than as
+  an uncatchable exception (PR 242)
+- Errors authenticating result in an error message that replaces the map,
+  rather than the cryptic 'Oops, something went wrong' default that Google Maps
+  provides (PR 240)
+- Adds style to error box (PR 243)
+- Removes the deprecated `data` traitlet from the Heatmap and WeightedHeatmap
+  widgets. See PR 249 for a migration pathway. (PR 249)
+- Introduces the Opacity traitlet for encoding stroke and fill opacities (PR 248)
+
 Version 0.7.4
 =============
 
