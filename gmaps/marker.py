@@ -1,8 +1,6 @@
 
 import ipywidgets as widgets
-from traitlets import (
-    Unicode, Int, List, observe, HasTraits, Float, Bool
-)
+from traitlets import Unicode, Int, List, observe, HasTraits, Bool
 
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
