@@ -23,3 +23,7 @@ package-lock.json
 __pycache__
 
 *.ipynb
+
+.pytest_cache
+
+changelog.tmp
