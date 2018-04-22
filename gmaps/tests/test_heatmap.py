@@ -138,15 +138,6 @@ class TestHeatmap(unittest.TestCase):
     def setUp(self):
         self.locations = [(-5.0, 5.0), (10.0, 10.0)]
 
-    def test_set_data(self):
-        heatmap = Heatmap(data=self.locations)
-        assert heatmap.locations == self.locations
-
-    def test_change_data(self):
-        heatmap = Heatmap(locations=self.locations)
-        heatmap.data = self.locations * 2
-        assert heatmap.locations == self.locations * 2
-
     def test_set_locations_np_array(self):
         import numpy as np
         heatmap = Heatmap(locations=self.locations)
@@ -173,18 +164,6 @@ class TestWeightedHeatmap(unittest.TestCase):
             (-5.0, 5.0, 0.2),
             (10.0, 10.0, 0.5),
         ]
-
-    def test_set_data(self):
-        heatmap = WeightedHeatmap(data=self.merged_location_weights)
-        assert heatmap.locations == self.locations
-        assert heatmap.weights == self.weights
-
-    def test_change_data(self):
-        heatmap = WeightedHeatmap(
-            locations=self.locations, weights=self.weights)
-        heatmap.data = self.merged_location_weights * 2
-        assert heatmap.locations == self.locations * 2
-        assert heatmap.weights == self.weights * 2
 
     def test_non_float_weights(self):
         with self.assertRaises(traitlets.TraitError):

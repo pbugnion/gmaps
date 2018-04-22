@@ -1,6 +1,4 @@
 
-import warnings
-
 import ipywidgets as widgets
 from traitlets import (
     Float, Bool, Unicode, HasTraits, default, List, observe
@@ -51,13 +49,6 @@ _doc_snippets['options'] = """
         (100, 0, 0, 0.5).
     :type gradient: list of colors, optional
 """
-
-
-def _warn_obsolete_data():
-    warnings.warn(
-        'The "data" traitlet is deprecated, and will be '
-        'removed in jupyter-gmaps 0.8.0. '
-        'Use "locations" instead.', DeprecationWarning)
 
 
 # Mixin for options common to both heatmap and weighted heatmaps.
@@ -129,17 +120,10 @@ class Heatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _view_name = Unicode('SimpleHeatmapLayerView').tag(sync=True)
     _model_name = Unicode('SimpleHeatmapLayerModel').tag(sync=True)
 
-    data = List()
     locations = geotraitlets.LocationArray(
         allow_none=False, minlen=1
     ).tag(sync=True)
     data_bounds = List().tag(sync=True)
-
-    @observe('data')
-    def _on_data_change(self, change):
-        data = change['new']
-        _warn_obsolete_data()
-        self.locations = data
 
     @observe('locations')
     def _calc_bounds(self, change):
@@ -192,7 +176,6 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
     _view_name = Unicode('WeightedHeatmapLayerView').tag(sync=True)
     _model_name = Unicode('WeightedHeatmapLayerModel').tag(sync=True)
 
-    data = List()
     locations = geotraitlets.LocationArray(
         allow_none=False, minlen=1
     ).tag(sync=True)
@@ -200,13 +183,6 @@ class WeightedHeatmap(GMapsWidgetMixin, widgets.Widget, _HeatmapOptionsMixin):
         allow_none=False, minlen=1
     ).tag(sync=True)
     data_bounds = List().tag(sync=True)
-
-    @observe('data')
-    def _on_data_change(self, change):
-        data = change['new']
-        _warn_obsolete_data()
-        self.locations = [point[:2] for point in data]
-        self.weights = [point[2] for point in data]
 
     @observe('locations')
     def _calc_bounds(self, change):
