@@ -91,7 +91,6 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                 this._viewEvents(google);
 
                 this.layerViews.update(this.model.get('layers'));
-                this.map.setTilt(this.model.attributes.tilt)
 
                 // hack to force the map to redraw
                 setTimeout(() => {
@@ -113,7 +112,8 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
     readOptions(google) {
         const options = {
             mapTypeId: stringToMapType(google, this.model.get('map_type')),
-            gestureHandling: this.model.get('mouse_handling').toLowerCase()
+            gestureHandling: this.model.get('mouse_handling').toLowerCase(),
+            tilt: this.model.get('tilt')
         }
         return options
     }
@@ -126,6 +126,13 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                     google, this.model.get('map_type'))
                 this.setMapOptions({ mapTypeId })
             }
+        )
+
+        this.model.on(
+          'change:tilt',
+          () => {
+            this.setMapOptions({ tilt: this.model.get('tilt') })
+          }
         )
 
         this.model.on(
