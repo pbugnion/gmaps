@@ -185,6 +185,20 @@ class ZoomLevel(traitlets.Integer):
             self.error(obj, value)
 
 
+class Tilt(traitlets.Integer):
+    """
+    Integer representing a tilt degree allowed by Google Maps
+    """
+    info_text = 'tilt angle in degrees (either 0 or 45)'
+    default_value = 45
+
+    def validate(self, obj, value):
+        if value in {0, 45}:
+            return value
+        else:
+            self.error(obj, value)
+
+
 class ColorAlpha(traitlets.Union):
     """
     Trait representing a color that can be passed to Google maps.

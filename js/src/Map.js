@@ -91,6 +91,7 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                 this._viewEvents(google);
 
                 this.layerViews.update(this.model.get('layers'));
+                this.map.setTilt(this.model.attributes.tilt)
 
                 // hack to force the map to redraw
                 setTimeout(() => {

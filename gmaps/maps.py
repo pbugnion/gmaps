@@ -4,7 +4,7 @@ from traitlets import (Unicode, default, List, Tuple, Instance,
                        observe, Dict, HasTraits, Enum, Union)
 
 from .bounds import merge_longitude_bounds
-from .geotraitlets import Point, ZoomLevel, MapType, MouseHandling
+from .geotraitlets import Point, ZoomLevel, MapType, MouseHandling, Tilt
 from ._docutils import doc_subst
 from ._version import CLIENT_VERSION
 
@@ -194,6 +194,7 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     initial_viewport = InitialViewport(default_value='DATA_BOUNDS').tag(
             sync=True, to_json=_serialize_viewport)
     map_type = MapType('ROADMAP').tag(sync=True)
+    tilt = Tilt().tag(sync=True)
     mouse_handling = MouseHandling('COOPERATIVE').tag(sync=True)
 
     def add_layer(self, layer):

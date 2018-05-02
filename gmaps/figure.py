@@ -6,7 +6,7 @@ from traitlets import Unicode, Instance, default, link
 from .maps import (
     Map, InitialViewport, GMapsWidgetMixin, map_params_doc_snippets
 )
-from .geotraitlets import MapType, MouseHandling
+from .geotraitlets import MapType, MouseHandling, Tilt
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
 from ._docutils import doc_subst
@@ -40,6 +40,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
     map_type = MapType('ROADMAP')
+    tilt = Tilt()
     mouse_handling = MouseHandling('COOPERATIVE')
     layout = widgets.trait_types.InstanceDict(FigureLayout).tag(
         sync=True, **widgets.widget_serialization)
@@ -50,6 +51,10 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
         super(Figure, self).__init__(*args, **kwargs)
         self._map.map_type = self.map_type
         link((self._map, 'map_type'), (self, 'map_type'))
+
+        self._map.tilt = self.tilt
+        link((self._map, 'tilt'), (self, 'tilt'))
+
         self._map.mouse_handling = self.mouse_handling
         link((self._map, 'mouse_handling'), (self, 'mouse_handling'))
 
@@ -109,7 +114,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
 
 @doc_subst(map_params_doc_snippets)
 def figure(
-        display_toolbar=True, display_errors=True, zoom_level=None,
+        display_toolbar=True, display_errors=True, zoom_level=None, tilt=45,
         center=None, layout=None, map_type='ROADMAP',
         mouse_handling='COOPERATIVE'):
     """
@@ -132,6 +137,13 @@ def figure(
         By default, the zoom level is chosen to fit the data passed to the
         map. If specified, you must also specify the map center.
     :type zoom_level: int, optional
+
+    :param tilt:
+        Tilt can be either 0 or 45 indicating the tilt angle.
+
+        Keep in mind that 45 degree imagery is only available for satellite and
+        hybrid map types, and is not available at every location at every zoom level.
+    :type tilt: int, optional
 
     :param center:
         Latitude-longitude pair determining the map center.
@@ -179,6 +191,7 @@ def figure(
     To have a satellite map:
 
     >>> fig = gmaps.figure(map_type='HYBRID')
+
     """  # noqa: E501
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
@@ -202,6 +215,6 @@ def figure(
     _errors_box = ErrorsBox() if display_errors else None
     fig = Figure(
         _map=_map, _toolbar=_toolbar, _errors_box=_errors_box,
-        layout=layout, map_type=map_type,
+        layout=layout, map_type=map_type, tilt=tilt,
         mouse_handling=mouse_handling)
     return fig
