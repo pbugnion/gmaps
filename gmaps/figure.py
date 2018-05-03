@@ -139,11 +139,12 @@ def figure(
     :type zoom_level: int, optional
 
     :param tilt:
-        Tilt can be either 0 or 45 indicating the tilt angle.
-
-        45-degree imagery is only available for satellite and hybrid map types,
-        and is not available at every location at every zoom level. If 45-degree
-        imagery is not available, Google Maps will automatically fall back to 0 tilt.
+        Tilt can be either 0 or 45 indicating the tilt angle in
+        degrees.  45-degree imagery is only available for satellite
+        and hybrid map types, and is not available at every location
+        at every zoom level. For locations where 45-degree imagery is
+        not available, Google Maps will automatically fall back to 0
+        tilt.
     :type tilt: int, optional
 
     :param center:
