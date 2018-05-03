@@ -100,6 +100,18 @@ class TestFigureFactory(unittest.TestCase):
         fig = figure(map_type='SATELLITE')
         assert fig.map_type == 'SATELLITE'
 
+    def test_0_tilt(self):
+        fig = figure(tilt=0)
+        assert fig._map.tilt == 0
+
+    def test_45_tilt(self):
+        fig = figure(tilt=45)
+        assert fig._map.tilt == 45
+
+    def test_default_tilt(self):
+        fig = figure()
+        assert fig._map.tilt == 45
+
     def test_custom_mouse_handling(self):
         fig = figure(mouse_handling='NONE')
         assert fig.mouse_handling == 'NONE'
