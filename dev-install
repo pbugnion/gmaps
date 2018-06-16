@@ -23,7 +23,6 @@ set -e
 
 cd js
 npm install
-npm run build
 cd ..
 
 pip install -e .
