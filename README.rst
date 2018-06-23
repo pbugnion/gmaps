@@ -9,16 +9,16 @@ Let's plot a `heatmap <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#
 
 .. code:: python
 
-    In [1]: import gmaps
-            import gmaps.datasets
-            gmaps.configure(api_key="AI...") # Your Google API key
+    import gmaps
+    import gmaps.datasets
+    gmaps.configure(api_key="AI...") # Your Google API key
 
     # load a Numpy array of (latitude, longitude) pairs
-    In [2]: locations = gmaps.datasets.load_dataset("taxi_rides")
+    locations = gmaps.datasets.load_dataset("taxi_rides")
 
-    In [3]: fig = gmaps.figure()
-            fig.add_layer(gmaps.heatmap_layer(locations))
-            fig
+    fig = gmaps.figure()
+    fig.add_layer(gmaps.heatmap_layer(locations))
+    fig
 
 .. image:: docs/source/_images/taxi_example.png
 
@@ -26,61 +26,61 @@ We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedo
 
 .. code:: python
 
-    In [1]: from matplotlib.cm import viridis
-            from matplotlib.colors import to_hex
-            
-            import gmaps
-            import gmaps.datasets
-            import gmaps.geojson_geometries
-            
-            gmaps.configure(api_key="AI...") # Your Google API key
+    from matplotlib.cm import viridis
+    from matplotlib.colors import to_hex
 
-    In [2]: countries_geojson = gmaps.geojson_geometries.load_geometry('countries') # Load GeoJSON of countries
+    import gmaps
+    import gmaps.datasets
+    import gmaps.geojson_geometries
 
-    In [3]: rows = gmaps.datasets.load_dataset('gini') # 'rows' is a list of tuples
-            country2gini = dict(rows) # dictionary mapping 'country' -> gini coefficient
-            min_gini = min(country2gini.values())
-            max_gini = max(country2gini.values())
-            gini_range = max_gini - min_gini
+    gmaps.configure(api_key="AI...") # Your Google API key
 
-            def calculate_color(gini):
-                """
-                Convert the GINI coefficient to a color
-                """
-                # make gini a number between 0 and 1
-                normalized_gini = (gini - min_gini) / gini_range
+    countries_geojson = gmaps.geojson_geometries.load_geometry('countries') # Load GeoJSON of countries
 
-                # invert gini so that high inequality gives dark color
-                inverse_gini = 1.0 - normalized_gini
+    rows = gmaps.datasets.load_dataset('gini') # 'rows' is a list of tuples
+    country2gini = dict(rows) # dictionary mapping 'country' -> gini coefficient
+    min_gini = min(country2gini.values())
+    max_gini = max(country2gini.values())
+    gini_range = max_gini - min_gini
 
-                # transform the gini coefficient to a matplotlib color
-                mpl_color = viridis(inverse_gini)
+    def calculate_color(gini):
+        """
+        Convert the GINI coefficient to a color
+        """
+        # make gini a number between 0 and 1
+        normalized_gini = (gini - min_gini) / gini_range
 
-                # transform from a matplotlib color to a valid CSS color
-                gmaps_color = to_hex(mpl_color, keep_alpha=False)
+        # invert gini so that high inequality gives dark color
+        inverse_gini = 1.0 - normalized_gini
 
-                return gmaps_color
-    
-            # Calculate a color for each GeoJSON feature
-            colors = []
-            for feature in countries_geojson['features']:
-                country_name = feature['properties']['name']
-                try:
-                    gini = country2gini[country_name]
-                    color = calculate_color(gini)
-                except KeyError:
-                    # no GINI for that country: return default color
-                    color = (0, 0, 0, 0.3)
-                colors.append(color)
+        # transform the gini coefficient to a matplotlib color
+        mpl_color = viridis(inverse_gini)
 
-      In [4]: fig = gmaps.figure()
-              gini_layer = gmaps.geojson_layer(
-                  countries_geojson,
-                  fill_color=colors,
-                  stroke_color=colors,
-                  fill_opacity=0.8)
-              fig.add_layer(gini_layer)
-              fig
+        # transform from a matplotlib color to a valid CSS color
+        gmaps_color = to_hex(mpl_color, keep_alpha=False)
+
+        return gmaps_color
+
+    # Calculate a color for each GeoJSON feature
+    colors = []
+    for feature in countries_geojson['features']:
+        country_name = feature['properties']['name']
+        try:
+            gini = country2gini[country_name]
+            color = calculate_color(gini)
+        except KeyError:
+            # no GINI for that country: return default color
+            color = (0, 0, 0, 0.3)
+        colors.append(color)
+
+    fig = gmaps.figure()
+    gini_layer = gmaps.geojson_layer(
+        countries_geojson,
+        fill_color=colors,
+        stroke_color=colors,
+        fill_opacity=0.8)
+    fig.add_layer(gini_layer)
+    fig
 
 .. image:: docs/source/_images/geojson-2.png
 
@@ -88,17 +88,22 @@ Or, for coffee fans, a map of all Starbucks in the UK:
 
 .. code:: python
 
-    In [1]: import gmaps
-            import gmaps.datasets
-            gmaps.configure(api_key="AI...") # Your Google API key
+    import gmaps
+    import gmaps.datasets
+    gmaps.configure(api_key="AI...") # Your Google API key
 
-    In [2]: locations = gmaps.datasets.load_dataset("starbucks_uk")
+    df = gmaps.datasets.load_dataset_as_df('starbucks_kfc_uk')
 
-    In [3]: fig = gmaps.Map()
-            starbucks_layer = gmaps.symbol_layer(
-                locations, fill_color="green", stroke_color="green", scale=2)
-            fig.add_layer(starbucks_layer)
-            fig
+    starbucks_df = df[df['chain_name'] == 'starbucks']
+    starbucks_df = starbucks_df[['latitude', 'longitude']]
+
+    starbucks_layer = gmaps.symbol_layer(
+	starbucks_df, fill_color="green", stroke_color="green", scale=2
+    )
+    fig = gmaps.figure()
+    fig.add_layer(starbucks_layer)
+    fig
+
 
 .. image:: docs/source/_images/starbucks-symbols.png
 
