@@ -88,17 +88,22 @@ Or, for coffee fans, a map of all Starbucks in the UK:
 
 .. code:: python
 
-    In [1]: import gmaps
-            import gmaps.datasets
-            gmaps.configure(api_key="AI...") # Your Google API key
+    import gmaps
+    import gmaps.datasets
+    gmaps.configure(api_key="AI...") # Your Google API key
 
-    In [2]: locations = gmaps.datasets.load_dataset("starbucks_uk")
+    df = gmaps.datasets.load_dataset_as_df('starbucks_kfc_uk')
 
-    In [3]: fig = gmaps.Map()
-            starbucks_layer = gmaps.symbol_layer(
-                locations, fill_color="green", stroke_color="green", scale=2)
-            fig.add_layer(starbucks_layer)
-            fig
+    starbucks_df = df[df['chain_name'] == 'starbucks']
+    starbucks_df = starbucks_df[['latitude', 'longitude']]
+
+    starbucks_layer = gmaps.symbol_layer(
+	starbucks_df, fill_color="green", stroke_color="green", scale=2
+    )
+    fig = gmaps.figure()
+    fig.add_layer(starbucks_layer)
+    fig
+
 
 .. image:: docs/source/_images/starbucks-symbols.png
 
