@@ -192,6 +192,34 @@ class SymbolLayer(unittest.TestCase):
         display_infos = [opts["display_info_box"] for opts in marker_options]
         assert tuple(display_infos) == (True, False)
 
+    def test_opacity_default(self):
+        options = self._add_default_options()
+        symbol_options = _symbol_layer_options(self.locations, **options)
+        for opts in symbol_options:
+            assert opts['fill_opacity'] == 1.0
+            assert opts['stroke_opacity'] == 1.0
+
+    def test_opacity_single(self):
+        options = self._add_default_options(
+            fill_opacity=0.2, stroke_opacity=0.5)
+        symbol_options = _symbol_layer_options(self.locations, **options)
+        for opts in symbol_options:
+            assert opts['fill_opacity'] == 0.2
+            assert opts['stroke_opacity'] == 0.5
+
+    def test_opacity_list(self):
+        options = self._add_default_options(
+            fill_opacity=[0.2, 0.4], stroke_opacity=[0.6, 0.7])
+        symbol_options = _symbol_layer_options(self.locations, **options)
+        fill_opacity_options = [
+            opts["fill_opacity"] for opts in symbol_options
+        ]
+        stroke_opacity_options = [
+            opts["stroke_opacity"] for opts in symbol_options
+        ]
+        assert tuple(fill_opacity_options) == (0.2, 0.4)
+        assert tuple(stroke_opacity_options) == (0.6, 0.7)
+
 
 class MarkerOptionsTests(unittest.TestCase):
 
