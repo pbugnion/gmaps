@@ -26,10 +26,8 @@ class LocationArray(unittest.TestCase):
 
     def test_accept_dataframe(self):
         pd = pytest.importorskip('pandas')
-        df = pd.DataFrame.from_items([
-            ('latitude', [loc[0] for loc in self.locations]),
-            ('longitude', [loc[1] for loc in self.locations]),
-        ])
+        df = pd.DataFrame.from_records(
+            self.locations, columns=['latitude', 'longitude'])
         a = self.A(x=df)
         assert a.x == self.locations
 

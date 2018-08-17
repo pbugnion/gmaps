@@ -43,11 +43,11 @@ class HeatmapLayer(unittest.TestCase):
 
     def test_weighted_pandas_df(self):
         pd = pytest.importorskip('pandas')
-        df = pd.DataFrame.from_items([
-            ('latitude', [loc[0] for loc in self.locations]),
-            ('longitude', [loc[1] for loc in self.locations]),
-            ('weight', self.weights)
-        ])
+        df = pd.DataFrame.from_records([
+            (longitude, latitude, weight)
+            for ((longitude, latitude), weight)
+            in zip(self.locations, self.weights)
+        ], columns=['latitude', 'longitude', 'weight'])
         heatmap = heatmap_layer(
             df[['latitude', 'longitude']],
             weights=df['weight']
@@ -60,10 +60,8 @@ class HeatmapLayer(unittest.TestCase):
 
     def test_not_weighted_pandas_df(self):
         pd = pytest.importorskip('pandas')
-        df = pd.DataFrame.from_items([
-            ('latitude', [loc[0] for loc in self.locations]),
-            ('longitude', [loc[1] for loc in self.locations]),
-        ])
+        df = pd.DataFrame.from_records(
+            self.locations, columns=['latitude', 'longitude'])
         heatmap = heatmap_layer(df[['latitude', 'longitude']])
         state = heatmap.get_state()
         assert state['_view_name'] == 'SimpleHeatmapLayerView'
@@ -147,10 +145,10 @@ class TestHeatmap(unittest.TestCase):
     def test_set_locations_dataframe(self):
         pd = pytest.importorskip('pandas')
         heatmap = Heatmap(locations=self.locations)
-        df = pd.DataFrame.from_items([
-            ('latitude', [loc[0] for loc in self.locations * 2]),
-            ('longitude', [loc[1] for loc in self.locations * 2]),
-        ])
+        df = pd.DataFrame.from_records(
+            self.locations * 2,
+            columns=['longitude', 'latitude']
+        )
         heatmap.locations = df
         assert heatmap.locations == self.locations * 2
 
