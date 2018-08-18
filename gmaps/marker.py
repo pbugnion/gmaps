@@ -224,6 +224,8 @@ def _symbol_layer_options(
         'hover_text': hover_text,
         'fill_color': fill_color,
         'stroke_color': stroke_color,
+        'fill_opacity': fill_opacity,
+        'stroke_opacity': stroke_opacity,
         'scale': scale
     }
 
