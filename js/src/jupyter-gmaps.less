@@ -43,6 +43,7 @@
     padding-top: 2px;
     padding-bottom: 2px;
     border-radius: 4px;
+    cursor: pointer;
     -webkit-appearance: none;
 
     &.active, &:active {
@@ -68,9 +69,17 @@
   .notification-widget {
     height: 26px;
     width: auto;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
     margin-right: 0px;
+    font-size: 12px;
+    line-height: 1.5;
+
+    &.warning {
+      background-color: #f0ad4e;
+      border-color: #eea236;
+      color: #fff;
+    }
   }
 
   .additional-controls-container {
