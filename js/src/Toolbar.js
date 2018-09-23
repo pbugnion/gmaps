@@ -35,7 +35,7 @@ export class ToolbarView extends widgets.DOMWidgetView {
 
         const $saveButton = $('<button />')
         $saveButton
-            .addClass('btn btn-default')
+            .addClass('gmaps-toolbar-btn')
             .attr('title', 'Download the map as PNG')
             .append('<i />')
             .addClass('fa fa-download');
