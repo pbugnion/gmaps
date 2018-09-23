@@ -69,17 +69,23 @@
   .notification-widget {
     height: 26px;
     width: auto;
+    display: inline-block;
+    box-sizing: border-box;
     margin-top: 0;
     margin-bottom: 0;
     margin-right: 0px;
     font-size: 12px;
     line-height: 1.5;
+    border-radius: 4px;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 4px;
+    padding-bottom: 1px;
 
-    &.warning {
-      background-color: #f0ad4e;
-      border-color: #eea236;
-      color: #fff;
-    }
+    background-color: #f0ad4e;
+    border-color: #eea236;
+    color: #fff;
+    border-radius: 4px;
   }
 
   .additional-controls-container {

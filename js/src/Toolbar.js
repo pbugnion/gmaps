@@ -47,10 +47,9 @@ export class ToolbarView extends widgets.DOMWidgetView {
         $notificationArea
             .addClass("notification-area");
 
-        const $savingNotification = $("<button />")
+        const $savingNotification = $("<span />")
         $savingNotification
-            .addClass("notification_widget btn")
-            .addClass("warning notification-widget")
+            .addClass("notification-widget")
             .html("<span>Downloading</span>")
             .hide();
 
