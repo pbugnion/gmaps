@@ -480,7 +480,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
     _createLayout() {
         const $container = $('<span />')
         $container
-            .addClass('btn-group')
+            .addClass('gmaps-toolbar-btn-group')
             .attr('data-toggle', 'buttons');
 
         const $disableButton = this._createModeButton(
@@ -541,7 +541,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
     _createModeButton(icon, hoverText) {
         const $button = $('<button />')
         $button
-            .addClass('btn btn-default')
+            .addClass('gmaps-toolbar-btn')
             .attr('title', hoverText)
             .append('<i />')
             .addClass(`${icon}`)

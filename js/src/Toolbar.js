@@ -8,8 +8,8 @@ export class ToolbarModel extends widgets.DOMWidgetModel {
         return {
             ...super.defaults(),
             ...defaultAttributes,
-            _model_name: "ToolbarModel",
-            _view_name: "ToolbarView",
+            _model_name: 'ToolbarModel',
+            _view_name: 'ToolbarView',
             layer_controls: [],
         }
     }
@@ -25,43 +25,42 @@ export class ToolbarView extends widgets.DOMWidgetView {
     render() {
         this.$el.addClass('gmaps-toolbar-container')
 
-        const $toolbar = $("<div />");
+        const $toolbar = $('<div />');
         $toolbar
-            .addClass("gmaps-toolbar toolbar-inner navbar-inner");
+            .addClass('gmaps-toolbar toolbar-inner navbar-inner');
 
-        const $toolbarContainer = $("<div />")
+        const $toolbarContainer = $('<div />')
         $toolbarContainer
-            .addClass("toolbar");
+            .addClass('toolbar');
 
-        const $saveButton = $("<button />")
+        const $saveButton = $('<button />')
         $saveButton
-            .addClass("btn btn-default")
-            .attr("title", "Download the map as PNG")
-            .append("<i />")
-            .addClass("fa fa-download");
+            .addClass('gmaps-toolbar-btn')
+            .attr('title', 'Download the map as PNG')
+            .append('<i />')
+            .addClass('fa fa-download');
 
         this.$additionalControlsContainer = $('<div />')
         this.$additionalControlsContainer.addClass('additional-controls-container')
 
-        const $notificationArea = $("<span />");
+        const $notificationArea = $('<span />');
         $notificationArea
-            .addClass("notification-area");
+            .addClass('notification-area');
 
-        const $savingNotification = $("<button />")
+        const $savingNotification = $('<span />')
         $savingNotification
-            .addClass("notification_widget btn btn-xs navbar-btn")
-            .addClass("warning notification-widget")
-            .html("<span>Downloading</span>")
+            .addClass('notification-widget')
+            .html('<span>Downloading</span>')
             .hide();
 
         $saveButton
             .click((event) => {
                 event.preventDefault();
-                $saveButton.prop("disabled", true)
+                $saveButton.prop('disabled', true)
                 $savingNotification.show()
                 if (this.savePngCallback) {
                     this.savePngCallback().then(() => {
-                        $saveButton.prop("disabled", false)
+                        $saveButton.prop('disabled', false)
                         $savingNotification.hide();
                     });
                 };

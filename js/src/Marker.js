@@ -8,8 +8,8 @@ export class SymbolModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
-            _view_name: "SymbolView",
-            _model_name: "SymbolModel"
+            _view_name: 'SymbolView',
+            _model_name: 'SymbolModel'
         }
     }
 }
@@ -19,8 +19,8 @@ export class MarkerModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
-            _view_name: "MarkerView",
-            _model_name: "MarkerModel"
+            _view_name: 'MarkerView',
+            _model_name: 'MarkerModel'
         }
     }
 }
@@ -30,8 +30,8 @@ export class MarkerLayerModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
-            _view_name: "MarkerLayerView",
-            _model_name: "MarkerLayerModel"
+            _view_name: 'MarkerLayerView',
+            _model_name: 'MarkerLayerModel'
         }
     }
 
@@ -52,8 +52,8 @@ export class MarkerLayerModel extends GMapsLayerModel {
  */
 class BaseMarkerView extends widgets.WidgetView {
     render() {
-        const [lat, lng] = this.model.get("location")
-        const title = this.model.get("hover_text")
+        const [lat, lng] = this.model.get('location')
+        const title = this.model.get('hover_text')
         const styleOptions = this.getStyleOptions()
         const markerOptions = {
             position: {lat, lng},
@@ -80,12 +80,12 @@ class BaseMarkerView extends widgets.WidgetView {
     }
 
     displayInfoBox() {
-        return this.model.get("display_info_box");
+        return this.model.get('display_info_box');
     }
 
     renderInfoBox() {
         const infoBox = new google.maps.InfoWindow({
-            content: this.model.get("info_box_content")
+            content: this.model.get('info_box_content')
         });
         return infoBox ;
     }
@@ -94,7 +94,7 @@ class BaseMarkerView extends widgets.WidgetView {
         this.restoreClickable();
         if (this.displayInfoBox()) {
             this.infoBoxListener = this.marker.addListener(
-                "click",
+                'click',
                 () => { this.infoBox.open(this.mapView.map, this.marker) }
             )
         }
@@ -148,7 +148,7 @@ class BaseMarkerView extends widgets.WidgetView {
             this.model.on(`change:${nameInModel}`, callback, this)
         })
 
-        this.model.on("change:display_info_box", () => {
+        this.model.on('change:display_info_box', () => {
             this.toggleInfoBoxListener()
         }, this)
 
@@ -159,11 +159,11 @@ class BaseMarkerView extends widgets.WidgetView {
 export class SymbolView extends BaseMarkerView {
 
     getStyleOptions() {
-        const fillColor = this.model.get("fill_color")
-        const strokeColor = this.model.get("stroke_color")
-        const fillOpacity = this.model.get("fill_opacity")
-        const strokeOpacity = this.model.get("stroke_opacity")
-        const scale = this.model.get("scale")
+        const fillColor = this.model.get('fill_color')
+        const strokeColor = this.model.get('stroke_color')
+        const fillOpacity = this.model.get('fill_opacity')
+        const strokeOpacity = this.model.get('stroke_opacity')
+        const scale = this.model.get('scale')
         return {
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
@@ -200,7 +200,7 @@ export class MarkerView extends BaseMarkerView {
 
     getStyleOptions() {
         this.modelEvents()
-        const label = this.model.get("label")
+        const label = this.model.get('label')
         return { label }
     }
 
@@ -230,7 +230,7 @@ export class MarkerLayerView extends GMapsLayerView {
 
     render() {
         this.markerViews = new widgets.ViewList(this.addMarker, null, this)
-        this.markerViews.update(this.model.get("markers"))
+        this.markerViews.update(this.model.get('markers'))
     }
 
     // No need to do anything here since the markers are added

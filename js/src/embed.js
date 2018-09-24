@@ -6,5 +6,4 @@
 
 export * from './index'
 
-require('bootstrap/dist/css/bootstrap.min.css')  // Ensure bootstrap is present when embedding
 require('./jupyter-gmaps-embed.less')
