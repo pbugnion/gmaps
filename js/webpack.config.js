@@ -3,15 +3,15 @@ var version = require('./package.json').version;
 // Custom webpack loaders are generally the same for all webpack bundles, hence
 // stored in a separate local variable.
 var loaders = [
-    { test: /\.css$/, loader: "style-loader!css-loader" },
-    { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
+    { test: /\.css$/, loader: 'style-loader!css-loader' },
+    { test: /\.less$/, loader: 'style-loader!css-loader!less-loader' },
     { test: /\.json$/, loader: 'json-loader' },
     { test: /\.js$/, loader: 'babel-loader', query: {presets: ['es2015', 'stage-0']}, exclude: /node_modules/ },
-    { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&mimetype=application/octet-stream" },
-    { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&mimetype=image/svg+xml" },
-    { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-    { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url-loader?limit=10000&mimetype=application/font-woff" },
-    { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader" },
+    { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream' },
+    { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml' },
+    { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
+    { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
+    { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader' },
 ];
 
 
