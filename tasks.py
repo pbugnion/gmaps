@@ -41,7 +41,7 @@ def prerelease(ctx, version):
     '''
     set_pyversion(version)
     set_jsversion(version)
-    run('python setup.py sdist upload')
+    release_python_sdist()
     os.chdir(os.path.join(GMAPS_DIR, 'js'))
     try:
         run('npm publish')
@@ -75,7 +75,7 @@ def release(ctx, version):
     run('git commit -m "Add release notes for version {}"'.format(version))
     set_pyversion(version)
     set_jsversion(version)
-    run('python setup.py sdist bdist upload')
+    release_python_sdist()
     os.chdir(os.path.join(GMAPS_DIR, 'js'))
     try:
         run('npm publish')
@@ -157,6 +157,12 @@ def update_release_notes(version, new_lines):
     ] + new_lines + list(current_release_notes_lines)
     with open(release_notes_path, 'w') as f:
         f.writelines(new_release_notes_lines)
+
+
+def release_python_sdist():
+    run('rm dist/*')
+    run('python setup.py sdist')
+    run('twine upload dist/*')
 
 
 def get_release_notes(version):
