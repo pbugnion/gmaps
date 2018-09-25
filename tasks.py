@@ -160,15 +160,14 @@ def update_release_notes(version, new_lines):
 
 
 def get_release_notes(version):
-    version_info = semver.parse_version_info(version)
-    version_string = semver.format_version(*version_info)
-    underline = '=' * len('Version {}'.format(version_string))
+    version = normalize_version(version)
+    underline = '=' * len('Version {}'.format(version))
     initial_message = RELEASE_NOTES_TEMPLATE.format(
-        version_string=version_string, underline=underline)
+        version_string=version, underline=underline)
     lines = open_editor(initial_message)
     non_commented_lines = [line for line in lines if not line.startswith('#')]
     changelog = ''.join(non_commented_lines)
-    if version_string in changelog:
+    if version in changelog:
         if not non_commented_lines[-1].isspace():
             non_commented_lines.append('\n')
         return non_commented_lines
@@ -177,21 +176,19 @@ def get_release_notes(version):
 
 
 def set_pyversion(version):
-    version_info = semver.parse_version_info(version)
-    version_string = semver.format_version(*version_info)
+    version = normalize_version(version)
     with open(os.path.join(GMAPS_DIR, 'gmaps', '_version.py'), 'w') as f:
-        f.write(VERSION_TEMPLATE.format(version_string=version_string))
+        f.write(VERSION_TEMPLATE.format(version_string=version))
 
 
 def set_jsversion(version):
-    version_info = semver.parse_version_info(version)
-    version_string = semver.format_version(*version_info)
+    version = normalize_version(version)
     package_json_path = os.path.join(GMAPS_DIR, 'js', 'package.json')
     with open(package_json_path) as f:
         package_json = f.readlines()
     for iline, line in enumerate(package_json):
         if '"version"' in line:
-            package_json[iline] = '  "version": "{}",\n'.format(version_string)
+            package_json[iline] = '  "version": "{}",\n'.format(version)
     with open(package_json_path, 'w') as f:
         f.writelines(package_json)
 
@@ -255,3 +252,9 @@ def replace_line(lines, regexp, new_line):
     updated_lines = lines[:]
     updated_lines[iline] = new_line
     return updated_lines
+
+
+def normalize_version(version):
+    version_info = semver.parse_version_info(version)
+    version_string = str(version_info)
+    return version_string
