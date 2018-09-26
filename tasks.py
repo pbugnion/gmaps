@@ -160,7 +160,7 @@ def update_release_notes(version, new_lines):
 
 
 def release_python_sdist():
-    run('rm dist/*')
+    run('rm -f dist/*')
     run('python setup.py sdist')
     run('twine upload dist/*')
 
