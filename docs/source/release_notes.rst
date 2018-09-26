@@ -2,6 +2,16 @@
 Release notes
 -------------
 
+Version 0.8.1
+=============
+
+This release:
+- adds the tilt option to maps (PR 253).
+- fixes passing tilt and stroke opacity attributes to heatmap (PR 263).
+- fixes an issue on JupyterLab where the color of output cells was 
+  changed to grey when built with jupyter-gmaps (PR 268).
+- updates the release process to use twine (PR 269).
+
 Version 0.8.0
 =============
 
