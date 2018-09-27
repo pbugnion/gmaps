@@ -121,16 +121,6 @@ This release adds two minor features:
 It also makes the following non-breaking changes:
  - Refactor JS to use ES6 classes.
 
-Version 0.5.3
-=============
-
-This release adds two minor features:
- - The directions layer can be customised, in particular how the route is calculated ([PR 153](https://github.com/pbugnion/gmaps/pull/153))
- - The user can explicitly set the map zoom and center ([PR 154](https://github.com/pbugnion/gmaps/pull/154))
-
-It also makes the following non-breaking changes:
- - Refactor JS to use ES6 classes.
-
 Version 0.5.2
 =============
 
