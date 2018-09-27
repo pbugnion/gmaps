@@ -5,7 +5,8 @@ Release notes
 Version 0.8.1 - 26th September 2018
 ===================================
 
-This release:
+This minor release:
+
 - adds the tilt option to maps (PR 253).
 - fixes passing tilt and stroke opacity attributes to heatmap (PR 263).
 - fixes an issue on JupyterLab where the color of output cells was 
