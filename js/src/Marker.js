@@ -9,7 +9,10 @@ export class SymbolModel extends GMapsLayerModel {
         return {
             ...super.defaults(),
             _view_name: 'SymbolView',
-            _model_name: 'SymbolModel'
+            _model_name: 'SymbolModel',
+            fill_opacity: 1.0,
+            stroke_opacity: 1.0,
+            scale: 4
         }
     }
 }
