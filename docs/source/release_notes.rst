@@ -2,6 +2,14 @@
 Release notes
 -------------
 
+Version 0.8.2
+=============
+
+This minor release fixes an issue where the fill color,
+stroke color or scale were not respected when embedding
+a map as HTML if they were exactly on the default value
+in the Python layer (PR 276).
+
 Version 0.8.1 - 26th September 2018
 ===================================
 
