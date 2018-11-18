@@ -1,8 +1,6 @@
-
 import * as widgets from '@jupyter-widgets/base';
 
-import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
-
+import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer';
 
 export class SymbolModel extends GMapsLayerModel {
     defaults() {
@@ -12,38 +10,35 @@ export class SymbolModel extends GMapsLayerModel {
             _model_name: 'SymbolModel',
             fill_opacity: 1.0,
             stroke_opacity: 1.0,
-            scale: 4
-        }
+            scale: 4,
+        };
     }
 }
-
 
 export class MarkerModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
             _view_name: 'MarkerView',
-            _model_name: 'MarkerModel'
-        }
+            _model_name: 'MarkerModel',
+        };
     }
 }
-
 
 export class MarkerLayerModel extends GMapsLayerModel {
     defaults() {
         return {
             ...super.defaults(),
             _view_name: 'MarkerLayerView',
-            _model_name: 'MarkerLayerModel'
-        }
+            _model_name: 'MarkerLayerModel',
+        };
     }
 
     static serializers = {
         ...widgets.DOMWidgetModel.serializers,
-        markers: {deserialize: widgets.unpack_models}
-    }
+        markers: {deserialize: widgets.unpack_models},
+    };
 }
-
 
 /* Base class for markers.
  * This sets options common to the different types of markers.
@@ -55,21 +50,21 @@ export class MarkerLayerModel extends GMapsLayerModel {
  */
 class BaseMarkerView extends widgets.WidgetView {
     render() {
-        const [lat, lng] = this.model.get('location')
-        const title = this.model.get('hover_text')
-        const styleOptions = this.getStyleOptions()
+        const [lat, lng] = this.model.get('location');
+        const title = this.model.get('hover_text');
+        const styleOptions = this.getStyleOptions();
         const markerOptions = {
             position: {lat, lng},
             draggable: false,
             title,
-            ...styleOptions
-        }
-        this.marker = new google.maps.Marker(markerOptions)
-        this.infoBox = this.renderInfoBox()
+            ...styleOptions,
+        };
+        this.marker = new google.maps.Marker(markerOptions);
+        this.infoBox = this.renderInfoBox();
         this.restoreClickable();
         this.infoBoxListener = null;
         this.mapView = null;
-        this.modelEvents()
+        this.modelEvents();
         this.marker.addListener('click', event => this.trigger('click'));
     }
 
@@ -88,22 +83,20 @@ class BaseMarkerView extends widgets.WidgetView {
 
     renderInfoBox() {
         const infoBox = new google.maps.InfoWindow({
-            content: this.model.get('info_box_content')
+            content: this.model.get('info_box_content'),
         });
-        return infoBox ;
+        return infoBox;
     }
 
     toggleInfoBoxListener() {
         this.restoreClickable();
         if (this.displayInfoBox()) {
-            this.infoBoxListener = this.marker.addListener(
-                'click',
-                () => { this.infoBox.open(this.mapView.map, this.marker) }
-            )
-        }
-        else {
+            this.infoBoxListener = this.marker.addListener('click', () => {
+                this.infoBox.open(this.mapView.map, this.marker);
+            });
+        } else {
             if (this.infoBoxListener !== null) {
-                this.infoBoxListener.remove()
+                this.infoBoxListener.remove();
             }
         }
     }
@@ -124,49 +117,42 @@ class BaseMarkerView extends widgets.WidgetView {
 
     modelEvents() {
         // Simple properties:
-        const properties = [
-            ['title', 'hover_text']
-        ]
+        const properties = [['title', 'hover_text']];
 
         properties.forEach(([nameInView, nameInModel]) => {
-            const callback = (
-                () => {
-                  this.marker.set(
-                  nameInView, this.model.get(nameInModel))
-                }
-            )
-            this.model.on(`change:${nameInModel}`, callback, this)
-        })
+            const callback = () => {
+                this.marker.set(nameInView, this.model.get(nameInModel));
+            };
+            this.model.on(`change:${nameInModel}`, callback, this);
+        });
 
-        const infoBoxProperties = [
-            ['content', 'info_box_content']
-        ]
+        const infoBoxProperties = [['content', 'info_box_content']];
         infoBoxProperties.forEach(([nameInView, nameInModel]) => {
-            const callback = (
-                () => {
-                    this.infoBox.set(
-                    nameInView, this.model.get(nameInModel))
-                }
-            )
-            this.model.on(`change:${nameInModel}`, callback, this)
-        })
+            const callback = () => {
+                this.infoBox.set(nameInView, this.model.get(nameInModel));
+            };
+            this.model.on(`change:${nameInModel}`, callback, this);
+        });
 
-        this.model.on('change:display_info_box', () => {
-            this.toggleInfoBoxListener()
-        }, this)
+        this.model.on(
+            'change:display_info_box',
+            () => {
+                this.toggleInfoBoxListener();
+            },
+            this
+        );
 
-        this.setStyleEvents()
+        this.setStyleEvents();
     }
 }
 
 export class SymbolView extends BaseMarkerView {
-
     getStyleOptions() {
-        const fillColor = this.model.get('fill_color')
-        const strokeColor = this.model.get('stroke_color')
-        const fillOpacity = this.model.get('fill_opacity')
-        const strokeOpacity = this.model.get('stroke_opacity')
-        const scale = this.model.get('scale')
+        const fillColor = this.model.get('fill_color');
+        const strokeColor = this.model.get('stroke_color');
+        const fillOpacity = this.model.get('fill_opacity');
+        const strokeOpacity = this.model.get('stroke_opacity');
+        const scale = this.model.get('scale');
         return {
             icon: {
                 path: google.maps.SymbolPath.CIRCLE,
@@ -174,9 +160,9 @@ export class SymbolView extends BaseMarkerView {
                 fillColor,
                 strokeColor,
                 fillOpacity,
-                strokeOpacity
-            }
-        }
+                strokeOpacity,
+            },
+        };
     }
 
     setStyleEvents() {
@@ -185,45 +171,36 @@ export class SymbolView extends BaseMarkerView {
             ['fillColor', 'fill_color'],
             ['scale', 'scale'],
             ['stroke_opacity', 'stroke_opacity'],
-            ['fillOpacity', 'fill_opacity']
-        ]
+            ['fillOpacity', 'fill_opacity'],
+        ];
         iconProperties.forEach(([nameInView, nameInModel]) => {
-            const callback = ( () => {
-                const newIcon = Object.assign({}, this.marker.getIcon())
-                newIcon[nameInView] = this.model.get(nameInModel)
-                this.marker.setIcon(newIcon)
-            })
-            this.model.on(`change:${nameInModel}`, callback, this)
-        })
+            const callback = () => {
+                const newIcon = Object.assign({}, this.marker.getIcon());
+                newIcon[nameInView] = this.model.get(nameInModel);
+                this.marker.setIcon(newIcon);
+            };
+            this.model.on(`change:${nameInModel}`, callback, this);
+        });
     }
 }
 
-
 export class MarkerView extends BaseMarkerView {
-
     getStyleOptions() {
-        this.modelEvents()
-        const label = this.model.get('label')
-        return { label }
+        this.modelEvents();
+        const label = this.model.get('label');
+        return {label};
     }
 
     setStyleEvents() {
-        const properties = [
-            ['label', 'label']
-        ]
+        const properties = [['label', 'label']];
         properties.forEach(([nameInView, nameInModel]) => {
-            const callback = (
-                () => {
-                  this.marker.set(
-                  nameInView, this.model.get(nameInModel))
-                }
-            )
-            this.model.on(`change:${nameInModel}`, callback, this)
-        })
+            const callback = () => {
+                this.marker.set(nameInView, this.model.get(nameInModel));
+            };
+            this.model.on(`change:${nameInModel}`, callback, this);
+        });
     }
-
 }
-
 
 export class MarkerLayerView extends GMapsLayerView {
     constructor(options) {
@@ -232,19 +209,18 @@ export class MarkerLayerView extends GMapsLayerView {
     }
 
     render() {
-        this.markerViews = new widgets.ViewList(this.addMarker, null, this)
-        this.markerViews.update(this.model.get('markers'))
+        this.markerViews = new widgets.ViewList(this.addMarker, null, this);
+        this.markerViews.update(this.model.get('markers'));
     }
 
     // No need to do anything here since the markers are added
     // when they are deserialized
-    addToMapView(mapView) { }
+    addToMapView(mapView) {}
 
     addMarker(childModel) {
-        return this.create_child_view(childModel)
-            .then((childView) => {
-                childView.addToMapView(this.mapView)
-                return childView
-            })
+        return this.create_child_view(childModel).then(childView => {
+            childView.addToMapView(this.mapView);
+            return childView;
+        });
     }
 }

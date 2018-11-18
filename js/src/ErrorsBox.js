@@ -1,6 +1,6 @@
 import * as widgets from '@jupyter-widgets/base';
-import { defaultAttributes } from './defaults'
-import { mapEventTypes } from './MapEvents'
+import {defaultAttributes} from './defaults';
+import {mapEventTypes} from './MapEvents';
 
 import $ from 'jquery';
 
@@ -11,20 +11,17 @@ export class ErrorsBoxModel extends widgets.DOMWidgetModel {
             ...defaultAttributes,
             _model_name: 'ErrorsBoxModel',
             _view_name: 'ErrorsBoxView',
-            errors: []
+            errors: [],
         };
     }
 
     subscribeToMap(mapEvents) {
-        mapEvents.on(
-            mapEventTypes.MAP_DOWNLOAD_ERROR,
-            ({ errorMessage }) => this.addError(errorMessage)
-        )
-        mapEvents.on(
-            mapEventTypes.LAYER_ERROR,
-            ({layerName, errorMessage}) =>
-                this.addError(`[${layerName} layer] ${errorMessage}`)
-        )
+        mapEvents.on(mapEventTypes.MAP_DOWNLOAD_ERROR, ({errorMessage}) =>
+            this.addError(errorMessage)
+        );
+        mapEvents.on(mapEventTypes.LAYER_ERROR, ({layerName, errorMessage}) =>
+            this.addError(`[${layerName} layer] ${errorMessage}`)
+        );
     }
 
     addError(errorMessage) {
@@ -38,24 +35,26 @@ export class ErrorsBoxModel extends widgets.DOMWidgetModel {
         this.set('errors', currentErrors);
         this.save_changes();
     }
-};
-
+}
 
 export class ErrorsBoxView extends widgets.DOMWidgetView {
     render() {
-        this.$el.addClass('gmaps-errors-box-container')
-        this._renderErrors()
-        this.model.on('change:errors', () => this._renderErrors())
+        this.$el.addClass('gmaps-errors-box-container');
+        this._renderErrors();
+        this.model.on('change:errors', () => this._renderErrors());
     }
 
     _renderErrors() {
-        const errorContainer = $('<ul />').addClass('gmaps-error-box')
-        this.model.get('errors').map(
-            (message, ierror) =>
-                $(`<li class="errors-box-well"><pre>${message}</pre></li>`)
-                    .click(() => this.model.removeError(ierror))
-        ).forEach(element => errorContainer.append(element))
+        const errorContainer = $('<ul />').addClass('gmaps-error-box');
+        this.model
+            .get('errors')
+            .map((message, ierror) =>
+                $(
+                    `<li class="errors-box-well"><pre>${message}</pre></li>`
+                ).click(() => this.model.removeError(ierror))
+            )
+            .forEach(element => errorContainer.append(element));
         this.$el.empty(); // Clear the current state
         this.$el.append(errorContainer);
     }
-};
+}

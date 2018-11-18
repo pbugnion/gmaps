@@ -1,38 +1,36 @@
-
 import * as widgets from '@jupyter-widgets/base';
-import $ from 'jquery'
-import _ from 'underscore'
+import $ from 'jquery';
+import _ from 'underscore';
 
-import { Store } from './Store';
-import { Dispatcher } from 'flux'
+import {Store} from './Store';
+import {Dispatcher} from 'flux';
 
 import GoogleMapsLoader from 'google-maps';
 
-import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer';
-import { defaultAttributes } from './defaults'
-import { latLngToArray } from './services/googleConverters'
-import { newEventBus } from './services/eventBus'
-
+import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer';
+import {defaultAttributes} from './defaults';
+import {latLngToArray} from './services/googleConverters';
+import {newEventBus} from './services/eventBus';
 
 class DrawingStore extends Store {
     areEqual(firstState, secondState) {
-        return _.isEqual(firstState, secondState)
+        return _.isEqual(firstState, secondState);
     }
 
     reduce(prevState, action) {
         switch (action.type) {
             case 'MODE_CHANGED': {
-                const { mode } = action.payload
-                const newState = { ...prevState, mode }
+                const {mode} = action.payload;
+                const newState = {...prevState, mode};
                 return newState;
             }
             case 'SHOW_CONTROLS_CHANGED': {
-                const { showControls } = action.payload
-                const newState = { ...prevState, showControls }
-                return newState
+                const {showControls} = action.payload;
+                const newState = {...prevState, showControls};
+                return newState;
             }
             default:
-                return prevState
+                return prevState;
         }
     }
 }
@@ -40,18 +38,16 @@ class DrawingStore extends Store {
 // Action creators for changing the store
 class DrawingActions {
     static modeChange(mode) {
-        return { type: 'MODE_CHANGED', payload: { mode } };
+        return {type: 'MODE_CHANGED', payload: {mode}};
     }
 
     static showControlsChange(showControls) {
         return {
             type: 'SHOW_CONTROLS_CHANGED',
-            payload: { showControls }
+            payload: {showControls},
         };
     }
-
 }
-
 
 // Messages for changing the backend state
 class DrawingMessages {
@@ -61,8 +57,8 @@ class DrawingMessages {
             payload: {
                 featureType: 'MARKER',
                 latitude,
-                longitude
-            }
+                longitude,
+            },
         };
         return payload;
     }
@@ -73,10 +69,10 @@ class DrawingMessages {
             payload: {
                 featureType: 'LINE',
                 start,
-                end
-            }
-        }
-        return payload
+                end,
+            },
+        };
+        return payload;
     }
 
     static newPolygon(path) {
@@ -84,38 +80,36 @@ class DrawingMessages {
             event: 'FEATURE_ADDED',
             payload: {
                 featureType: 'POLYGON',
-                path
-            }
-        }
-        return payload ;
+                path,
+            },
+        };
+        return payload;
     }
 
     static deleteFeature(modelId) {
         const payload = {
             event: 'FEATURE_DELETED',
             payload: {
-                modelId
-            }
-        }
-        return payload
+                modelId,
+            },
+        };
+        return payload;
     }
 
     static modeChange(mode) {
         const payload = {
             event: 'MODE_CHANGED',
-            payload: { mode }
-        }
+            payload: {mode},
+        };
         return payload;
     }
 }
 
-
 export class DrawingLayerModel extends GMapsLayerModel {
-
     initialize(attributes, options) {
         super.initialize(attributes, options);
         this.dispatcher = new Dispatcher();
-        const initialState = this._initialStoreState(attributes)
+        const initialState = this._initialStoreState(attributes);
         this.store = new DrawingStore(initialState, this.dispatcher);
         this.store.addListener(() => this._onStoreChange());
         this._initializeControls();
@@ -125,33 +119,30 @@ export class DrawingLayerModel extends GMapsLayerModel {
     _initialStoreState(attributes) {
         return {
             mode: attributes.mode,
-            showControls: attributes.toolbar_controls.get('show_controls')
-        }
+            showControls: attributes.toolbar_controls.get('show_controls'),
+        };
     }
 
     // Handle changes made in the Python layer,
     // propagating them to the store if necessary
     _bindModelEvents() {
-        this.on(
-            'change:toolbar_controls',
-            () => this._initializeControls()
-        );
+        this.on('change:toolbar_controls', () => this._initializeControls());
         this.on('change:mode', () => {
             const mode = this.get('mode');
             this.dispatcher.dispatch(DrawingActions.modeChange(mode));
-        })
+        });
     }
 
     _initializeControls() {
         const controls = this.get('toolbar_controls');
         if (controls) {
             controls.set('dispatcher', this.dispatcher);
-            controls.set('store', this.store)
+            controls.set('store', this.store);
         }
     }
 
     _onStoreChange() {
-        const { mode } = this.store.getState();
+        const {mode} = this.store.getState();
         const message = DrawingMessages.modeChange(mode);
         this.send(message, this.callbacks());
     }
@@ -163,17 +154,16 @@ export class DrawingLayerModel extends GMapsLayerModel {
             _model_name: 'DrawingLayerModel',
             features: [],
             mode: 'MARKER',
-            toolbar_controls: null
-        }
+            toolbar_controls: null,
+        };
     }
 
     static serializers = {
         ...widgets.DOMWidgetModel.serializers,
         features: {deserialize: widgets.unpack_models},
-        toolbar_controls: {deserialize: widgets.unpack_models}
-    }
+        toolbar_controls: {deserialize: widgets.unpack_models},
+    };
 }
-
 
 export class DrawingControlsModel extends widgets.DOMWidgetModel {
     initialize(attributes, options) {
@@ -186,10 +176,10 @@ export class DrawingControlsModel extends widgets.DOMWidgetModel {
     _bindModelEvents() {
         this.on('change:show_controls', () => {
             const showControls = this.get('show_controls');
-            const dispatcher = this.get('dispatcher')
+            const dispatcher = this.get('dispatcher');
             if (dispatcher) {
                 const message = DrawingActions.showControlsChange(showControls);
-                dispatcher.dispatch(message)
+                dispatcher.dispatch(message);
             }
         });
     }
@@ -202,11 +192,10 @@ export class DrawingControlsModel extends widgets.DOMWidgetModel {
             _view_name: 'DrawingControlsView',
             show_controls: true,
             dispatcher: null,
-            store: null
-        }
+            store: null,
+        };
     }
-};
-
+}
 
 export class DrawingLayerView extends GMapsLayerView {
     constructor(options) {
@@ -216,88 +205,99 @@ export class DrawingLayerView extends GMapsLayerView {
     }
 
     render() {
-        this.features = new widgets.ViewList(this.addFeature, this.removeFeature, this)
-        this.features.update(this.model.get('features'))
-        this.model.on(
-            'change:features',
-            () => {
-                this.features.update(this.model.get('features'))
-                    .then(features => {
-                        if (this._clickHandler) {
-                            this._clickHandler.onNewFeatures(features);
-                        }
-                    })
-            },
+        this.features = new widgets.ViewList(
+            this.addFeature,
+            this.removeFeature,
+            this
         );
-        this.model.store.addListener(() => { this._onNewMode() })
-        this._clickHandler = null
+        this.features.update(this.model.get('features'));
+        this.model.on('change:features', () => {
+            this.features.update(this.model.get('features')).then(features => {
+                if (this._clickHandler) {
+                    this._clickHandler.onNewFeatures(features);
+                }
+            });
+        });
+        this.model.store.addListener(() => {
+            this._onNewMode();
+        });
+        this._clickHandler = null;
     }
 
     addFeature(childModel) {
-        return this.create_child_view(childModel)
-            .then((childView) => {
-                childView.addToMapView(this.mapView)
-                return childView
-            })
+        return this.create_child_view(childModel).then(childView => {
+            childView.addToMapView(this.mapView);
+            return childView;
+        });
     }
 
     removeFeature(featureView) {
         featureView.removeFromMapView();
-    };
+    }
 
     _onNewMode() {
-        const { mode } = this.model.store.getState()
+        const {mode} = this.model.store.getState();
         this._setClickListener(this.mapView.map, mode);
     }
 
     _setClickListener(map, mode) {
         if (mode === 'DISABLED') {
-            if (this._clickHandler) { this._clickHandler.remove(); }
+            if (this._clickHandler) {
+                this._clickHandler.remove();
+            }
         } else if (mode === 'MARKER') {
-            if (this._clickHandler) { this._clickHandler.remove(); }
+            if (this._clickHandler) {
+                this._clickHandler.remove();
+            }
             this._clickHandler = new MarkerClickHandler(
                 map,
-                (latitude, longitude) => this.send(DrawingMessages.newMarker(latitude, longitude))
-            )
+                (latitude, longitude) =>
+                    this.send(DrawingMessages.newMarker(latitude, longitude))
+            );
         } else if (mode === 'LINE') {
-            if (this._clickHandler) { this._clickHandler.remove(); }
-            this._clickHandler = new LineClickHandler(
-                map,
-                ([start, end]) => this.send(DrawingMessages.newLine(start, end))
-            )
+            if (this._clickHandler) {
+                this._clickHandler.remove();
+            }
+            this._clickHandler = new LineClickHandler(map, ([start, end]) =>
+                this.send(DrawingMessages.newLine(start, end))
+            );
         } else if (mode === 'POLYGON') {
-            if (this._clickHandler) { this._clickHandler.remove(); }
-            this._clickHandler = new PolygonClickHandler(
-                map,
-                path => this.send(DrawingMessages.newPolygon(path))
-            )
+            if (this._clickHandler) {
+                this._clickHandler.remove();
+            }
+            this._clickHandler = new PolygonClickHandler(map, path =>
+                this.send(DrawingMessages.newPolygon(path))
+            );
         } else if (mode === 'DELETE') {
-            if (this._clickHandler) { this._clickHandler.remove(); }
-            const sendDeleteMessage =
-                (feature) => this.send(
+            if (this._clickHandler) {
+                this._clickHandler.remove();
+            }
+            const sendDeleteMessage = feature =>
+                this.send(
                     DrawingMessages.deleteFeature(feature.model.model_id)
-                )
+                );
             Promise.all(this.features.views).then(features => {
                 this._clickHandler = new DeleteClickHandler(
-                    features, sendDeleteMessage
+                    features,
+                    sendDeleteMessage
                 );
-            })
+            });
         }
     }
 
     addToMapView(mapView) {
-        const { mode } = this.model.store.getState()
-        this._setClickListener(mapView.map, mode)
-    };
+        const {mode} = this.model.store.getState();
+        this._setClickListener(mapView.map, mode);
+    }
 }
 
 class MarkerClickHandler {
     constructor(map, onNewMarker) {
         this._clickListener = map.addListener('click', event => {
-            const { latLng } = event;
+            const {latLng} = event;
             const latitude = latLng.lat();
             const longitude = latLng.lng();
-            onNewMarker(latitude, longitude)
+            onNewMarker(latitude, longitude);
         });
     }
 
@@ -313,19 +313,19 @@ class LineClickHandler {
         this.currentLine = null;
         this.map = map;
         this._clickListener = map.addListener('click', event => {
-            const { latLng } = event;
+            const {latLng} = event;
             if (this.currentLine === null) {
                 this.currentLine = this._createLineStartingAt(latLng);
             } else {
                 const path = this._finishLineAt(this.currentLine, latLng);
                 this.currentLine.setMap(null);
                 this.currentLine = null;
-                onNewLine(path)
+                onNewLine(path);
             }
         });
         this._moveListener = map.addListener('mousemove', event => {
             if (this.currentLine !== null) {
-                const { latLng } = event;
+                const {latLng} = event;
                 this.currentLine.getPath().setAt(1, latLng);
             }
         });
@@ -334,21 +334,21 @@ class LineClickHandler {
     onNewFeatures(features) {}
 
     _createLineStartingAt(latLng) {
-        const path = new google.maps.MVCArray([latLng, latLng])
-        const line = new google.maps.Polyline({ path, clickable: false })
+        const path = new google.maps.MVCArray([latLng, latLng]);
+        const line = new google.maps.Polyline({path, clickable: false});
         line.setMap(this.map);
-        return line
+        return line;
     }
 
     _finishLineAt(line, latLngEnd) {
         const linePath = line.getPath();
-        const latLngStart = linePath.getAt(0)
+        const latLngStart = linePath.getAt(0);
         const [latitudeStart, longitudeStart] = latLngToArray(latLngStart);
         const [latitudeEnd, longitudeEnd] = latLngToArray(latLngEnd);
         const path = [
             [latitudeStart, longitudeStart],
-            [latitudeEnd, longitudeEnd]
-        ]
+            [latitudeEnd, longitudeEnd],
+        ];
         return path;
     }
 
@@ -361,14 +361,13 @@ class LineClickHandler {
     }
 }
 
-
 class PolygonClickHandler {
     constructor(map, onNewPolygon) {
         this.map = map;
         this.currentPolygon = null;
-        this.map.setOptions({ disableDoubleClickZoom: true })
+        this.map.setOptions({disableDoubleClickZoom: true});
         this._clickListener = map.addListener('click', event => {
-            const { latLng } = event;
+            const {latLng} = event;
             if (this.currentPolygon === null) {
                 this.currentPolygon = this._createPolygonStartingAt(latLng);
             } else {
@@ -386,13 +385,13 @@ class PolygonClickHandler {
                     // likely to just be user error.
                     onNewPolygon(path);
                 }
-            };
-        })
+            }
+        });
         this._moveListener = map.addListener('mousemove', event => {
             if (this.currentPolygon !== null) {
-                const { latLng } = event;
+                const {latLng} = event;
                 const currentPath = this.currentPolygon.getPath();
-                currentPath.setAt(currentPath.getLength()-1, latLng);
+                currentPath.setAt(currentPath.getLength() - 1, latLng);
             }
         });
     }
@@ -406,25 +405,27 @@ class PolygonClickHandler {
         if (this.currentPolygon) {
             this.currentPolygon.setMap(null);
         }
-        this.map.setOptions({ disableDoubleClickZoom: false })
+        this.map.setOptions({disableDoubleClickZoom: false});
     }
 
     _createPolygonStartingAt(latLng) {
-        const path = new google.maps.MVCArray([latLng, latLng])
-        const polygon = new google.maps.Polyline({ path, clickable: false })
+        const path = new google.maps.MVCArray([latLng, latLng]);
+        const polygon = new google.maps.Polyline({path, clickable: false});
         polygon.setMap(this.map);
         return polygon;
     }
 
     _finishCurrentLine(latLng) {
         const currentPath = this.currentPolygon.getPath();
-        const lastLatLng = currentPath.getAt(currentPath.getLength()-1);
+        const lastLatLng = currentPath.getAt(currentPath.getLength() - 1);
         currentPath.push(lastLatLng);
     }
 
     _completePolygon() {
         const currentPath = this.currentPolygon.getPath();
-        const pathElems = currentPath.getArray().map(point => latLngToArray(point))
+        const pathElems = currentPath
+            .getArray()
+            .map(point => latLngToArray(point));
         // last element is duplicate since we always introduce
         // two new elements on click.
         const path = _.initial(pathElems);
@@ -432,44 +433,38 @@ class PolygonClickHandler {
     }
 }
 
-
 class DeleteClickHandler {
     constructor(features, onDeleteFeature) {
-        this.eventBus = newEventBus()
-        this.onDeleteFeature = onDeleteFeature
+        this.eventBus = newEventBus();
+        this.onDeleteFeature = onDeleteFeature;
         this.currentFeatures = features;
-        this._registerFeatureListeners(features)
+        this._registerFeatureListeners(features);
     }
 
     onNewFeatures(features) {
-        this._deregisterCurrentFeatureListeners()
+        this._deregisterCurrentFeatureListeners();
         this.currentFeatures = features;
-        this._registerFeatureListeners(features)
+        this._registerFeatureListeners(features);
     }
 
     remove() {
-        this._deregisterCurrentFeatureListeners()
+        this._deregisterCurrentFeatureListeners();
     }
 
     _deregisterCurrentFeatureListeners() {
-        this.currentFeatures.forEach(
-            feature => feature.restoreClickable()
-        )
+        this.currentFeatures.forEach(feature => feature.restoreClickable());
         this.eventBus.stopListening();
     }
 
     _registerFeatureListeners(features) {
         features.forEach(feature => {
             feature.ensureClickable();
-            this.eventBus.listenTo(
-                feature,
-                'click',
-                () => this.onDeleteFeature(feature)
-            )
-        })
+            this.eventBus.listenTo(feature, 'click', () =>
+                this.onDeleteFeature(feature)
+            );
+        });
     }
 }
-
 
 export class DrawingControlsView extends widgets.DOMWidgetView {
     render() {
@@ -478,39 +473,44 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
     }
 
     _createLayout() {
-        const $container = $('<span />')
+        const $container = $('<span />');
         $container
             .addClass('gmaps-toolbar-btn-group')
             .attr('data-toggle', 'buttons');
 
         const $disableButton = this._createModeButton(
-            'fa fa-ban', 'Disable drawing layer'
-        )
-        this._createButtonEvent($disableButton, 'DISABLED')
+            'fa fa-ban',
+            'Disable drawing layer'
+        );
+        this._createButtonEvent($disableButton, 'DISABLED');
         const $markerButton = this._createModeButton(
-            'fa fa-map-marker', 'Drawing layer: switch to \'marker\' mode'
-        )
-        this._createButtonEvent($markerButton, 'MARKER')
+            'fa fa-map-marker',
+            "Drawing layer: switch to 'marker' mode"
+        );
+        this._createButtonEvent($markerButton, 'MARKER');
         const $lineButton = this._createModeButton(
-            'gmaps-icon line', 'Drawing layer: switch to \'line\' mode'
-        )
-        this._createButtonEvent($lineButton, 'LINE')
+            'gmaps-icon line',
+            "Drawing layer: switch to 'line' mode"
+        );
+        this._createButtonEvent($lineButton, 'LINE');
         const $polygonButton = this._createModeButton(
-            'gmaps-icon polygon', 'Drawing layer: switch to \'polygon\' mode'
-        )
-        this._createButtonEvent($polygonButton, 'POLYGON')
+            'gmaps-icon polygon',
+            "Drawing layer: switch to 'polygon' mode"
+        );
+        this._createButtonEvent($polygonButton, 'POLYGON');
         const $deleteButton = this._createModeButton(
-            'fa fa-trash', 'Drawing layer: delete features'
-        )
-        this._createButtonEvent($deleteButton, 'DELETE')
+            'fa fa-trash',
+            'Drawing layer: delete features'
+        );
+        this._createButtonEvent($deleteButton, 'DELETE');
 
         this.modeButtons = {
-            'DISABLED': $disableButton,
-            'MARKER': $markerButton,
-            'LINE': $lineButton,
-            'POLYGON': $polygonButton,
-            'DELETE': $deleteButton
-        }
+            DISABLED: $disableButton,
+            MARKER: $markerButton,
+            LINE: $lineButton,
+            POLYGON: $polygonButton,
+            DELETE: $deleteButton,
+        };
 
         $container.append(
             $disableButton,
@@ -520,12 +520,12 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             $deleteButton
         );
         this.$el.append($container);
-        this.$el.addClass('additional-controls')
+        this.$el.addClass('additional-controls');
     }
 
     _setInitialState() {
         this._setStore();
-        this.model.on('change:store', () => this._setStore())
+        this.model.on('change:store', () => this._setStore());
 
         this._onNewMode();
         this._onNewShowControls();
@@ -539,41 +539,41 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         }
     }
     _createModeButton(icon, hoverText) {
-        const $button = $('<button />')
+        const $button = $('<button />');
         $button
             .addClass('gmaps-toolbar-btn')
             .attr('title', hoverText)
             .append('<i />')
-            .addClass(`${icon}`)
+            .addClass(`${icon}`);
 
-        return $button
+        return $button;
     }
 
     _createButtonEvent($button, mode) {
         $button.click(() => {
             const dispatcher = this.model.get('dispatcher');
             dispatcher.dispatch(DrawingActions.modeChange(mode));
-        })
+        });
     }
 
     _setButtonSelected(selectedMode) {
         Object.entries(this.modeButtons).forEach(([mode, $button]) => {
             if (mode === selectedMode) {
-                $button.addClass('active')
+                $button.addClass('active');
             } else {
-                $button.removeClass('active')
+                $button.removeClass('active');
             }
         });
     }
 
     _setVisibility(showControls) {
-        this.$el.toggle(showControls)
+        this.$el.toggle(showControls);
     }
 
     _onNewMode() {
         const store = this.model.get('store');
         if (store) {
-            const { mode } = store.getState();
+            const {mode} = store.getState();
             this._setButtonSelected(mode);
         }
     }
@@ -581,7 +581,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
     _onNewShowControls() {
         const store = this.model.get('store');
         if (store) {
-            const { showControls } = store.getState();
+            const {showControls} = store.getState();
             this._setVisibility(showControls);
         }
     }

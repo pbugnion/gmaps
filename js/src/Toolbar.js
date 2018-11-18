@@ -1,7 +1,7 @@
-import * as widgets from '@jupyter-widgets/base'
-import $ from 'jquery'
+import * as widgets from '@jupyter-widgets/base';
+import $ from 'jquery';
 
-import { defaultAttributes } from './defaults'
+import {defaultAttributes} from './defaults';
 
 export class ToolbarModel extends widgets.DOMWidgetModel {
     defaults() {
@@ -11,61 +11,57 @@ export class ToolbarModel extends widgets.DOMWidgetModel {
             _model_name: 'ToolbarModel',
             _view_name: 'ToolbarView',
             layer_controls: [],
-        }
+        };
     }
 
     static serializers = {
         ...widgets.DOMWidgetModel.serializers,
-        layer_controls: {deserialize: widgets.unpack_models}
-    }
-};
+        layer_controls: {deserialize: widgets.unpack_models},
+    };
+}
 
 export class ToolbarView extends widgets.DOMWidgetView {
-
     render() {
-        this.$el.addClass('gmaps-toolbar-container')
+        this.$el.addClass('gmaps-toolbar-container');
 
         const $toolbar = $('<div />');
-        $toolbar
-            .addClass('gmaps-toolbar toolbar-inner navbar-inner');
+        $toolbar.addClass('gmaps-toolbar toolbar-inner navbar-inner');
 
-        const $toolbarContainer = $('<div />')
-        $toolbarContainer
-            .addClass('toolbar');
+        const $toolbarContainer = $('<div />');
+        $toolbarContainer.addClass('toolbar');
 
-        const $saveButton = $('<button />')
+        const $saveButton = $('<button />');
         $saveButton
             .addClass('gmaps-toolbar-btn')
             .attr('title', 'Download the map as PNG')
             .append('<i />')
             .addClass('fa fa-download');
 
-        this.$additionalControlsContainer = $('<div />')
-        this.$additionalControlsContainer.addClass('additional-controls-container')
+        this.$additionalControlsContainer = $('<div />');
+        this.$additionalControlsContainer.addClass(
+            'additional-controls-container'
+        );
 
         const $notificationArea = $('<span />');
-        $notificationArea
-            .addClass('notification-area');
+        $notificationArea.addClass('notification-area');
 
-        const $savingNotification = $('<span />')
+        const $savingNotification = $('<span />');
         $savingNotification
             .addClass('notification-widget')
             .html('<span>Downloading</span>')
             .hide();
 
-        $saveButton
-            .click((event) => {
-                event.preventDefault();
-                $saveButton.prop('disabled', true)
-                $savingNotification.show()
-                if (this.savePngCallback) {
-                    this.savePngCallback().then(() => {
-                        $saveButton.prop('disabled', false)
-                        $savingNotification.hide();
-                    });
-                };
-            })
-        
+        $saveButton.click(event => {
+            event.preventDefault();
+            $saveButton.prop('disabled', true);
+            $savingNotification.show();
+            if (this.savePngCallback) {
+                this.savePngCallback().then(() => {
+                    $saveButton.prop('disabled', false);
+                    $savingNotification.hide();
+                });
+            }
+        });
 
         $toolbarContainer
             .append($saveButton)
@@ -73,14 +69,20 @@ export class ToolbarView extends widgets.DOMWidgetView {
             .append($notificationArea);
 
         $notificationArea.append($savingNotification);
-        $toolbar.append($toolbarContainer)
-        this.$el.append($toolbar)
+        $toolbar.append($toolbarContainer);
+        this.$el.append($toolbar);
 
-        this.additionalControlViews = new widgets.ViewList(this.addControlsModel, null, this);
-        this.additionalControlViews.update(this.model.get('layer_controls'))
+        this.additionalControlViews = new widgets.ViewList(
+            this.addControlsModel,
+            null,
+            this
+        );
+        this.additionalControlViews.update(this.model.get('layer_controls'));
 
         this.model.on('change:layer_controls', () => {
-            this.additionalControlViews.update(this.model.get('layer_controls'))
+            this.additionalControlViews.update(
+                this.model.get('layer_controls')
+            );
         });
 
         this.update();
@@ -92,7 +94,7 @@ export class ToolbarView extends widgets.DOMWidgetView {
 
     addControlsModel(model) {
         return this.create_child_view(model).then(view => {
-            this.$additionalControlsContainer.append(view.el)
+            this.$additionalControlsContainer.append(view.el);
             return view;
         });
     }

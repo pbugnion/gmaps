@@ -1,9 +1,7 @@
+import * as widgets from '@jupyter-widgets/base';
 
-import * as widgets from '@jupyter-widgets/base'
-
-import { GMapsLayerView, GMapsLayerModel } from './GMapsLayer'
-import { arrayToLatLng } from './services/googleConverters'
-
+import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer';
+import {arrayToLatLng} from './services/googleConverters';
 
 export class PolygonModel extends GMapsLayerModel {
     defaults() {
@@ -15,17 +13,17 @@ export class PolygonModel extends GMapsLayerModel {
             stroke_weight: 2,
             stroke_opacity: 0.6,
             fill_color: '#696969',
-            fill_opacity: 0.2
-        }
+            fill_opacity: 0.2,
+        };
     }
 }
 
 export class PolygonView extends GMapsLayerView {
     render() {
-        const points = this.model.get('path').map(
-            latLngArray => arrayToLatLng(latLngArray)
-        )
-        const pathElems = [...points, points[0]] // make sure we close the polygon
+        const points = this.model
+            .get('path')
+            .map(latLngArray => arrayToLatLng(latLngArray));
+        const pathElems = [...points, points[0]]; // make sure we close the polygon
         const path = new google.maps.MVCArray(pathElems);
         const strokeColor = this.model.get('stroke_color');
         const strokeWeight = this.model.get('stroke_weight');
@@ -38,11 +36,14 @@ export class PolygonView extends GMapsLayerView {
             strokeWeight,
             strokeOpacity,
             fillOpacity,
-            clickable: false
+            clickable: false,
         };
-        this.polygon = new google.maps.Polygon({ paths: [path], ...polygonOptions })
+        this.polygon = new google.maps.Polygon({
+            paths: [path],
+            ...polygonOptions,
+        });
         this.polygon.addListener('click', event => this.trigger('click'));
-        this.modelEvents()
+        this.modelEvents();
     }
 
     modelEvents() {
@@ -51,19 +52,17 @@ export class PolygonView extends GMapsLayerView {
             ['strokeWeight', 'stroke_weight'],
             ['strokeOpacity', 'stroke_opacity'],
             ['fillColor', 'fill_color'],
-            ['fillOpacity', 'fill_opacity']
-        ]
+            ['fillOpacity', 'fill_opacity'],
+        ];
 
         properties.forEach(([nameInView, nameInModel]) => {
-            const callback = (
-                () => {
-                    this.polygon.setOptions(
-                        {[nameInView]: this.model.get(nameInModel)}
-                    )
-                }
-            )
-            this.model.on(`change:${nameInModel}`, callback, this)
-        })
+            const callback = () => {
+                this.polygon.setOptions({
+                    [nameInView]: this.model.get(nameInModel),
+                });
+            };
+            this.model.on(`change:${nameInModel}`, callback, this);
+        });
     }
 
     addToMapView(mapView) {
@@ -77,10 +76,10 @@ export class PolygonView extends GMapsLayerView {
     }
 
     ensureClickable() {
-        this.polygon.setOptions({ clickable: true })
+        this.polygon.setOptions({clickable: true});
     }
 
     restoreClickable() {
-        this.polygon.setOptions({ clickable: false })
+        this.polygon.setOptions({clickable: false});
     }
 }

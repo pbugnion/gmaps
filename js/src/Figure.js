@@ -1,23 +1,22 @@
-
 import _ from 'underscore';
 
 import * as widgets from '@jupyter-widgets/base';
-import { VBoxModel, VBoxView } from '@jupyter-widgets/controls';
-import { defaultAttributes } from './defaults';
+import {VBoxModel, VBoxView} from '@jupyter-widgets/controls';
+import {defaultAttributes} from './defaults';
 
 export class FigureModel extends VBoxModel {
     defaults() {
         return {
             ...super.defaults(),
             ...defaultAttributes,
-            _model_name: "FigureModel",
-            _view_name: "FigureView",
+            _model_name: 'FigureModel',
+            _view_name: 'FigureView',
             children: [],
             box_style: '',
             _map: undefined,
             _errors_box: undefined,
-            _toolbar: undefined
-        }
+            _toolbar: undefined,
+        };
     }
 
     static serializers = {
@@ -25,38 +24,36 @@ export class FigureModel extends VBoxModel {
         children: {deserialize: widgets.unpack_models},
         _map: {deserialize: widgets.unpack_models},
         _toolbar: {deserialize: widgets.unpack_models},
-        _errors_box: {deserialize: widgets.unpack_models}
-    }
+        _errors_box: {deserialize: widgets.unpack_models},
+    };
 }
 
 export class FigureView extends VBoxView {
     initialize(parameters) {
-        super.initialize(parameters)
-        const toolbarModel = this.model.get("_toolbar");
-        if(toolbarModel) {
-            this.toolbarView =
-                this.add_child_model(this.model.get("_toolbar"))
-                    .then(toolbarView => {
-                        toolbarView.registerSavePngCallback(
-                            () => this.savePng()
-                        )
-                        return toolbarView;
-                    })
-        }
-        else {
+        super.initialize(parameters);
+        const toolbarModel = this.model.get('_toolbar');
+        if (toolbarModel) {
+            this.toolbarView = this.add_child_model(
+                this.model.get('_toolbar')
+            ).then(toolbarView => {
+                toolbarView.registerSavePngCallback(() => this.savePng());
+                return toolbarView;
+            });
+        } else {
             this.toolbarView = null;
         }
-        const mapModel = this.model.get('_map')
+        const mapModel = this.model.get('_map');
 
         const errorsBoxModel = this.model.get('_errors_box');
         if (errorsBoxModel) {
-            errorsBoxModel.subscribeToMap(mapModel.events)
-            this.errorsBoxView =
-                this.add_child_model(this.model.get("_errors_box"));
+            errorsBoxModel.subscribeToMap(mapModel.events);
+            this.errorsBoxView = this.add_child_model(
+                this.model.get('_errors_box')
+            );
         }
 
         this.mapView = this.add_child_model(mapModel);
-        this.pWidget.addClass("gmaps-figure")
+        this.pWidget.addClass('gmaps-figure');
     }
 
     savePng() {

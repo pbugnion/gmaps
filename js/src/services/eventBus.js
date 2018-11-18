@@ -1,5 +1,5 @@
-import * as Backbone from 'backbone'
+import * as Backbone from 'backbone';
 
 export function newEventBus() {
-    return { ...Backbone.Events }
+    return {...Backbone.Events};
 }
