@@ -1,5 +1,5 @@
 import * as gmaps from './index';
-import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
+import {IJupyterWidgetRegistry} from '@jupyter-widgets/base';
 
 export default {
     id: 'jupyter-gmaps',
@@ -8,8 +8,8 @@ export default {
         widgets.registerWidget({
             name: 'jupyter-gmaps',
             version: gmaps.version,
-            exports: gmaps
-        })
+            exports: gmaps,
+        });
     },
-    autoStart: true
-}
+    autoStart: true,
+};

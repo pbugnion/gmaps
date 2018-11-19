@@ -1,14 +1,24 @@
-language:
-  python
-python:
-  - "2.7"
-  - "3.5"
-  - "3.6"
+language: python
+cache:
+  directories:
+    - node_modules
 install:
-  - "pip install -U pip"
-  - "pip install -r requirements.txt"
-  - "pip install -r test-requirements.txt"
-before_script:
-  flake8 gmaps
+  - "if [[ \"$GROUP\" == js ]] ; then npm -v ; fi"
+  - "if [[ \"$GROUP\" == js ]] ; then npm install --prefix js/ ; fi"
+  - "if [[ \"$GROUP\" == python ]] ; then pip install -U pip ; fi"
+  - "if [[ \"$GROUP\" == python ]] ; then pip install -r requirements.txt ; fi"
+  - "if [[ \"$GROUP\" == python ]] ; then pip install -r test-requirements.txt ; fi"
 script:
-  py.test
+  - "if [[ \"$GROUP\" == js ]] ; then npm run --prefix js/ lint ; fi"
+  - "if [[ \"$GROUP\" == python ]] ; then flake8 gmaps ; fi"
+  - "if [[ \"$GROUP\" == python ]] ; then py.test ; fi"
+matrix:
+  include:
+    - python: 3.6
+      env: GROUP=python
+    - python: 3.5
+      env: GROUP=python
+    - python: 2.7
+      env: GROUP=python
+    - python: 3.6
+      env: GROUP=js

@@ -1,4 +1,4 @@
-import BaseStore from "flux/lib/FluxStore";
+import BaseStore from 'flux/lib/FluxStore';
 
 export class Store extends BaseStore {
     constructor(initalState, dispatcher) {

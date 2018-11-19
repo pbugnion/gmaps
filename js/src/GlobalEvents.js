@@ -1,7 +1,7 @@
-import { newEventBus } from './services/eventBus'
+import {newEventBus} from './services/eventBus';
 
 export const globalEvents = {
-    AUTHENTICATION_ERROR: 'AUTHENTICATION_ERROR'
-}
+    AUTHENTICATION_ERROR: 'AUTHENTICATION_ERROR',
+};
 
-export const globalEventBus = { ...Backbone.Events }
+export const globalEventBus = {...Backbone.Events};

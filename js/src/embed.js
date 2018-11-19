@@ -4,6 +4,6 @@
 // dynamic baseURL for the static assets and may load some css that would
 // already be loaded by the notebook otherwise.
 
-export * from './index'
+export * from './index';
 
-require('./jupyter-gmaps-embed.less')
+require('./jupyter-gmaps-embed.less');

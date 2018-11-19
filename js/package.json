@@ -25,6 +25,8 @@
     "clean:all": "npm run clean:nbextension && npm run clean:labextension",
     "clean:nbextension": "rimraf ../gmaps/static && rimraf dist/",
     "clean:labextension": "rimraf ../gmaps/labextension",
+    "format": "prettier src/*.js src/services/*.js --write",
+    "lint": "prettier src/*.js src/services/*.js --list-different",
     "update": "rimraf dist/ && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -40,6 +42,7 @@
     "less": "^2.7.2",
     "less-loader": "^4.0.3",
     "mkdirp": "^0.5.1",
+    "prettier": "^1.15.2",
     "rimraf": "^2.6.1",
     "style-loader": "^0.17.0",
     "url-loader": "^0.5.9",
