@@ -5,7 +5,7 @@ gmaps
 
 gmaps is a plugin for including interactive Google maps in the IPython Notebook.
 
-Let's plot a `heatmap <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#heatmaps>`_ of taxi pickups in San Francisco:
+Let's plot a `heatmap <http://jupyter-gmaps.readthedocs.io/en/latest/tutorial.html#heatmaps>`_ of taxi pickups in San Francisco:
 
 .. code:: python
 
@@ -22,7 +22,7 @@ Let's plot a `heatmap <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#
 
 .. image:: docs/source/_images/taxi_example.png
 
-We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedocs.io/en/latest/gmaps.html#geojson-layer>`_:
+We can also plot chloropleth maps using `GeoJSON <http://jupyter-gmaps.readthedocs.io/en/latest/tutorial.html#geojson-layer>`_:
 
 .. code:: python
 
