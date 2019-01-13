@@ -12,7 +12,8 @@ from ..marker import (
     Markers,
     Symbol,
     _marker_layer_options,
-    _symbol_layer_options
+    _symbol_layer_options,
+    marker_layer
 )
 
 
@@ -31,6 +32,10 @@ class MarkerLayer(unittest.TestCase):
         new_options = self.kwargs.copy()
         new_options.update(options)
         return new_options
+
+    def test_locations(self):
+        markers = marker_layer(self.locations)
+        assert [marker.location for marker in markers.markers] == self.locations
 
     def test_hover_text_atomic(self):
         options = self._add_default_options(hover_text="test-text")
