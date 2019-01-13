@@ -140,6 +140,10 @@ class SymbolLayer(unittest.TestCase):
         new_options.update(options)
         return new_options
 
+    def test_locations(self):
+        symbols = symbol_layer(self.locations)
+        assert [symbol.location for symbol in symbols.markers] == self.locations
+
     def test_stroke_color_atomic_text(self):
         options = self._add_default_options(stroke_color="red")
         symbols = symbol_layer(self.locations, **options)
