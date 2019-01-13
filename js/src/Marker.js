@@ -210,10 +210,13 @@ export class MarkerLayerView extends GMapsLayerView {
 
     render() {
         this.markerViews = new widgets.ViewList(
-            this.addMarker, this.removeMarker, this);
+            this.addMarker,
+            this.removeMarker,
+            this
+        );
         this.markerViews.update(this.model.get('markers'));
         this.model.on('change:markers', () => {
-            this.markerViews.update(this.model.get('markers'))
+            this.markerViews.update(this.model.get('markers'));
         });
     }
 
@@ -229,6 +232,6 @@ export class MarkerLayerView extends GMapsLayerView {
     }
 
     removeMarker(markerView) {
-        markerView.removeFromMapView()
+        markerView.removeFromMapView();
     }
 }
