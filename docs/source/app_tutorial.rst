@@ -379,3 +379,9 @@ This is the entire code listing::
   OutletExplorer(df).render()
 
 .. image:: _images/update-symbols-with-checkboxes.png
+
+ We used the :class:`gmaps.Markers` class to represent the symbol layer,
+ rather than the :func:`gmaps.symbol_layer` factory function. The
+ `Markers` class is easier to manipulate, since it just takes a list
+ of symbols. The disadvantage is that we had to construct the symbols
+ independently.
