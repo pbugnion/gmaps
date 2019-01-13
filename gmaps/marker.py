@@ -8,13 +8,16 @@ import gmaps.bounds as bounds
 from .maps import DEFAULT_CENTER, GMapsWidgetMixin
 from .locations import locations_to_list
 from .options import merge_option_dicts, is_atomic, is_color_atomic
+from ._docutils import doc_subst
 
 __all__ = [
     'Symbol', 'Marker', 'Markers', 'MarkerOptions',
     'marker_layer', 'symbol_layer'
 ]
 
-_marker_options_docstring = """
+_doc_snippets = {}
+
+_doc_snippets['marker_options'] = """
     :param label:
         Text to be displayed inside the marker. Google maps only displays
         the first letter of this string.
@@ -51,10 +54,13 @@ def _resolve_info_box_kwargs(**kwargs):
     return kwargs
 
 
+@doc_subst(_doc_snippets)
 class MarkerOptions(HasTraits):
-    __doc__ = """
+    """
     Style options for a marker
-    """ + _marker_options_docstring
+
+    {marker_options}
+    """
     hover_text = Unicode('').tag(sync=True)
     display_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode('').tag(sync=True)
@@ -128,8 +134,9 @@ class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         super(Symbol, self).__init__(**kwargs)
 
 
+@doc_subst(_doc_snippets)
 class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
-    __doc__ = """
+    """
     Class representing a marker.
 
     Markers should be added to the map via the :func:`gmaps.marker_layer`
@@ -142,7 +149,9 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         are expressed as a float between -180 (corresponding to 180 degrees
         west) and +180 (corresponding to 180 degrees east).
     :type location: tuple of floats
-    """ + _marker_options_docstring
+
+    {marker_options}
+    """
     _view_name = Unicode('MarkerView').tag(sync=True)
     _model_name = Unicode('MarkerModel').tag(sync=True)
     label = Unicode('').tag(sync=True)
