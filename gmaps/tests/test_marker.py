@@ -11,7 +11,6 @@ from ..marker import (
     Marker,
     Markers,
     Symbol,
-    _marker_layer_options,
     _symbol_layer_options,
     marker_layer
 )
@@ -39,24 +38,24 @@ class MarkerLayer(unittest.TestCase):
 
     def test_hover_text_atomic(self):
         options = self._add_default_options(hover_text="test-text")
-        marker_options = _marker_layer_options(self.locations, **options)
-        for options in marker_options:
-            assert options["hover_text"] == "test-text"
+        markers = marker_layer(self.locations, **options)
+        for marker in markers.markers:
+            assert marker.hover_text == "test-text"
 
     def test_hover_text_lists(self):
         options = self._add_default_options(hover_text=["t1", "t2"])
-        marker_options = _marker_layer_options(self.locations, **options)
-        hover_texts = [opts["hover_text"] for opts in marker_options]
-        assert tuple(hover_texts) == ("t1", "t2")
+        markers = marker_layer(self.locations, **options)
+        hover_texts = [marker.hover_text for marker in markers.markers]
+        assert hover_texts == ["t1", "t2"]
 
     def test_infobox_content_atomic(self):
         test_content = "<h3>test-html-infobox</h3>"
         options = self._add_default_options(
             info_box_content=test_content, display_info_box=True)
-        marker_options = _marker_layer_options(self.locations, **options)
-        for options in marker_options:
-            assert options["info_box_content"] == test_content
-            assert options["display_info_box"]
+        markers = marker_layer(self.locations, **options)
+        for marker in markers.markers:
+            assert marker.info_box_content == test_content
+            assert marker.display_info_box
 
     def test_infobox_content_lists(self):
         test_content = ["<h1>h1</h1>", "<h2>h2</h2>"]
@@ -64,31 +63,32 @@ class MarkerLayer(unittest.TestCase):
         options = self._add_default_options(
             info_box_content=test_content,
             display_info_box=test_display_info_box)
-        marker_options = _marker_layer_options(self.locations, **options)
-        info_contents = [opts["info_box_content"] for opts in marker_options]
-        display_infos = [opts["display_info_box"] for opts in marker_options]
+        markers = marker_layer(self.locations, **options)
+        info_contents = [marker.info_box_content for marker in markers.markers]
+        display_infos = [marker.display_info_box for marker in markers.markers]
         assert tuple(info_contents) == tuple(test_content)
         assert tuple(display_infos) == tuple(test_display_info_box)
 
     def test_infobox_default_display(self):
         test_content = "test-content"
         options = self._add_default_options(info_box_content=test_content)
-        marker_options = _marker_layer_options(self.locations, **options)
-        for options in marker_options:
-            assert options["display_info_box"]
+        markers = marker_layer(self.locations, **options)
+        for marker in markers.markers:
+            assert marker.info_box_content == "test-content"
+            assert marker.display_info_box
 
     def test_infobox_default_display_lists(self):
         test_content = ["1", None]
         options = self._add_default_options(info_box_content=test_content)
-        marker_options = _marker_layer_options(self.locations, **options)
-        display_infos = [opts["display_info_box"] for opts in marker_options]
+        markers = marker_layer(self.locations, **options)
+        display_infos = [marker.display_info_box for marker in markers.markers]
         assert tuple(display_infos) == (True, False)
 
     def test_locations_array(self):
         locations_array = np.array(self.locations)
         options = self._add_default_options()
-        marker_options = _marker_layer_options(locations_array, **options)
-        locations = [opts["location"] for opts in marker_options]
+        markers = marker_layer(locations_array, **options)
+        locations = [marker.location for marker in markers.markers]
         assert locations == self.locations
 
     def test_locations_pandas_df(self):
@@ -96,8 +96,8 @@ class MarkerLayer(unittest.TestCase):
         df = pd.DataFrame.from_records(
             self.locations, columns=["latitude", "longitude"])
         options = self._add_default_options()
-        marker_options = _marker_layer_options(df, **options)
-        locations = [opts["location"] for opts in marker_options]
+        markers = marker_layer(df, **options)
+        locations = [marker.location for marker in markers.markers]
         assert locations == self.locations
 
     def test_all_pandas_df(self):
@@ -110,13 +110,13 @@ class MarkerLayer(unittest.TestCase):
             columns=["latitude", "longitude", "hover_text", "label"])
         options = self._add_default_options(
             hover_text=df["hover_text"], label=df["label"])
-        marker_options = _marker_layer_options(
+        markers = marker_layer(
             df[["latitude", "longitude"]], **options)
-        locations = [opts["location"] for opts in marker_options]
+        locations = [marker.location for marker in markers.markers]
         assert locations == self.locations
-        hover_texts = [opts["hover_text"] for opts in marker_options]
+        hover_texts = [marker.hover_text for marker in markers.markers]
         assert hover_texts == ["text1", "text2"]
-        labels = [opts["label"] for opts in marker_options]
+        labels = [marker.label for marker in markers.markers]
         assert labels == ["a", "b"]
 
 
