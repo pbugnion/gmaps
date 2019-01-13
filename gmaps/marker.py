@@ -5,7 +5,7 @@ from traitlets import Unicode, Int, List, observe, HasTraits, Bool
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
 
-from .maps import DEFAULT_CENTER, DEFAULT_BOUNDS, GMapsWidgetMixin
+from .maps import DEFAULT_CENTER, GMapsWidgetMixin
 from .locations import locations_to_list
 from .options import merge_option_dicts, is_atomic, is_color_atomic
 from ._docutils import doc_subst
