@@ -144,11 +144,19 @@ class SymbolLayer(unittest.TestCase):
         symbols = symbol_layer(self.locations)
         assert [symbol.location for symbol in symbols.markers] == self.locations
 
+    def test_empty_locations(self):
+        symbols = symbol_layer([])
+        assert symbols.markers == []
+
     def test_stroke_color_atomic_text(self):
         options = self._add_default_options(stroke_color="red")
         symbols = symbol_layer(self.locations, **options)
         for symbol in symbols.markers:
             assert symbol.stroke_color == "red"
+
+    def test_empty_locations_stroke_color(self):
+        symbols = symbol_layer([], stroke_color="red")
+        assert symbols.markers == []
 
     def test_stroke_color_atomic_tuple(self):
         color = (10, 10, 10, 0.5)
