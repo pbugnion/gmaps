@@ -33,7 +33,8 @@ class MarkerLayer(unittest.TestCase):
 
     def test_locations(self):
         markers = marker_layer(self.locations)
-        assert [marker.location for marker in markers.markers] == self.locations
+        locations = [marker.location for marker in markers.markers]
+        assert locations == self.locations
 
     def test_hover_text_atomic(self):
         options = self._add_default_options(hover_text="test-text")
@@ -141,7 +142,8 @@ class SymbolLayer(unittest.TestCase):
 
     def test_locations(self):
         symbols = symbol_layer(self.locations)
-        assert [symbol.location for symbol in symbols.markers] == self.locations
+        locations = [symbol.location for symbol in symbols.markers]
+        assert locations == self.locations
 
     def test_empty_locations(self):
         symbols = symbol_layer([])
@@ -198,7 +200,9 @@ class SymbolLayer(unittest.TestCase):
         options = self._add_default_options(
             info_box_content=test_content, display_info_box=True)
         symbols = symbol_layer(self.locations, **options)
-        content_options = [symbol.info_box_content for symbol in symbols.markers]
+        content_options = [
+            symbol.info_box_content for symbol in symbols.markers
+        ]
         assert content_options == test_content
 
     def test_infobox_default_display_lists(self):
