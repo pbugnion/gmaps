@@ -42,6 +42,36 @@ _doc_snippets['marker_options'] = """
 """
 
 
+_doc_snippets['marker_examples'] = """
+    >>> fig = gmaps.figure()
+    >>> locations = [
+            (-34.0, -59.166672),
+            (-32.23333, -64.433327),
+            (40.166672, 44.133331),
+            (51.216671, 5.0833302)
+        ]
+    >>> marker_layer = gmaps.marker_layer(locations)
+    >>> fig.add_layer(marker_layer)
+
+    You can customize the markers by passing arguments to ``marker_layer``:
+
+    >>> marker_layer = gmaps.marker_layer(
+            locations,
+            hover_text=['Atucha', 'Embalse', 'Armenia', 'Br']
+        )
+
+    To change the number of markers once the layer has already been
+    added to the map, mutate the ``markers`` attribute.  You will need
+    to pass a list of :class:`gmaps.Marker` or :class:`gmaps.Symbol`
+    explicitly.
+
+    >>> marker_layer.markers = [
+            gmaps.Marker(location=(1.0, 2.0)),
+            gmaps.Marker(location=(3.0, 4.0))
+        ]
+"""
+
+
 def _resolve_info_box_kwargs(**kwargs):
     if kwargs.get('display_info_box') is None:
         # Not explicitly specified: infer from info_box_content
@@ -162,6 +192,7 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         super(Marker, self).__init__(**kwargs)
 
 
+@doc_subst(_doc_snippets)
 class Markers(GMapsWidgetMixin, widgets.Widget):
     """
     Marker and symbol layer
@@ -179,32 +210,7 @@ class Markers(GMapsWidgetMixin, widgets.Widget):
 
     :Examples:
 
-    >>> fig = gmaps.figure()
-    >>> locations = [
-            (-34.0, -59.166672),
-            (-32.23333, -64.433327),
-            (40.166672, 44.133331),
-            (51.216671, 5.0833302)
-        ]
-    >>> marker_layer = gmaps.marker_layer(locations)
-    >>> fig.add_layer(marker_layer)
-
-    You can customize the markers by passing arguments to ``marker_layer``:
-
-    >>> marker_layer = gmaps.marker_layer(
-            locations,
-            hover_text=['Atucha', 'Embalse', 'Armenia', 'Br']
-        )
-
-    To change the number of markers once the layer has already been
-    added to the map, mutate the ``markers`` attribute.  You will need
-    to pass a list of :class:`gmaps.Marker` or :class:`gmaps.Symbol`
-    explicitly.
-
-    >>> marker_layer.markers = [
-            gmaps.Marker(location=(1.0, 2.0)),
-            gmaps.Marker(location=(3.0, 4.0))
-        ]
+    {marker_examples}
 
     To change the style of markers or symbols once the layer has already been
     added to the map, mutate the marker directly.
@@ -456,6 +462,7 @@ def symbol_layer(
     return Markers(markers=symbols)
 
 
+@doc_subst(_doc_snippets)
 def marker_layer(
         locations, hover_text='', label='',
         info_box_content=None, display_info_box=None):
@@ -469,16 +476,7 @@ def marker_layer(
 
     :Examples:
 
-    >>> fig = gmaps.figure()
-    >>> locations = [
-            (-34.0, -59.166672),
-            (-32.23333, -64.433327),
-            (40.166672, 44.133331),
-            (51.216671, 5.0833302),
-            (51.333328, 4.25)
-        ]
-    >>> markers = gmaps.marker_layer(locations)
-    >>> fig.add_layer(markers)
+    {marker_examples}
 
     :param locations:
         List of (latitude, longitude) pairs
