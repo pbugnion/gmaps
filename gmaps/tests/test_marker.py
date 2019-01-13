@@ -9,6 +9,7 @@ import traitlets
 from ..marker import (
     MarkerOptions,
     Marker,
+    Markers,
     Symbol,
     _marker_layer_options,
     _symbol_layer_options
@@ -321,3 +322,21 @@ class SymbolTest(unittest.TestCase):
             Symbol(self.location, stroke_opacity=1.2)
         with self.assertRaises(traitlets.TraitError):
             Symbol(self.location, stroke_opacity='not-a-float')
+
+
+class MarkersTest(unittest.TestCase):
+
+    def setUp(self):
+        self.locations = [(-5.0, 5.0), (10.0, 10.0)]
+        self.symbols = [
+            Symbol(location=location)
+            for location in self.locations
+        ]
+
+    def test_bounds_markers(self):
+        layer = Markers(markers=self.symbols)
+        assert layer.has_bounds
+
+    def test_bounds_no_markers(self):
+        layer = Markers(markers=[])
+        assert not layer.has_bounds

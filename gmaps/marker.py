@@ -5,7 +5,7 @@ from traitlets import Unicode, Int, List, observe, HasTraits, Bool
 import gmaps.geotraitlets as geotraitlets
 import gmaps.bounds as bounds
 
-from .maps import DEFAULT_CENTER, GMapsWidgetMixin
+from .maps import DEFAULT_CENTER, DEFAULT_BOUNDS, GMapsWidgetMixin
 from .locations import locations_to_list
 from .options import merge_option_dicts, is_atomic, is_color_atomic
 from ._docutils import doc_subst
@@ -218,25 +218,28 @@ class Markers(GMapsWidgetMixin, widgets.Widget):
     >>> marker_layer.markers[0].label = 'C'  # markers[0] is a Marker
     >>> marker_layer.markers[0].scale = 5    # markers[0] is a Symbol
     """
-    has_bounds = True
     _view_name = Unicode('MarkerLayerView').tag(sync=True)
     _model_name = Unicode('MarkerLayerModel').tag(sync=True)
 
-    markers = List(minlen=1).tag(sync=True,  **widgets.widget_serialization)
+    markers = List().tag(sync=True,  **widgets.widget_serialization)
     data_bounds = List().tag(sync=True)
 
     @observe('markers')
     def _calc_bounds(self, change):
         markers = change['new']
-        locations = [marker.location for marker in markers]
-        latitudes = [location[0] for location in locations]
-        longitudes = [location[1] for location in locations]
-        min_latitude, max_latitude = bounds.latitude_bounds(latitudes)
-        min_longitude, max_longitude = bounds.longitude_bounds(longitudes)
-        self.data_bounds = [
-            (min_latitude, min_longitude),
-            (max_latitude, max_longitude)
-        ]
+        if markers:
+            locations = [marker.location for marker in markers]
+            latitudes = [location[0] for location in locations]
+            longitudes = [location[1] for location in locations]
+            min_latitude, max_latitude = bounds.latitude_bounds(latitudes)
+            min_longitude, max_longitude = bounds.longitude_bounds(longitudes)
+            self.data_bounds = [
+                (min_latitude, min_longitude),
+                (max_latitude, max_longitude)
+            ]
+            self.has_bounds = True
+        else:
+            self.has_bounds = False
 
 
 def _info_box_option_lists(number_markers, info_box_content, display_info_box):
