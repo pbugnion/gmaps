@@ -3,7 +3,7 @@ Building applications with `jupyter-gmaps`
 ------------------------------------------
 
 You can use `jupyter-gmaps` as a component in a `Jupyter widgets <https://ipywidgets.readthedocs.io/en/stable/>`_ application. Jupyter widgets let you embed rich user interfaces in Jupyter notebooks. For instance:
- - you can use maps as a way to get user input. The drawing layer lets users draw markers, lines or polygons on the map. We can specify arbitrary Python code that runs whenever a shape is added to the map. As an example, we will build an application where, whenever the user places a marker, we retrieve the address of the marker and write it in a text widget. 
+ - you can use maps as a way to get user input. The drawing layer lets users draw markers, lines or polygons on the map. We can specify arbitrary Python code that runs whenever a shape is added to the map. As an example, we will build an application where, whenever the user places a marker, we retrieve the address of the marker and write it in a text widget.
  - you can use maps as a way to display the result of an external computation. For instance, if you have timestamped geographical data (for instance, you have the date and coordinates of a series of events), you can combine a heatmap with a slider to see how events unfold over time.
 
 .. _reacting-to-user-actions:
@@ -119,8 +119,8 @@ There are several things to note:
   adddress. Assuming the address is valid, display it in the text widget.
 
 
-Updating data in response to other widgets
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Updating a heatmap in response to other widgets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Many layers support updating the data without re-rendering the entire map. This is useful
 for exploring multi-dimensional datasets, especially in conjunction with other widgets.
@@ -148,6 +148,7 @@ This is the entire code listing::
 
   import gmaps
   gmaps.configure(api_key='AIza...')
+
 
   class AcledExplorer(object):
       """
@@ -204,7 +205,7 @@ This is the entire code listing::
           )
           self._slider.observe(self._on_year_change, names='value')
           controls = widgets.HBox(
-              [self._slider, self._total_box], 
+              [self._slider, self._total_box],
               layout={'justify_content': 'space-between'}
           )
           return controls
@@ -222,7 +223,7 @@ This is the entire code listing::
   AcledExplorer(df).render()
 
 .. image:: _images/update-heatmap-with-slider.png
-  
+
 There are several things to note on this:
 
 - We wrap the application in a class to help keep the mutable state
@@ -248,3 +249,139 @@ There are several things to note on this:
   and `VBox
   <https://ipywidgets.readthedocs.io/en/latest/examples/Widget%20List.html#VBox>`_
   widgets.
+
+
+Updating symbols in response to other widgets
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The marker and symbol layers can also be udpated dynamically (as can
+most other markers).
+
+As an example, we will use the ``starbucks_kfc_uk`` dataset, a dataset
+indexing the location of every Starbucks and KFC in the UK. The
+original dataset is from the
+`UK food standards agency <http://ratings.food.gov.uk>`_.
+
+We will build a application with two checkboxes, one for Starbucks
+outlets and one for KFC outlets. We react to users clicking on the
+outlets by changing the symbols displayed on the map.
+
+This is the entire code listing::
+
+  from IPython.display import display
+  import ipywidgets as widgets
+
+  import gmaps
+  import gmaps.datasets
+  gmaps.configure(api_key="AIza...")
+
+
+  class OutletExplorer(object):
+
+    def __init__(self, df):
+        """
+        Jupyter widget for exploring KFC and Starbucks outlets
+
+        Using checkboxes, the user chooses whether to include
+        Starbucks, KFC outlets, both or neither.
+        """
+        self._df = df
+        self._symbol_layer = None
+
+        self._starbucks_symbols = self._create_symbols_for_chain(
+            'starbucks', 'rgba(0, 150, 0, 0.4)')
+        self._kfc_symbols = self._create_symbols_for_chain(
+            'kfc', 'rgba(150, 0, 0, 0.4)')
+
+        title_widget = widgets.HTML(
+            '<h3>Explore KFC and Starbucks locations</h3>'
+            '<h4>Data from <a href="http://ratings.food.gov.uk">UK Food Standards Agency</a></h4>'
+        )
+        controls = self._render_controls(True, True)
+        map_figure = self._render_map(True, True)
+        self._container = widgets.VBox(
+            [title_widget, controls, map_figure])
+
+    def render(self):
+        """ Render the widget """
+        display(self._container)
+
+    def _render_map(self, initial_include_starbucks, initial_include_kfc):
+        """ Render the initial map """
+        fig = gmaps.figure(layout={'height': '500px'})
+        symbols = self._generate_symbols(True, True)
+        self._symbol_layer = gmaps.Markers(markers=symbols)
+        fig.add_layer(self._symbol_layer)
+        return fig
+
+    def _render_controls(
+        self,
+        initial_include_starbucks,
+        initial_include_kfc
+    ):
+        """ Render the checkboxes """
+        self._starbucks_checkbox = widgets.Checkbox(
+            value=initial_include_starbucks,
+            description='Starbucks'
+        )
+        self._kfc_checkbox = widgets.Checkbox(
+            value=initial_include_kfc,
+            description='KFC'
+        )
+        self._starbucks_checkbox.observe(
+            self._on_controls_change, names='value')
+        self._kfc_checkbox.observe(
+            self._on_controls_change, names='value')
+        controls = widgets.VBox(
+            [self._starbucks_checkbox, self._kfc_checkbox])
+        return controls
+
+    def _on_controls_change(self, obj):
+        """
+        Called when the checkboxes change
+
+        This method builds the list of symbols to include on the map,
+        based on the current checkbox values. It then updates the
+        symbol layer with the new symbol list.
+        """
+        include_starbucks = self._starbucks_checkbox.value
+        include_kfc = self._kfc_checkbox.value
+        symbols = self._generate_symbols(
+            include_starbucks, include_kfc)
+        # Update the layer with the new symbols:
+        self._symbol_layer.markers = symbols
+
+    def _generate_symbols(self, include_starbucks, include_kfc):
+        """ Generate the list of symbols to includs """
+        symbols = []
+        if include_starbucks:
+            symbols.extend(self._starbucks_symbols)
+        if include_kfc:
+            symbols.extend(self._kfc_symbols)
+        return symbols
+
+    def _create_symbols_for_chain(self, chain, color):
+        chain_df = self._df[self._df['chain_name'] == chain]
+        symbols = [
+            gmaps.Symbol(
+                location=(latitude, longitude),
+                stroke_color=color,
+                fill_color=color,
+                scale=2
+            )
+            for latitude, longitude in
+            zip(chain_df["latitude"], chain_df["longitude"])
+        ]
+        return symbols
+
+
+  df = gmaps.datasets.load_dataset_as_df("starbucks_kfc_uk")
+  OutletExplorer(df).render()
+
+.. image:: _images/update-symbols-with-checkboxes.png
+
+ We used the :class:`gmaps.Markers` class to represent the symbol layer,
+ rather than the :func:`gmaps.symbol_layer` factory function. The
+ `Markers` class is easier to manipulate, since it just takes a list
+ of symbols. The disadvantage is that we had to construct the symbols
+ independently.
