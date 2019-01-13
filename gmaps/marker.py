@@ -60,9 +60,9 @@ _doc_snippets['marker_examples'] = """
             hover_text=['Atucha', 'Embalse', 'Armenia', 'Br']
         )
 
-    To change the number of markers once the layer has already been
-    added to the map, mutate the ``markers`` attribute.  You will need
-    to pass a list of :class:`gmaps.Marker` or :class:`gmaps.Symbol`
+    To change the number of markers on an existing layer, mutate the
+    ``markers`` attribute. You will need to pass a list of
+    :class:`gmaps.Marker` or :class:`gmaps.Symbol` instances
     explicitly.
 
     >>> marker_layer.markers = [
@@ -212,8 +212,8 @@ class Markers(GMapsWidgetMixin, widgets.Widget):
 
     {marker_examples}
 
-    To change the style of markers or symbols once the layer has already been
-    added to the map, mutate the marker directly.
+    To change the style of markers or symbols on an existing layer
+    mutate the marker directly.
 
     >>> marker_layer.markers[0].label = 'C'  # markers[0] is a Marker
     >>> marker_layer.markers[0].scale = 5    # markers[0] is a Symbol
@@ -369,17 +369,31 @@ def symbol_layer(
     single value. If given as a single value, this value will
     be broadcast to every marker. Thus, these two calls are equivalent:
 
-    >>> symbols = gmaps.symbol_layer(
+    >>> symbol_layer = gmaps.symbol_layer(
             locations, fill_color=['red']*len(locations))
-    >>> symbols = gmaps.symbol_layer(
+    >>> symbol_layer = gmaps.symbol_layer(
             locations, fill_color='red')
 
     The former is useful for passing different colours to
     different symbols.
 
     >>> colors = ['red', 'green', 'blue', 'black', 'white']
-    >>> symbols = gmaps.symbol_layer(
-            locations, fill_color=colors, stroke_color=colors)
+    >>> symbol_layer = gmaps.symbol_layer(
+            locations, fill_color=colors, stro
+
+    To change the number of symbols after the layer has been
+    constructed, mutate the ``markers`` attribute. You will need to
+    pass a list of :class:`gmaps.Symbol` instances explicitly.
+
+    >>> symbol_layer.markers = [
+            gmaps.Symbol(location=(1.0, 2.0)),
+            gmaps.Symbol(location=(3.0, 4.0))
+        ]
+
+    To change the style of symbols on an existing layer, mutate the
+    symbol directly.
+
+    >>> symbol_layer.markers[0].scale = 5
 
     :param locations:
         List of (latitude, longitude) pairs
@@ -477,6 +491,11 @@ def marker_layer(
     :Examples:
 
     {marker_examples}
+
+    To change the style of markers on an existing layer, mutate the
+    marker directly.
+
+    >>> marker_layer.markers[0].label = 'C'  # markers[0] is a Marker
 
     :param locations:
         List of (latitude, longitude) pairs
