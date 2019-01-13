@@ -3,7 +3,6 @@ import unittest
 import pytest
 
 import numpy as np
-
 import traitlets
 
 from ..marker import (
@@ -352,6 +351,7 @@ class MarkersTest(unittest.TestCase):
     def test_bounds_markers(self):
         layer = Markers(markers=self.symbols)
         assert layer.has_bounds
+        assert layer.data_bounds
 
     def test_bounds_no_markers(self):
         layer = Markers(markers=[])
