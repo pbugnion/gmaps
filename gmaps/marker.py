@@ -8,13 +8,16 @@ import gmaps.bounds as bounds
 from .maps import DEFAULT_CENTER, GMapsWidgetMixin
 from .locations import locations_to_list
 from .options import merge_option_dicts, is_atomic, is_color_atomic
+from ._docutils import doc_subst
 
 __all__ = [
     'Symbol', 'Marker', 'Markers', 'MarkerOptions',
     'marker_layer', 'symbol_layer'
 ]
 
-_marker_options_docstring = """
+_doc_snippets = {}
+
+_doc_snippets['marker_options'] = """
     :param label:
         Text to be displayed inside the marker. Google maps only displays
         the first letter of this string.
@@ -39,6 +42,36 @@ _marker_options_docstring = """
 """
 
 
+_doc_snippets['marker_examples'] = """
+    >>> fig = gmaps.figure()
+    >>> locations = [
+            (-34.0, -59.166672),
+            (-32.23333, -64.433327),
+            (40.166672, 44.133331),
+            (51.216671, 5.0833302)
+        ]
+    >>> marker_layer = gmaps.marker_layer(locations)
+    >>> fig.add_layer(marker_layer)
+
+    You can customize the markers by passing arguments to ``marker_layer``:
+
+    >>> marker_layer = gmaps.marker_layer(
+            locations,
+            hover_text=['Atucha', 'Embalse', 'Armenia', 'Br']
+        )
+
+    To change the number of markers on an existing layer, mutate the
+    ``markers`` attribute. You will need to pass a list of
+    :class:`gmaps.Marker` or :class:`gmaps.Symbol` instances
+    explicitly.
+
+    >>> marker_layer.markers = [
+            gmaps.Marker(location=(1.0, 2.0)),
+            gmaps.Marker(location=(3.0, 4.0))
+        ]
+"""
+
+
 def _resolve_info_box_kwargs(**kwargs):
     if kwargs.get('display_info_box') is None:
         # Not explicitly specified: infer from info_box_content
@@ -51,10 +84,13 @@ def _resolve_info_box_kwargs(**kwargs):
     return kwargs
 
 
+@doc_subst(_doc_snippets)
 class MarkerOptions(HasTraits):
-    __doc__ = """
+    """
     Style options for a marker
-    """ + _marker_options_docstring
+
+    {marker_options}
+    """
     hover_text = Unicode('').tag(sync=True)
     display_info_box = Bool(False).tag(sync=True)
     info_box_content = Unicode('').tag(sync=True)
@@ -128,8 +164,9 @@ class Symbol(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         super(Symbol, self).__init__(**kwargs)
 
 
+@doc_subst(_doc_snippets)
 class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
-    __doc__ = """
+    """
     Class representing a marker.
 
     Markers should be added to the map via the :func:`gmaps.marker_layer`
@@ -142,7 +179,9 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         are expressed as a float between -180 (corresponding to 180 degrees
         west) and +180 (corresponding to 180 degrees east).
     :type location: tuple of floats
-    """ + _marker_options_docstring
+
+    {marker_options}
+    """
     _view_name = Unicode('MarkerView').tag(sync=True)
     _model_name = Unicode('MarkerModel').tag(sync=True)
     label = Unicode('').tag(sync=True)
@@ -153,9 +192,31 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
         super(Marker, self).__init__(**kwargs)
 
 
+@doc_subst(_doc_snippets)
 class Markers(GMapsWidgetMixin, widgets.Widget):
     """
-    A collection of markers or symbols.
+    Marker and symbol layer
+
+    This class represent a layer of markers and symbols. Add this to a
+    :class:`gmaps.Map` instance to draw a set of markers or symbols.
+
+    In general, prefer instantiating this using the higher-level
+    :func:`gmaps.marker_layer` and :func:`gmaps.symbol_layer`
+    factory functions.
+
+    :param markers: Markers and symbols to draw on the map.
+    :type markers: list of :class:`gmaps.Marker` and
+        :class:`gmaps.Symbol` objects.
+
+    :Examples:
+
+    {marker_examples}
+
+    To change the style of markers or symbols on an existing layer
+    mutate the marker directly.
+
+    >>> marker_layer.markers[0].label = 'C'  # markers[0] is a Marker
+    >>> marker_layer.markers[0].scale = 5    # markers[0] is a Symbol
     """
     has_bounds = True
     _view_name = Unicode('MarkerLayerView').tag(sync=True)
@@ -308,17 +369,31 @@ def symbol_layer(
     single value. If given as a single value, this value will
     be broadcast to every marker. Thus, these two calls are equivalent:
 
-    >>> symbols = gmaps.symbol_layer(
+    >>> symbol_layer = gmaps.symbol_layer(
             locations, fill_color=['red']*len(locations))
-    >>> symbols = gmaps.symbol_layer(
+    >>> symbol_layer = gmaps.symbol_layer(
             locations, fill_color='red')
 
     The former is useful for passing different colours to
     different symbols.
 
     >>> colors = ['red', 'green', 'blue', 'black', 'white']
-    >>> symbols = gmaps.symbol_layer(
-            locations, fill_color=colors, stroke_color=colors)
+    >>> symbol_layer = gmaps.symbol_layer(
+            locations, fill_color=colors, stro
+
+    To change the number of symbols after the layer has been
+    constructed, mutate the ``markers`` attribute. You will need to
+    pass a list of :class:`gmaps.Symbol` instances explicitly.
+
+    >>> symbol_layer.markers = [
+            gmaps.Symbol(location=(1.0, 2.0)),
+            gmaps.Symbol(location=(3.0, 4.0))
+        ]
+
+    To change the style of symbols on an existing layer, mutate the
+    symbol directly.
+
+    >>> symbol_layer.markers[0].scale = 5
 
     :param locations:
         List of (latitude, longitude) pairs
@@ -401,6 +476,7 @@ def symbol_layer(
     return Markers(markers=symbols)
 
 
+@doc_subst(_doc_snippets)
 def marker_layer(
         locations, hover_text='', label='',
         info_box_content=None, display_info_box=None):
@@ -414,16 +490,12 @@ def marker_layer(
 
     :Examples:
 
-    >>> fig = gmaps.figure()
-    >>> locations = [
-            (-34.0, -59.166672),
-            (-32.23333, -64.433327),
-            (40.166672, 44.133331),
-            (51.216671, 5.0833302),
-            (51.333328, 4.25)
-        ]
-    >>> markers = gmaps.marker_layer(locations)
-    >>> fig.add_layer(markers)
+    {marker_examples}
+
+    To change the style of markers on an existing layer, mutate the
+    marker directly.
+
+    >>> marker_layer.markers[0].label = 'C'  # markers[0] is a Marker
 
     :param locations:
         List of (latitude, longitude) pairs
