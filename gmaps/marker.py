@@ -155,7 +155,53 @@ class Marker(GMapsWidgetMixin, _BaseMarkerMixin, widgets.Widget):
 
 class Markers(GMapsWidgetMixin, widgets.Widget):
     """
-    A collection of markers or symbols.
+    Marker and symbol layer
+
+    This class represent a layer of markers and symbols. Add this to a
+    :class:`gmaps.Map` instance to draw a set of markers or symbols.
+
+    In general, prefer instantiating this using the higher-level
+    :func:`gmaps.marker_layer` and :func:`gmaps.symbol_layer`
+    factory functions.
+
+    :param markers: Markers and symbols to draw on the map.
+    :type markers: list of :class:`gmaps.Marker` and
+        :class:`gmaps.Symbol` objects.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> locations = [
+            (-34.0, -59.166672),
+            (-32.23333, -64.433327),
+            (40.166672, 44.133331),
+            (51.216671, 5.0833302)
+        ]
+    >>> marker_layer = gmaps.marker_layer(locations)
+    >>> fig.add_layer(marker_layer)
+
+    You can customize the markers by passing arguments to ``marker_layer``:
+
+    >>> marker_layer = gmaps.marker_layer(
+            locations,
+            hover_text=['Atucha', 'Embalse', 'Armenia', 'Br']
+        )
+
+    To change the number of markers once the layer has already been
+    added to the map, mutate the ``markers`` attribute.  You will need
+    to pass a list of :class:`gmaps.Marker` or :class:`gmaps.Symbol`
+    explicitly.
+
+    >>> marker_layer.markers = [
+            gmaps.Marker(location=(1.0, 2.0)),
+            gmaps.Marker(location=(3.0, 4.0))
+        ]
+
+    To change the style of markers or symbols once the layer has already been
+    added to the map, mutate the marker directly.
+
+    >>> marker_layer.markers[0].label = 'C'  # markers[0] is a Marker
+    >>> marker_layer.markers[0].scale = 5    # markers[0] is a Symbol
     """
     has_bounds = True
     _view_name = Unicode('MarkerLayerView').tag(sync=True)
