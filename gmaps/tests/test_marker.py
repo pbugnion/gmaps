@@ -11,8 +11,8 @@ from ..marker import (
     Marker,
     Markers,
     Symbol,
-    _symbol_layer_options,
-    marker_layer
+    marker_layer,
+    symbol_layer
 )
 
 
@@ -142,89 +142,88 @@ class SymbolLayer(unittest.TestCase):
 
     def test_stroke_color_atomic_text(self):
         options = self._add_default_options(stroke_color="red")
-        symbol_options = _symbol_layer_options(
-            self.locations, **options)
-        for options in symbol_options:
-            assert options["stroke_color"] == "red"
+        symbols = symbol_layer(self.locations, **options)
+        for symbol in symbols.markers:
+            assert symbol.stroke_color == "red"
 
     def test_stroke_color_atomic_tuple(self):
         color = (10, 10, 10, 0.5)
         options = self._add_default_options(stroke_color=color)
-        symbol_options = _symbol_layer_options(self.locations, **options)
-        for options in symbol_options:
-            assert options["stroke_color"] == color
+        symbols = symbol_layer(self.locations, **options)
+        for symbol in symbols.markers:
+            assert symbol.stroke_color == 'rgba(10,10,10,0.5)'
 
     def test_stroke_color_list_text(self):
         options = self._add_default_options(stroke_color=["red", "green"])
-        symbol_options = _symbol_layer_options(self.locations, **options)
-        opts = [opts["stroke_color"] for opts in symbol_options]
-        assert tuple(opts) == ("red", "green")
+        symbols = symbol_layer(self.locations, **options)
+        colors = [symbol.stroke_color for symbol in symbols.markers]
+        assert colors == ["red", "green"]
 
     def test_stroke_color_list_tuples(self):
         c1 = (10, 10, 10, 0.5)
         c2 = (20, 20, 20, 0.5)
         options = self._add_default_options(stroke_color=[c1, c2])
-        symbol_options = _symbol_layer_options(self.locations, **options)
-        colors = [opts["stroke_color"] for opts in symbol_options]
-        assert tuple(colors) == (c1, c2)
+        symbols = symbol_layer(self.locations, **options)
+        colors = [symbol.stroke_color for symbol in symbols.markers]
+        assert colors == ['rgba(10,10,10,0.5)', 'rgba(20,20,20,0.5)']
 
     def test_infobox_default(self):
         options = self._add_default_options()
-        symbol_options = _symbol_layer_options(self.locations, **options)
-        for opts in symbol_options:
-            assert not opts["display_info_box"]
+        symbols = symbol_layer(self.locations, **options)
+        for symbol in symbols.markers:
+            assert not symbol.display_info_box
 
     def test_infobox_content_atomic(self):
         test_content = "<h3>test-html-infobox</h3>"
         options = self._add_default_options(
             info_box_content=test_content, display_info_box=True)
-        symbol_options = _symbol_layer_options(self.locations, **options)
-        for options in symbol_options:
-            assert options["info_box_content"] == test_content
-            assert options["display_info_box"]
+        symbols = symbol_layer(self.locations, **options)
+        for symbol in symbols.markers:
+            assert symbol.info_box_content == test_content
+            assert symbol.display_info_box
 
     def test_infobox_content_lists(self):
         test_content = ["1", "2"]
         options = self._add_default_options(
             info_box_content=test_content, display_info_box=True)
-        symbol_options = _symbol_layer_options(self.locations, **options)
-        content_options = [opts["info_box_content"] for opts in symbol_options]
-        assert tuple(content_options) == tuple(test_content)
+        symbols = symbol_layer(self.locations, **options)
+        content_options = [symbol.info_box_content for symbol in symbols.markers]
+        assert content_options == test_content
 
     def test_infobox_default_display_lists(self):
         test_content = ["1", None]
         options = self._add_default_options(info_box_content=test_content)
-        marker_options = _symbol_layer_options(self.locations, **options)
-        display_infos = [opts["display_info_box"] for opts in marker_options]
-        assert tuple(display_infos) == (True, False)
+        symbols = symbol_layer(self.locations, **options)
+        display_infos = [symbol.display_info_box for symbol in symbols.markers]
+        assert display_infos == [True, False]
 
     def test_opacity_default(self):
         options = self._add_default_options()
-        symbol_options = _symbol_layer_options(self.locations, **options)
-        for opts in symbol_options:
-            assert opts['fill_opacity'] == 1.0
-            assert opts['stroke_opacity'] == 1.0
+        symbols = symbol_layer(self.locations, **options)
+        for symbol in symbols.markers:
+            assert symbol.fill_opacity == 1.0
+            assert symbol.stroke_opacity == 1.0
 
     def test_opacity_single(self):
         options = self._add_default_options(
             fill_opacity=0.2, stroke_opacity=0.5)
-        symbol_options = _symbol_layer_options(self.locations, **options)
-        for opts in symbol_options:
-            assert opts['fill_opacity'] == 0.2
-            assert opts['stroke_opacity'] == 0.5
+        symbols = symbol_layer(self.locations, **options)
+        for symbol in symbols.markers:
+            assert symbol.fill_opacity == 0.2
+            assert symbol.stroke_opacity == 0.5
 
     def test_opacity_list(self):
         options = self._add_default_options(
             fill_opacity=[0.2, 0.4], stroke_opacity=[0.6, 0.7])
-        symbol_options = _symbol_layer_options(self.locations, **options)
+        symbols = symbol_layer(self.locations, **options)
         fill_opacity_options = [
-            opts["fill_opacity"] for opts in symbol_options
+            symbol.fill_opacity for symbol in symbols.markers
         ]
         stroke_opacity_options = [
-            opts["stroke_opacity"] for opts in symbol_options
+            symbol.stroke_opacity for symbol in symbols.markers
         ]
-        assert tuple(fill_opacity_options) == (0.2, 0.4)
-        assert tuple(stroke_opacity_options) == (0.6, 0.7)
+        assert fill_opacity_options == [0.2, 0.4]
+        assert stroke_opacity_options == [0.6, 0.7]
 
 
 class MarkerOptionsTests(unittest.TestCase):
