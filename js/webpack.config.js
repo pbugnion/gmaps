@@ -14,6 +14,8 @@ var rules = [
     { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader' },
 ];
 
+var mode = 'production';
+
 
 module.exports = [
     {
@@ -29,7 +31,8 @@ module.exports = [
             filename: 'extension.js',
             path: __dirname + '/../gmaps/static',
             libraryTarget: 'amd'
-        }
+        },
+        mode: mode
     },
     {
         // Lab plugin
@@ -43,7 +46,8 @@ module.exports = [
         module: {
             rules: rules
         },
-        externals: ['@jupyter-widgets/base', '../dist/index']
+        externals: ['@jupyter-widgets/base', '../dist/index'],
+        mode: mode
     },
     {
         // Bundle for the notebook containing the custom widget views and models
@@ -61,7 +65,8 @@ module.exports = [
         module: {
             rules: rules
         },
-        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls']
+        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls'],
+        mode: mode
     },
     {
         // Embeddable jupyter-gmaps bundle
@@ -88,6 +93,7 @@ module.exports = [
         module: {
             rules: rules
         },
-        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls']
+        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls'],
+        mode: mode
     }
 ];
