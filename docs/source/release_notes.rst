@@ -82,12 +82,15 @@ This minor release:
 Version 0.7.0 - 11th November 2017
 ==================================
 
-- This minor release adds a drawing layer, giving the user the ability to add
-arbitrary lines, markers and polygons to a map. The developer can bind callbacks
-that are run when a feature is added, allowing the development of complex, widgets-
-based application on top of jupyter-gmaps (PR 183).
-- It fixes a bug where the bounds were incorrectly calculated when two longitudes coincided (PR 204).
-- It fixes a bug where, for single latitudes, the returned bounds could stretch beyond what Google Maps allows (PR 204)
+- This minor release adds a drawing layer, giving the user the ability
+  to add arbitrary lines, markers and polygons to a map. The developer
+  can bind callbacks that are run when a feature is added, allowing
+  the development of complex, widgets- based application on top of
+  jupyter-gmaps (PR 183).
+- It fixes a bug where the bounds were incorrectly calculated when two
+  longitudes coincided (PR 204).
+- It fixes a bug where, for single latitudes, the returned bounds
+  could stretch beyond what Google Maps allows (PR 204)
 
 Version 0.6.2 - 30th October 2017
 =================================
