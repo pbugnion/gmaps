@@ -240,7 +240,7 @@ Version 0.2.1 - 26th March 2016
 test release -- no changes.
 
 Version 0.2 - 2nd January 2016
-=============================
+==============================
 
  * IPython 4.0 compatibility
  * Python 3 compatibility
