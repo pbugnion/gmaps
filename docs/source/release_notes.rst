@@ -55,6 +55,7 @@ Version 0.7.3 - 11th March 2018
 ===============================
 
 This release:
+
 - simplifies setting the width and height for a figure. We now do
   not need to explicitly set the width and height of the embedded
   map (PR 221).
