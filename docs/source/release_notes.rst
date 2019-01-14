@@ -2,8 +2,8 @@
 Release notes
 -------------
 
-Version 0.8.2
-=============
+Version 0.8.2 - 13th October 2018
+=================================
 
 This minor release fixes an issue where the fill color,
 stroke color or scale were not respected when embedding
@@ -55,6 +55,7 @@ Version 0.7.3 - 11th March 2018
 ===============================
 
 This release:
+
 - simplifies setting the width and height for a figure. We now do
   not need to explicitly set the width and height of the embedded
   map (PR 221).
@@ -81,12 +82,15 @@ This minor release:
 Version 0.7.0 - 11th November 2017
 ==================================
 
-- This minor release adds a drawing layer, giving the user the ability to add
-arbitrary lines, markers and polygons to a map. The developer can bind callbacks
-that are run when a feature is added, allowing the development of complex, widgets-
-based application on top of jupyter-gmaps (PR 183).
-- It fixes a bug where the bounds were incorrectly calculated when two longitudes coincided (PR 204).
-- It fixes a bug where, for single latitudes, the returned bounds could stretch beyond what Google Maps allows (PR 204)
+- This minor release adds a drawing layer, giving the user the ability
+  to add arbitrary lines, markers and polygons to a map. The developer
+  can bind callbacks that are run when a feature is added, allowing
+  the development of complex, widgets- based application on top of
+  jupyter-gmaps (PR 183).
+- It fixes a bug where the bounds were incorrectly calculated when two
+  longitudes coincided (PR 204).
+- It fixes a bug where, for single latitudes, the returned bounds
+  could stretch beyond what Google Maps allows (PR 204)
 
 Version 0.6.2 - 30th October 2017
 =================================
@@ -236,7 +240,7 @@ Version 0.2.1 - 26th March 2016
 test release -- no changes.
 
 Version 0.2 - 2nd January 2016
-=============================
+==============================
 
  * IPython 4.0 compatibility
  * Python 3 compatibility
