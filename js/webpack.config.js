@@ -2,10 +2,9 @@ var version = require('./package.json').version;
 
 // Custom webpack loaders are generally the same for all webpack bundles, hence
 // stored in a separate local variable.
-var loaders = [
+var rules = [
     { test: /\.css$/, loader: 'style-loader!css-loader' },
     { test: /\.less$/, loader: 'style-loader!css-loader!less-loader' },
-    { test: /\.json$/, loader: 'json-loader' },
     { test: /\.js$/, loader: 'babel-loader', query: {presets: ['es2015', 'stage-0']}, exclude: /node_modules/ },
     { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/octet-stream' },
     { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml' },
@@ -13,6 +12,8 @@ var loaders = [
     { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
     { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file-loader' },
 ];
+
+var mode = 'production';
 
 
 module.exports = [
@@ -29,7 +30,8 @@ module.exports = [
             filename: 'extension.js',
             path: __dirname + '/../gmaps/static',
             libraryTarget: 'amd'
-        }
+        },
+        mode: mode
     },
     {
         // Lab plugin
@@ -41,9 +43,10 @@ module.exports = [
             libraryTarget: 'amd'
         },
         module: {
-            loaders: loaders
+            rules: rules
         },
-        externals: ['@jupyter-widgets/base', '../dist/index']
+        externals: ['@jupyter-widgets/base', '../dist/index'],
+        mode: mode
     },
     {
         // Bundle for the notebook containing the custom widget views and models
@@ -59,9 +62,10 @@ module.exports = [
         },
         devtool: 'source-map',
         module: {
-            loaders: loaders
+            rules: rules
         },
-        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls']
+        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls'],
+        mode: mode
     },
     {
         // Embeddable jupyter-gmaps bundle
@@ -86,8 +90,9 @@ module.exports = [
         },
         devtool: 'source-map',
         module: {
-            loaders: loaders
+            rules: rules
         },
-        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls']
+        externals: ['@jupyter-widgets/base', '@jupyter-widgets/controls'],
+        mode: mode
     }
 ];
