@@ -470,6 +470,9 @@ def symbol_layer(
         The default value is True for any symbols for which `info_box_content`
         is set, and False otherwise.
     :type display_info_box: boolean or list of booleans, optional
+
+    :returns:
+        A :class:`gmaps.Markers` instance.
     """
     options = _symbol_layer_options(
         locations, hover_text, fill_color,
@@ -543,6 +546,9 @@ def marker_layer(
         The default value is True for any markers for which `info_box_content`
         is set, and False otherwise.
     :type display_info_box: boolean or list of booleans, optional
+
+    :returns:
+        A :class:`gmaps.Markers` instance.
     """
     marker_options = _marker_layer_options(
         locations, hover_text, label, info_box_content, display_info_box)
