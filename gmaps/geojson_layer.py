@@ -208,6 +208,9 @@ def geojson_layer(
         (corresponding to no stroke) to about 20, corresponding to a very
         fat brush. 3.0 by default.
     :type stroke_weight: float or list of floats, optional
+
+    :returns:
+        A :class:`gmaps.GeoJson` instance.
     """
     _validate_geojson(geojson)
     styled_geojson = copy.deepcopy(geojson)
