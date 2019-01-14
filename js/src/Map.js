@@ -33,6 +33,7 @@ function reloadGoogleMaps(configuration) {
     }
 
     GoogleMapsLoader.LIBRARIES = ['visualization'];
+    GoogleMapsLoader.VERSION = '3.34';
     if (
         configuration['api_key'] !== null &&
         configuration['api_key'] !== undefined
