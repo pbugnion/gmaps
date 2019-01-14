@@ -2,8 +2,8 @@
 Release notes
 -------------
 
-Version 0.8.2
-=============
+Version 0.8.2 - 13th October 2018
+=================================
 
 This minor release fixes an issue where the fill color,
 stroke color or scale were not respected when embedding
