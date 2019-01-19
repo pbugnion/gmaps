@@ -1,6 +1,6 @@
 
 import ipywidgets as widgets
-from traitlets import (Unicode, default, List, Tuple, Instance,
+from traitlets import (Unicode, default, List, Instance,
                        observe, Dict, HasTraits, Enum, Union)
 
 from .bounds import merge_longitude_bounds
