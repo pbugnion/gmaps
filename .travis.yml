@@ -8,10 +8,14 @@ install:
   - "if [[ \"$GROUP\" == python ]] ; then pip install -U pip ; fi"
   - "if [[ \"$GROUP\" == python ]] ; then pip install -r requirements.txt ; fi"
   - "if [[ \"$GROUP\" == python ]] ; then pip install -r test-requirements.txt ; fi"
+  - "if [[ \"$GROUP\" == js ]] ; then npm -v ; fi"
+  - "if [[ \"$GROUP\" == docs ]] ; then npm install --prefix js/ ; fi"
+  - "if [[ \"$GROUP\" == docs ]] ; then pip install sphinx . ; fi"
 script:
   - "if [[ \"$GROUP\" == js ]] ; then npm run --prefix js/ lint ; fi"
   - "if [[ \"$GROUP\" == python ]] ; then flake8 gmaps ; fi"
   - "if [[ \"$GROUP\" == python ]] ; then py.test ; fi"
+  - "if [[ \"$GROUP\" == docs ]] ; then SPHINXOPTS=-W make -e -C docs/ dummy ; fi"
 matrix:
   include:
     - python: 3.6
@@ -22,3 +26,5 @@ matrix:
       env: GROUP=python
     - python: 3.6
       env: GROUP=js
+    - python: 3.6
+      env: GROUP=docs
