@@ -45,6 +45,11 @@ class Map(unittest.TestCase):
             'IPY_MODEL_' + test_layer.model_id,
         ]
 
+    def test_invalid_layer(self):
+        m = maps.Map()
+        with self.assertRaises(traitlets.TraitError):
+            m.layers = [52]
+
 
 class InitialViewport(unittest.TestCase):
 
