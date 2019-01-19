@@ -423,6 +423,13 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
         super(Polygon, self).__init__(**kwargs)
 
 
+class Circle(GMapsWidgetMixin, widgets.Widget):
+    _view_name = Unicode('CircleView').tag(sync=True)
+    _model_name = Unicode('CircleModel').tag(sync=True)
+    radius = Float().tag(sync=True)
+    center = geotraitlets.Point().tag(sync=True)
+
+
 @doc_subst(_doc_snippets)
 class Drawing(GMapsWidgetMixin, widgets.Widget):
     """
