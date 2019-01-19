@@ -35,6 +35,21 @@ class Map(unittest.TestCase):
         assert state['layers'] == ['IPY_MODEL_' + test_layer.model_id]
         assert state['mouse_handling'] == 'NONE'
 
+    def test_change_layer(self):
+        test_layer = heatmap_layer([(1.0, 2.0), (3.0, 4.0)])
+        m = maps.Map()
+        assert m.get_state()['layers'] == []
+        m.layers = [test_layer, test_layer]
+        assert m.get_state()['layers'] == [
+            'IPY_MODEL_' + test_layer.model_id,
+            'IPY_MODEL_' + test_layer.model_id,
+        ]
+
+    def test_invalid_layer(self):
+        m = maps.Map()
+        with self.assertRaises(traitlets.TraitError):
+            m.layers = [52]
+
 
 class InitialViewport(unittest.TestCase):
 

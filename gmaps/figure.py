@@ -34,9 +34,9 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     """
     _view_name = Unicode("FigureView").tag(sync=True)
     _model_name = Unicode("FigureModel").tag(sync=True)
-    _toolbar = Instance(Toolbar, allow_none=True, default=None).tag(
+    _toolbar = Instance(Toolbar, allow_none=True).tag(
         sync=True, **widgets.widget_serialization)
-    _errors_box = Instance(ErrorsBox, allow_none=True, default=None).tag(
+    _errors_box = Instance(ErrorsBox, allow_none=True).tag(
         sync=True, **widgets.widget_serialization)
     _map = Instance(Map).tag(sync=True, **widgets.widget_serialization)
     map_type = MapType('ROADMAP')

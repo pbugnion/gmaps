@@ -1,6 +1,6 @@
 
 import ipywidgets as widgets
-from traitlets import (Unicode, default, List, Tuple, Instance,
+from traitlets import (Unicode, default, List, Instance,
                        observe, Dict, HasTraits, Enum, Union)
 
 from .bounds import merge_longitude_bounds
@@ -188,7 +188,7 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     """
     _view_name = Unicode('PlainmapView').tag(sync=True)
     _model_name = Unicode('PlainmapModel').tag(sync=True)
-    layers = Tuple(trait=Instance(widgets.Widget)).tag(
+    layers = List(trait=Instance(widgets.Widget)).tag(
         sync=True, **widgets.widget_serialization)
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
     initial_viewport = InitialViewport(default_value='DATA_BOUNDS').tag(

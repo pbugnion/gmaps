@@ -38,12 +38,16 @@ class DirectionsLayer(unittest.TestCase):
         assert state['end'] == self.end
         assert state['waypoints'] == []
 
+    # Using the data traitlet is deprecated
+    @pytest.mark.filterwarnings("ignore::DeprecationWarning")
     def test_set_data(self):
         layer = Directions(data=self.data_array)
         assert layer.start == self.start
         assert layer.end == self.end
         assert layer.waypoints == self.waypoints
 
+    # Using the start and end traitlets is deprecated
+    @pytest.mark.filterwarnings("ignore::DeprecationWarning")
     def test_change_data(self):
         layer = Directions(start=(0.0, 0.0), end=(2.0, 2.0))
         layer.data = self.data_array

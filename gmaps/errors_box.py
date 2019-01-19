@@ -12,4 +12,4 @@ class ErrorsBox(GMapsWidgetMixin, widgets.DOMWidget):
     """
     _view_name = Unicode("ErrorsBoxView").tag(sync=True)
     _model_name = Unicode("ErrorsBoxModel").tag(sync=True)
-    errors = List(trait=Unicode).tag(sync=True)
+    errors = List(trait=Unicode()).tag(sync=True)
