@@ -2,6 +2,23 @@
 Release notes
 -------------
 
+Version 0.8.3
+=============
+
+This release: 
+
+- allows dynamically updating an already constructed marker and
+  symbol layer. This makes it easier to use that layer in
+  widget applications (PR 285, 286).
+- adds support for marker layers with no markers (PR 288)
+- updates the Google JS API version form 3.31 to 3.34 (PR 289)
+- updates the build process to use webpack 4 (PR 290)
+- adds the return type of the marker, symbol and geojson layer
+  to the factory functions (PR 291)
+- autoformats the JS parts of the code with prettier (PR 279)
+- adds checks on the integrity of the documentation as part 
+  of the build process (PR 293).
+
 Version 0.8.2 - 13th October 2018
 =================================
 
