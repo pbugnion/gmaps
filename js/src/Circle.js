@@ -1,4 +1,5 @@
 import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer'
+import {arrayToLatLng} from './services/googleConverters';
 
 export class CircleModel extends GMapsLayerModel {
     defaults() {
@@ -11,8 +12,15 @@ export class CircleModel extends GMapsLayerModel {
 export class CircleView extends GMapsLayerView {
     render() {
         const radius = this.model.get('radius');
-        const center = this.model.get('center');
-        console.log(radius);
-        console.log(center);
+        const center = arrayToLatLng(this.model.get('center'));
+        this.circle = new google.maps.Circle({
+            center,
+            radius,
+        })
+    }
+
+    addToMapView(mapView) {
+        this.mapView = mapView;
+        this.circle.setMap(mapView.map);
     }
 }
