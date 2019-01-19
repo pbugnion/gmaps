@@ -1,10 +1,37 @@
 import unittest
 
+import traitlets
+
 from ..figure import figure, Figure, FigureLayout
 from ..maps import Map
+from ..toolbar import Toolbar
+from ..errors_box import ErrorsBox
 
 
 class TestFigure(unittest.TestCase):
+
+    def test_defaults(self):
+        fig = Figure(_map=Map())
+        assert fig._toolbar is None
+        assert fig._errors_box is None
+
+    def test_with_toolbar(self):
+        toolbar = Toolbar()
+        fig = Figure(_map=Map(), _toolbar=toolbar)
+        assert fig._toolbar == toolbar
+
+    def test_validate_toolbar(self):
+        with self.assertRaises(traitlets.TraitError):
+            Figure(_map=Map(), _toolbar=42)
+
+    def test_with_errors_box(self):
+        errors_box = ErrorsBox()
+        fig = Figure(_map=Map(), _errors_box=errors_box)
+        assert fig._errors_box == errors_box
+
+    def test_validate_errors_box(self):
+        with self.assertRaises(traitlets.TraitError):
+            Figure(_map=Map(), _errors_box=42)
 
     def test_proxy_map_type(self):
         fig = Figure(_map=Map(), map_type='HYBRID')
