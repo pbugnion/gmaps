@@ -16,6 +16,7 @@ export class CircleView extends GMapsLayerView {
         this.circle = new google.maps.Circle({
             center,
             radius,
+            clickable: false,
         })
     }
 
