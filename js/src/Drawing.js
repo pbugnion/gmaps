@@ -482,6 +482,14 @@ class CircleClickHandler {
 
     onNewFeatures(features) {}
 
+    remove() {
+        this._clickListener.remove();
+        this._moveListener.remove();
+        if (this.currentCircle) {
+            this.currentCircle.setMap(null);
+        }
+    }
+
     _createCircleCenteredAt(latLng) {
         const circle = new google.maps.Circle({
             center: latLng,
