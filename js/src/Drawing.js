@@ -480,6 +480,8 @@ class CircleClickHandler {
         })
     }
 
+    onNewFeatures(features) {}
+
     _createCircleCenteredAt(latLng) {
         const circle = new google.maps.Circle({
             center: latLng,
