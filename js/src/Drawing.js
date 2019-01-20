@@ -87,6 +87,18 @@ class DrawingMessages {
         return payload;
     }
 
+    static newCircle(center, radius) {
+        const payload = {
+            event: 'FEATURE_ADDED',
+            payload: {
+                featureType: 'CIRCLE',
+                center,
+                radius
+            },
+        };
+        return payload
+    }
+
     static deleteFeature(modelId) {
         const payload = {
             event: 'FEATURE_DELETED',
@@ -273,8 +285,8 @@ export class DrawingLayerView extends GMapsLayerView {
             if (this._clickHandler) {
                 this._clickHandler.remove();
             }
-            this._clickHandler = new CircleClickHandler(map, circle =>
-                console.log(circle)
+            this._clickHandler = new CircleClickHandler(map, (center, radius) =>
+                this.send(DrawingMessages.newCircle(center, radius))
             );
         } else if (mode === 'DELETE') {
             if (this._clickHandler) {
@@ -450,18 +462,16 @@ class CircleClickHandler {
             const {latLng} = event;
             if (this.currentCircle === null) {
                 this.currentCentre = latLngToArray(latLng);
-                console.log(this.currentCentre);
                 this.currentCircle = this._createCircleCenteredAt(latLng);
             } else {
                 const radius = calculateDistance(
                     this.currentCentre,
                     latLngToArray(latLng)
                 )
-                const circleDefinition = {centre: this.currentCentre, radius}
+                onNewCircle(this.currentCentre, radius);
                 this.currentCircle.setMap(null);
                 this.currentCircle = null;
                 this.currentCentre = null;
-                onNewCircle(circleDefinition);
             }
         })
         this._moveListener = map.addListener('mousemove', event => {
