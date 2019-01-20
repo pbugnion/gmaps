@@ -13,7 +13,7 @@ from ._docutils import doc_subst
 
 
 ALLOWED_DRAWING_MODES = {
-    'DISABLED', 'MARKER', 'LINE', 'POLYGON', 'DELETE'
+    'DISABLED', 'MARKER', 'LINE', 'POLYGON', 'CIRCLE', 'DELETE'
 }
 DEFAULT_DRAWING_MODE = 'MARKER'
 

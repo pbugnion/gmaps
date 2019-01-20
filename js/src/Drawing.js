@@ -498,6 +498,11 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             "Drawing layer: switch to 'polygon' mode"
         );
         this._createButtonEvent($polygonButton, 'POLYGON');
+        const $circleButton = this._createModeButton(
+            'fa fa-circle-thin',
+            "Drawing layer: switch to 'circle' mode"
+        );
+        this._createButtonEvent($circleButton, 'CIRCLE');
         const $deleteButton = this._createModeButton(
             'fa fa-trash',
             'Drawing layer: delete features'
@@ -509,6 +514,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             MARKER: $markerButton,
             LINE: $lineButton,
             POLYGON: $polygonButton,
+            CIRCLE: $circleButton,
             DELETE: $deleteButton,
         };
 
@@ -517,6 +523,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             $markerButton,
             $lineButton,
             $polygonButton,
+            $circleButton,
             $deleteButton
         );
         this.$el.append($container);
