@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "build:all": "npm run build:nbextension && npm run build:labextension",
-    "build:watch": "webpack --watch",
+    "build:watch": "webpack --watch --progress",
     "build:nbextension": "webpack",
     "build:labextension": "cd ../gmaps && rimraf labextension && mkdirp labextension && cd labextension && npm pack ../../js",
     "clean:all": "npm run clean:nbextension && npm run clean:labextension",
