@@ -28,7 +28,7 @@
     "format": "prettier src/*.js src/services/*.js --write",
     "lint": "prettier src/*.js src/services/*.js --list-different",
     "update": "rimraf dist/ && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -37,6 +37,8 @@
     "babel-preset-stage-0": "^6.5.0",
     "css-loader": "^0.28.1",
     "file-loader": "^3.0.1",
+    "jest": "^23.6.0",
+    "jest-extended": "^0.11.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.3",
     "mkdirp": "^0.5.1",
@@ -58,5 +60,8 @@
   },
   "jupyterlab": {
     "extension": "jupyterlab-dist/labplugin"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "jest-extended"
   }
 }
