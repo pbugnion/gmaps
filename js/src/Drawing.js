@@ -464,10 +464,7 @@ class CircleClickHandler {
                 this.currentCenter = latLngToArray(latLng);
                 this.currentCircle = this._createCircleCenteredAt(latLng);
             } else {
-                const radius = calculateDistance(
-                    this.currentCenter,
-                    latLngToArray(latLng)
-                )
+                const radius = this._calculateRadius(latLng);
                 onNewCircle(this.currentCenter, radius);
                 this.currentCircle.setMap(null);
                 this.currentCircle = null;
@@ -477,10 +474,7 @@ class CircleClickHandler {
         this._moveListener = map.addListener('mousemove', event => {
             if (this.currentCircle !== null) {
                 const {latLng} = event;
-                const radius = calculateDistance(
-                    this.currentCenter,
-                    latLngToArray(latLng)
-                );
+                const radius = this._calculateRadius(latLng);
                 this.currentCircle.setRadius(radius);
             }
         })
@@ -494,6 +488,10 @@ class CircleClickHandler {
         })
         circle.setMap(this.map);
         return circle;
+    }
+
+    _calculateRadius(latLng) {
+        return calculateDistance(this.currentCenter, latLngToArray(latLng));
     }
 }
 
