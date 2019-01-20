@@ -457,28 +457,28 @@ class CircleClickHandler {
     constructor(map, onNewCircle) {
         this.map = map;
         this.currentCircle = null;
-        this.currentCentre = null;
+        this.currentCenter = null;
         this._clickListener = map.addListener('click', event => {
             const {latLng} = event;
             if (this.currentCircle === null) {
-                this.currentCentre = latLngToArray(latLng);
+                this.currentCenter = latLngToArray(latLng);
                 this.currentCircle = this._createCircleCenteredAt(latLng);
             } else {
                 const radius = calculateDistance(
-                    this.currentCentre,
+                    this.currentCenter,
                     latLngToArray(latLng)
                 )
-                onNewCircle(this.currentCentre, radius);
+                onNewCircle(this.currentCenter, radius);
                 this.currentCircle.setMap(null);
                 this.currentCircle = null;
-                this.currentCentre = null;
+                this.currentCenter = null;
             }
         })
         this._moveListener = map.addListener('mousemove', event => {
             if (this.currentCircle !== null) {
                 const {latLng} = event;
                 const radius = calculateDistance(
-                    this.currentCentre,
+                    this.currentCenter,
                     latLngToArray(latLng)
                 );
                 this.currentCircle.setRadius(radius);
