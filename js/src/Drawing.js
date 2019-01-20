@@ -11,6 +11,7 @@ import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer';
 import {defaultAttributes} from './defaults';
 import {latLngToArray} from './services/googleConverters';
 import {newEventBus} from './services/eventBus';
+import {calculateDistance} from './services/distance';
 
 class DrawingStore extends Store {
     areEqual(firstState, secondState) {
@@ -268,6 +269,13 @@ export class DrawingLayerView extends GMapsLayerView {
             this._clickHandler = new PolygonClickHandler(map, path =>
                 this.send(DrawingMessages.newPolygon(path))
             );
+        } else if (mode === 'CIRCLE') {
+            if (this._clickHandler) {
+                this._clickHandler.remove();
+            }
+            this._clickHandler = new CircleClickHandler(map, circle =>
+                console.log(circle)
+            );
         } else if (mode === 'DELETE') {
             if (this._clickHandler) {
                 this._clickHandler.remove();
@@ -430,6 +438,52 @@ class PolygonClickHandler {
         // two new elements on click.
         const path = _.initial(pathElems);
         return path;
+    }
+}
+
+class CircleClickHandler {
+    constructor(map, onNewCircle) {
+        this.map = map;
+        this.currentCircle = null;
+        this.currentCentre = null;
+        this._clickListener = map.addListener('click', event => {
+            const {latLng} = event;
+            if (this.currentCircle === null) {
+                this.currentCentre = latLngToArray(latLng);
+                console.log(this.currentCentre);
+                this.currentCircle = this._createCircleCenteredAt(latLng);
+            } else {
+                const radius = calculateDistance(
+                    this.currentCentre,
+                    latLngToArray(latLng)
+                )
+                const circleDefinition = {centre: this.currentCentre, radius}
+                this.currentCircle.setMap(null);
+                this.currentCircle = null;
+                this.currentCentre = null;
+                onNewCircle(circleDefinition);
+            }
+        })
+        this._moveListener = map.addListener('mousemove', event => {
+            if (this.currentCircle !== null) {
+                const {latLng} = event;
+                const radius = calculateDistance(
+                    this.currentCentre,
+                    latLngToArray(latLng)
+                );
+                this.currentCircle.setRadius(radius);
+            }
+        })
+    }
+
+    _createCircleCenteredAt(latLng) {
+        const circle = new google.maps.Circle({
+            center: latLng,
+            radius: 100,
+            clickable: false,
+        })
+        circle.setMap(this.map);
+        return circle;
     }
 }
 
