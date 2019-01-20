@@ -4,7 +4,14 @@ import {arrayToLatLng} from './services/googleConverters';
 export class CircleModel extends GMapsLayerModel {
     defaults() {
         return {
-            ...super.defaults()
+            ...super.defaults(),
+            _view_name: 'CircleView',
+            _model_name: 'CircleModel',
+            stroke_color: '#696969',
+            stroke_weight: 2,
+            stroke_opacity: 0.6,
+            fill_color: '#696969',
+            fill_opacity: 0.2,
         }
     };
 }
@@ -13,10 +20,23 @@ export class CircleView extends GMapsLayerView {
     render() {
         const radius = this.model.get('radius');
         const center = arrayToLatLng(this.model.get('center'));
+        const strokeColor = this.model.get('stroke_color');
+        const strokeWeight = this.model.get('stroke_weight');
+        const strokeOpacity = this.model.get('stroke_opacity');
+        const fillColor = this.model.get('fill_color');
+        const fillOpacity = this.model.get('fill_opacity');
+        const circleOptions = {
+            strokeColor,
+            fillColor,
+            strokeWeight,
+            strokeOpacity,
+            fillOpacity,
+            clickable: false,
+        }
         this.circle = new google.maps.Circle({
             center,
             radius,
-            clickable: false,
+            ...circleOptions,
         })
         this.circle.addListener('click', event => this.trigger('click'));
     }

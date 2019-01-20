@@ -428,6 +428,19 @@ class Circle(GMapsWidgetMixin, widgets.Widget):
     _model_name = Unicode('CircleModel').tag(sync=True)
     radius = Float().tag(sync=True)
     center = geotraitlets.Point().tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.6).tag(sync=True)
+    fill_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_FILL_COLOR
+    ).tag(sync=True)
+    fill_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.2).tag(sync=True)
 
 
 @doc_subst(_doc_snippets)
