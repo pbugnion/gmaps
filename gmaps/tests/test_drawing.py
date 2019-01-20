@@ -53,6 +53,18 @@ def new_polygon_message(path):
     return message
 
 
+def new_circle_message(center, radius):
+    message = {
+        'event': 'FEATURE_ADDED',
+        'payload': {
+            'featureType': 'CIRCLE',
+            'radius': radius,
+            'center': center
+        }
+    }
+    return message
+
+
 class Drawing(unittest.TestCase):
 
     def test_default_features(self):
@@ -205,6 +217,17 @@ class Drawing(unittest.TestCase):
         [new_polygon] = layer.features
         assert new_polygon.path == path
         assert new_polygon.stroke_weight == 19.0
+
+    def test_adding_circle(self):
+        layer = drawing.Drawing()
+        center = [10.0, 15.0]
+        radius = 500.0
+        message = new_circle_message(center, radius)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_circle] = layer.features
+        assert new_circle.center == tuple(center)
+        assert new_circle.radius == radius
 
     def test_default_mode(self):
         layer = drawing.Drawing()

@@ -565,6 +565,10 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             elif payload['featureType'] == 'POLYGON':
                 path = payload['path']
                 feature = self.polygon_options.to_polygon(path)
+            elif payload['featureType'] == 'CIRCLE':
+                center = payload['center']
+                radius = payload['radius']
+                feature = Circle(center=center, radius=radius)
             self.features = self.features + [feature]
         elif content.get('event') == 'MODE_CHANGED':
             payload = content['payload']
