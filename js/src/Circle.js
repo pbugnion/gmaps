@@ -18,10 +18,24 @@ export class CircleView extends GMapsLayerView {
             radius,
             clickable: false,
         })
+        this.circle.addListener('click', event => this.trigger('click'));
     }
 
     addToMapView(mapView) {
         this.mapView = mapView;
         this.circle.setMap(mapView.map);
+    }
+
+    removeFromMapView() {
+        this.mapView = null;
+        this.circle.setMap(null);
+    }
+
+    ensureClickable() {
+        this.circle.setOptions({clickable: true})
+    }
+
+    restoreClickable() {
+        this.circle.setOptions({clickable: false})
     }
 }
