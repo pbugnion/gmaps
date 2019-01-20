@@ -442,6 +442,27 @@ class Circle(GMapsWidgetMixin, widgets.Widget):
     fill_opacity = geotraitlets.Opacity(
         allow_none=False, default_value=0.2).tag(sync=True)
 
+    def __init__(
+            self,
+            center,
+            radius,
+            stroke_color=DEFAULT_STROKE_COLOR,
+            stroke_weight=2.0,
+            stroke_opacity=0.6,
+            fill_color=DEFAULT_FILL_COLOR,
+            fill_opacity=0.2
+    ):
+        kwargs = dict(
+            center=center,
+            radius=radius,
+            stroke_color=stroke_color,
+            stroke_weight=stroke_weight,
+            stroke_opacity=stroke_opacity,
+            fill_color=fill_color,
+            fill_opacity=fill_opacity
+        )
+        super(Circle, self).__init__(**kwargs)
+
 
 @doc_subst(_doc_snippets)
 class Drawing(GMapsWidgetMixin, widgets.Widget):

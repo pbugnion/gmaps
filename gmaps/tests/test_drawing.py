@@ -400,3 +400,49 @@ class PolygonOptions(unittest.TestCase):
         assert actual_polygon.stroke_opacity == expected_polygon.stroke_opacity
         assert actual_polygon.fill_color == expected_polygon.fill_color
         assert actual_polygon.fill_opacity == expected_polygon.fill_opacity
+
+
+class Circle(unittest.TestCase):
+
+    def setUp(self):
+        self.center = (20.0, 24.0)
+        self.radius = 4.0e5
+
+    def test_kwargs(self):
+        circle = drawing.Circle(center=self.center, radius=self.radius)
+        assert circle.get_state()['center'] == self.center
+        assert circle.get_state()['radius'] == self.radius
+
+    def test_missing_center(self):
+        with self.assertRaises(TypeError):
+            drawing.Circle(radius=self.radius)
+
+    def test_missing_radius(self):
+        with self.assertRaises(TypeError):
+            drawing.Circle(center=self.center)
+
+    def test_defaults(self):
+        circle = drawing.Circle(self.center, self.radius)
+        state = circle.get_state()
+        assert state['stroke_color'] == drawing.DEFAULT_STROKE_COLOR
+        assert state['stroke_weight'] == 2.0
+        assert state['stroke_opacity'] == 0.6
+        assert state['fill_color'] == drawing.DEFAULT_FILL_COLOR
+        assert state['fill_opacity'] == 0.2
+
+    def test_custom_arguments(self):
+        circle = drawing.Circle(
+            self.center,
+            self.radius,
+            stroke_color=(1, 3, 5),
+            stroke_weight=10.0,
+            stroke_opacity=0.87,
+            fill_color=(7, 9, 11),
+            fill_opacity=0.76
+        )
+        state = circle.get_state()
+        assert state['stroke_color'] == 'rgb(1,3,5)'
+        assert state['stroke_weight'] == 10.0
+        assert state['stroke_opacity'] == 0.87
+        assert state['fill_color'] == 'rgb(7,9,11)'
+        assert state['fill_opacity'] == 0.76
