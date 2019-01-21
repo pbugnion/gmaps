@@ -423,6 +423,34 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
         super(Polygon, self).__init__(**kwargs)
 
 
+class CircleOptions(HasTraits):
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.6).tag(sync=True)
+    fill_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_FILL_COLOR
+    ).tag(sync=True)
+    fill_opacity = geotraitlets.Opacity(
+        allow_none=False, default_value=0.2).tag(sync=True)
+
+    def to_circle(self, center, radius):
+        new_circle = Circle(
+            center=center,
+            radius=radius,
+            stroke_color=self.stroke_color,
+            stroke_weight=self.stroke_weight,
+            stroke_opacity=self.stroke_opacity,
+            fill_color=self.fill_color,
+            fill_opacity=self.fill_opacity
+        )
+        return new_circle
+
+
 class Circle(GMapsWidgetMixin, widgets.Widget):
     _view_name = Unicode('CircleView').tag(sync=True)
     _model_name = Unicode('CircleModel').tag(sync=True)

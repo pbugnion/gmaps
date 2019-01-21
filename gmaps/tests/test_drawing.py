@@ -446,3 +446,19 @@ class Circle(unittest.TestCase):
         assert state['stroke_opacity'] == 0.87
         assert state['fill_color'] == 'rgb(7,9,11)'
         assert state['fill_opacity'] == 0.76
+
+
+class CircleOptions(unittest.TestCase):
+
+    def test_to_circle_defaults(self):
+        center = (10.0, 20.0)
+        radius = 40.0e3
+        expected_circle = drawing.Circle(center, radius)
+        actual_circle = drawing.CircleOptions().to_circle(center, radius)
+        assert actual_circle.center == expected_circle.center
+        assert actual_circle.radius == expected_circle.radius
+        assert actual_circle.stroke_color == expected_circle.stroke_color
+        assert actual_circle.stroke_weight == expected_circle.stroke_weight
+        assert actual_circle.stroke_opacity == expected_circle.stroke_opacity
+        assert actual_circle.fill_color == expected_circle.fill_color
+        assert actual_circle.fill_opacity == expected_circle.fill_opacity
