@@ -116,6 +116,16 @@ class Drawing(unittest.TestCase):
         layer = drawing.Drawing(polygon_options=options)
         assert layer.polygon_options.stroke_weight == 12.0
 
+    def test_circle_options_instance(self):
+        options = drawing.CircleOptions(stroke_weight=12.0)
+        layer = drawing.Drawing(circle_options=options)
+        assert layer.circle_options.stroke_weight == 12.0
+
+    def test_circle_options_dict(self):
+        options = {'stroke_weight': 12.0}
+        layer = drawing.Drawing(circle_options=options)
+        assert layer.circle_options.stroke_weight == 12.0
+
     def test_adding_marker(self):
         layer = drawing.Drawing()
         message = new_marker_message(latitude=25.0, longitude=-5.0)
