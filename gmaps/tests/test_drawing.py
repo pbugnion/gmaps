@@ -239,6 +239,19 @@ class Drawing(unittest.TestCase):
         assert new_circle.center == tuple(center)
         assert new_circle.radius == radius
 
+    def test_adding_circle_with_options(self):
+        layer = drawing.Drawing(
+            circle_options=drawing.CircleOptions(stroke_weight=19.0))
+        center = [10.0, 15.0]
+        radius = 500.0
+        message = new_circle_message(center, radius)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_circle] = layer.features
+        assert new_circle.center == tuple(center)
+        assert new_circle.radius == radius
+        assert new_circle.stroke_weight == 19.0
+
     def test_default_mode(self):
         layer = drawing.Drawing()
         assert layer.get_state()['mode'] == drawing.DEFAULT_DRAWING_MODE
