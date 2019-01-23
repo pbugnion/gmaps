@@ -470,6 +470,10 @@ class Circle(unittest.TestCase):
         assert state['fill_color'] == 'rgb(7,9,11)'
         assert state['fill_opacity'] == 0.76
 
+    def test_negative_radius(self):
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Circle(self.center, -1.0)
+
 
 class CircleOptions(unittest.TestCase):
 

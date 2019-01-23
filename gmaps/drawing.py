@@ -454,7 +454,7 @@ class CircleOptions(HasTraits):
 class Circle(GMapsWidgetMixin, widgets.Widget):
     _view_name = Unicode('CircleView').tag(sync=True)
     _model_name = Unicode('CircleModel').tag(sync=True)
-    radius = Float().tag(sync=True)
+    radius = Float(min=0.0).tag(sync=True)
     center = geotraitlets.Point().tag(sync=True)
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_STROKE_COLOR
