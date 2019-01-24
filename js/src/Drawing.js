@@ -571,7 +571,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
         );
         this._createButtonEvent($polygonButton, 'POLYGON');
         const $circleButton = this._createModeButton(
-            'fa fa-circle-thin',
+            'fa fa-circle-o',
             "Drawing layer: switch to 'circle' mode"
         );
         this._createButtonEvent($circleButton, 'CIRCLE');
