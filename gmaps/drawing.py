@@ -579,7 +579,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
 
     :param mode:
         Initial drawing mode. One of ``DISABLED``, ``MARKER``, ``LINE``,
-        ``POLYGON`` or ``DELETE``. Defaults to ``MARKER`` if
+        ``POLYGON``, ``CIRCLE`` or ``DELETE``. Defaults to ``MARKER`` if
         ``toolbar_controls.show_controls`` is True, otherwise defaults to
         ``DISABLED``.
     :type mode: str, optional
@@ -736,10 +736,11 @@ def drawing_layer(
     {params}
 
     :param mode:
-        Initial drawing mode. One of ``DISABLED``, ``MARKER``, ``LINE``,
-        ``POLYGON`` or ``DELETE``. Defaults to ``MARKER`` if ``show_controls``
-        is True, otherwise defaults to ``DISABLED``.
-    :type mode: str, optional
+        Initial drawing mode. One of ``DISABLED``,
+        ``MARKER``, ``LINE``, ``POLYGON``, ``CIRCLE`` or
+        ``DELETE``. Defaults to ``MARKER`` if ``show_controls`` is
+        True, otherwise defaults to ``DISABLED``.  :type mode: str,
+        optional
 
     :param show_controls:
         Whether to show the drawing controls in the map toolbar.
