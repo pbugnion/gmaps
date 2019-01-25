@@ -37,7 +37,7 @@ class GeoJsonFeature(GMapsWidgetMixin, widgets.Widget):
     fill_opacity = geotraitlets.Opacity(default_value=1.0).tag(sync=True)
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=True, default_value=None).tag(sync=True)
-    stroke_opacity = geotraitlets.Opacity(default_value=1.0).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
     stroke_weight = Float(min=0.0, default_value=1.0).tag(sync=True)
 
     def get_coords(self):
@@ -123,7 +123,8 @@ def _validate_geojson(geojson_document):
 
 def geojson_layer(
         geojson, fill_color=None,
-        fill_opacity=0.4, stroke_color=None, stroke_opacity=0.8,
+        fill_opacity=0.4, stroke_color=None,
+        stroke_opacity=geotraitlets.StrokeOpacity.default_value,
         stroke_weight=1.0):
     """
     GeoJSON layer
@@ -200,7 +201,7 @@ def geojson_layer(
     :param stroke_opacity:
         The opacity of the stroke color. The opacity should be a float
         between 0.0 (transparent) and 1.0 (opaque), or a list of floats.
-        0.8 by default.
+        0.6 by default.
     :type stroke_opacity: float or list of floats, optional
 
     :param stroke_weight:

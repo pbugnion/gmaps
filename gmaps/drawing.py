@@ -200,8 +200,7 @@ class LineOptions(HasTraits):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.6).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
 
     def to_line(self, start, end):
         new_line = Line(
@@ -275,14 +274,13 @@ class Line(GMapsWidgetMixin, widgets.Widget):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.6).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
 
     def __init__(
             self, start, end,
             stroke_color=DEFAULT_STROKE_COLOR,
             stroke_weight=2.0,
-            stroke_opacity=0.6
+            stroke_opacity=geotraitlets.StrokeOpacity.default_value
     ):
         kwargs = dict(
             start=start,
@@ -320,8 +318,7 @@ class PolygonOptions(HasTraits):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.6).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
@@ -396,8 +393,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.6).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
@@ -408,7 +404,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
             self, path,
             stroke_color=DEFAULT_STROKE_COLOR,
             stroke_weight=2.0,
-            stroke_opacity=0.6,
+            stroke_opacity=geotraitlets.StrokeOpacity.default_value,
             fill_color=DEFAULT_FILL_COLOR,
             fill_opacity=0.2
     ):
@@ -430,8 +426,7 @@ class CircleOptions(HasTraits):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.6).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
@@ -462,8 +457,7 @@ class Circle(GMapsWidgetMixin, widgets.Widget):
     stroke_weight = Float(
         min=0.0, allow_none=False, default_value=2.0
     ).tag(sync=True)
-    stroke_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.6).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
@@ -476,7 +470,7 @@ class Circle(GMapsWidgetMixin, widgets.Widget):
             radius,
             stroke_color=DEFAULT_STROKE_COLOR,
             stroke_weight=2.0,
-            stroke_opacity=0.6,
+            stroke_opacity=geotraitlets.StrokeOpacity.default_value,
             fill_color=DEFAULT_FILL_COLOR,
             fill_opacity=0.2
     ):
