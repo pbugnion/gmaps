@@ -2,6 +2,14 @@
 Release notes
 -------------
 
+Version 0.8.4
+=============
+
+This release:
+- adds the ability to draw circles in the drawing layer (PR 295)
+- adds JS unit testing to the build pipeline (PR 295)
+- fixes deprecation warnings for obsolete traitlets code (PR 294)
+
 Version 0.8.3
 =============
 
