@@ -81,6 +81,10 @@ Low level widgets
 
 .. autoclass:: gmaps.PolygonOptions
 
+.. autoclass:: gmaps.Circle
+
+.. autoclass:: gmaps.CircleOptions
+
 Datasets
 --------
 
