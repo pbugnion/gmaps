@@ -1,4 +1,4 @@
-import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer'
+import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer';
 import {arrayToLatLng} from './services/googleConverters';
 
 export class CircleModel extends GMapsLayerModel {
@@ -12,8 +12,8 @@ export class CircleModel extends GMapsLayerModel {
             stroke_opacity: 0.6,
             fill_color: '#696969',
             fill_opacity: 0.2,
-        }
-    };
+        };
+    }
 }
 
 export class CircleView extends GMapsLayerView {
@@ -32,12 +32,12 @@ export class CircleView extends GMapsLayerView {
             strokeOpacity,
             fillOpacity,
             clickable: false,
-        }
+        };
         this.circle = new google.maps.Circle({
             center,
             radius,
             ...circleOptions,
-        })
+        });
         this.circle.addListener('click', event => this.trigger('click'));
         this.modelEvents();
     }
@@ -72,10 +72,10 @@ export class CircleView extends GMapsLayerView {
     }
 
     ensureClickable() {
-        this.circle.setOptions({clickable: true})
+        this.circle.setOptions({clickable: true});
     }
 
     restoreClickable() {
-        this.circle.setOptions({clickable: false})
+        this.circle.setOptions({clickable: false});
     }
 }

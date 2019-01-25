@@ -93,10 +93,10 @@ class DrawingMessages {
             payload: {
                 featureType: 'CIRCLE',
                 center,
-                radius
+                radius,
             },
         };
-        return payload
+        return payload;
     }
 
     static deleteFeature(modelId) {
@@ -470,14 +470,14 @@ class CircleClickHandler {
                 this.currentCircle = null;
                 this.currentCenter = null;
             }
-        })
+        });
         this._moveListener = map.addListener('mousemove', event => {
             if (this.currentCircle !== null) {
                 const {latLng} = event;
                 const radius = this._calculateRadius(latLng);
                 this.currentCircle.setRadius(radius);
             }
-        })
+        });
     }
 
     onNewFeatures(features) {}
@@ -495,7 +495,7 @@ class CircleClickHandler {
             center: latLng,
             radius: 100,
             clickable: false,
-        })
+        });
         circle.setMap(this.map);
         return circle;
     }
