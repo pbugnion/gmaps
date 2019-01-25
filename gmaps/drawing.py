@@ -419,7 +419,28 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
         super(Polygon, self).__init__(**kwargs)
 
 
+@doc_subst(_doc_snippets)
 class CircleOptions(HasTraits):
+    """
+    Style options for a circle.
+
+    Pass an instance of this class to :func:`gmaps.drawing_layer` to
+    control the style of new user-drawn circles on the map.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(
+            circle_options=gmaps.CircleOptions(
+                stroke_color='red', fill_color=(255, 0, 132))
+        )
+    >>> fig.add_layer(drawing)
+    >>> fig # display the figure
+
+    {stroke_options_params}
+
+    {fill_options_params}
+    """
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_STROKE_COLOR
     ).tag(sync=True)
