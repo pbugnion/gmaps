@@ -322,8 +322,7 @@ class PolygonOptions(HasTraits):
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
-    fill_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.2).tag(sync=True)
+    fill_opacity = geotraitlets.FillOpacity().tag(sync=True)
 
     def to_polygon(self, path):
         new_polygon = Polygon(
@@ -397,8 +396,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
-    fill_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.2).tag(sync=True)
+    fill_opacity = geotraitlets.FillOpacity().tag(sync=True)
 
     def __init__(
             self, path,
@@ -406,7 +404,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
             stroke_weight=2.0,
             stroke_opacity=geotraitlets.StrokeOpacity.default_value,
             fill_color=DEFAULT_FILL_COLOR,
-            fill_opacity=0.2
+            fill_opacity=geotraitlets.FillOpacity.default_value
     ):
         kwargs = dict(
             path=path,
@@ -430,8 +428,7 @@ class CircleOptions(HasTraits):
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
-    fill_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.2).tag(sync=True)
+    fill_opacity = geotraitlets.FillOpacity().tag(sync=True)
 
     def to_circle(self, center, radius):
         new_circle = Circle(
@@ -461,8 +458,7 @@ class Circle(GMapsWidgetMixin, widgets.Widget):
     fill_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_FILL_COLOR
     ).tag(sync=True)
-    fill_opacity = geotraitlets.Opacity(
-        allow_none=False, default_value=0.2).tag(sync=True)
+    fill_opacity = geotraitlets.FillOpacity().tag(sync=True)
 
     def __init__(
             self,
@@ -472,7 +468,7 @@ class Circle(GMapsWidgetMixin, widgets.Widget):
             stroke_weight=2.0,
             stroke_opacity=geotraitlets.StrokeOpacity.default_value,
             fill_color=DEFAULT_FILL_COLOR,
-            fill_opacity=0.2
+            fill_opacity=geotraitlets.FillOpacity.default_value
     ):
         kwargs = dict(
             center=center,

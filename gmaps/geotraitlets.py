@@ -284,6 +284,11 @@ class StrokeOpacity(Opacity):
     allow_none = False
 
 
+class FillOpacity(Opacity):
+    default_value = 0.2
+    allow_none = False
+
+
 def is_valid_point(pt):
     latitude, longitude = pt
     return (-90.0 <= latitude <= 90.0) and (-180.0 <= longitude <= 180.0)

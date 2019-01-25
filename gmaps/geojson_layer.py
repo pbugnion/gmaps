@@ -16,6 +16,9 @@ from .maps import GMapsWidgetMixin
 __all__ = ["GeoJson", "geojson_layer", "GeoJsonFeature", "InvalidGeoJson"]
 
 
+GEOJSON_DEFAULT_FILL_OPACITY = 0.4
+
+
 class InvalidGeoJson(Exception):
     pass
 
@@ -34,7 +37,9 @@ class GeoJsonFeature(GMapsWidgetMixin, widgets.Widget):
     fill_color = geotraitlets.ColorAlpha(
         allow_none=True, default_value=None
     ).tag(sync=True)
-    fill_opacity = geotraitlets.Opacity(default_value=1.0).tag(sync=True)
+    fill_opacity = geotraitlets.FillOpacity(
+        default_value=GEOJSON_DEFAULT_FILL_OPACITY
+    ).tag(sync=True)
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=True, default_value=None).tag(sync=True)
     stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
@@ -123,7 +128,8 @@ def _validate_geojson(geojson_document):
 
 def geojson_layer(
         geojson, fill_color=None,
-        fill_opacity=0.4, stroke_color=None,
+        fill_opacity=GEOJSON_DEFAULT_FILL_OPACITY,
+        stroke_color=None,
         stroke_opacity=geotraitlets.StrokeOpacity.default_value,
         stroke_weight=1.0):
     """
