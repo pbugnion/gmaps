@@ -521,8 +521,8 @@ So far, we have only considered visualizing GeoJSON geometries that come with `j
   fig.add_layer(geojson_layer)
   fig
 
-Drawing markers, lines and polygons
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Drawing markers, lines, circles and polygons
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The `drawing layer` lets you draw complex shapes on the map. You can add markers,
 lines and polygons directly to maps. Let's, for instance, draw the `Greenwich
