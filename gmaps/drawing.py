@@ -125,7 +125,7 @@ _doc_snippets['examples'] = """
 """
 
 
-_doc_snippets['line_options_params'] = """
+_doc_snippets['stroke_options_params'] = """
     :param stroke_color:
         The stroke color of the line. Colors can be specified as a simple
         string, e.g. 'blue', as an RGB tuple, e.g. (100, 0, 0),
@@ -143,11 +143,9 @@ _doc_snippets['line_options_params'] = """
     :type stroke_opacity: float, optional
 """
 
-_doc_snippets['polygon_options_params'] = """
-    {line_options_params}
-
+_doc_snippets['fill_options_params'] = """
     :param fill_color:
-        The internal color of the polygon. Colors can be specified as a simple
+        The internal color. Colors can be specified as a simple
         string, e.g. 'blue', as an RGB tuple, e.g. (100, 0, 0),
         or as an RGBA tuple, e.g. (100, 0, 0, 0.5). Defaults to a grey
         color: (69, 69, 69)
@@ -157,7 +155,7 @@ _doc_snippets['polygon_options_params'] = """
         The opacity of the fill color. The opacity should be a float
         between 0.0 (transparent) and 1.0 (opaque). 0.2 by default.
     :type fill_opacity: float, optional
-""".format(line_options_params=_doc_snippets['line_options_params'].strip())
+"""
 
 
 class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
@@ -192,7 +190,7 @@ class LineOptions(HasTraits):
     >>> fig.add_layer(drawing)
     >>> fig # display the figure
 
-    {line_options_params}
+    {stroke_options_params}
     """
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_STROKE_COLOR
@@ -262,7 +260,7 @@ class Line(GMapsWidgetMixin, widgets.Widget):
         and +180 (corresponding to 180 degrees east).
     :type start: tuple of floats
 
-    {line_options_params}
+    {stroke_options_params}
     """
     _view_name = Unicode('LineView').tag(sync=True)
     _model_name = Unicode('LineModel').tag(sync=True)
@@ -310,7 +308,9 @@ class PolygonOptions(HasTraits):
     >>> fig.add_layer(drawing)
     >>> fig # display the figure
 
-    {polygon_options_params}
+    {stroke_options_params}
+
+    {fill_options_params}
     """
     stroke_color = geotraitlets.ColorAlpha(
         allow_none=False, default_value=DEFAULT_STROKE_COLOR
@@ -343,7 +343,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
 
     Add this polygon to a map via the :func:`gmaps.drawing_layer`
     function, or by passing it directly to the ``.features`` array
-    of an existing instance of :class:`gmaps.Drawing`.
+    of a :class:`gmaps.Drawing` instance.
 
     :Examples:
 
@@ -381,7 +381,9 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
         west) and +180 (corresponding to 180 degrees east).
     :type path: list of tuples of floats
 
-    {polygon_options_params}
+    {stroke_options_params}
+    
+    {fill_options_params}
     """
     _view_name = Unicode('PolygonView').tag(sync=True)
     _model_name = Unicode('PolygonModel').tag(sync=True)
@@ -443,7 +445,62 @@ class CircleOptions(HasTraits):
         return new_circle
 
 
+@doc_subst(_doc_snippets)
 class Circle(GMapsWidgetMixin, widgets.Widget):
+    """
+    Widget representing a closed circle on a map
+
+    Add this cicle to a map via the :func:`gmaps.drawing_layer`
+    function, or by passing it directly to the ``.features`` array
+    of a :class:`gmaps.Drawing` instance
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(features=[
+         gmaps.Circle(
+            radius=20000,  # in meters
+            center=(46.656, 6.111),
+            stroke_color='red', fill_color=(255, 0, 132)
+        )
+    ])
+    >>> fig.add_layer(drawing)
+
+    You can also add circles to an existing :class:`gmaps.Drawing`
+    instance:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer()
+    >>> fig.add_layer(drawing)
+    >>> fig # display the figure
+
+    You can now add polygons directly on the map:
+
+    >>> drawing.features = [
+         gmaps.Circle(
+            radius=20000,  # in meters
+            center=(46.656, 6.111),
+            stroke_color='red', fill_color=(255, 0, 132)
+        )
+    ]
+
+    :param center:
+        (latitude, longitude) pair denoting the center of the
+        circle. Latitudes are expressed as a float between -90 (
+        corresponding to 90 degrees south) and +90 (corresponding to
+        90 degrees north). Longitudes are expressed as a float between
+        -180 (corresponding to 180 degrees west) and +180
+        (corresponding to 180 degrees east).
+    :type center: pair of floats
+
+    :param radius:
+        Radius of the circle, in meters.
+    :type radius: float
+
+    {stroke_options_params}
+
+    {fill_options_params}
+    """
     _view_name = Unicode('CircleView').tag(sync=True)
     _model_name = Unicode('CircleModel').tag(sync=True)
     radius = Float(min=0.0).tag(sync=True)
