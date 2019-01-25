@@ -382,7 +382,7 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
     :type path: list of tuples of floats
 
     {stroke_options_params}
-    
+
     {fill_options_params}
     """
     _view_name = Unicode('PolygonView').tag(sync=True)
