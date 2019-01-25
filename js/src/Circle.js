@@ -1,0 +1,81 @@
+import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer';
+import {arrayToLatLng} from './services/googleConverters';
+
+export class CircleModel extends GMapsLayerModel {
+    defaults() {
+        return {
+            ...super.defaults(),
+            _view_name: 'CircleView',
+            _model_name: 'CircleModel',
+            stroke_color: '#696969',
+            stroke_weight: 2,
+            stroke_opacity: 0.6,
+            fill_color: '#696969',
+            fill_opacity: 0.2,
+        };
+    }
+}
+
+export class CircleView extends GMapsLayerView {
+    render() {
+        const radius = this.model.get('radius');
+        const center = arrayToLatLng(this.model.get('center'));
+        const strokeColor = this.model.get('stroke_color');
+        const strokeWeight = this.model.get('stroke_weight');
+        const strokeOpacity = this.model.get('stroke_opacity');
+        const fillColor = this.model.get('fill_color');
+        const fillOpacity = this.model.get('fill_opacity');
+        const circleOptions = {
+            strokeColor,
+            fillColor,
+            strokeWeight,
+            strokeOpacity,
+            fillOpacity,
+            clickable: false,
+        };
+        this.circle = new google.maps.Circle({
+            center,
+            radius,
+            ...circleOptions,
+        });
+        this.circle.addListener('click', event => this.trigger('click'));
+        this.modelEvents();
+    }
+
+    modelEvents() {
+        const properties = [
+            ['strokeColor', 'stroke_color'],
+            ['strokeWeight', 'stroke_weight'],
+            ['strokeOpacity', 'stroke_opacity'],
+            ['fillColor', 'fill_color'],
+            ['fillOpacity', 'fill_opacity'],
+        ];
+
+        properties.forEach(([nameInView, nameInModel]) => {
+            const callback = () => {
+                this.circle.setOptions({
+                    [nameInView]: this.model.get(nameInModel),
+                });
+            };
+            this.model.on(`change:${nameInModel}`, callback, this);
+        });
+    }
+
+    addToMapView(mapView) {
+        this.mapView = mapView;
+        this.circle.setMap(mapView.map);
+    }
+
+    removeFromMapView() {
+        this.mapView = null;
+        this.circle.setMap(null);
+    }
+
+    ensureClickable() {
+        this.circle.setOptions({clickable: true});
+    }
+
+    restoreClickable() {
+        this.circle.setOptions({clickable: false});
+    }
+}

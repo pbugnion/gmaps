@@ -53,6 +53,18 @@ def new_polygon_message(path):
     return message
 
 
+def new_circle_message(center, radius):
+    message = {
+        'event': 'FEATURE_ADDED',
+        'payload': {
+            'featureType': 'CIRCLE',
+            'radius': radius,
+            'center': center
+        }
+    }
+    return message
+
+
 class Drawing(unittest.TestCase):
 
     def test_default_features(self):
@@ -103,6 +115,16 @@ class Drawing(unittest.TestCase):
         options = {'stroke_weight': 12.0}
         layer = drawing.Drawing(polygon_options=options)
         assert layer.polygon_options.stroke_weight == 12.0
+
+    def test_circle_options_instance(self):
+        options = drawing.CircleOptions(stroke_weight=12.0)
+        layer = drawing.Drawing(circle_options=options)
+        assert layer.circle_options.stroke_weight == 12.0
+
+    def test_circle_options_dict(self):
+        options = {'stroke_weight': 12.0}
+        layer = drawing.Drawing(circle_options=options)
+        assert layer.circle_options.stroke_weight == 12.0
 
     def test_adding_marker(self):
         layer = drawing.Drawing()
@@ -205,6 +227,30 @@ class Drawing(unittest.TestCase):
         [new_polygon] = layer.features
         assert new_polygon.path == path
         assert new_polygon.stroke_weight == 19.0
+
+    def test_adding_circle(self):
+        layer = drawing.Drawing()
+        center = [10.0, 15.0]
+        radius = 500.0
+        message = new_circle_message(center, radius)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_circle] = layer.features
+        assert new_circle.center == tuple(center)
+        assert new_circle.radius == radius
+
+    def test_adding_circle_with_options(self):
+        layer = drawing.Drawing(
+            circle_options=drawing.CircleOptions(stroke_weight=19.0))
+        center = [10.0, 15.0]
+        radius = 500.0
+        message = new_circle_message(center, radius)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_circle] = layer.features
+        assert new_circle.center == tuple(center)
+        assert new_circle.radius == radius
+        assert new_circle.stroke_weight == 19.0
 
     def test_default_mode(self):
         layer = drawing.Drawing()
@@ -377,3 +423,69 @@ class PolygonOptions(unittest.TestCase):
         assert actual_polygon.stroke_opacity == expected_polygon.stroke_opacity
         assert actual_polygon.fill_color == expected_polygon.fill_color
         assert actual_polygon.fill_opacity == expected_polygon.fill_opacity
+
+
+class Circle(unittest.TestCase):
+
+    def setUp(self):
+        self.center = (20.0, 24.0)
+        self.radius = 4.0e5
+
+    def test_kwargs(self):
+        circle = drawing.Circle(center=self.center, radius=self.radius)
+        assert circle.get_state()['center'] == self.center
+        assert circle.get_state()['radius'] == self.radius
+
+    def test_missing_center(self):
+        with self.assertRaises(TypeError):
+            drawing.Circle(radius=self.radius)
+
+    def test_missing_radius(self):
+        with self.assertRaises(TypeError):
+            drawing.Circle(center=self.center)
+
+    def test_defaults(self):
+        circle = drawing.Circle(self.center, self.radius)
+        state = circle.get_state()
+        assert state['stroke_color'] == drawing.DEFAULT_STROKE_COLOR
+        assert state['stroke_weight'] == 2.0
+        assert state['stroke_opacity'] == 0.6
+        assert state['fill_color'] == drawing.DEFAULT_FILL_COLOR
+        assert state['fill_opacity'] == 0.2
+
+    def test_custom_arguments(self):
+        circle = drawing.Circle(
+            self.center,
+            self.radius,
+            stroke_color=(1, 3, 5),
+            stroke_weight=10.0,
+            stroke_opacity=0.87,
+            fill_color=(7, 9, 11),
+            fill_opacity=0.76
+        )
+        state = circle.get_state()
+        assert state['stroke_color'] == 'rgb(1,3,5)'
+        assert state['stroke_weight'] == 10.0
+        assert state['stroke_opacity'] == 0.87
+        assert state['fill_color'] == 'rgb(7,9,11)'
+        assert state['fill_opacity'] == 0.76
+
+    def test_negative_radius(self):
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Circle(self.center, -1.0)
+
+
+class CircleOptions(unittest.TestCase):
+
+    def test_to_circle_defaults(self):
+        center = (10.0, 20.0)
+        radius = 40.0e3
+        expected_circle = drawing.Circle(center, radius)
+        actual_circle = drawing.CircleOptions().to_circle(center, radius)
+        assert actual_circle.center == expected_circle.center
+        assert actual_circle.radius == expected_circle.radius
+        assert actual_circle.stroke_color == expected_circle.stroke_color
+        assert actual_circle.stroke_weight == expected_circle.stroke_weight
+        assert actual_circle.stroke_opacity == expected_circle.stroke_opacity
+        assert actual_circle.fill_color == expected_circle.fill_color
+        assert actual_circle.fill_opacity == expected_circle.fill_opacity

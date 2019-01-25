@@ -11,6 +11,7 @@ import {GMapsLayerView, GMapsLayerModel} from './GMapsLayer';
 import {defaultAttributes} from './defaults';
 import {latLngToArray} from './services/googleConverters';
 import {newEventBus} from './services/eventBus';
+import {calculateDistance} from './services/distance';
 
 class DrawingStore extends Store {
     areEqual(firstState, secondState) {
@@ -81,6 +82,18 @@ class DrawingMessages {
             payload: {
                 featureType: 'POLYGON',
                 path,
+            },
+        };
+        return payload;
+    }
+
+    static newCircle(center, radius) {
+        const payload = {
+            event: 'FEATURE_ADDED',
+            payload: {
+                featureType: 'CIRCLE',
+                center,
+                radius,
             },
         };
         return payload;
@@ -268,6 +281,13 @@ export class DrawingLayerView extends GMapsLayerView {
             this._clickHandler = new PolygonClickHandler(map, path =>
                 this.send(DrawingMessages.newPolygon(path))
             );
+        } else if (mode === 'CIRCLE') {
+            if (this._clickHandler) {
+                this._clickHandler.remove();
+            }
+            this._clickHandler = new CircleClickHandler(map, (center, radius) =>
+                this.send(DrawingMessages.newCircle(center, radius))
+            );
         } else if (mode === 'DELETE') {
             if (this._clickHandler) {
                 this._clickHandler.remove();
@@ -433,6 +453,58 @@ class PolygonClickHandler {
     }
 }
 
+class CircleClickHandler {
+    constructor(map, onNewCircle) {
+        this.map = map;
+        this.currentCircle = null;
+        this.currentCenter = null;
+        this._clickListener = map.addListener('click', event => {
+            const {latLng} = event;
+            if (this.currentCircle === null) {
+                this.currentCenter = latLngToArray(latLng);
+                this.currentCircle = this._createCircleCenteredAt(latLng);
+            } else {
+                const radius = this._calculateRadius(latLng);
+                onNewCircle(this.currentCenter, radius);
+                this.currentCircle.setMap(null);
+                this.currentCircle = null;
+                this.currentCenter = null;
+            }
+        });
+        this._moveListener = map.addListener('mousemove', event => {
+            if (this.currentCircle !== null) {
+                const {latLng} = event;
+                const radius = this._calculateRadius(latLng);
+                this.currentCircle.setRadius(radius);
+            }
+        });
+    }
+
+    onNewFeatures(features) {}
+
+    remove() {
+        this._clickListener.remove();
+        this._moveListener.remove();
+        if (this.currentCircle) {
+            this.currentCircle.setMap(null);
+        }
+    }
+
+    _createCircleCenteredAt(latLng) {
+        const circle = new google.maps.Circle({
+            center: latLng,
+            radius: 100,
+            clickable: false,
+        });
+        circle.setMap(this.map);
+        return circle;
+    }
+
+    _calculateRadius(latLng) {
+        return calculateDistance(this.currentCenter, latLngToArray(latLng));
+    }
+}
+
 class DeleteClickHandler {
     constructor(features, onDeleteFeature) {
         this.eventBus = newEventBus();
@@ -498,6 +570,11 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             "Drawing layer: switch to 'polygon' mode"
         );
         this._createButtonEvent($polygonButton, 'POLYGON');
+        const $circleButton = this._createModeButton(
+            'fa fa-circle-o',
+            "Drawing layer: switch to 'circle' mode"
+        );
+        this._createButtonEvent($circleButton, 'CIRCLE');
         const $deleteButton = this._createModeButton(
             'fa fa-trash',
             'Drawing layer: delete features'
@@ -509,6 +586,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             MARKER: $markerButton,
             LINE: $lineButton,
             POLYGON: $polygonButton,
+            CIRCLE: $circleButton,
             DELETE: $deleteButton,
         };
 
@@ -517,6 +595,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             $markerButton,
             $lineButton,
             $polygonButton,
+            $circleButton,
             $deleteButton
         );
         this.$el.append($container);

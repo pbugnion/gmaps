@@ -1,7 +1,7 @@
 
 import unittest
 
-from .. import geojson_layer, InvalidGeoJson
+from .. import geojson_layer, InvalidGeoJson, GeoJsonFeature
 
 
 class GeoJson(unittest.TestCase):
@@ -33,3 +33,23 @@ class GeoJson(unittest.TestCase):
         }
         with self.assertRaises(InvalidGeoJson):
             geojson_layer(geo)
+
+
+class TestGeoJsonFeature(unittest.TestCase):
+
+    def test_defaults(self):
+        valid_feature_dict = {
+            "type": "Feature",
+            "geometry": {
+                "type": "polygon",
+                "coordinates": [[
+                    [71.049, 38.408],
+                    [71.334, 38.280]
+                ]],
+            },
+            "properties": {"name": "Afghanistan"}
+        }
+        feature = GeoJsonFeature(feature=valid_feature_dict)
+        state = feature.get_state()
+        assert state["fill_opacity"] == 0.4
+        assert state["stroke_opacity"] == 0.6
