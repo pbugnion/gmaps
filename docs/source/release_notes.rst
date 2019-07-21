@@ -7,16 +7,8 @@ Version 0.9.0
 
 This release:
 - adds support for JupyterLab 1.0 and removes support for JupyterLab <1.0 (PRs 310 and 312).
-  *jupyter-gmaps* 0.8.4 was the last version to support JupyterLab <1.0.
+*jupyter-gmaps* 0.8.4 was the last version to support JupyterLab <1.0.
 - removes a build artifact that was committed to source control (PR 311).
-
-Version 0.9.0
-=============
-
-This release adds support for JupyterLab 1.0 and removes support for older
-versions of JupyterLab (PRs 310 and 312).
-
-It also removes a build artifact that was committed.
 
 Version 0.8.4
 =============
