@@ -43,6 +43,20 @@ installation. You can also trigger this directly on the command line with::
 
     $ jupyter lab build
 
+Installing `jupyter-gmaps` on JupyterLab <1.0
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To install `jupyter-gmaps` with versions of JupyterLab pre 1.0, you will need to pin the version of `jupyterlab-manager` and of `jupyter-gmaps`. Find the version of the `jupyterlab-manager` that you need from `this compatibility table <https://github.com/jupyter-widgets/ipywidgets/tree/master/packages/jupyterlab-manager>`_. For instance, for JupyterLab 0.35.x::
+
+    $ jupyter labextension install @jupyter-widgets/jupyterlab-manager@0.38
+
+Then, install `jupyter-gmaps` pinned to ``0.8.4``::
+
+    $ pip install gmaps==0.8.4
+
+You will then need to re-build JupyterLab with::
+
+    $ jupyter lab build
 
 Development version
 ^^^^^^^^^^^^^^^^^^^
