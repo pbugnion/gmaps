@@ -2,6 +2,14 @@
 Release notes
 -------------
 
+Version 0.9.0
+=============
+
+This release adds support for JupyterLab 1.0 and removes support for older
+versions of JupyterLab (PRs 310 and 312).
+
+It also removes a build artifact that was committed.
+
 Version 0.8.4
 =============
 
