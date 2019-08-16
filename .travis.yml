@@ -18,6 +18,8 @@ script:
   - "if [[ \"$GROUP\" == docs ]] ; then SPHINXOPTS=-W make -e -C docs/ dummy ; fi"
 matrix:
   include:
+    - python: 3.7
+      env: GROUP=python
     - python: 3.6
       env: GROUP=python
     - python: 3.5
