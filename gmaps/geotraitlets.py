@@ -326,9 +326,13 @@ def _validate_longitude(longitude):
             '-180 and 180.'.format(longitude)
         )
 
+
 class StylesString(traitlets.Unicode):
     """
     A string holding a google maps styles as JSON formatted string
+
+    Using `this <https://developers.google.com/maps/documentation/javascript/styling>` page # noqa: E501
+    for reference.
     """
     info_text = 'JSON formatted styles string'
     default_value = traitlets.Undefined

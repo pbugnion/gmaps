@@ -7,6 +7,9 @@ from ..maps import Map
 from ..toolbar import Toolbar
 from ..errors_box import ErrorsBox
 
+STYLES = '[{}]'
+STYLES_1 = '[{}, {}]'
+
 
 class TestFigure(unittest.TestCase):
 
@@ -63,6 +66,16 @@ class TestFigure(unittest.TestCase):
         fig._map.mouse_handling = 'NONE'
         assert fig.mouse_handling == 'NONE'
 
+    def test_proxy_styles(self):
+        fig = Figure(_map=Map(), styles=STYLES)
+        assert fig.styles == STYLES
+        assert fig._map.styles == STYLES
+
+    def test_proxy_styles_change(self):
+        fig = Figure(_map=Map(), styles=STYLES)
+        fig.styles = STYLES_1
+        assert fig._map.styles == STYLES_1
+
 
 class TestFigureFactory(unittest.TestCase):
 
@@ -72,6 +85,7 @@ class TestFigureFactory(unittest.TestCase):
         assert fig._errors_box is not None
         assert fig.map_type == 'ROADMAP'
         assert fig.mouse_handling == 'COOPERATIVE'
+        assert fig.styles == '{}'
         map_ = fig._map
         assert map_ is not None
         assert map_.initial_viewport == 'DATA_BOUNDS'
@@ -142,3 +156,7 @@ class TestFigureFactory(unittest.TestCase):
     def test_custom_mouse_handling(self):
         fig = figure(mouse_handling='NONE')
         assert fig.mouse_handling == 'NONE'
+
+    def test_custom_styles(self):
+        fig = figure(styles=STYLES_1)
+        assert fig.styles == STYLES_1

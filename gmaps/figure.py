@@ -44,7 +44,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     mouse_handling = MouseHandling('COOPERATIVE')
     layout = widgets.trait_types.InstanceDict(FigureLayout).tag(
         sync=True, **widgets.widget_serialization)
-    
+
     styles = StylesString('{}')
 
     def __init__(self, *args, **kwargs):
@@ -59,7 +59,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
 
         self._map.mouse_handling = self.mouse_handling
         link((self._map, 'mouse_handling'), (self, 'mouse_handling'))
-        
+
         self._map.styles = self.styles
         link((self._map, 'styles'), (self, 'styles'))
 
@@ -161,7 +161,7 @@ def figure(
     {map_type}
 
     {mouse_handling}
-    
+
     {styles}
 
     :param layout:
@@ -200,21 +200,23 @@ def figure(
     To have a satellite map:
 
     >>> fig = gmaps.figure(map_type='HYBRID')
-    
+
     To have a map with custom styles:
 
-    >>> fig = gmaps.figure(styles='''[{
+    styles = '''[{{
             "featureType": "road",
             "elementType": "geometry",
             "stylers": [
-                {
+                {{
                     "visibility": "on"
-                },
-                {
+                }},
+                {{
                     "color": "#000000"
-                }
+                }}
             ]
-    }]''')
+    }}]'''
+
+    >>> fig = gmaps.figure(styles=styles)
     """  # noqa: E501
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:

@@ -4,7 +4,8 @@ from traitlets import (Unicode, default, List, Instance,
                        observe, Dict, HasTraits, Enum, Union)
 
 from .bounds import merge_longitude_bounds
-from .geotraitlets import Point, ZoomLevel, MapType, MouseHandling, Tilt, StylesString
+from .geotraitlets import (Point, ZoomLevel, MapType,
+                           MouseHandling, Tilt, StylesString)
 from ._docutils import doc_subst
 from ._version import CLIENT_VERSION
 
@@ -37,10 +38,13 @@ map_params_doc_snippets['mouse_handling'] = """
     :type mouse_handling: str, optional
 """
 
+
 map_params_doc_snippets['styles'] = """
     :param styles:
-        A string holding a google maps styles as JSON formatted string
-        https://developers.google.com/maps/documentation/javascript/style-reference
+        A JSON formatted Google Maps styles string.
+
+        Using `this <https://developers.google.com/maps/documentation/javascript/styling>` page # noqa: E501
+        for reference.
     :type styles: str, optional
 """
 
@@ -80,10 +84,11 @@ class InitialViewport(Union):
     """
     Traitlet defining the initial viewport for a map.
     """
+
     def __init__(self, **metadata):
         trait_types = [
-                Enum(['DATA_BOUNDS']),
-                Instance(_ZoomCenter)
+            Enum(['DATA_BOUNDS']),
+            Instance(_ZoomCenter)
         ]
         super(InitialViewport, self).__init__(trait_types, **metadata)
 
@@ -142,9 +147,9 @@ def _serialize_viewport(viewport, manager):
     else:
         try:
             payload = {
-                    'type': 'ZOOM_CENTER',
-                    'center': viewport.center,
-                    'zoom_level': viewport.zoom_level
+                'type': 'ZOOM_CENTER',
+                'center': viewport.center,
+                'zoom_level': viewport.zoom_level
             }
         except AttributeError:
             raise ValueError('viewport')
@@ -172,7 +177,7 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     {map_type}
 
     {mouse_handling}
-    
+
     {styles}
 
     :Examples:
@@ -194,24 +199,24 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
     You can also change this dynamically:
 
     >>> m.map_type = 'TERRAIN'
-    
+
     To have a map with custom styles:
-    
-    styles = '''[{
+
+    styles = '''[{{
             "featureType": "road",
             "elementType": "geometry",
             "stylers": [
-                {
+                {{
                     "visibility": "on"
-                },
-                {
+                }},
+                {{
                     "color": "#000000"
-                }
+                }}
             ]
-    }]'''
+    }}]'''
 
     >>> m = gmaps.Map(styles=styles)
-    
+
     You can also change this dynamically:
 
     >>> m.styles = 'styles'
@@ -222,7 +227,7 @@ class Map(ConfigurationMixin, GMapsWidgetMixin, widgets.DOMWidget):
         sync=True, **widgets.widget_serialization)
     data_bounds = List(DEFAULT_BOUNDS).tag(sync=True)
     initial_viewport = InitialViewport(default_value='DATA_BOUNDS').tag(
-            sync=True, to_json=_serialize_viewport)
+        sync=True, to_json=_serialize_viewport)
     map_type = MapType('ROADMAP').tag(sync=True)
     tilt = Tilt().tag(sync=True)
     mouse_handling = MouseHandling('COOPERATIVE').tag(sync=True)

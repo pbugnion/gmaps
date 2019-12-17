@@ -5,6 +5,8 @@ import traitlets
 
 from .. import maps, heatmap_layer
 
+STYLES = '[{}]'
+
 
 class Map(unittest.TestCase):
 
@@ -15,6 +17,7 @@ class Map(unittest.TestCase):
         assert state['mouse_handling'] == 'COOPERATIVE'
         assert state['initial_viewport'] == {'type': 'DATA_BOUNDS'}
         assert state['layers'] == []
+        assert state['styles'] == '{}'
 
     def test_custom_traits(self):
         test_layer = heatmap_layer([(1.0, 2.0), (3.0, 4.0)])
@@ -23,7 +26,8 @@ class Map(unittest.TestCase):
             mouse_handling='NONE',
             initial_viewport=maps.InitialViewport.from_zoom_center(
                 10, (5.0, 10.0)),
-            layers=[test_layer]
+            layers=[test_layer],
+            styles=STYLES
         )
         state = m.get_state()
         assert state['map_type'] == 'HYBRID'
@@ -34,6 +38,7 @@ class Map(unittest.TestCase):
         }
         assert state['layers'] == ['IPY_MODEL_' + test_layer.model_id]
         assert state['mouse_handling'] == 'NONE'
+        assert state['styles'] == STYLES
 
     def test_change_layer(self):
         test_layer = heatmap_layer([(1.0, 2.0), (3.0, 4.0)])
