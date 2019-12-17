@@ -1,6 +1,8 @@
 
 import re
 
+import json
+
 import traitlets
 
 from .locations import locations_to_list
@@ -323,3 +325,22 @@ def _validate_longitude(longitude):
             'Longitudes must lie between '
             '-180 and 180.'.format(longitude)
         )
+
+
+class StylesString(traitlets.Unicode):
+    """
+    A string holding a google maps styles as JSON formatted string
+
+    Using `this <https://developers.google.com/maps/documentation/javascript/styling>` page # noqa: E501
+    for reference.
+    """
+    info_text = 'JSON formatted styles string'
+    default_value = traitlets.Undefined
+
+    def validate(self, obj, value):
+        try:
+            value_as_string = super(StylesString, self).validate(obj, value)
+            json.loads(value_as_string)
+            return value_as_string
+        except TypeError:
+            return self.error(obj, value)

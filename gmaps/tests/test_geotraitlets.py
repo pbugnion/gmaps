@@ -387,3 +387,32 @@ class TestOpacity(unittest.TestCase):
     def test_wrong_type(self):
         with self.assertRaises(traitlets.TraitError):
             self.A(x='not-a-float')
+
+
+STYLES = '''[{
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+        {
+            "visibility": "on"
+        },
+        {
+            "color": "#000000"
+        }
+    ]
+}]'''
+
+
+class StylesString(unittest.TestCase):
+    def setUp(self):
+        class A(traitlets.HasTraits):
+            x = geotraitlets.StylesString()
+        self.A = A
+
+    def test_accept_styles_json_string(self):
+        a = self.A(x=STYLES)
+        assert a.x == STYLES
+
+    def test_reject_invalid_json_string(self):
+        with self.assertRaises(ValueError):
+            self.A(x='{')
