@@ -110,10 +110,12 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
     }
 
     readOptions(google) {
+        const styles = this.model.get('styles');
         const options = {
             mapTypeId: stringToMapType(google, this.model.get('map_type')),
             gestureHandling: this.model.get('mouse_handling').toLowerCase(),
             tilt: this.model.get('tilt'),
+            styles: styles ? JSON.parse(styles) : '',
         };
         return options;
     }
@@ -136,6 +138,11 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
                 .get('mouse_handling')
                 .toLowerCase();
             this.setMapOptions({gestureHandling});
+        });
+
+        this.model.on('change:styles', () => {
+            const styles = JSON.parse(this.model.get('styles'));
+            this.setMapOptions({styles});
         });
     }
 
@@ -240,6 +247,7 @@ export class PlainmapModel extends widgets.DOMWidgetModel {
             initial_viewport: {type: DATA_BOUNDS},
             map_type: 'ROADMAP',
             mouse_handling: 'COOPERATIVE',
+            styles: '{}',
         };
     }
 

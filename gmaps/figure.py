@@ -6,7 +6,7 @@ from traitlets import Unicode, Instance, default, link
 from .maps import (
     Map, InitialViewport, GMapsWidgetMixin, map_params_doc_snippets
 )
-from .geotraitlets import MapType, MouseHandling, Tilt
+from .geotraitlets import MapType, MouseHandling, Tilt, StylesString
 from .toolbar import Toolbar
 from .errors_box import ErrorsBox
 from ._docutils import doc_subst
@@ -44,6 +44,8 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
     mouse_handling = MouseHandling('COOPERATIVE')
     layout = widgets.trait_types.InstanceDict(FigureLayout).tag(
         sync=True, **widgets.widget_serialization)
+    
+    styles = StylesString('{}')
 
     def __init__(self, *args, **kwargs):
         if kwargs.get('layout') is None:
@@ -57,6 +59,9 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
 
         self._map.mouse_handling = self.mouse_handling
         link((self._map, 'mouse_handling'), (self, 'mouse_handling'))
+        
+        self._map.styles = self.styles
+        link((self._map, 'styles'), (self, 'styles'))
 
     @default('layout')
     def _default_layout(self):
@@ -116,7 +121,7 @@ class Figure(GMapsWidgetMixin, widgets.DOMWidget):
 def figure(
         display_toolbar=True, display_errors=True, zoom_level=None, tilt=45,
         center=None, layout=None, map_type='ROADMAP',
-        mouse_handling='COOPERATIVE'):
+        mouse_handling='COOPERATIVE', styles='{}'):
     """
     Create a gmaps figure
 
@@ -156,6 +161,8 @@ def figure(
     {map_type}
 
     {mouse_handling}
+    
+    {styles}
 
     :param layout:
         Control the layout of the figure, e.g. its width, height, border etc.
@@ -193,7 +200,21 @@ def figure(
     To have a satellite map:
 
     >>> fig = gmaps.figure(map_type='HYBRID')
+    
+    To have a map with custom styles:
 
+    >>> fig = gmaps.figure(styles='''[{
+            "featureType": "road",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "visibility": "on"
+                },
+                {
+                    "color": "#000000"
+                }
+            ]
+    }]''')
     """  # noqa: E501
     if zoom_level is not None or center is not None:
         if zoom_level is None or center is None:
@@ -218,5 +239,5 @@ def figure(
     fig = Figure(
         _map=_map, _toolbar=_toolbar, _errors_box=_errors_box,
         layout=layout, map_type=map_type, tilt=tilt,
-        mouse_handling=mouse_handling)
+        mouse_handling=mouse_handling, styles=styles)
     return fig
