@@ -127,6 +127,13 @@ export class PlainmapView extends ConfigurationMixin(widgets.DOMWidgetView) {
             this.setMapOptions({mapTypeId});
         });
 
+        this.model.on('change:data_bounds', () => {
+            const {type} = this.model.get('initial_viewport');
+            if (type === DATA_BOUNDS) {
+                this.setViewportFromBounds(this.model.get('data_bounds'));
+            }
+        });
+
         this.model.on('change:tilt', () => {
             this.setMapOptions({tilt: this.model.get('tilt')});
         });
