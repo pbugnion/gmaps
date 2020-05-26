@@ -171,11 +171,7 @@ You will then need to rebuild JupyterLab with::
 Google API keys
 ---------------
 
-To access Google maps, `gmaps` needs a Google API key. This key tells Google who you are, presumably so it can keep track of rate limits and such things. To create an API key, follow the instructions in the `documentation <http://jupyter-gmaps.readthedocs.io/en/latest/authentication.html>`_. Once you have an API key, pass it to `gmaps` before creating widgets:
-
-.. code:: python
-
-    gmaps.configure(api_key="AI...")
+To access Google maps, `gmaps` needs a Google API key. This key tells Google who you are, presumably so it can keep track of rate limits and such things. To create an API key, follow the instructions in the `documentation <http://jupyter-gmaps.readthedocs.io/en/latest/authentication.html>`_. Once you have an API key, pass it to `gmaps` before creating widgets (still following the instructions in the documentation). If you get a "this page can't load Google maps correctly" error, review the tips provided at the webpage linked from the "do you own this website" text provided in the error message; for example, you may not have properly configured billing for the GCP project associated with the API. 
 
 Documentation
 -------------
