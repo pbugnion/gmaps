@@ -6,13 +6,9 @@ Most operations on Google Maps require that you tell Google who you are. To auth
 
 .. image:: _images/api_key.*
 
-You can pass this key to `gmaps` with the ``configure`` method::
+You can pass this key to `gmaps` with the ``configure`` method. Maps and layers created after the call to ``gmaps.configure`` will have access to the API key.
 
-  gmaps.configure(api_key="AI...")
-
-Maps and layers created after the call to ``gmaps.configure`` will have access to the API key.
-
-You should avoid hard-coding the API key into your Jupyter notebooks. You can use  `environment variables <https://en.wikipedia.org/wiki/Environment_variable>`_. Add the following line to your shell start-up file (probably `~/.profile` or `~/.bashrc`)::
+However, you should avoid hard-coding the API key into your Jupyter notebooks. You can use  `environment variables <https://en.wikipedia.org/wiki/Environment_variable>`_. Add the following line to your shell start-up file (probably `~/.profile` or `~/.bashrc`)::
 
   export GOOGLE_API_KEY=AI...
 
@@ -22,3 +18,5 @@ Make sure you don't put spaces around the ``=`` sign. If you then open a `new` t
   import gmaps
 
   gmaps.configure(api_key=os.environ["GOOGLE_API_KEY"])
+
+If you get a "this page can't load Google maps correctly" error in your Jupyter Notebook, review the tips provided at the webpage linked from the "do you own this website" text provided in the error message; for example, you may not have properly configured billing for the GCP project associated with the API.
