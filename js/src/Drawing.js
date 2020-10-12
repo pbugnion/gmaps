@@ -87,6 +87,17 @@ class DrawingMessages {
         return payload;
     }
 
+    static newPolyline(path) {
+        const payload = {
+            event: 'FEATURE_ADDED',
+            payload: {
+                featureType: 'POLYLINE',
+                path,
+            },
+        };
+        return payload;
+    }
+
     static newCircle(center, radius) {
         const payload = {
             event: 'FEATURE_ADDED',
@@ -281,6 +292,13 @@ export class DrawingLayerView extends GMapsLayerView {
             this._clickHandler = new PolygonClickHandler(map, path =>
                 this.send(DrawingMessages.newPolygon(path))
             );
+        } else if (mode === 'POLYLINE') {
+            if (this._clickHandler) {
+                this._clickHandler.remove();
+            }
+            this._clickHandler = new PolylineClickHandler(map, path =>
+                this.send(DrawingMessages.newPolyline(path))
+            );
         } else if (mode === 'CIRCLE') {
             if (this._clickHandler) {
                 this._clickHandler.remove();
@@ -453,6 +471,78 @@ class PolygonClickHandler {
     }
 }
 
+class PolylineClickHandler {
+    constructor(map, onNewPolyline) {
+        this.map = map;
+        this.currentPolyline = null;
+        this.map.setOptions({disableDoubleClickZoom: true});
+        this._clickListener = map.addListener('click', event => {
+            const {latLng} = event;
+            if (this.currentPolyline === null) {
+                this.currentPolyline = this._createPolylineStartingAt(latLng);
+            } else {
+                this._finishCurrentLine(latLng);
+            }
+        });
+        this._dblclickListener = map.addListener('dblclick', event => {
+            if (this.currentPolyline !== null) {
+                const path = this._completePolyline();
+                this.currentPolyline.setMap(null);
+                this.currentPolyline = null;
+                if (path.length > 2) {
+                    // Only dispatch an event if there are at
+                    // least three points. Otherwise, it's
+                    // likely to just be user error.
+                    onNewPolyline(path);
+                }
+            }
+        });
+        this._moveListener = map.addListener('mousemove', event => {
+            if (this.currentPolyline !== null) {
+                const {latLng} = event;
+                const currentPath = this.currentPolyline.getPath();
+                currentPath.setAt(currentPath.getLength() - 1, latLng);
+            }
+        });
+    }
+
+    onNewFeatures(features) {}
+
+    remove() {
+        this._clickListener.remove();
+        this._dblclickListener.remove();
+        this._moveListener.remove();
+        if (this.currentPolyline) {
+            this.currentPolyline.setMap(null);
+        }
+        this.map.setOptions({disableDoubleClickZoom: false});
+    }
+
+    _createPolylineStartingAt(latLng) {
+        const path = new google.maps.MVCArray([latLng, latLng]);
+        const polyline = new google.maps.Polyline({path, clickable: false});
+        polyline.setMap(this.map);
+        return polyline;
+    }
+
+    _finishCurrentLine(latLng) {
+        const currentPath = this.currentPolyline.getPath();
+        const lastLatLng = currentPath.getAt(currentPath.getLength() - 1);
+        currentPath.push(lastLatLng);
+    }
+
+    _completePolyline() {
+        const currentPath = this.currentPolyline.getPath();
+        const pathElems = currentPath
+            .getArray()
+            .map(point => latLngToArray(point));
+        // last element is duplicate since we always introduce
+        // two new elements on click.
+        const path = _.initial(pathElems);
+        return path;
+    }
+}
+
 class CircleClickHandler {
     constructor(map, onNewCircle) {
         this.map = map;
@@ -570,6 +660,11 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             "Drawing layer: switch to 'polygon' mode"
         );
         this._createButtonEvent($polygonButton, 'POLYGON');
+        const $polylineButton = this._createModeButton(
+            'gmaps-icon polyline',
+            "Drawing layer: switch to 'polyline' mode"
+        );
+        this._createButtonEvent($polylineButton, 'POLYLINE');
         const $circleButton = this._createModeButton(
             'fa fa-circle-o',
             "Drawing layer: switch to 'circle' mode"
@@ -586,6 +681,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             MARKER: $markerButton,
             LINE: $lineButton,
             POLYGON: $polygonButton,
+            POLYLINE: $polylineButton,
             CIRCLE: $circleButton,
             DELETE: $deleteButton,
         };
@@ -595,6 +691,7 @@ export class DrawingControlsView extends widgets.DOMWidgetView {
             $markerButton,
             $lineButton,
             $polygonButton,
+            $polylineButton,
             $circleButton,
             $deleteButton
         );
