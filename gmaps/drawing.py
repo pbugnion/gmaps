@@ -1,4 +1,3 @@
-
 import ipywidgets as widgets
 
 from traitlets import (
@@ -11,21 +10,20 @@ from .maps import GMapsWidgetMixin
 from .marker import MarkerOptions
 from ._docutils import doc_subst
 
-
 ALLOWED_DRAWING_MODES = {
-    'DISABLED', 'MARKER', 'LINE', 'POLYGON', 'CIRCLE', 'DELETE'
+    'DISABLED', 'MARKER', 'LINE', 'POLYGON', 'POLYLINE', 'CIRCLE', 'DELETE'
 }
 DEFAULT_DRAWING_MODE = 'MARKER'
 
 DEFAULT_STROKE_COLOR = '#696969'
 DEFAULT_FILL_COLOR = '#696969'
 
-
 _doc_snippets = {}
 _doc_snippets['params'] = """
     :param features:
         List of features to draw on the map. Features must be one of
-        :class:`gmaps.Marker`, :class:`gmaps.Line` or :class:`gmaps.Polygon`.
+        :class:`gmaps.Marker`, :class:`gmaps.Line`, :class:`gmaps.Polygon`,
+        or :class:`gmaps.Polyline`.
     :type features: list of features, optional
 
     :param marker_options:
@@ -65,11 +63,24 @@ _doc_snippets['params'] = """
         the options to the :class:`gmaps.Polygon` constructor.
     :type polygon_options:
         :class:`gmaps.PolygonOptions`, `dict` or `None`, optional
+
+    :param polyline_options:
+        Options controlling how new polylines are drawn on the map. Either pass
+        in an instance of :class:`gmaps.PolylineOptions`, or a dictionary with
+        keys `stroke_weight`, `stroke_color`, `stroke_opacity` 
+        (or a subset of these). See
+        :class:`gmaps.PolylineOptions` for documentation on possible values.
+        Note that this only affects the initial options of polylines added to
+        the map by a user. To customise polylines added programatically, pass in
+        the options to the :class:`gmaps.Polyline` constructor.
+    :type polyline_options:
+        :class:`gmaps.PolylineOptions`, `dict` or `None`, optional
+
 """
 
 _doc_snippets['examples'] = """
-    You can use the drawing layer to add lines, markers and
-    polygons to a map:
+    You can use the drawing layer to add lines, markers, polygons, and
+    polylines to a map:
 
     >>> fig = gmaps.figure()
     >>> drawing = gmaps.drawing_layer(features=[
@@ -78,6 +89,10 @@ _doc_snippets['examples'] = """
          gmaps.Polygon(
              [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)],
              fill_color='red'
+         ),
+         gmaps.Polyline(
+             [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)],
+             fill_color='blue'
          )
     ])
     >>> fig.add_layer(drawing)
@@ -124,7 +139,6 @@ _doc_snippets['examples'] = """
         fig  # display the figure
 """
 
-
 _doc_snippets['stroke_options_params'] = """
     :param stroke_color:
         The stroke color of the line. Colors can be specified as a simple
@@ -169,7 +183,7 @@ class DrawingControls(GMapsWidgetMixin, widgets.DOMWidget):
     _model_name = Unicode('DrawingControlsModel').tag(sync=True)
     _view_name = Unicode('DrawingControlsView').tag(sync=True)
     show_controls = Bool(default_value=True, allow_none=False).tag(
-        sync=True)
+            sync=True)
 
 
 @doc_subst(_doc_snippets)
@@ -420,6 +434,121 @@ class Polygon(GMapsWidgetMixin, widgets.Widget):
 
 
 @doc_subst(_doc_snippets)
+class PolylineOptions(HasTraits):
+    """
+    Style options for a polyline.
+
+    Pass an instance of this class to :func:`gmaps.drawing_layer` to
+    control the style of new user-drawn polylines on the map.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(
+            polyline_options=gmaps.PolylineOptions(
+                stroke_color='red', fill_color=(255, 0, 132))
+        )
+    >>> fig.add_layer(drawing)
+    >>> fig # display the figure
+
+    {stroke_options_params}
+
+    {fill_options_params}
+    """
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
+
+    def to_polyline(self, path):
+        new_polyline = Polyline(
+            path=path,
+            stroke_color=self.stroke_color,
+            stroke_weight=self.stroke_weight,
+            stroke_opacity=self.stroke_opacity,
+        )
+        return new_polyline
+
+
+@doc_subst(_doc_snippets)
+class Polyline(GMapsWidgetMixin, widgets.Widget):
+    """
+    Widget representing a linear overlay of connected line segments on the map
+
+    Add this polyline to a map via the :func:`gmaps.drawing_layer`
+    function, or by passing it directly to the ``.features`` array
+    of a :class:`gmaps.Drawing` instance.
+
+    :Examples:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer(features=[
+         gmaps.Polyline(
+            [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)],
+            stroke_color='blue'
+        )
+    ])
+    >>> fig.add_layer(drawing)
+
+    You can also add a polyline to an existing :class:`gmaps.Drawing`
+    instance:
+
+    >>> fig = gmaps.figure()
+    >>> drawing = gmaps.drawing_layer()
+    >>> fig.add_layer(drawing)
+    >>> fig # display the figure
+
+    You can now add polylines directly on the map:
+
+    >>> drawing.features = [
+         gmaps.Polyline(
+             [(46.72, 6.06), (46.48, 6.49), (46.79, 6.91)]
+             stroke_color='blue'
+         )
+    ]
+
+    :param path:
+        List of (latitude, longitude) pairs denoting each point on the polyline.
+        Latitudes are expressed as a float between -90 (corresponding to 90
+        degrees south) and +90 (corresponding to 90 degrees north). Longitudes
+        are expressed as a float between -180 (corresponding to 180 degrees
+        west) and +180 (corresponding to 180 degrees east).
+    :type path: list of tuples of floats
+
+    {stroke_options_params}
+
+    {fill_options_params}
+    """
+    _view_name = Unicode('PolylineView').tag(sync=True)
+    _model_name = Unicode('PolylineModel').tag(sync=True)
+    path = List(geotraitlets.Point(), minlen=3).tag(sync=True)
+    stroke_color = geotraitlets.ColorAlpha(
+        allow_none=False, default_value=DEFAULT_STROKE_COLOR
+    ).tag(sync=True)
+    stroke_weight = Float(
+        min=0.0, allow_none=False, default_value=2.0
+    ).tag(sync=True)
+    stroke_opacity = geotraitlets.StrokeOpacity().tag(sync=True)
+
+    def __init__(
+        self, path,
+        stroke_color=DEFAULT_STROKE_COLOR,
+        stroke_weight=2.0,
+        stroke_opacity=geotraitlets.StrokeOpacity.default_value
+    ):
+        kwargs = dict(
+            path=path,
+            stroke_color=stroke_color,
+            stroke_weight=stroke_weight,
+            stroke_opacity=stroke_opacity,
+        )
+        super(Polyline, self).__init__(**kwargs)
+
+
+@doc_subst(_doc_snippets)
 class CircleOptions(HasTraits):
     """
     Style options for a circle.
@@ -579,9 +708,9 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
 
     :param mode:
         Initial drawing mode. One of ``DISABLED``, ``MARKER``, ``LINE``,
-        ``POLYGON``, ``CIRCLE`` or ``DELETE``. Defaults to ``MARKER`` if
-        ``toolbar_controls.show_controls`` is True, otherwise defaults to
-        ``DISABLED``.
+        ``POLYGON``, ``POLYLINE``, ``CIRCLE`` or ``DELETE``. Defaults
+        to ``MARKER`` if ``toolbar_controls.show_controls`` is True, otherwise
+         defaults to ``DISABLED``.
     :type mode: str, optional
 
     :param toolbar_controls:
@@ -599,6 +728,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
         LineOptions, allow_none=False)
     polygon_options = widgets.trait_types.InstanceDict(
         PolygonOptions, allow_none=False)
+    polyline_options = widgets.trait_types.InstanceDict(
+            PolylineOptions, allow_none=False)
     circle_options = widgets.trait_types.InstanceDict(
         CircleOptions, allow_none=False)
     toolbar_controls = Instance(DrawingControls, allow_none=False).tag(
@@ -614,6 +745,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             kwargs['line_options'] = self._default_line_options()
         if kwargs.get('polygon_options') is None:
             kwargs['polygon_options'] = self._default_polygon_options()
+        if kwargs.get('polyline_options') is None:
+            kwargs['polyline_options'] = self._default_polyline_options()
         if kwargs.get('circle_options') is None:
             kwargs['circle_options'] = self._default_circle_options()
         self._new_feature_callbacks = []
@@ -629,8 +762,8 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             Callable to be called when a new feature is added.
             The callback should take a single argument, the
             feature that has been added. This can be an instance
-            of :class:`gmaps.Line`, :class:`gmaps.Marker` or
-            :class:`gmaps.Polygon`.
+            of :class:`gmaps.Line`, :class:`gmaps.Marker`,
+            :class:`gmaps.Polygon`, or :class:`gmaps.Polyline`.
         :type callback: callable
         """
         self._new_feature_callbacks.append(callback)
@@ -661,6 +794,10 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
     @default('polygon_options')
     def _default_polygon_options(self):
         return PolygonOptions()
+
+    @default('polyline_options')
+    def _default_polyline_options(self):
+        return PolylineOptions()
 
     @default('circle_options')
     def _default_circle_options(self):
@@ -703,6 +840,9 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
             elif payload['featureType'] == 'POLYGON':
                 path = payload['path']
                 feature = self.polygon_options.to_polygon(path)
+            elif payload['featureType'] == 'POLYLINE':
+                path = payload['path']
+                feature = self.polyline_options.to_polyline(path)
             elif payload['featureType'] == 'CIRCLE':
                 center = payload['center']
                 radius = payload['radius']
@@ -722,7 +862,7 @@ class Drawing(GMapsWidgetMixin, widgets.Widget):
 def drawing_layer(
         features=None, mode=DEFAULT_DRAWING_MODE,
         show_controls=True, marker_options=None, line_options=None,
-        polygon_options=None):
+        polygon_options=None, polyline_options=None):
     """
     Create an interactive drawing layer
 
@@ -737,7 +877,7 @@ def drawing_layer(
 
     :param mode:
         Initial drawing mode. One of ``DISABLED``,
-        ``MARKER``, ``LINE``, ``POLYGON``, ``CIRCLE`` or
+        ``MARKER``, ``LINE``, ``POLYGON``, ``POLYLINE``, ``CIRCLE``, or
         ``DELETE``. Defaults to ``MARKER`` if ``show_controls`` is
         True, otherwise defaults to ``DISABLED``.  :type mode: str,
         optional
@@ -757,6 +897,7 @@ def drawing_layer(
         'toolbar_controls': controls,
         'marker_options': marker_options,
         'line_options': line_options,
-        'polygon_options': polygon_options
+        'polygon_options': polygon_options,
+        'polyline_options': polyline_options
     }
     return Drawing(**kwargs)

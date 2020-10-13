@@ -1,6 +1,6 @@
 {
   "name": "jupyter-gmaps",
-  "version": "0.9.1-dev",
+  "version": "0.10.0-dev",
   "description": "Google maps plugin for Jupyter notebooks",
   "author": "Pascal Bugnion",
   "main": "src/index.js",
@@ -27,7 +27,7 @@
     "clean:labextension": "rimraf ../gmaps/labextension",
     "format": "prettier src/*.js src/services/*.js --write",
     "lint": "prettier src/*.js src/services/*.js --list-different",
-    "update": "rimraf dist/ && npm run build",
+    "update": "rimraf dist/ && npm run build:all",
     "test": "jest"
   },
   "devDependencies": {

@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+flake8 = "*"
+numpy = "*"
+pandas = "*"
+
+[packages]
+six = "*"
+ipython = ">=5.3.0"
+ipywidgets = ">=7.0.0"
+traitlets = ">=4.3.0"
+geojson = ">=2.0.0"
+
+[requires]
+python_version = "3.6"

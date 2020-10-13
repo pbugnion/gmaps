@@ -53,6 +53,17 @@ def new_polygon_message(path):
     return message
 
 
+def new_polyline_message(path):
+    message = {
+        'event': 'FEATURE_ADDED',
+        'payload': {
+            'featureType': 'POLYLINE',
+            'path': path
+        }
+    }
+    return message
+
+
 def new_circle_message(center, radius):
     message = {
         'event': 'FEATURE_ADDED',
@@ -115,6 +126,16 @@ class Drawing(unittest.TestCase):
         options = {'stroke_weight': 12.0}
         layer = drawing.Drawing(polygon_options=options)
         assert layer.polygon_options.stroke_weight == 12.0
+
+    def test_polyline_options_instance(self):
+        options = drawing.PolylineOptions(stroke_weight=12.0)
+        layer = drawing.Drawing(polyline_options=options)
+        assert layer.polyline_options.stroke_weight == 12.0
+
+    def test_polyline_options_dict(self):
+        options = {'stroke_weight': 12.0}
+        layer = drawing.Drawing(polyline_options=options)
+        assert layer.polyline_options.stroke_weight == 12.0
 
     def test_circle_options_instance(self):
         options = drawing.CircleOptions(stroke_weight=12.0)
@@ -228,6 +249,26 @@ class Drawing(unittest.TestCase):
         assert new_polygon.path == path
         assert new_polygon.stroke_weight == 19.0
 
+    def test_adding_polyline(self):
+        layer = drawing.Drawing()
+        path = [(5.0, 10.0), (15.0, 20.0), (25.0, 50.0)]
+        message = new_polyline_message(path)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_polyline] = layer.features
+        assert new_polyline.path == path
+
+    def test_adding_polyline_with_options(self):
+        layer = drawing.Drawing(
+            polyline_options=drawing.PolylineOptions(stroke_weight=19.0))
+        path = [(5.0, 10.0), (15.0, 20.0), (25.0, 50.0)]
+        message = new_polyline_message(path)
+        layer._handle_custom_msg(message, None)
+        assert len(layer.features) == 1
+        [new_polyline] = layer.features
+        assert new_polyline.path == path
+        assert new_polyline.stroke_weight == 19.0
+
     def test_adding_circle(self):
         layer = drawing.Drawing()
         center = [10.0, 15.0]
@@ -301,6 +342,10 @@ class DrawingFactory(unittest.TestCase):
     def test_with_polygon_options(self):
         layer = drawing.drawing_layer(polygon_options={'stroke_weight': 12.0})
         assert layer.polygon_options.stroke_weight == 12.0
+
+    def test_with_polyline_options(self):
+        layer = drawing.drawing_layer(polyline_options={'stroke_weight': 12.0})
+        assert layer.polyline_options.stroke_weight == 12.0
 
 
 class Line(unittest.TestCase):
@@ -423,6 +468,68 @@ class PolygonOptions(unittest.TestCase):
         assert actual_polygon.stroke_opacity == expected_polygon.stroke_opacity
         assert actual_polygon.fill_color == expected_polygon.fill_color
         assert actual_polygon.fill_opacity == expected_polygon.fill_opacity
+
+
+class Polyline(unittest.TestCase):
+
+    def setUp(self):
+        self.path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+
+    def test_path_kwarg(self):
+        polyline = drawing.Polyline(path=self.path)
+        assert polyline.get_state()['path'] == self.path
+
+    def test_normal_path_arg(self):
+        polyline = drawing.Polyline(self.path)
+        assert polyline.get_state()['path'] == self.path
+
+    def test_missing_path(self):
+        with self.assertRaises(TypeError):
+            drawing.Polyline()
+
+    def test_insufficient_points_path(self):
+        with self.assertRaises(traitlets.TraitError):
+            path = [(5.0, 30.0), (-5.0, 10.0)]
+            drawing.Polyline(path)
+
+    def test_defaults(self):
+        polyline = drawing.Polyline(self.path)
+        state = polyline.get_state()
+        assert state['stroke_color'] == drawing.DEFAULT_STROKE_COLOR
+        assert state['stroke_weight'] == 2.0
+        assert state['stroke_opacity'] == 0.6
+
+    def test_custom_arguments(self):
+        polyline = drawing.Polyline(
+            self.path,
+            stroke_color=(1, 3, 5),
+            stroke_weight=10.0,
+            stroke_opacity=0.87,
+        )
+        state = polyline.get_state()
+        assert state['stroke_color'] == 'rgb(1,3,5)'
+        assert state['stroke_weight'] == 10.0
+        assert state['stroke_opacity'] == 0.87
+
+    def test_invalid_stroke_opacity(self):
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polyline(self.path, stroke_opacity=-0.2)
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polyline(self.path, stroke_opacity=1.2)
+        with self.assertRaises(traitlets.TraitError):
+            drawing.Polyline(self.path, stroke_opacity='not-a-float')
+
+
+class PolylineOptions(unittest.TestCase):
+
+    def test_to_polyline_defaults(self):
+        path = [(10.0, 20.0), (5.0, 30.0), (-5.0, 10.0)]
+        expected_polyline = drawing.Polyline(path)
+        actual_polyline = drawing.PolylineOptions().to_polyline(path)
+        assert actual_polyline.path == expected_polyline.path
+        assert actual_polyline.stroke_color == expected_polyline.stroke_color
+        assert actual_polyline.stroke_weight == expected_polyline.stroke_weight
+        assert actual_polyline.stroke_opacity == expected_polyline.stroke_opacity
 
 
 class Circle(unittest.TestCase):
