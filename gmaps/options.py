@@ -1,5 +1,8 @@
-
-import collections
+try:
+    import collections
+    collections.Iterable
+except Exception:
+    import collections.abc as collections
 
 from six import string_types
 
