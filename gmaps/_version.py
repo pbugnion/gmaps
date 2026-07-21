@@ -1,5 +1,5 @@
 
-# This file is generated programatically.
+# This file is generated programmatically.
 
 # Version of the Python package
 __version__ = '0.9.1-dev'
